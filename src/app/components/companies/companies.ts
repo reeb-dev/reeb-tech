@@ -5,6 +5,7 @@ interface Company {
   name: string;
   logo: string;
   years: string;
+  description?: string;
 }
 
 @Component({
@@ -17,18 +18,15 @@ export class CompaniesComponent {
   companies: Company[] = [
     {
       name: 'Indra',
-      logo: 'https://via.placeholder.com/120x60?text=Indra',
-      years: '2020 - 2024'
+      logo: '/screenshot-2025-02-05-130401.png',
+      years: '2020 - 2024',
+      description: 'Multinacional Fortune 500. Lideré proyectos empresariales con millones de usuarios.'
     },
     {
-      name: 'Tech Company',
-      logo: 'https://via.placeholder.com/120x60?text=Tech+Co',
-      years: '2018 - 2020'
-    },
-    {
-      name: 'Startup Local',
-      logo: 'https://via.placeholder.com/120x60?text=Startup',
-      years: '2016 - 2018'
+      name: 'SisKit',
+      logo: '/unnamed.webp',
+      years: '2018 - 2020',
+      description: 'Startup de software. Arquitectura y desarrollo de plataforma core.'
     }
   ];
 }

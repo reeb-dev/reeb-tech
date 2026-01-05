@@ -18,7 +18,7 @@ export class StackComponent {
     {
       name: 'Backend',
       icon: '⚙️',
-      technologies: ['Java/Spring Boot', 'Node.js/Express', 'Python/FastAPI', 'PostgreSQL', 'MongoDB', 'Redis', 'Docker', 'Kubernetes']
+      technologies: ['Java/Spring Boot', 'Node.js/Express',  'PostgreSQL', 'Docker']
     },
     {
       name: 'Frontend',
@@ -28,12 +28,12 @@ export class StackComponent {
     {
       name: 'DevOps & Cloud',
       icon: '☁️',
-      technologies: ['AWS', 'Docker', 'Kubernetes', 'CI/CD', 'GitHub Actions', 'Jenkins', 'Terraform', 'Linux']
+      technologies: ['AWS', 'Docker', 'CI/CD', 'GitHub Actions', 'Jenkins',  'Linux']
     },
     {
       name: 'Herramientas & Metodologías',
       icon: '🛠️',
-      technologies: ['Git', 'Agile/Scrum', 'Clean Code', 'SOLID Principles', 'Microservicios', 'REST APIs', 'GraphQL', 'Testing']
+      technologies: ['Git', 'Agile/Scrum', 'Clean Code', 'SOLID Principles', 'Microservicios', 'REST APIs', 'Testing']
     }
   ];
 }
