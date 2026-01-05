@@ -16,24 +16,24 @@ interface TechCategory {
 export class StackComponent {
   techStack: TechCategory[] = [
     {
-      name: 'Backend',
-      icon: '⚙️',
-      technologies: ['Java/Spring Boot', 'Node.js/Express',  'PostgreSQL', 'Docker']
-    },
-    {
       name: 'Frontend',
       icon: '🎨',
-      technologies: ['Angular', 'React', 'TypeScript', 'Tailwind CSS', 'RxJS', 'State Management', 'Testing Angular']
+      technologies: ['Angular (Especialidad)', 'TypeScript', 'Tailwind CSS', 'RxJS']
     },
     {
-      name: 'DevOps & Cloud',
-      icon: '☁️',
-      technologies: ['AWS', 'Docker', 'CI/CD', 'GitHub Actions', 'Jenkins',  'Linux']
+      name: 'Backend',
+      icon: '⚙️',
+      technologies: ['Java / Spring Boot', 'Node.js', 'PostgreSQL', 'MySQL', 'Oracle']
     },
     {
-      name: 'Herramientas & Metodologías',
+      name: 'Mobile',
+      icon: '📱',
+      technologies: ['Android Nativo', 'Kotlin', 'Jetpack Compose']
+    },
+    {
+      name: 'Infra',
       icon: '🛠️',
-      technologies: ['Git', 'Agile/Scrum', 'Clean Code', 'SOLID Principles', 'Microservicios', 'REST APIs', 'Testing']
+      technologies: ['Docker', 'CI/CD', 'Git', 'Linux']
     }
   ];
 }

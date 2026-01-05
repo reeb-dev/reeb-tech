@@ -1,0 +1,86 @@
+<section id="contact" class="py-24 bg-white dark:bg-[#0A0A0B] transition-colors duration-300">
+  <div class="container-custom">
+    <div class="max-w-2xl mx-auto">
+      <div class="text-center mb-12">
+        <h2 class="heading-lg mb-4 text-gray-900 dark:text-white">Contacto</h2>
+        <p class="text-lg text-[#94A3B8]">
+          ¿Tienes un problema técnico o necesitas reforzar tu equipo?<br>
+          No busco venderte la solución más cara, sino la que mejor se adapte a tu necesidad real.
+        </p>
+      </div>
+
+      <div class="bg-gray-50 dark:bg-[#020617] rounded-xl border border-[#E5E7EB] dark:border-[#1E293B] p-8">
+        <!-- Interest Selector -->
+        <div class="mb-8">
+          <label class="block text-sm font-mono text-[#3B82F6] uppercase tracking-widest mb-4">¿Qué necesitas?</label>
+          <div class="space-y-3">
+            <label *ngFor="let interest of interests" class="flex items-center gap-3 cursor-pointer group">
+              <input 
+                type="checkbox" 
+                [(ngModel)]="interest.checked"
+                class="w-5 h-5 rounded border-[#E5E7EB] dark:border-[#1E293B] text-[#3B82F6] focus:ring-[#3B82F6] bg-white dark:bg-[#0A0A0B]"
+              >
+              <span class="text-[#94A3B8] group-hover:text-gray-900 dark:group-hover:text-white transition-colors">{{ interest.label }}</span>
+            </label>
+          </div>
+        </div>
+
+        <!-- Form Fields -->
+        <div class="space-y-6">
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div>
+              <label class="block text-sm font-medium text-gray-900 dark:text-white mb-2">Nombre</label>
+              <input 
+                type="text" 
+                [(ngModel)]="name"
+                placeholder="Tu nombre"
+                class="w-full px-4 py-3 rounded-lg border border-[#E5E7EB] dark:border-[#1E293B] bg-white dark:bg-[#0A0A0B] text-gray-900 dark:text-white placeholder-[#94A3B8] focus:border-[#3B82F6] focus:ring-1 focus:ring-[#3B82F6] transition-colors"
+              >
+            </div>
+            <div>
+              <label class="block text-sm font-medium text-gray-900 dark:text-white mb-2">Email</label>
+              <input 
+                type="email" 
+                [(ngModel)]="email"
+                placeholder="tu@email.com"
+                class="w-full px-4 py-3 rounded-lg border border-[#E5E7EB] dark:border-[#1E293B] bg-white dark:bg-[#0A0A0B] text-gray-900 dark:text-white placeholder-[#94A3B8] focus:border-[#3B82F6] focus:ring-1 focus:ring-[#3B82F6] transition-colors"
+              >
+            </div>
+          </div>
+
+          <div>
+            <label class="block text-sm font-medium text-gray-900 dark:text-white mb-2">Mensaje</label>
+            <textarea 
+              [(ngModel)]="message"
+              rows="4"
+              placeholder="Describe brevemente tu situación o necesidad técnica..."
+              class="w-full px-4 py-3 rounded-lg border border-[#E5E7EB] dark:border-[#1E293B] bg-white dark:bg-[#0A0A0B] text-gray-900 dark:text-white placeholder-[#94A3B8] focus:border-[#3B82F6] focus:ring-1 focus:ring-[#3B82F6] transition-colors resize-none"
+            ></textarea>
+          </div>
+
+          <a 
+            [href]="getMailtoLink()"
+            class="w-full inline-flex items-center justify-center gap-2 px-8 py-4 bg-[#3B82F6] hover:bg-[#1D4ED8] text-white font-semibold rounded-lg transition-all duration-200 shadow-lg hover:shadow-xl hover:scale-[1.02]"
+          >
+            <span>Iniciar consulta técnica</span>
+            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"></path>
+            </svg>
+          </a>
+        </div>
+
+        <!-- Direct Contact -->
+        <div class="mt-8 pt-8 border-t border-[#E5E7EB] dark:border-[#1E293B]">
+          <p class="text-sm text-[#94A3B8] text-center mb-4">O contacta directamente:</p>
+          <div class="flex flex-wrap justify-center gap-4">
+            <a href="mailto:manuelreeb@icloud.com" class="text-sm text-[#3B82F6] hover:underline">manuelreeb@icloud.com</a>
+            <span class="text-[#94A3B8]">•</span>
+            <a href="https://www.linkedin.com/in/manuel-jesus-reeb/" target="_blank" class="text-sm text-[#3B82F6] hover:underline">LinkedIn</a>
+            <span class="text-[#94A3B8]">•</span>
+            <a href="https://github.com/reeb-dev" target="_blank" class="text-sm text-[#3B82F6] hover:underline">GitHub</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>

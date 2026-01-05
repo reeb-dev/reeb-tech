@@ -1,34 +1,59 @@
-<section id="services" class="section-padding bg-white dark:bg-dark-secondary transition-colors duration-300">
+<section id="services" class="py-24 bg-white dark:bg-[#0A0A0B] transition-colors duration-300">
   <div class="container-custom">
+    <!-- Header -->
     <div class="max-w-2xl mx-auto text-center mb-16">
-      <h2 class="heading-lg mb-4 text-gray-900 dark:text-white">Servicios</h2>
-      <p class="text-lg text-text-muted">
-        Como consultor senior, ofrezco servicios especializados para llevar tu negocio al siguiente nivel.
+      <h2 class="heading-lg mb-4 text-gray-900 dark:text-white">¿Qué Resuelvo?</h2>
+      <p class="text-lg text-[#94A3B8]">
+        No vendo tecnología, resuelvo problemas. Si algo técnico te quita el sueño, probablemente puedo ayudarte.
       </p>
     </div>
 
-    <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
-      <div *ngFor="let service of services" class="group p-8 rounded-xl border border-gray-200 dark:border-gray-700 hover:border-accent-600 dark:hover:border-accent-600 hover:shadow-lg dark:hover:shadow-none transition-all duration-300">
-        <div class="text-5xl mb-4 group-hover:scale-110 transition-transform duration-300">{{ service.icon }}</div>
-        <h3 class="heading-md mb-3 text-gray-900 dark:text-white">{{ service.title }}</h3>
-        <p class="text-gray-600 dark:text-gray-400 mb-6">{{ service.description }}</p>
+    <!-- Services Grid -->
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-8 mb-20">
+      <div *ngFor="let service of services" class="group p-8 rounded-xl border border-[#E5E7EB] dark:border-[#1E293B] hover:border-[#3B82F6] dark:hover:border-[#3B82F6] hover:shadow-lg dark:hover:shadow-none transition-all duration-300 bg-white dark:bg-[#020617]">
+        <div class="text-5xl mb-4">{{ service.icon }}</div>
+        <h3 class="text-xl font-semibold mb-3 text-gray-900 dark:text-white">{{ service.title }}</h3>
+        <p class="text-[#3B82F6] font-medium mb-2 text-sm">{{ service.problem }}</p>
+        <p class="text-[#94A3B8] mb-6 text-sm">{{ service.solution }}</p>
         <ul class="space-y-2">
-          <li *ngFor="let feature of service.features" class="flex items-start gap-3 text-sm text-gray-700 dark:text-gray-300">
-            <span class="text-accent-600 dark:text-accent-400 font-bold mt-1">✓</span>
+          <li *ngFor="let feature of service.features" class="flex items-start gap-3 text-sm text-[#94A3B8]">
+            <span class="text-[#3B82F6] font-bold mt-0.5">✓</span>
             <span>{{ feature }}</span>
           </li>
         </ul>
       </div>
     </div>
 
-    <!-- CTA Section -->
-    <div class="mt-16 p-12 rounded-2xl bg-gradient-to-r from-accent-600 to-accent-600 text-white text-center space-y-6">
-      <h3 class="heading-md">¿Listo para llevar tu proyecto al siguiente nivel?</h3>
+    <!-- Use Cases -->
+    <div class="mb-20">
+      <h3 class="text-xl font-semibold text-gray-900 dark:text-white text-center mb-8">Casos de Uso</h3>
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <div *ngFor="let useCase of useCases" class="flex items-center justify-between p-4 rounded-lg border border-[#E5E7EB] dark:border-[#1E293B] bg-gray-50 dark:bg-[#020617] hover:border-[#3B82F6] dark:hover:border-[#3B82F6] transition-colors">
+          <p class="text-[#94A3B8] text-sm">{{ useCase.problem }}</p>
+          <a href="#contact" class="text-[#3B82F6] font-medium text-sm whitespace-nowrap ml-4 hover:underline">→ {{ useCase.cta }}</a>
+        </div>
+      </div>
+    </div>
+
+    <!-- Advantages: Cero Complicaciones -->
+    <div class="mb-20 p-8 rounded-xl bg-gray-50 dark:bg-[#020617] border border-[#E5E7EB] dark:border-[#1E293B]">
+      <h3 class="text-xl font-semibold text-gray-900 dark:text-white text-center mb-8">Cero Complicaciones</h3>
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+        <div *ngFor="let advantage of advantages" class="text-center">
+          <h4 class="font-semibold text-gray-900 dark:text-white mb-2">{{ advantage.title }}</h4>
+          <p class="text-sm text-[#94A3B8]">{{ advantage.description }}</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- CTA for Companies -->
+    <div class="p-12 rounded-2xl bg-gradient-to-r from-[#1D4ED8] to-[#3B82F6] text-white text-center space-y-6">
+      <h3 class="text-2xl font-semibold">¿Eres una empresa buscando un Senior/Staff Engineer?</h3>
       <p class="text-lg opacity-90 max-w-2xl mx-auto">
-        Contacta conmigo para discutir cómo puedo ayudarte a construir soluciones técnicamente impecables que impulsen el crecimiento de tu negocio.
+        También estoy disponible para staff augmentation o posiciones de contrato indefinido.
       </p>
-      <a href="mailto:contact@manuelreeb.dev" class="inline-block px-8 py-3 bg-white text-accent-600 font-semibold rounded-lg hover:bg-gray-100 transition-colors duration-200">
-        Contáctame Ahora
+      <a href="#contact" class="inline-block px-8 py-3 bg-white text-[#1D4ED8] font-semibold rounded-lg hover:bg-[#F9FAFB] transition-all duration-200 shadow-lg hover:shadow-xl hover:scale-105">
+        Hablemos de tu equipo
       </a>
     </div>
   </div>

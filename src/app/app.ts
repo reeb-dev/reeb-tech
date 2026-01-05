@@ -6,6 +6,7 @@ import { ProjectsComponent } from './components/projects/projects';
 import { StackComponent } from './components/stack/stack';
 import { AboutComponent } from './components/about/about';
 import { ServicesComponent } from './components/services/services';
+import { ContactComponent } from './components/contact/contact';
 import { FooterComponent } from './components/footer/footer';
 
 @Component({
@@ -18,6 +19,7 @@ import { FooterComponent } from './components/footer/footer';
     StackComponent,
     AboutComponent,
     ServicesComponent,
+    ContactComponent,
     FooterComponent
   ],
   templateUrl: './app.html',

@@ -1,11 +1,10 @@
 import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ThemeService } from '../../services/theme';
-import { LogoComponent } from '../logo/logo';
 
 @Component({
   selector: 'app-navbar',
-  imports: [CommonModule, LogoComponent],
+  imports: [CommonModule],
   templateUrl: './navbar.html',
   styleUrl: './navbar.css',
 })

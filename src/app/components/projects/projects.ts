@@ -3,14 +3,13 @@ import { CommonModule } from '@angular/common';
 
 interface Project {
   title: string;
-  description: string;
-  problem: string;
+  context: string;
+  role: string;
+  environment: string;
+  challenge: string;
   solution: string;
-  impact: string;
+  metrics: string;
   tech: string[];
-  demoUrl: string;
-  codeUrl: string;
-  image: string;
 }
 
 @Component({
@@ -22,37 +21,24 @@ interface Project {
 export class ProjectsComponent {
   projects: Project[] = [
     {
-      title: 'Sistema CRM Enterprise',
-      description: 'Plataforma completa de gestión de relaciones con clientes para empresa multinacional',
-      problem: 'El cliente necesitaba gestionar 500+ ventas diarias sin control de inventario ni análisis de datos',
-      solution: 'Desarrollé un sistema con Spring Boot, Angular y PostgreSQL bajo arquitectura limpia y principios SOLID',
-      impact: 'Reducción del 40% en tiempo de respuesta y 60% en errores operacionales. Incremento de 30% en productividad',
-      tech: ['Spring Boot', 'Angular', 'PostgreSQL', 'Docker', 'Kubernetes'],
-      demoUrl: '#',
-      codeUrl: '#',
-      image: 'https://via.placeholder.com/600x400?text=CRM+Project'
+      title: 'Sistemas Críticos — Indra',
+      context: 'Entorno enterprise con aplicaciones de alto flujo de datos y usuarios.',
+      role: 'Software Engineer',
+      environment: 'Enterprise / Soporte Nivel 3',
+      challenge: 'Mantener la operatividad de aplicaciones que no podían permitirse caídas.',
+      solution: 'Refactorización de módulos legados, optimización de consultas SQL y mantenimiento de despliegues en entornos de producción.',
+      metrics: 'Uptime: 99.9%',
+      tech: ['Java', 'Spring', 'Oracle SQL', 'Angular']
     },
     {
-      title: 'Plataforma de E-Learning',
-      description: 'Aplicación web para educación online con más de 10,000 estudiantes activos',
-      problem: 'Necesidad de escalabilidad, bajo rendimiento con muchos usuarios concurrentes',
-      solution: 'Implementé arquitectura de microservicios con Redis para caché, implementé lazy loading y optimizaciones frontend',
-      impact: 'Escalabilidad horizontal alcanzada, latencia reducida en 50%, incremento de usuarios a 50,000',
-      tech: ['Next.js', 'Node.js', 'MongoDB', 'Redis', 'AWS'],
-      demoUrl: '#',
-      codeUrl: '#',
-      image: 'https://via.placeholder.com/600x400?text=E-Learning'
-    },
-    {
-      title: 'Dashboard Analytics en Tiempo Real',
-      description: 'Sistema de visualización de datos en tiempo real para empresa financiera',
-      problem: 'Necesidad de procesar y visualizar millones de transacciones diarias en tiempo real',
-      solution: 'Utilicé WebSockets, InfluxDB para series temporales, Grafana y visualizaciones con D3.js',
-      impact: 'Procesamiento en tiempo real de 1M+ eventos/minuto, latencia < 100ms, insights en 5 segundos',
-      tech: ['React', 'WebSockets', 'InfluxDB', 'Grafana', 'Docker', 'Kafka'],
-      demoUrl: '#',
-      codeUrl: '#',
-      image: 'https://via.placeholder.com/600x400?text=Analytics'
+      title: 'Arquitectura de Microservicios',
+      context: 'Migración de monolito a servicios independientes.',
+      role: 'Backend Developer',
+      environment: 'Startup / Greenfield',
+      challenge: 'Migrar funcionalidades sin interrumpir el servicio ni perder integridad de datos.',
+      solution: 'Implementación de APIs REST robustas y comunicación entre servicios asegurando consistencia transaccional.',
+      metrics: 'Zero downtime migration',
+      tech: ['Spring Boot', 'Node.js', 'Docker', 'PostgreSQL']
     }
   ];
 }

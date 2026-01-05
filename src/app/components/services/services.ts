@@ -3,9 +3,15 @@ import { CommonModule } from '@angular/common';
 
 interface Service {
   title: string;
-  description: string;
+  problem: string;
+  solution: string;
   icon: string;
   features: string[];
+}
+
+interface UseCase {
+  problem: string;
+  cta: string;
 }
 
 @Component({
@@ -17,37 +23,62 @@ interface Service {
 export class ServicesComponent {
   services: Service[] = [
     {
-      title: 'Desarrollo de Software a Medida',
-      description: 'Desarrollo de aplicaciones personalizadas adaptadas a tus necesidades empresariales específicas.',
-      icon: '💻',
+      title: 'Recuperación de Proyectos',
+      problem: '¿Tienes código que nadie entiende o que se rompe constantemente?',
+      solution: 'Analizo la deuda técnica y estabilizo el sistema para que puedas seguir creciendo.',
+      icon: '🔧',
       features: [
-        'Aplicaciones Web (Angular, React, Vue)',
-        'Aplicaciones Backend (Spring Boot, Node.js)',
-        'Integración de APIs y servicios',
-        'Bases de datos y optimización'
+        'Auditoría de código existente',
+        'Refactoring sin romper nada',
+        'Documentación técnica',
+        'Estabilización de bugs críticos'
       ]
     },
     {
-      title: 'Modernización de Aplicaciones',
-      description: 'Actualización de sistemas legacy a tecnologías modernas, mejorando rendimiento y mantenibilidad.',
+      title: 'Desarrollo de MVPs',
+      problem: '¿Tienes una idea pero no sabes cómo empezar sin gastar de más?',
+      solution: 'Construyo productos mínimos viables bajo estándares profesionales, evitando errores de base.',
       icon: '🚀',
       features: [
-        'Migración a arquitecturas modernas',
-        'Containerización con Docker',
-        'Implementación de CI/CD',
-        'Mejora de rendimiento y escalabilidad'
+        'De la idea al código funcional',
+        'Stack adecuado (no oversized)',
+        'Arquitectura escalable desde el día 1',
+        'Entrega iterativa y feedback rápido'
       ]
     },
     {
-      title: 'Consultoría Técnica y Arquitectura',
-      description: 'Asesoramiento experto en decisiones arquitectónicas y mejores prácticas de desarrollo.',
-      icon: '🏗️',
+      title: 'Consultoría de Arquitectura',
+      problem: '¿No sabes si elegir Angular, React, Spring o Node?',
+      solution: 'Te ayudo a elegir el stack correcto para que no gastes de más en infraestructura innecesaria.',
+      icon: '📐',
       features: [
-        'Diseño de arquitecturas escalables',
-        'Code Reviews y Best Practices',
-        'Mentoring técnico a equipos',
-        'Planificación de proyectos complejos'
+        'Evaluación de requerimientos reales',
+        'Propuesta de arquitectura',
+        'Estimación de costos realista',
+        'Roadmap técnico claro'
       ]
+    }
+  ];
+
+  useCases: UseCase[] = [
+    { problem: 'Tu app Angular está lenta o llena de errores que nadie sabe arreglar', cta: 'Yo la estabilizo' },
+    { problem: 'Quieres migrar tu base de datos y te da miedo perder información', cta: 'Hablemos' },
+    { problem: 'Necesitas un experto en Spring/Java para una urgencia', cta: 'Contáctame' },
+    { problem: 'Tu equipo interno no da abasto y necesitas refuerzo temporal', cta: 'Staff augmentation' }
+  ];
+
+  advantages = [
+    {
+      title: 'Comunicación Directa',
+      description: 'Hablo en humano, no solo en código. Te explico qué estamos haciendo y por qué.'
+    },
+    {
+      title: 'Autonomía Total',
+      description: 'Después de 4 años en Indra, sé trabajar sin supervisión constante. Me das un problema y te traigo la solución.'
+    },
+    {
+      title: 'Código con Propiedad',
+      description: 'Todo lo que construyo es tuyo. Código documentado y listo para que cualquier otro desarrollador pueda seguir.'
     }
   ];
 }

@@ -6,50 +6,60 @@ module.exports = {
   theme: {
     extend: {
       colors: {
-        // Paleta Tech Premium - Sobria y escalable para Senior Developers
-        'dark': '#0B0D10',           // Negro profundo (no puro) - Fondo principal
-        'dark-secondary': '#111827',  // Superficies y cards
-        'dark-tertiary': '#1F2933',   // Bordes y divisores
+        // 🌑 Modo Dark - Cian Técnico
+        'dark': '#020617',            // BG principal
+        'dark-secondary': '#020617',  // Superficies y cards
+        'dark-tertiary': '#1E293B',   // Bordes y divisores
         
-        // Sistema de grises profesionales
-        'text-primary': '#E5E7EB',
-        'text-secondary': '#9CA3AF',
+        // ☀️ Modo Light - Limpio y profesional
+        'light': '#FFFFFF',           // BG principal
+        'light-secondary': '#F8FAFC', // Superficies y cards
+        'light-tertiary': '#E2E8F0',  // Bordes
         
-        // Acento Tech (azul tecnológico)
-        'accent': '#60A5FA',
-        'accent-light': '#93C5FD',
-        'accent-dark': '#3B82F6',
+        // Sistema de textos
+        'text-primary-dark': '#E5E7EB',    // Texto principal en dark
+        'text-secondary-dark': '#94A3B8',  // Texto muted en dark
+        'text-primary-light': '#020617',   // Texto principal en light
+        'text-secondary-light': '#475569', // Texto muted en light
         
-        // Paleta bronze mantenida para compatibilidad
+        // Acento Cian Técnico - La personalidad controlada
+        'accent': {
+          DEFAULT: '#22D3EE',  // Dark mode accent
+          'light': '#0891B2',  // Light mode accent
+          'hover': '#06B6D4',  // Hover state
+        },
+        
+        // Paleta bronze actualizada con cian
         'bronze': {
           50: '#F8FAFC',
           100: '#F1F5F9',
           200: '#E2E8F0',
           300: '#CBD5E1',
           400: '#94A3B8',
-          500: '#60A5FA',  // Acento tech
-          600: '#3B82F6',
-          700: '#2563EB',
-          800: '#1E40AF',
-          900: '#1E3A8A',
+          500: '#22D3EE',
+          600: '#0891B2',
+          700: '#0E7490',
+          800: '#155E75',
+          900: '#164E63',
         },
         
-        // Gold reemplazado por tonos tech
+        // Gold reemplazado por tonos cian
         'gold': {
-          50: '#F0F9FF',
-          100: '#E0F2FE',
-          200: '#BAE6FD',
-          300: '#7DD3FC',
-          400: '#38BDF8',
-          500: '#60A5FA',
-          600: '#3B82F6',
-          700: '#2563EB',
-          800: '#1E40AF',
-          900: '#1E3A8A',
+          50: '#ECFEFF',
+          100: '#CFFAFE',
+          200: '#A5F3FC',
+          300: '#67E8F9',
+          400: '#22D3EE',
+          500: '#06B6D4',
+          600: '#0891B2',
+          700: '#0E7490',
+          800: '#155E75',
+          900: '#164E63',
         },
       },
       fontFamily: {
         'sans': ['Inter', 'system-ui', 'sans-serif'],
+        'brand': ['Space Grotesk', 'Inter', 'system-ui', 'sans-serif'],
       },
     },
   },

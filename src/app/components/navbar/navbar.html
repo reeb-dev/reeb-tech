@@ -1,46 +1,45 @@
-<nav class="fixed w-full top-0 z-50 bg-white dark:bg-dark border-b border-gray-200 dark:border-dark-secondary backdrop-blur-md bg-opacity-95 dark:bg-opacity-95 transition-colors duration-300">
+<nav class="fixed w-full top-0 z-50 bg-white dark:bg-dark border-b border-[#E2E8F0] dark:border-[#1E293B] backdrop-blur-md bg-opacity-95 dark:bg-opacity-95 transition-colors duration-300">
   <div class="container-custom py-4 flex items-center justify-between">
     <!-- Logo -->
-    <a href="#hero" class="flex items-center gap-3 group">
-      <div class="w-12 h-12">
-        <app-logo></app-logo>
+    <a href="#hero" class="flex items-center gap-4 group">
+      <div class="font-brand font-semibold text-4xl tracking-wider text-[#020617] dark:text-[#E5E7EB] hover:text-[#3B82F6] dark:hover:text-[#3B82F6] transition-colors duration-300" style="letter-spacing: 0.04em;">
+        REEB
       </div>
-      <span class="text-lg font-semibold text-gray-900 dark:text-text-primary hidden sm:block">Manuel Reeb</span>
     </a>
 
     <!-- Desktop Menu -->
     <div class="hidden md:flex items-center gap-8">
-      <a href="#projects" class="text-sm font-medium text-gray-700 dark:text-gray-300 hover:text-accent-600 dark:hover:text-accent-400 transition-colors">
+      <a href="#projects" class="text-sm font-medium text-[#475569] dark:text-[#94A3B8] hover:text-[#3B82F6] dark:hover:text-[#3B82F6] transition-colors">
         Proyectos
       </a>
-      <a href="#stack" class="text-sm font-medium text-gray-700 dark:text-gray-300 hover:text-accent-600 dark:hover:text-accent-400 transition-colors">
+      <a href="#stack" class="text-sm font-medium text-[#475569] dark:text-[#94A3B8] hover:text-[#3B82F6] dark:hover:text-[#3B82F6] transition-colors">
         Stack
       </a>
-      <a href="#about" class="text-sm font-medium text-gray-700 dark:text-gray-300 hover:text-accent-600 dark:hover:text-accent-400 transition-colors">
+      <a href="#about" class="text-sm font-medium text-[#475569] dark:text-[#94A3B8] hover:text-[#3B82F6] dark:hover:text-[#3B82F6] transition-colors">
         Sobre mí
       </a>
-      <a href="#services" class="text-sm font-medium text-gray-700 dark:text-gray-300 hover:text-accent-600 dark:hover:text-accent-400 transition-colors">
+      <a href="#services" class="text-sm font-medium text-[#475569] dark:text-[#94A3B8] hover:text-[#3B82F6] dark:hover:text-[#3B82F6] transition-colors">
         Servicios
       </a>
 
       <!-- Divider -->
-      <div class="w-px h-6 bg-gray-200 dark:bg-gray-700"></div>
+      <div class="w-px h-6 bg-[#E2E8F0] dark:bg-[#1E293B]"></div>
 
       <!-- Contact Links -->
-      <a href="mailto:manuelreeb@icloud.com" class="text-sm font-medium text-gray-700 dark:text-gray-300 hover:text-accent-600 dark:hover:text-accent-400 transition-colors">
+      <a href="mailto:manuelreeb@icloud.com" class="text-sm font-medium text-[#475569] dark:text-[#94A3B8] hover:text-[#3B82F6] dark:hover:text-[#3B82F6] transition-colors">
         Email
       </a>
-      <a href="https://github.com/reeb-dev" target="_blank" class="text-sm font-medium text-gray-700 dark:text-gray-300 hover:text-accent-600 dark:hover:text-accent-400 transition-colors">
+      <a href="https://github.com/reeb-dev" target="_blank" class="text-sm font-medium text-[#475569] dark:text-[#94A3B8] hover:text-[#3B82F6] dark:hover:text-[#3B82F6] transition-colors">
         GitHub
       </a>
-      <a href="https://www.linkedin.com/in/manuel-jesus-reeb/" target="_blank" class="text-sm font-medium text-gray-700 dark:text-gray-300 hover:text-accent-600 dark:hover:text-accent-400 transition-colors">
+      <a href="https://www.linkedin.com/in/manuel-jesus-reeb/" target="_blank" class="text-sm font-medium text-[#475569] dark:text-[#94A3B8] hover:text-[#3B82F6] dark:hover:text-[#3B82F6] transition-colors">
         LinkedIn
       </a>
 
       <!-- Theme Toggle -->
       <button
         (click)="toggleTheme()"
-        class="p-2 rounded-lg bg-gray-100 dark:bg-dark-secondary hover:bg-gray-200 dark:hover:bg-dark-secondary transition-colors"
+        class="p-2 rounded-lg bg-[#F8FAFC] dark:bg-[#020617] hover:bg-[#E2E8F0] dark:hover:bg-[#1E293B] border border-[#E2E8F0] dark:border-[#1E293B] transition-colors"
         [attr.aria-label]="themeService.isDarkMode() ? 'Cambiar a modo claro' : 'Cambiar a modo oscuro'"
       >
         <span *ngIf="!themeService.isDarkMode()" class="text-xl">🌙</span>
@@ -52,14 +51,14 @@
     <div class="md:hidden flex items-center gap-4">
       <button
         (click)="toggleTheme()"
-        class="p-2 rounded-lg bg-gray-100 dark:bg-dark-secondary hover:bg-gray-200 dark:hover:bg-dark-secondary transition-colors"
+        class="p-2 rounded-lg bg-[#F8FAFC] dark:bg-[#020617] hover:bg-[#E2E8F0] dark:hover:bg-[#1E293B] border border-[#E2E8F0] dark:border-[#1E293B] transition-colors"
       >
         <span *ngIf="!themeService.isDarkMode()" class="text-xl">🌙</span>
         <span *ngIf="themeService.isDarkMode()" class="text-xl">☀️</span>
       </button>
       <button
         (click)="toggleMobileMenu()"
-        class="p-2 rounded-lg bg-gray-100 dark:bg-dark-secondary hover:bg-gray-200 dark:hover:bg-dark-secondary transition-colors"
+        class="p-2 rounded-lg bg-[#F8FAFC] dark:bg-[#020617] hover:bg-[#E2E8F0] dark:hover:bg-[#1E293B] border border-[#E2E8F0] dark:border-[#1E293B] transition-colors"
       >
         <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
           <path *ngIf="!isMobileMenuOpen" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
@@ -70,30 +69,30 @@
   </div>
 
   <!-- Mobile Menu -->
-  <div *ngIf="isMobileMenuOpen" class="md:hidden border-t border-gray-200 dark:border-dark-secondary bg-white dark:bg-dark-secondary">
+  <div *ngIf="isMobileMenuOpen" class="md:hidden border-t border-[#E2E8F0] dark:border-[#1E293B] bg-white dark:bg-[#020617]">
     <div class="container-custom py-4 space-y-4">
-      <a href="#projects" class="block text-sm font-medium text-gray-700 dark:text-gray-300 hover:text-accent-600 dark:hover:text-accent-400 transition-colors">
+      <a href="#projects" class="block text-sm font-medium text-[#475569] dark:text-[#94A3B8] hover:text-[#3B82F6] dark:hover:text-[#3B82F6] transition-colors">
         Proyectos
       </a>
-      <a href="#stack" class="block text-sm font-medium text-gray-700 dark:text-gray-300 hover:text-accent-600 dark:hover:text-accent-400 transition-colors">
+      <a href="#stack" class="block text-sm font-medium text-[#475569] dark:text-[#94A3B8] hover:text-[#3B82F6] dark:hover:text-[#3B82F6] transition-colors">
         Stack
       </a>
-      <a href="#about" class="block text-sm font-medium text-gray-700 dark:text-gray-300 hover:text-accent-600 dark:hover:text-accent-400 transition-colors">
+      <a href="#about" class="block text-sm font-medium text-[#475569] dark:text-[#94A3B8] hover:text-[#3B82F6] dark:hover:text-[#3B82F6] transition-colors">
         Sobre mí
       </a>
-      <a href="#services" class="block text-sm font-medium text-gray-700 dark:text-gray-300 hover:text-accent-600 dark:hover:text-accent-400 transition-colors">
+      <a href="#services" class="block text-sm font-medium text-[#475569] dark:text-[#94A3B8] hover:text-[#3B82F6] dark:hover:text-[#3B82F6] transition-colors">
         Servicios
       </a>
       
       <!-- Contact Links Mobile -->
-      <div class="pt-4 border-t border-gray-200 dark:border-gray-700 space-y-4">
-        <a href="mailto:manuelreeb@icloud.com" class="block text-sm font-medium text-gray-700 dark:text-gray-300 hover:text-accent-600 dark:hover:text-accent-400 transition-colors">
+      <div class="pt-4 border-t border-[#E2E8F0] dark:border-[#1E293B] space-y-4">
+        <a href="mailto:manuelreeb@icloud.com" class="block text-sm font-medium text-[#475569] dark:text-[#94A3B8] hover:text-[#3B82F6] dark:hover:text-[#3B82F6] transition-colors">
           Email
         </a>
-        <a href="https://github.com/reeb-dev" target="_blank" class="block text-sm font-medium text-gray-700 dark:text-gray-300 hover:text-accent-600 dark:hover:text-accent-400 transition-colors">
+        <a href="https://github.com/reeb-dev" target="_blank" class="block text-sm font-medium text-[#475569] dark:text-[#94A3B8] hover:text-[#3B82F6] dark:hover:text-[#3B82F6] transition-colors">
           GitHub
         </a>
-        <a href="https://www.linkedin.com/in/manuel-jesus-reeb/" target="_blank" class="block text-sm font-medium text-gray-700 dark:text-gray-300 hover:text-accent-600 dark:hover:text-accent-400 transition-colors">
+        <a href="https://www.linkedin.com/in/manuel-jesus-reeb/" target="_blank" class="block text-sm font-medium text-[#475569] dark:text-[#94A3B8] hover:text-[#3B82F6] dark:hover:text-[#3B82F6] transition-colors">
           LinkedIn
         </a>
       </div>
