@@ -3,9 +3,11 @@ import { CommonModule } from '@angular/common';
 
 interface Company {
   name: string;
-  logo: string;
+  logo?: string;
   years: string;
   description?: string;
+  initials?: string;
+  color?: string;
 }
 
 @Component({
@@ -18,13 +20,15 @@ export class CompaniesComponent {
   companies: Company[] = [
     {
       name: 'Indra',
-      logo: 'assets/screenshot-2025-02-05-130401.png',
+      initials: 'IN',
+      color: 'bg-blue-500',
       years: '2020 - 2024',
       description: 'Multinacional Fortune 500. Lideré proyectos empresariales con millones de usuarios.'
     },
     {
       name: 'SisKit',
-      logo: 'assets/unnamed.webp',
+      initials: 'SK',
+      color: 'bg-purple-500',
       years: '2018 - 2020',
       description: 'Startup de software. Arquitectura y desarrollo de plataforma core.'
     }
