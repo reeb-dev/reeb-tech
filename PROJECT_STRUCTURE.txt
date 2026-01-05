@@ -1,0 +1,32 @@
+.
+├── COMANDOS.sh
+├── Dockerfile
+├── PROJECT_STRUCTURE.txt
+├── README.md
+├── RESUMEN.md
+├── SETUP.md
+├── angular.json
+├── package-lock.json
+├── package.json
+├── postcss.config.js
+├── public
+│   └── favicon.ico
+├── src
+│   ├── app
+│   │   ├── app.config.ts
+│   │   ├── app.css
+│   │   ├── app.html
+│   │   ├── app.routes.ts
+│   │   ├── app.spec.ts
+│   │   ├── app.ts
+│   │   ├── components
+│   │   └── services
+│   ├── index.html
+│   ├── main.ts
+│   └── styles.css
+├── tailwind.config.js
+├── tsconfig.app.json
+├── tsconfig.json
+└── tsconfig.spec.json
+
+6 directories, 24 files
