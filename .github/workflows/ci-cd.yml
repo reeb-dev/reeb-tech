@@ -32,7 +32,7 @@ jobs:
       run: npm run lint 2>/dev/null || echo "No lint configuration"
 
     - name: Build project
-      run: npm run build -- --configuration production --base-href /portfolio-reeb/
+      run: npm run build -- --configuration production --base-href /reeb-tech/
 
     - name: Run tests
       run: npm run test:ci 2>/dev/null || echo "No test configuration"
