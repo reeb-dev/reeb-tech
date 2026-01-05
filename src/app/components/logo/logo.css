@@ -1,0 +1,29 @@
+.logo-svg {
+  width: 100%;
+  height: 100%;
+  transition: transform 0.3s ease;
+}
+
+.logo-svg:hover {
+  transform: scale(1.05);
+}
+
+.hex {
+  fill: none;
+  stroke: #E5E7EB;
+  stroke-width: 6;
+  transition: stroke 0.3s ease;
+}
+
+.logo-svg:hover .hex {
+  stroke: #60A5FA;
+}
+
+.letter {
+  fill: url(#metalGradient);
+  transition: opacity 0.3s ease;
+}
+
+.logo-svg:hover .letter {
+  opacity: 0.95;
+}

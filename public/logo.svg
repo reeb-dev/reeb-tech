@@ -1,0 +1,45 @@
+<svg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="metalGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#F3F4F6" />
+      <stop offset="50%" stop-color="#D1D5DB" />
+      <stop offset="100%" stop-color="#9CA3AF" />
+    </linearGradient>
+  </defs>
+  
+  <!-- Fondo hexagonal -->
+  <polygon
+    fill="#0B0D10"
+    points="100,15 170,55 170,145 100,185 30,145 30,55"
+  />
+  
+  <!-- Hexágono -->
+  <polygon
+    fill="none"
+    stroke="#E5E7EB"
+    stroke-width="6"
+    points="100,15 170,55 170,145 100,185 30,145 30,55"
+  />
+
+  <!-- Letra R -->
+  <path
+    fill="url(#metalGradient)"
+    d="
+      M75 55
+      H110
+      C135 55 145 65 145 85
+      C145 105 135 115 110 115
+      H95
+      V145
+      H75
+      Z
+
+      M95 75
+      V95
+      H110
+      C120 95 125 92 125 85
+      C125 78 120 75 110 75
+      Z
+    "
+  />
+</svg>
