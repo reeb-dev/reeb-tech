@@ -8,13 +8,13 @@
     </div>
 
     <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
-      <div *ngFor="let category of techStack" class="p-8 rounded-xl border border-gray-200 dark:border-gray-700 hover:border-bronze-400 dark:hover:border-bronze-600 transition-colors duration-200">
+      <div *ngFor="let category of techStack" class="p-8 rounded-xl border border-gray-200 dark:border-gray-700 hover:border-accent-400 dark:hover:border-accent-600 transition-colors duration-200">
         <div class="flex items-center gap-3 mb-6">
           <span class="text-4xl">{{ category.icon }}</span>
           <h3 class="heading-md text-gray-900 dark:text-white">{{ category.name }}</h3>
         </div>
         <div class="flex flex-wrap gap-2">
-          <span *ngFor="let tech of category.technologies" class="px-3 py-1 bg-gray-100 dark:bg-dark text-gray-700 dark:text-gray-300 text-sm rounded-full font-medium hover:bg-bronze-600 hover:text-white dark:hover:bg-bronze-600 transition-colors duration-200">
+          <span *ngFor="let tech of category.technologies" class="px-3 py-1 bg-gray-100 dark:bg-dark text-gray-700 dark:text-gray-300 text-sm rounded-full font-medium hover:bg-accent-600 hover:text-white dark:hover:bg-accent-600 transition-colors duration-200">
             {{ tech }}
           </span>
         </div>

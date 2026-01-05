@@ -10,7 +10,7 @@
     </div>
     
     <div class="flex flex-wrap justify-center gap-8">
-      <div *ngFor="let company of companies" class="group p-8 rounded-xl border border-gray-200 dark:border-gray-700 hover:border-bronze-500 dark:hover:border-bronze-600 hover:shadow-lg dark:hover:shadow-none transition-all duration-300 bg-gradient-to-br from-gray-50 to-white dark:from-dark dark:to-dark-secondary w-full md:w-80">
+      <div *ngFor="let company of companies" class="group p-8 rounded-xl border border-gray-200 dark:border-gray-700 hover:border-accent-500 dark:hover:border-accent-600 hover:shadow-lg dark:hover:shadow-none transition-all duration-300 bg-gradient-to-br from-gray-50 to-white dark:from-dark dark:to-dark-secondary w-full md:w-80">
         <!-- Logo -->
         <div class="mb-6 h-24 flex items-center justify-center bg-white dark:bg-dark rounded-lg p-4 group-hover:scale-105 transition-transform duration-300">
           <img 
@@ -25,7 +25,7 @@
         <div class="space-y-3">
           <h3 class="text-xl font-bold text-gray-900 dark:text-white">{{ company.name }}</h3>
           
-          <p class="text-sm font-semibold text-bronze-600 dark:text-bronze-400">
+          <p class="text-sm font-semibold text-accent-600 dark:text-accent-400">
             {{ company.years }}
           </p>
           
@@ -36,7 +36,7 @@
         
         <!-- Badge -->
         <div class="mt-6 pt-6 border-t border-gray-200 dark:border-gray-700">
-          <span class="inline-block px-3 py-1 bg-bronze-100 dark:bg-bronze-900 dark:bg-opacity-30 text-bronze-700 dark:text-bronze-400 text-xs font-semibold rounded-full">
+          <span class="inline-block px-3 py-1 bg-accent-100 dark:bg-accent-900 dark:bg-opacity-30 text-accent-700 dark:text-accent-400 text-xs font-semibold rounded-full">
             ✓ Experiencia
           </span>
         </div>
