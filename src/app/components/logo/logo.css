@@ -5,25 +5,26 @@
 }
 
 .logo-svg:hover {
-  transform: scale(1.05);
+  transform: scale(1.08);
 }
 
 .hex {
   fill: none;
   stroke: #E5E7EB;
-  stroke-width: 6;
-  transition: stroke 0.3s ease;
+  stroke-width: 8;
+  transition: stroke 0.3s ease, stroke-width 0.3s ease;
 }
 
 .logo-svg:hover .hex {
   stroke: #60A5FA;
+  stroke-width: 9;
 }
 
 .letter {
-  fill: url(#metalGradient);
   transition: opacity 0.3s ease;
 }
 
 .logo-svg:hover .letter {
-  opacity: 0.95;
+  opacity: 1;
+  filter: brightness(1.1);
 }
