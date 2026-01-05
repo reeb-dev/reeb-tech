@@ -46,6 +46,10 @@ jobs:
     needs: build-and-test
     runs-on: ubuntu-latest
     if: github.ref == 'refs/heads/main' && github.event_name == 'push'
+    permissions:
+      contents: read
+      pages: write
+      id-token: write
 
     steps:
     - uses: actions/checkout@v4
@@ -60,11 +64,13 @@ jobs:
       run: npm ci
 
     - name: Build project
-      run: npm run build
+      run: npm run build -- --configuration production --base-href /portfolio-reeb/
+
+    - name: Upload artifact
+      uses: actions/upload-pages-artifact@v2
+      with:
+        path: './dist/manuelreeb/browser'
 
     - name: Deploy to GitHub Pages
-      uses: peaceiris/actions-gh-pages@v3
-      with:
-        github_token: ${{ secrets.GITHUB_TOKEN }}
-        publish_dir: ./dist/manuelreeb/browser
-        cname: manuelreeb.dev
+      id: deployment
+      uses: actions/deploy-pages@v4
