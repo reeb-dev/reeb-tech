@@ -1,0 +1,64 @@
+<section id="projects" class="section-padding bg-gray-50 dark:bg-dark transition-colors duration-300">
+  <div class="container-custom">
+    <div class="max-w-2xl mx-auto text-center mb-16">
+      <h2 class="heading-lg mb-4 text-gray-900 dark:text-white">Proyectos Destacados</h2>
+      <p class="text-lg text-text-muted">
+        Selección de mis mejores trabajos. Cada uno representa un reto técnico resuelto e impacto medible en negocios reales.
+      </p>
+    </div>
+
+    <div class="space-y-12">
+      <div *ngFor="let project of projects; let last = last" class="group">
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
+          <!-- Imagen -->
+          <div [class.lg:order-2]="project === projects[1]" class="relative overflow-hidden rounded-xl">
+            <img [src]="project.image" [alt]="project.title" class="w-full h-96 object-cover group-hover:scale-105 transition-transform duration-300">
+          </div>
+
+          <!-- Contenido -->
+          <div [class.lg:order-1]="project === projects[1]">
+            <h3 class="heading-md mb-3 text-gray-900 dark:text-white">{{ project.title }}</h3>
+            <p class="text-gray-600 dark:text-gray-400 mb-6 leading-relaxed">{{ project.description }}</p>
+
+            <!-- Problema -->
+            <div class="mb-6 p-4 bg-red-50 dark:bg-red-900 dark:bg-opacity-20 rounded-lg border border-red-200 dark:border-red-800">
+              <h4 class="font-semibold text-red-900 dark:text-red-400 mb-2">El Problema</h4>
+              <p class="text-red-800 dark:text-red-300 text-sm">{{ project.problem }}</p>
+            </div>
+
+            <!-- Solución -->
+            <div class="mb-6 p-4 bg-blue-50 dark:bg-blue-900 dark:bg-opacity-20 rounded-lg border border-blue-200 dark:border-blue-800">
+              <h4 class="font-semibold text-blue-900 dark:text-blue-400 mb-2">La Solución</h4>
+              <p class="text-blue-800 dark:text-blue-300 text-sm">{{ project.solution }}</p>
+            </div>
+
+            <!-- Impacto -->
+            <div class="mb-8 p-4 bg-green-50 dark:bg-green-900 dark:bg-opacity-20 rounded-lg border border-green-200 dark:border-green-800">
+              <h4 class="font-semibold text-green-900 dark:text-green-400 mb-2">Impacto Medible</h4>
+              <p class="text-green-800 dark:text-green-300 text-sm">{{ project.impact }}</p>
+            </div>
+
+            <!-- Tech Stack -->
+            <div class="mb-8">
+              <h4 class="font-semibold text-gray-900 dark:text-white mb-3">Stack Técnico</h4>
+              <div class="flex flex-wrap gap-2">
+                <span *ngFor="let tech of project.tech" class="px-3 py-1 bg-indigo-100 dark:bg-indigo-900 dark:bg-opacity-50 text-indigo-900 dark:text-indigo-300 text-sm rounded-full font-medium">
+                  {{ tech }}
+                </span>
+              </div>
+            </div>
+
+            <!-- Botones -->
+            <div class="flex gap-4">
+              <a [href]="project.demoUrl" class="btn-primary">Ver Demo</a>
+              <a [href]="project.codeUrl" target="_blank" class="btn-secondary">Ver Código</a>
+            </div>
+          </div>
+        </div>
+
+        <!-- Divider -->
+        <div *ngIf="!last" class="mt-16 border-t border-gray-300 dark:border-gray-700"></div>
+      </div>
+    </div>
+  </div>
+</section>

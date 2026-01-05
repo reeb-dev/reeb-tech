@@ -1,0 +1,72 @@
+<nav class="fixed w-full top-0 z-50 bg-white dark:bg-dark border-b border-gray-200 dark:border-dark-secondary backdrop-blur-md bg-opacity-95 dark:bg-opacity-95 transition-colors duration-300">
+  <div class="container-custom py-4 flex items-center justify-between">
+    <!-- Logo -->
+    <a href="#hero" class="text-2xl font-bold bg-gradient-to-r from-indigo-600 to-purple-600 bg-clip-text text-transparent">
+      Manuel Reeb
+    </a>
+
+    <!-- Desktop Menu -->
+    <div class="hidden md:flex items-center gap-8">
+      <a href="#projects" class="text-sm font-medium text-gray-700 dark:text-gray-300 hover:text-indigo-600 dark:hover:text-indigo-400 transition-colors">
+        Proyectos
+      </a>
+      <a href="#stack" class="text-sm font-medium text-gray-700 dark:text-gray-300 hover:text-indigo-600 dark:hover:text-indigo-400 transition-colors">
+        Stack
+      </a>
+      <a href="#about" class="text-sm font-medium text-gray-700 dark:text-gray-300 hover:text-indigo-600 dark:hover:text-indigo-400 transition-colors">
+        Sobre mí
+      </a>
+      <a href="#services" class="text-sm font-medium text-gray-700 dark:text-gray-300 hover:text-indigo-600 dark:hover:text-indigo-400 transition-colors">
+        Servicios
+      </a>
+
+      <!-- Theme Toggle -->
+      <button
+        (click)="toggleTheme()"
+        class="p-2 rounded-lg bg-gray-100 dark:bg-dark-secondary hover:bg-gray-200 dark:hover:bg-dark-secondary transition-colors"
+        [attr.aria-label]="themeService.isDarkMode() ? 'Cambiar a modo claro' : 'Cambiar a modo oscuro'"
+      >
+        <span *ngIf="!themeService.isDarkMode()" class="text-xl">🌙</span>
+        <span *ngIf="themeService.isDarkMode()" class="text-xl">☀️</span>
+      </button>
+    </div>
+
+    <!-- Mobile Menu Button -->
+    <div class="md:hidden flex items-center gap-4">
+      <button
+        (click)="toggleTheme()"
+        class="p-2 rounded-lg bg-gray-100 dark:bg-dark-secondary hover:bg-gray-200 dark:hover:bg-dark-secondary transition-colors"
+      >
+        <span *ngIf="!themeService.isDarkMode()" class="text-xl">🌙</span>
+        <span *ngIf="themeService.isDarkMode()" class="text-xl">☀️</span>
+      </button>
+      <button
+        (click)="toggleMobileMenu()"
+        class="p-2 rounded-lg bg-gray-100 dark:bg-dark-secondary hover:bg-gray-200 dark:hover:bg-dark-secondary transition-colors"
+      >
+        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path *ngIf="!isMobileMenuOpen" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
+          <path *ngIf="isMobileMenuOpen" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+        </svg>
+      </button>
+    </div>
+  </div>
+
+  <!-- Mobile Menu -->
+  <div *ngIf="isMobileMenuOpen" class="md:hidden border-t border-gray-200 dark:border-dark-secondary bg-white dark:bg-dark-secondary">
+    <div class="container-custom py-4 space-y-4">
+      <a href="#projects" class="block text-sm font-medium text-gray-700 dark:text-gray-300 hover:text-indigo-600 dark:hover:text-indigo-400 transition-colors">
+        Proyectos
+      </a>
+      <a href="#stack" class="block text-sm font-medium text-gray-700 dark:text-gray-300 hover:text-indigo-600 dark:hover:text-indigo-400 transition-colors">
+        Stack
+      </a>
+      <a href="#about" class="block text-sm font-medium text-gray-700 dark:text-gray-300 hover:text-indigo-600 dark:hover:text-indigo-400 transition-colors">
+        Sobre mí
+      </a>
+      <a href="#services" class="block text-sm font-medium text-gray-700 dark:text-gray-300 hover:text-indigo-600 dark:hover:text-indigo-400 transition-colors">
+        Servicios
+      </a>
+    </div>
+  </div>
+</nav>
