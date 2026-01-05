@@ -7,45 +7,8 @@ on:
     branches: [ main, develop ]
 
 jobs:
-  build-and-test:
+  build-and-deploy:
     runs-on: ubuntu-latest
-
-    strategy:
-      matrix:
-        node-version: [20.x]
-
-    steps:
-    - uses: actions/checkout@v4
-
-    - name: Setup Node.js ${{ matrix.node-version }}
-      uses: actions/setup-node@v4
-      with:
-        node-version: ${{ matrix.node-version }}
-        cache: 'npm'
-
-    - name: Install dependencies
-      run: npm ci
-
-    - name: Lint code
-      run: npm run lint 2>/dev/null || echo "No lint configuration"
-
-    - name: Build project
-      run: npm run build
-
-    - name: Run tests
-      run: npm run test:ci 2>/dev/null || echo "No test configuration"
-
-    - name: Upload build artifacts
-      if: success()
-      uses: actions/upload-artifact@v4
-      with:
-        name: angular-build
-        path: dist/
-
-  deploy-to-github-pages:
-    needs: build-and-test
-    runs-on: ubuntu-latest
-    if: github.ref == 'refs/heads/main' && github.event_name == 'push'
     permissions:
       contents: read
       pages: write
@@ -63,14 +26,22 @@ jobs:
     - name: Install dependencies
       run: npm ci
 
+    - name: Lint code
+      run: npm run lint 2>/dev/null || echo "No lint configuration"
+
     - name: Build project
       run: npm run build -- --configuration production --base-href /portfolio-reeb/
 
-    - name: Upload artifact
-      uses: actions/upload-pages-artifact@v2
+    - name: Run tests
+      run: npm run test:ci 2>/dev/null || echo "No test configuration"
+
+    - name: Upload artifact to GitHub Pages
+      if: github.ref == 'refs/heads/main' && github.event_name == 'push'
+      uses: actions/upload-pages-artifact@v3
       with:
         path: './dist/manuelreeb/browser'
 
     - name: Deploy to GitHub Pages
+      if: github.ref == 'refs/heads/main' && github.event_name == 'push'
       id: deployment
       uses: actions/deploy-pages@v4
