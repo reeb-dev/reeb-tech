@@ -1,0 +1,402 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Automotores Reeb — Compra y venta de vehículos</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <header class="top">
+    <div class="top-inner">
+      <a class="logo" href="index.html">
+        <span class="logo-icon">🚗</span>
+        <div>AUTOMOTORES<small>Concesionaria multimarca</small></div>
+      </a>
+      <nav>
+        <a href="#catalogo">Catálogo</a>
+        <a href="#contacto">Contacto</a>
+        <a class="btn" href="panel.html">Panel Admin</a>
+      </nav>
+    </div>
+  </header>
+
+  <!-- Hero Section -->
+  <section class="hero-section">
+    <div class="wrap">
+      <h1>Encontrá tu próximo vehículo</h1>
+      <p>0km y usados seleccionados con financiación y permuta</p>
+      
+      <div class="search-box">
+        <div class="search-row">
+          <select id="filterMarca">
+            <option value="">Todas las marcas</option>
+          </select>
+          <select id="filterTipo">
+            <option value="">0km y usados</option>
+            <option value="0km">Solo 0km</option>
+            <option value="usado">Solo usados</option>
+          </select>
+          <select id="filterAno">
+            <option value="">Cualquier año</option>
+            <option value="2024">2024</option>
+            <option value="2023">2023</option>
+            <option value="2022">2022</option>
+            <option value="2021">2021</option>
+            <option value="2020-">2020 o anterior</option>
+          </select>
+          <select id="filterPrecio">
+            <option value="">Cualquier precio</option>
+            <option value="0-20000">Hasta USD 20.000</option>
+            <option value="20000-35000">USD 20.000 - 35.000</option>
+            <option value="35000-50000">USD 35.000 - 50.000</option>
+            <option value="50000-999999">Más de USD 50.000</option>
+          </select>
+          <select id="filterCombustible">
+            <option value="">Cualquier combustible</option>
+            <option value="nafta">Nafta</option>
+            <option value="diesel">Diésel</option>
+            <option value="gnc">GNC</option>
+          </select>
+          <button class="search-btn" onclick="applyFilters()">🔍 Buscar</button>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <main class="wrap" id="catalogo">
+    <!-- Results Header -->
+    <div class="results-header">
+      <div class="results-count">
+        <strong id="resultsCount">0</strong> vehículos encontrados
+      </div>
+      <select class="sort-select" id="sortSelect" onchange="applyFilters()">
+        <option value="destacados">Destacados primero</option>
+        <option value="precio-asc">Menor precio</option>
+        <option value="precio-desc">Mayor precio</option>
+        <option value="km-asc">Menor kilometraje</option>
+        <option value="recientes">Más recientes</option>
+      </select>
+    </div>
+
+    <!-- Vehicles Grid -->
+    <div class="vehicles-grid" id="catalog"></div>
+
+    <!-- Admin Section -->
+    <div class="admin-section" id="contacto">
+      <h3>¿Tenés una concesionaria?</h3>
+      <p>Accedé al panel de administración para gestionar tu stock de vehículos y ventas.</p>
+      <a class="btn" href="panel.html">Acceder al panel</a>
+    </div>
+  </main>
+
+  <!-- Vehicle Detail Modal -->
+  <div class="modal-overlay" id="modal">
+    <div class="modal">
+      <button class="modal-close" onclick="closeModal()">✕</button>
+      <div class="modal-gallery">
+        <img id="modalImage" src="" alt="">
+        <button class="nav-btn prev" onclick="prevImage()">‹</button>
+        <button class="nav-btn next" onclick="nextImage()">›</button>
+        <div class="counter" id="imageCounter">1 / 3</div>
+      </div>
+      <div class="modal-content" id="modalContent"></div>
+    </div>
+  </div>
+
+  <footer class="wrap">
+    <p>Automotores · demo de producto · datos ficticios con fines ilustrativos.</p>
+  </footer>
+
+  <script src="data.js"></script>
+  <script>
+    let vehicles = seed();
+    let currentFilters = {};
+    let currentVehicle = null;
+    let currentImageIndex = 0;
+
+    // Populate marca filter
+    function populateFilters() {
+      const marcasSet = new Set(vehicles.map(v => v.marca));
+      const marcasSelect = document.getElementById("filterMarca");
+      Array.from(marcasSet).sort().forEach(marca => {
+        const opt = document.createElement("option");
+        opt.value = marca;
+        opt.textContent = marca;
+        marcasSelect.appendChild(opt);
+      });
+    }
+
+    function applyFilters() {
+      const marca = document.getElementById("filterMarca").value;
+      const tipo = document.getElementById("filterTipo").value;
+      const ano = document.getElementById("filterAno").value;
+      const precio = document.getElementById("filterPrecio").value;
+      const combustible = document.getElementById("filterCombustible").value;
+      
+      currentFilters = { marca, tipo, ano, precio, combustible };
+      renderVehicles();
+    }
+
+    function filterVehicles() {
+      return vehicles.filter(v => {
+        // Solo mostrar disponibles y reservados en catálogo
+        if (v.status === "vendido") return false;
+        
+        if (currentFilters.marca && v.marca !== currentFilters.marca) return false;
+        if (currentFilters.tipo && v.tipo !== currentFilters.tipo) return false;
+        if (currentFilters.combustible && v.combustible !== currentFilters.combustible) return false;
+        
+        if (currentFilters.ano) {
+          if (currentFilters.ano === "2020-") {
+            if (v.ano > 2020) return false;
+          } else {
+            if (v.ano !== parseInt(currentFilters.ano)) return false;
+          }
+        }
+        
+        if (currentFilters.precio) {
+          const [min, max] = currentFilters.precio.split("-").map(Number);
+          if (v.precioUSD < min || v.precioUSD > max) return false;
+        }
+        
+        return true;
+      });
+    }
+
+    function sortVehicles(list) {
+      const sortBy = document.getElementById("sortSelect").value;
+      
+      return [...list].sort((a, b) => {
+        switch(sortBy) {
+          case "precio-asc": return a.precioUSD - b.precioUSD;
+          case "precio-desc": return b.precioUSD - a.precioUSD;
+          case "km-asc": return a.km - b.km;
+          case "recientes": return a.diasPublicado - b.diasPublicado;
+          default: // destacados
+            if (a.destacado && !b.destacado) return -1;
+            if (!a.destacado && b.destacado) return 1;
+            return b.vistas - a.vistas;
+        }
+      });
+    }
+
+    function renderVehicles() {
+      const filtered = sortVehicles(filterVehicles());
+      document.getElementById("resultsCount").textContent = filtered.length;
+
+      if (filtered.length === 0) {
+        document.getElementById("catalog").innerHTML = `
+          <div class="no-results" style="grid-column: 1/-1;">
+            <h3>No encontramos vehículos</h3>
+            <p>Probá ajustando los filtros de búsqueda</p>
+          </div>
+        `;
+        return;
+      }
+
+      document.getElementById("catalog").innerHTML = filtered.map(v => `
+        <article class="vehicle-card" onclick="openModal('${v.id}')">
+          <div class="image">
+            <img src="${v.imagenes[0]}" alt="${esc(v.marca)} ${esc(v.modelo)}">
+            <div class="badges">
+              <span class="badge tipo-${v.tipo}">${tipoLabel(v.tipo)}</span>
+              ${v.destacado ? '<span class="badge destacado">⭐ Destacado</span>' : ''}
+              ${v.status === 'reservado' ? '<span class="badge reservado">Reservado</span>' : ''}
+            </div>
+            <button class="favorite" onclick="event.stopPropagation()">♡</button>
+            ${v.imagenes.length > 1 ? `<div class="gallery-count">📷 ${v.imagenes.length}</div>` : ''}
+          </div>
+          <div class="body">
+            <div class="type-year">${esc(v.marca)} · ${v.ano}</div>
+            <h3>${esc(v.modelo)}</h3>
+            <div class="version">${esc(v.version)}</div>
+            <div class="price-box">
+              <span class="price">${formatPrecioUSD(v.precioUSD)}</span>
+              <span class="price-ars">${formatPrecioARS(v.precioUSD)}</span>
+            </div>
+            <div class="km">📍 ${formatKm(v.km)}</div>
+            <div class="specs">
+              <span>⛽ ${combustibleLabel(v.combustible)}</span>
+              <span>⚙️ ${transmisionLabel(v.transmision)}</span>
+              <span>🚪 ${v.puertas} puertas</span>
+            </div>
+            <div class="badges" style="margin-top: 12px; padding-top: 12px; border-top: 1px solid var(--line);">
+              ${v.financiacion ? '<span class="badge financiacion">💳 Financiación</span>' : ''}
+              ${v.permuta ? '<span class="badge permuta">🔄 Permuta</span>' : ''}
+            </div>
+            <div class="stats">
+              <span>👁️ ${v.vistas} vistas</span>
+              <span>💬 ${v.consultas} consultas</span>
+            </div>
+          </div>
+        </article>
+      `).join("");
+    }
+
+    function openModal(id) {
+      currentVehicle = vehicles.find(v => v.id === id);
+      currentImageIndex = 0;
+      
+      if (!currentVehicle) return;
+      
+      updateModalImage();
+      
+      const v = currentVehicle;
+      
+      document.getElementById("modalContent").innerHTML = `
+        <div class="badges">
+          <span class="badge tipo-${v.tipo}">${tipoLabel(v.tipo)}</span>
+          ${v.destacado ? '<span class="badge destacado">⭐ Destacado</span>' : ''}
+          ${v.financiacion ? '<span class="badge financiacion">💳 Financiación</span>' : ''}
+          ${v.permuta ? '<span class="badge permuta">🔄 Permuta</span>' : ''}
+          ${v.status === 'reservado' ? '<span class="badge reservado">Reservado</span>' : ''}
+        </div>
+        <h2>${esc(v.marca)} ${esc(v.modelo)}</h2>
+        <div class="version-full">${esc(v.version)} · ${v.ano}</div>
+        
+        <div class="modal-price-box">
+          <div class="price">${formatPrecioUSD(v.precioUSD)}</div>
+          <div class="price-ars">${formatPrecioARS(v.precioUSD)}</div>
+        </div>
+
+        <div class="modal-specs">
+          <div class="spec">
+            <div class="icon">📍</div>
+            <div class="value">${v.km === 0 ? '0' : v.km.toLocaleString('es-AR')}</div>
+            <div class="label">Kilómetros</div>
+          </div>
+          <div class="spec">
+            <div class="icon">⛽</div>
+            <div class="value">${combustibleLabel(v.combustible)}</div>
+            <div class="label">Combustible</div>
+          </div>
+          <div class="spec">
+            <div class="icon">⚙️</div>
+            <div class="value">${transmisionLabel(v.transmision)}</div>
+            <div class="label">Transmisión</div>
+          </div>
+          <div class="spec">
+            <div class="icon">🎨</div>
+            <div class="value">${esc(v.color)}</div>
+            <div class="label">Color</div>
+          </div>
+        </div>
+
+        <div class="modal-description">
+          <h4>Descripción</h4>
+          <p>${esc(v.descripcion)}</p>
+        </div>
+
+        <div class="modal-ficha">
+          <h4>Ficha técnica</h4>
+          <div class="ficha-grid">
+            <div class="ficha-item">
+              <div class="label">Marca</div>
+              <div class="value">${esc(v.marca)}</div>
+            </div>
+            <div class="ficha-item">
+              <div class="label">Modelo</div>
+              <div class="value">${esc(v.modelo)}</div>
+            </div>
+            <div class="ficha-item">
+              <div class="label">Versión</div>
+              <div class="value">${esc(v.version)}</div>
+            </div>
+            <div class="ficha-item">
+              <div class="label">Año</div>
+              <div class="value">${v.ano}</div>
+            </div>
+            <div class="ficha-item">
+              <div class="label">Motor</div>
+              <div class="value">${esc(v.motor)}</div>
+            </div>
+            <div class="ficha-item">
+              <div class="label">Puertas</div>
+              <div class="value">${v.puertas}</div>
+            </div>
+            ${v.patente ? `
+              <div class="ficha-item">
+                <div class="label">Patente</div>
+                <div class="value">${esc(v.patente)}</div>
+              </div>
+            ` : ''}
+          </div>
+        </div>
+
+        <div class="modal-stats">
+          <div class="stat">
+            <div class="value">${v.vistas}</div>
+            <div class="label">Vistas</div>
+          </div>
+          <div class="stat">
+            <div class="value">${v.consultas}</div>
+            <div class="label">Consultas</div>
+          </div>
+          <div class="stat">
+            <div class="value">${v.diasPublicado}</div>
+            <div class="label">Días publicado</div>
+          </div>
+        </div>
+
+        <div class="modal-contact">
+          <div>
+            <h4>¿Te interesa este vehículo?</h4>
+            <p>Contactanos para más información o coordinar una visita</p>
+          </div>
+          <div class="btns">
+            <a href="#" class="btn-whatsapp">📱 WhatsApp</a>
+            <a href="#" class="btn-call">📞 Llamar</a>
+          </div>
+        </div>
+      `;
+      
+      document.getElementById("modal").classList.add("open");
+      document.body.style.overflow = "hidden";
+    }
+
+    function closeModal() {
+      document.getElementById("modal").classList.remove("open");
+      document.body.style.overflow = "";
+      currentVehicle = null;
+    }
+
+    function updateModalImage() {
+      if (!currentVehicle) return;
+      const imgs = currentVehicle.imagenes;
+      document.getElementById("modalImage").src = imgs[currentImageIndex];
+      document.getElementById("imageCounter").textContent = `${currentImageIndex + 1} / ${imgs.length}`;
+    }
+
+    function nextImage() {
+      if (!currentVehicle) return;
+      const imgs = currentVehicle.imagenes;
+      currentImageIndex = (currentImageIndex + 1) % imgs.length;
+      updateModalImage();
+    }
+
+    function prevImage() {
+      if (!currentVehicle) return;
+      const imgs = currentVehicle.imagenes;
+      currentImageIndex = (currentImageIndex - 1 + imgs.length) % imgs.length;
+      updateModalImage();
+    }
+
+    // Keyboard navigation
+    document.addEventListener("keydown", (e) => {
+      if (e.key === "Escape") closeModal();
+      if (e.key === "ArrowRight") nextImage();
+      if (e.key === "ArrowLeft") prevImage();
+    });
+
+    // Close modal on overlay click
+    document.getElementById("modal").addEventListener("click", (e) => {
+      if (e.target.id === "modal") closeModal();
+    });
+
+    // Initial render
+    populateFilters();
+    renderVehicles();
+  </script>
+</body>
+</html>

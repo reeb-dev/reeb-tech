@@ -1,0 +1,99 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Panel · Automotores</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <div class="app">
+    <header class="top">
+      <div class="top-inner">
+        <a class="logo" href="index.html">
+          <span class="logo-icon">🚗</span>
+          <div>AUTOMOTORES<small>Gestión de stock · demo</small></div>
+        </a>
+        <nav>
+          <a href="index.html">Ver catálogo</a>
+          <button class="btn" id="open-create" type="button">+ Nuevo vehículo</button>
+        </nav>
+      </div>
+    </header>
+
+    <div class="toolbar">
+      <div>
+        <p class="eyebrow">Datos de ejemplo</p>
+        <h1>Stock de vehículos</h1>
+      </div>
+    </div>
+
+    <div class="stats" id="stats"></div>
+
+    <form class="create" id="create">
+      <input name="codigo" placeholder="Código (ej: AUT-013)" required>
+      <select name="marca" required>
+        <option value="">Marca</option>
+        <option value="Toyota">Toyota</option>
+        <option value="Volkswagen">Volkswagen</option>
+        <option value="Ford">Ford</option>
+        <option value="Fiat">Fiat</option>
+        <option value="Chevrolet">Chevrolet</option>
+        <option value="Renault">Renault</option>
+        <option value="Peugeot">Peugeot</option>
+        <option value="Jeep">Jeep</option>
+        <option value="Honda">Honda</option>
+        <option value="Nissan">Nissan</option>
+        <option value="Hyundai">Hyundai</option>
+        <option value="Kia">Kia</option>
+      </select>
+      <input name="modelo" placeholder="Modelo" required>
+      <input name="version" placeholder="Versión">
+      <input name="ano" type="number" placeholder="Año" min="1990" max="2025" required>
+      <select name="tipo">
+        <option value="usado">Usado</option>
+        <option value="0km">0 Km</option>
+      </select>
+      <input name="precioUSD" type="number" placeholder="Precio USD" required>
+      <input name="km" type="number" placeholder="Kilómetros" value="0">
+      <select name="combustible">
+        <option value="nafta">Nafta</option>
+        <option value="diesel">Diésel</option>
+        <option value="gnc">GNC</option>
+        <option value="hibrido">Híbrido</option>
+        <option value="electrico">Eléctrico</option>
+      </select>
+      <select name="transmision">
+        <option value="manual">Manual</option>
+        <option value="automatica">Automática</option>
+        <option value="cvt">CVT</option>
+      </select>
+      <input name="color" placeholder="Color">
+      <input name="patente" placeholder="Patente (usados)">
+      <button class="btn-panel" type="submit">Agregar vehículo</button>
+    </form>
+
+    <div class="workspace">
+      <section class="list">
+        <table>
+          <thead>
+            <tr>
+              <th>Código</th>
+              <th>Vehículo</th>
+              <th>Tipo</th>
+              <th>Año</th>
+              <th class="amount">Precio USD</th>
+              <th>Estado</th>
+            </tr>
+          </thead>
+          <tbody id="rows"></tbody>
+        </table>
+      </section>
+      <aside class="detail" id="detail"></aside>
+    </div>
+  </div>
+
+  <script src="data.js"></script>
+  <script src="panel.js"></script>
+</body>
+</html>
