@@ -13,6 +13,11 @@
   --success: #22c55e;
   --warning: #f59e0b;
   --danger: #ef4444;
+  
+  /* Brand colors (defaults, overridden by JS) */
+  --brand-primary: #0f172a;
+  --brand-secondary: #ffffff;
+  --brand-accent: #1e293b;
 }
 * { box-sizing: border-box; }
 body {
@@ -81,7 +86,7 @@ a { color: inherit; }
 /* Hero */
 .hero-section {
   background: linear-gradient(135deg, var(--azul) 0%, var(--azul-light) 100%);
-  padding: 48px 0;
+  padding: 48px 0 32px;
   color: white;
 }
 .hero-section h1 { 
@@ -95,12 +100,69 @@ a { color: inherit; }
   font-size: 18px;
 }
 
+/* === BRANDS SECTION === */
+.brands-section {
+  padding: 24px 0 0;
+}
+.brands-section h3 {
+  font-size: 14px;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  opacity: 0.7;
+  margin: 0 0 16px;
+  font-weight: 500;
+}
+.brands-grid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  justify-content: center;
+}
+.brand-chip {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 16px;
+  background: rgba(255,255,255,0.1);
+  border: 1px solid rgba(255,255,255,0.2);
+  border-radius: 30px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  color: white;
+  font-size: 14px;
+  font-weight: 500;
+}
+.brand-chip:hover {
+  background: rgba(255,255,255,0.2);
+  transform: translateY(-2px);
+}
+.brand-chip.active {
+  background: white;
+  color: var(--azul);
+  border-color: white;
+}
+.brand-chip .brand-logo {
+  width: 24px;
+  height: 24px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.brand-chip .brand-logo svg {
+  width: 100%;
+  height: 100%;
+}
+.brand-chip.active .brand-logo svg {
+  color: var(--azul);
+}
+
 /* Search Box */
 .search-box {
   background: white;
   border-radius: 16px;
   padding: 24px;
   box-shadow: 0 8px 40px rgba(0,0,0,0.2);
+  margin-top: 24px;
 }
 .search-row {
   display: grid;
@@ -154,6 +216,51 @@ a { color: inherit; }
   cursor: pointer;
 }
 
+/* Active brand filter indicator */
+.active-brand-filter {
+  display: none;
+  align-items: center;
+  gap: 12px;
+  padding: 12px 20px;
+  background: linear-gradient(135deg, var(--brand-primary) 0%, var(--brand-accent) 100%);
+  color: var(--brand-secondary);
+  border-radius: 12px;
+  margin-bottom: 20px;
+}
+.active-brand-filter.show {
+  display: flex;
+}
+.active-brand-filter .brand-logo-large {
+  width: 40px;
+  height: 40px;
+}
+.active-brand-filter .brand-logo-large svg {
+  width: 100%;
+  height: 100%;
+}
+.active-brand-filter .brand-info h4 {
+  margin: 0;
+  font-size: 18px;
+}
+.active-brand-filter .brand-info span {
+  font-size: 13px;
+  opacity: 0.9;
+}
+.active-brand-filter .clear-filter {
+  margin-left: auto;
+  background: rgba(255,255,255,0.2);
+  border: none;
+  color: inherit;
+  padding: 8px 16px;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 13px;
+  transition: background 0.2s;
+}
+.active-brand-filter .clear-filter:hover {
+  background: rgba(255,255,255,0.3);
+}
+
 /* Vehicle Cards */
 .vehicles-grid {
   display: grid;
@@ -168,11 +275,23 @@ a { color: inherit; }
   box-shadow: 0 2px 16px rgba(0,0,0,0.08);
   transition: transform 0.3s, box-shadow 0.3s;
   cursor: pointer;
+  position: relative;
 }
 .vehicle-card:hover {
   transform: translateY(-6px);
   box-shadow: 0 16px 48px rgba(0,0,0,0.15);
 }
+
+/* Brand stripe on card */
+.vehicle-card .brand-stripe {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 4px;
+  background: var(--brand-primary);
+}
+
 .vehicle-card .image {
   position: relative;
   height: 220px;
@@ -186,6 +305,27 @@ a { color: inherit; }
   transition: transform 0.4s;
 }
 .vehicle-card:hover .image img { transform: scale(1.05); }
+
+/* Brand logo on card */
+.vehicle-card .card-brand-logo {
+  position: absolute;
+  bottom: 12px;
+  left: 12px;
+  width: 36px;
+  height: 36px;
+  background: white;
+  border-radius: 8px;
+  padding: 6px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.vehicle-card .card-brand-logo svg {
+  width: 100%;
+  height: 100%;
+  color: var(--brand-primary);
+}
 
 .vehicle-card .badges {
   position: absolute;
@@ -209,6 +349,7 @@ a { color: inherit; }
 .badge.financiacion { background: var(--acento); color: white; }
 .badge.permuta { background: #8b5cf6; color: white; }
 .badge.reservado { background: var(--warning); color: white; }
+.badge.segmento { background: rgba(0,0,0,0.6); color: white; }
 
 .vehicle-card .favorite {
   position: absolute;
@@ -241,11 +382,21 @@ a { color: inherit; }
 .vehicle-card .body { padding: 20px; }
 .vehicle-card .type-year {
   font-size: 12px;
-  color: var(--acento);
+  color: var(--brand-text, var(--brand-primary));
   margin-bottom: 4px;
   text-transform: uppercase;
   letter-spacing: 0.5px;
   font-weight: 600;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.vehicle-card .segmento-tag {
+  background: var(--bg);
+  padding: 2px 8px;
+  border-radius: 4px;
+  font-size: 10px;
+  color: var(--muted);
 }
 .vehicle-card h3 {
   margin: 0 0 4px;
@@ -376,6 +527,39 @@ a { color: inherit; }
   font-size: 14px;
   font-weight: 500;
 }
+
+/* Modal brand header */
+.modal-brand-header {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 16px 28px;
+  background: linear-gradient(135deg, var(--brand-primary) 0%, var(--brand-accent) 100%);
+  color: var(--brand-secondary);
+}
+.modal-brand-header .brand-logo-modal {
+  width: 48px;
+  height: 48px;
+  background: rgba(255,255,255,0.2);
+  border-radius: 10px;
+  padding: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.modal-brand-header .brand-logo-modal svg {
+  width: 100%;
+  height: 100%;
+}
+.modal-brand-header h3 {
+  margin: 0;
+  font-size: 20px;
+}
+.modal-brand-header span {
+  font-size: 13px;
+  opacity: 0.9;
+}
+
 .modal-content { padding: 28px; }
 .modal-content .badges { display: flex; gap: 8px; margin-bottom: 14px; flex-wrap: wrap; }
 .modal-content h2 { margin: 0 0 6px; font-size: 28px; color: var(--azul); }
@@ -702,9 +886,13 @@ footer { padding: 36px 0 48px; color: var(--muted); font-size: 14px; }
   .top-inner, .toolbar { flex-direction: column; align-items: start; }
   h1 { font-size: 32px; }
   .search-row { grid-template-columns: 1fr 1fr; }
+  .brands-grid { gap: 8px; }
+  .brand-chip { padding: 8px 12px; font-size: 13px; }
 }
 
 @media (max-width: 640px) {
   .search-row { grid-template-columns: 1fr; }
   .modal-specs, .ficha-grid { grid-template-columns: 1fr 1fr; }
+  .brand-chip .brand-name { display: none; }
+  .brand-chip { padding: 10px; }
 }

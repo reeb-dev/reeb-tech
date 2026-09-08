@@ -26,18 +26,35 @@
     <div class="wrap">
       <h1>Encontrá tu próximo vehículo</h1>
       <p>0km y usados seleccionados con financiación y permuta</p>
+
+      <div class="brands-section">
+        <h3>Marcas que trabajamos</h3>
+        <div class="brands-grid" id="brandsGrid"></div>
+      </div>
       
       <div class="search-box">
         <div class="search-row">
-          <select id="filterMarca">
+          <select id="filterMarca" onchange="applyFilters()">
             <option value="">Todas las marcas</option>
           </select>
-          <select id="filterTipo">
+          <select id="filterSegmento" onchange="applyFilters()">
+            <option value="">Todos los segmentos</option>
+            <option value="auto">Auto</option>
+            <option value="suv">SUV</option>
+            <option value="pickup">Pickup</option>
+          </select>
+          <select id="filterTipo" onchange="applyFilters()">
             <option value="">0km y usados</option>
             <option value="0km">Solo 0km</option>
             <option value="usado">Solo usados</option>
           </select>
-          <select id="filterAno">
+          <select id="filterTransmision" onchange="applyFilters()">
+            <option value="">Cualquier transmisión</option>
+            <option value="manual">Manual</option>
+            <option value="automatica">Automática</option>
+            <option value="cvt">CVT</option>
+          </select>
+          <select id="filterAno" onchange="applyFilters()">
             <option value="">Cualquier año</option>
             <option value="2024">2024</option>
             <option value="2023">2023</option>
@@ -45,18 +62,18 @@
             <option value="2021">2021</option>
             <option value="2020-">2020 o anterior</option>
           </select>
-          <select id="filterPrecio">
+          <select id="filterPrecio" onchange="applyFilters()">
             <option value="">Cualquier precio</option>
             <option value="0-20000">Hasta USD 20.000</option>
             <option value="20000-35000">USD 20.000 - 35.000</option>
             <option value="35000-50000">USD 35.000 - 50.000</option>
             <option value="50000-999999">Más de USD 50.000</option>
           </select>
-          <select id="filterCombustible">
+          <select id="filterCombustible" onchange="applyFilters()">
             <option value="">Cualquier combustible</option>
             <option value="nafta">Nafta</option>
             <option value="diesel">Diésel</option>
-            <option value="gnc">GNC</option>
+            <option value="hibrido">Híbrido</option>
           </select>
           <button class="search-btn" onclick="applyFilters()">🔍 Buscar</button>
         </div>
@@ -72,12 +89,15 @@
       </div>
       <select class="sort-select" id="sortSelect" onchange="applyFilters()">
         <option value="destacados">Destacados primero</option>
+        <option value="marca-az">Marca A-Z</option>
         <option value="precio-asc">Menor precio</option>
         <option value="precio-desc">Mayor precio</option>
         <option value="km-asc">Menor kilometraje</option>
         <option value="recientes">Más recientes</option>
       </select>
     </div>
+
+    <div class="active-brand-filter" id="activeBrandFilter"></div>
 
     <!-- Vehicles Grid -->
     <div class="vehicles-grid" id="catalog"></div>
@@ -115,36 +135,86 @@
     let currentVehicle = null;
     let currentImageIndex = 0;
 
-    // Populate marca filter
     function populateFilters() {
       const marcasSet = new Set(vehicles.map(v => v.marca));
       const marcasSelect = document.getElementById("filterMarca");
-      Array.from(marcasSet).sort().forEach(marca => {
+      Array.from(marcasSet).sort((a, b) => a.localeCompare(b, "es")).forEach(marca => {
         const opt = document.createElement("option");
         opt.value = marca;
         opt.textContent = marca;
         marcasSelect.appendChild(opt);
       });
+      renderBrands();
+    }
+
+    function renderBrands() {
+      const active = currentFilters.marca || "";
+      document.getElementById("brandsGrid").innerHTML = MARCAS.filter(marca =>
+        vehicles.some(v => v.marca === marca && v.status !== "vendido")
+      ).map(marca => `
+        <button type="button" class="brand-chip ${active === marca ? "active" : ""}" onclick="filterByBrandChip('${esc(marca)}')">
+          <span class="brand-logo">${getMarcaLogo(marca)}</span>
+          <span class="brand-name">${esc(marca)}</span>
+        </button>
+      `).join("");
+    }
+
+    function filterByBrandChip(marca) {
+      const select = document.getElementById("filterMarca");
+      select.value = select.value === marca ? "" : marca;
+      applyFilters();
+    }
+
+    function clearBrandFilter() {
+      document.getElementById("filterMarca").value = "";
+      applyFilters();
+    }
+
+    function updateActiveBrandFilter(count) {
+      const el = document.getElementById("activeBrandFilter");
+      const marca = currentFilters.marca;
+      if (!marca) {
+        el.classList.remove("show");
+        el.innerHTML = "";
+        return;
+      }
+      const colors = getMarcaColor(marca);
+      el.style.setProperty("--brand-primary", colors.primary);
+      el.style.setProperty("--brand-accent", colors.accent);
+      el.style.setProperty("--brand-secondary", colors.secondary);
+      el.classList.add("show");
+      el.innerHTML = `
+        <div class="brand-logo-large">${getMarcaLogo(marca)}</div>
+        <div class="brand-info">
+          <h4>${esc(marca)}</h4>
+          <span>${count} vehículos</span>
+        </div>
+        <button type="button" class="clear-filter" onclick="clearBrandFilter()">Ver todas las marcas</button>
+      `;
     }
 
     function applyFilters() {
       const marca = document.getElementById("filterMarca").value;
+      const segmento = document.getElementById("filterSegmento").value;
       const tipo = document.getElementById("filterTipo").value;
+      const transmision = document.getElementById("filterTransmision").value;
       const ano = document.getElementById("filterAno").value;
       const precio = document.getElementById("filterPrecio").value;
       const combustible = document.getElementById("filterCombustible").value;
       
-      currentFilters = { marca, tipo, ano, precio, combustible };
+      currentFilters = { marca, segmento, tipo, transmision, ano, precio, combustible };
+      renderBrands();
       renderVehicles();
     }
 
     function filterVehicles() {
       return vehicles.filter(v => {
-        // Solo mostrar disponibles y reservados en catálogo
         if (v.status === "vendido") return false;
         
         if (currentFilters.marca && v.marca !== currentFilters.marca) return false;
+        if (currentFilters.segmento && v.segmento !== currentFilters.segmento) return false;
         if (currentFilters.tipo && v.tipo !== currentFilters.tipo) return false;
+        if (currentFilters.transmision && v.transmision !== currentFilters.transmision) return false;
         if (currentFilters.combustible && v.combustible !== currentFilters.combustible) return false;
         
         if (currentFilters.ano) {
@@ -169,11 +239,15 @@
       
       return [...list].sort((a, b) => {
         switch(sortBy) {
+          case "marca-az": {
+            const marca = a.marca.localeCompare(b.marca, "es");
+            return marca !== 0 ? marca : a.modelo.localeCompare(b.modelo, "es");
+          }
           case "precio-asc": return a.precioUSD - b.precioUSD;
           case "precio-desc": return b.precioUSD - a.precioUSD;
           case "km-asc": return a.km - b.km;
           case "recientes": return a.diasPublicado - b.diasPublicado;
-          default: // destacados
+          default:
             if (a.destacado && !b.destacado) return -1;
             if (!a.destacado && b.destacado) return 1;
             return b.vistas - a.vistas;
@@ -184,6 +258,7 @@
     function renderVehicles() {
       const filtered = sortVehicles(filterVehicles());
       document.getElementById("resultsCount").textContent = filtered.length;
+      updateActiveBrandFilter(filtered.length);
 
       if (filtered.length === 0) {
         document.getElementById("catalog").innerHTML = `
@@ -195,20 +270,25 @@
         return;
       }
 
-      document.getElementById("catalog").innerHTML = filtered.map(v => `
-        <article class="vehicle-card" onclick="openModal('${v.id}')">
+      document.getElementById("catalog").innerHTML = filtered.map(v => {
+        const colors = getMarcaColor(v.marca);
+        return `
+        <article class="vehicle-card" onclick="openModal('${v.id}')" style="--brand-primary:${colors.primary};--brand-accent:${colors.accent};--brand-secondary:${colors.secondary};--brand-text:${colors.text || colors.primary}">
+          <div class="brand-stripe"></div>
           <div class="image">
             <img src="${v.imagenes[0]}" alt="${esc(v.marca)} ${esc(v.modelo)}">
             <div class="badges">
               <span class="badge tipo-${v.tipo}">${tipoLabel(v.tipo)}</span>
+              <span class="badge segmento">${segmentoLabel(v.segmento)}</span>
               ${v.destacado ? '<span class="badge destacado">⭐ Destacado</span>' : ''}
               ${v.status === 'reservado' ? '<span class="badge reservado">Reservado</span>' : ''}
             </div>
             <button class="favorite" onclick="event.stopPropagation()">♡</button>
+            <div class="card-brand-logo">${getMarcaLogo(v.marca)}</div>
             ${v.imagenes.length > 1 ? `<div class="gallery-count">📷 ${v.imagenes.length}</div>` : ''}
           </div>
           <div class="body">
-            <div class="type-year">${esc(v.marca)} · ${v.ano}</div>
+            <div class="type-year">${esc(v.marca)} · ${v.ano}<span class="segmento-tag">${segmentoLabel(v.segmento)}</span></div>
             <h3>${esc(v.modelo)}</h3>
             <div class="version">${esc(v.version)}</div>
             <div class="price-box">
@@ -221,7 +301,7 @@
               <span>⚙️ ${transmisionLabel(v.transmision)}</span>
               <span>🚪 ${v.puertas} puertas</span>
             </div>
-            <div class="badges" style="margin-top: 12px; padding-top: 12px; border-top: 1px solid var(--line);">
+            <div class="badges" style="margin-top: 12px; padding-top: 12px; border-top: 1px solid var(--line); position: static;">
               ${v.financiacion ? '<span class="badge financiacion">💳 Financiación</span>' : ''}
               ${v.permuta ? '<span class="badge permuta">🔄 Permuta</span>' : ''}
             </div>
@@ -231,7 +311,8 @@
             </div>
           </div>
         </article>
-      `).join("");
+      `;
+      }).join("");
     }
 
     function openModal(id) {
@@ -244,9 +325,23 @@
       
       const v = currentVehicle;
       
+      const colors = getMarcaColor(v.marca);
+      const modal = document.querySelector(".modal");
+      modal.style.setProperty("--brand-primary", colors.primary);
+      modal.style.setProperty("--brand-accent", colors.accent);
+      modal.style.setProperty("--brand-secondary", colors.secondary);
+
       document.getElementById("modalContent").innerHTML = `
+        <div class="modal-brand-header" style="margin: -28px -28px 20px;">
+          <div class="brand-logo-modal">${getMarcaLogo(v.marca)}</div>
+          <div>
+            <h3>${esc(v.marca)}</h3>
+            <span>${segmentoLabel(v.segmento)} · ${tipoLabel(v.tipo)}</span>
+          </div>
+        </div>
         <div class="badges">
           <span class="badge tipo-${v.tipo}">${tipoLabel(v.tipo)}</span>
+          <span class="badge segmento">${segmentoLabel(v.segmento)}</span>
           ${v.destacado ? '<span class="badge destacado">⭐ Destacado</span>' : ''}
           ${v.financiacion ? '<span class="badge financiacion">💳 Financiación</span>' : ''}
           ${v.permuta ? '<span class="badge permuta">🔄 Permuta</span>' : ''}
@@ -306,6 +401,10 @@
             <div class="ficha-item">
               <div class="label">Año</div>
               <div class="value">${v.ano}</div>
+            </div>
+            <div class="ficha-item">
+              <div class="label">Segmento</div>
+              <div class="value">${segmentoLabel(v.segmento)}</div>
             </div>
             <div class="ficha-item">
               <div class="label">Motor</div>
