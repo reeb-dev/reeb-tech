@@ -114,7 +114,7 @@ function render() {
     <tr class="row ${item.id === selected ? "on" : ""}" data-id="${esc(item.id)}">
       <td>${thumbHtml(item)}</td>
       <td>${esc(item.codigo)}</td>
-      <td>${esc(item.nombre)}${item.autor ? `<br><small style="color:#666">${esc(item.autor)}</small>` : ""}</td>
+      <td>${esc(item.nombre)}${item.autor ? `<br><small style="color:#666">${esc(item.autor)}</small>` : ""}${item.descripcion ? `<br><small class="row-desc">${esc(item.descripcion)}</small>` : ""}</td>
       <td>${esc(catLabel(item.categoria))}</td>
       <td class="amount">${esc(money(item.precio))}</td>
       <td class="amount">${item.status === "pedido" ? "—" : item.stock}</td>
@@ -138,6 +138,7 @@ function render() {
     <p class="eyebrow">${esc(item.codigo)} · ${esc(catLabel(item.categoria))}</p>
     <h2>${esc(item.nombre)}</h2>
     ${item.autor ? `<p style="color:var(--muted);font-size:14px;">${esc(item.autor)} · ${esc(item.editorial || "")}</p>` : ""}
+    ${item.descripcion ? `<p class="detail-desc">${esc(item.descripcion)}</p>` : ""}
     <div class="meta">
       <div><span>Precio</span>${esc(money(item.precio))}</div>
       <div><span>Costo</span>${esc(money(item.costo))}</div>

@@ -156,15 +156,16 @@ input, select, textarea { width: 100%; font: inherit; padding: 8px; border: 1px 
 .hero-covers img { width: 100%; aspect-ratio: 2 / 3; object-fit: cover; border-radius: 10px; box-shadow: 0 8px 24px rgba(0,0,0,0.12); background: #eee; }
 .hero-covers img:nth-child(2) { transform: translateY(-16px); }
 
-.book-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); gap: 18px; }
+.book-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 18px; }
 .book-tile { background: var(--card); border-radius: 12px; overflow: hidden; box-shadow: 0 2px 8px rgba(0,0,0,0.06); display: flex; flex-direction: column; }
 .book-tile .cover { aspect-ratio: 2 / 3; background: #f4f4f5; overflow: hidden; }
 .book-tile .cover img { width: 100%; height: 100%; object-fit: cover; display: block; }
 .book-tile .body { padding: 12px 14px 16px; display: flex; flex-direction: column; gap: 4px; flex: 1; }
 .book-tile h3 { margin: 0; font-size: 15px; line-height: 1.3; }
 .book-tile .cat { margin: 0; font-size: 11px; letter-spacing: 0.06em; text-transform: uppercase; color: var(--purpura); font-weight: 600; }
-.book-tile .autor { margin: 0; font-size: 12px; color: var(--muted); min-height: 2.4em; }
-.book-tile .price { margin: 4px 0 0; font-size: 18px; font-weight: 700; color: var(--verde); }
+.book-tile .autor { margin: 0; font-size: 12px; color: var(--muted); }
+.book-tile .desc { margin: 6px 0 0; font-size: 13px; line-height: 1.45; color: #3f3f46; display: -webkit-box; -webkit-line-clamp: 4; -webkit-box-orient: vertical; overflow: hidden; }
+.book-tile .price { margin: 8px 0 0; font-size: 18px; font-weight: 700; color: var(--verde); }
 .book-tile .stock { margin: 0; font-size: 12px; color: var(--muted); }
 .book-tile .stock.bajo { color: #e67e22; }
 .book-tile .stock.agotado { color: #e74c3c; }
@@ -204,6 +205,8 @@ input, select, textarea { width: 100%; font: inherit; padding: 8px; border: 1px 
 .checkout-actions { display: flex; gap: 8px; justify-content: flex-end; margin-top: 16px; }
 
 .detail-cover { width: 140px; height: 210px; object-fit: cover; border-radius: 8px; margin-bottom: 12px; box-shadow: 0 4px 14px rgba(0,0,0,0.12); }
+.detail-desc { font-size: 14px; line-height: 1.5; margin: 8px 0 12px; }
+.row-desc { display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; color: #71717a; max-width: 280px; }
 .ventas-panel { margin-top: 28px; }
 .ventas-panel h3 { font-size: 16px; margin: 0 0 12px; }
 .venta-card { background: white; border: 1px solid var(--line); border-radius: 8px; padding: 12px; margin-bottom: 10px; }

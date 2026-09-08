@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Librería — Libros, útiles y papelería</title>
+  <title>Librería — Catálogo de venta de libros</title>
   <link rel="stylesheet" href="styles.css">
 </head>
 <body>
@@ -25,9 +25,9 @@
   <main class="wrap">
     <section class="hero">
       <div>
-        <p class="kicker">Tu librería de confianza</p>
-        <h1>Libros con tapa, útiles escolares y todo para la oficina.</h1>
-        <p class="lead">Catálogo del barrio: Borges, Cortázar, García Márquez, El Eternauta y más. ¿No está lo que buscás? Te lo encargamos.</p>
+        <p class="kicker">Catálogo de venta</p>
+        <h1>Libros con tapa, descripción y precio en pesos.</h1>
+        <p class="lead">Veintiséis títulos de ficción, clásicos e historieta latinoamericana. Cada uno con tapa, autor, editorial y stock. ¿No está lo que buscás? Te lo encargamos.</p>
         <a class="btn" href="#catalogo" style="background:var(--verde,#27ae60);color:white;">Ver catálogo</a>
       </div>
       <aside class="hero-covers" aria-hidden="true">
@@ -39,7 +39,7 @@
 
     <section class="section" id="catalogo">
       <div class="catalog-header">
-        <h2>Venta de libros</h2>
+        <h2>Catálogo de venta</h2>
         <div class="filters" id="filters"></div>
       </div>
       <div class="book-grid" id="catalog"></div>
@@ -94,6 +94,7 @@
 
   <footer class="wrap">Librería · demo de producto · no es una librería en actividad.</footer>
 
+  <script src="../contacto.js" data-phone="5491140001234" data-text="Hola, quiero consultar por un libro del catálogo" data-subject="Consulta demo — Librería" data-title="Consultar un título"></script>
   <script src="data.js"></script>
   <script>
     const FILTERS = [
@@ -146,6 +147,7 @@
               <p class="cat">${esc(catLabel(p.categoria))}</p>
               <h3>${esc(p.nombre)}</h3>
               <p class="autor">${p.autor ? `${esc(p.autor)} · ${esc(p.editorial || "")}` : esc(p.editorial || catLabel(p.categoria))}</p>
+              ${p.descripcion ? `<p class="desc">${esc(p.descripcion)}</p>` : ""}
               <p class="price">${money(p.precio)}</p>
               <p class="stock ${esc(status)}">${
                 agotado ? "Agotado" : status === "bajo" ? `Últimas ${p.stock} unidades` : `En stock (${p.stock})`
