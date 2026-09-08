@@ -32,6 +32,7 @@ document.getElementById("nuevo-pedido").addEventListener("click", () => {
   peds.push(nuevoPed);
   selectedPed = nuevoPed.id;
   savePedidos();
+  showToast("Pedido creado");
   render();
 });
 
@@ -166,6 +167,7 @@ function renderPedidos() {
     prod.vendidos++;
     saveProductos();
     savePedidos();
+    showToast("Producto agregado");
     render();
   });
 
@@ -180,6 +182,7 @@ function renderPedidos() {
     pedido.factura = { tipo, numero, cae, vto, total };
     pedido.status = "entregado";
     savePedidos();
+    showToast("Factura emitida");
     render();
   });
 
@@ -187,6 +190,7 @@ function renderPedidos() {
     const newStatus = detail.querySelector("#cambiar-status").value;
     pedido.status = newStatus;
     savePedidos();
+    showToast("Estado actualizado");
     render();
   });
 }
@@ -257,6 +261,18 @@ function renderIngredientes() {
     <p style="color:var(--muted);">Stock de materias primas para producción.</p>
     <p style="margin-top:16px;font-size:13px;">Los ingredientes con stock igual o menor al mínimo aparecen marcados para reponer.</p>
   `;
+}
+
+// Toast notification
+function showToast(message) {
+  const existing = document.querySelector(".toast");
+  if (existing) existing.remove();
+  const toast = document.createElement("div");
+  toast.className = "toast";
+  toast.textContent = message;
+  document.body.appendChild(toast);
+  setTimeout(() => toast.classList.add("show"), 10);
+  setTimeout(() => { toast.classList.remove("show"); setTimeout(() => toast.remove(), 300); }, 3000);
 }
 
 render();

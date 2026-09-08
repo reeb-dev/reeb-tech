@@ -139,6 +139,7 @@ function renderMesas() {
     pedidosData.push(nuevoPedido);
     saveMesas();
     savePedidos();
+    showToast("Mesa abierta");
     render();
   });
 
@@ -147,6 +148,7 @@ function renderMesas() {
     if (!platoId || !pedido) return;
     pedido.items.push({ menu: platoId, cantidad: 1, status: "pendiente", nota: "" });
     savePedidos();
+    showToast("Plato agregado");
     render();
   });
 
@@ -162,6 +164,7 @@ function renderMesas() {
     mesa.status = "cuenta";
     savePedidos();
     saveMesas();
+    showToast("Factura emitida");
     render();
   });
 
@@ -169,6 +172,7 @@ function renderMesas() {
     mesa.status = "libre";
     mesa.mozo = null;
     saveMesas();
+    showToast("Mesa liberada");
     render();
   });
 }
@@ -260,6 +264,18 @@ function renderMenu() {
     <h2>Menú</h2>
     <p style="color:var(--muted);">Carta del restaurante con precios y disponibilidad.</p>
   `;
+}
+
+// Toast notification
+function showToast(message) {
+  const existing = document.querySelector(".toast");
+  if (existing) existing.remove();
+  const toast = document.createElement("div");
+  toast.className = "toast";
+  toast.textContent = message;
+  document.body.appendChild(toast);
+  setTimeout(() => toast.classList.add("show"), 10);
+  setTimeout(() => { toast.classList.remove("show"); setTimeout(() => toast.remove(), 300); }, 3000);
 }
 
 render();

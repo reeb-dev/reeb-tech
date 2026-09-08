@@ -1,6 +1,7 @@
 let items = load();
 let selected = items[0]?.id || "";
 let filter = "todos";
+let searchTerm = "";
 
 document.getElementById("open-create").addEventListener("click", () => {
   document.getElementById("create").classList.toggle("open");
@@ -28,12 +29,24 @@ document.getElementById("create").addEventListener("submit", (event) => {
   save(items);
   event.target.reset();
   event.target.classList.remove("open");
+  showToast("Producto agregado");
   render();
 });
 
 function visible() {
-  if (filter === "todos") return items;
-  return items.filter((item) => stockStatus(item) === filter || item.status === filter);
+  let result = items;
+  if (filter !== "todos") {
+    result = result.filter((item) => stockStatus(item) === filter || item.status === filter);
+  }
+  if (searchTerm) {
+    const term = searchTerm.toLowerCase();
+    result = result.filter((item) => 
+      item.nombre.toLowerCase().includes(term) || 
+      item.codigo.toLowerCase().includes(term) ||
+      (item.proveedor || "").toLowerCase().includes(term)
+    );
+  }
+  return result;
 }
 
 function render() {
@@ -48,7 +61,13 @@ function render() {
     <button type="button" data-filter="bajo" class="${filter === "bajo" ? "on" : ""}"><strong>${bajo}</strong>stock bajo</button>
     <button type="button" data-filter="agotado" class="${filter === "agotado" ? "on" : ""}"><strong>${agotado}</strong>agotados</button>
     <button type="button" data-filter="fiado" class="${filter === "fiado" ? "on" : ""}"><strong>${fiados}</strong>fiados</button>
+    <input type="text" id="search" placeholder="🔍 Buscar..." value="${esc(searchTerm)}" style="margin-left:auto;padding:8px 12px;border:1px solid var(--line);border-radius:4px;width:180px;">
   `;
+  
+  document.getElementById("search").addEventListener("input", (e) => {
+    searchTerm = e.target.value;
+    render();
+  });
 
   document.querySelectorAll("[data-filter]").forEach((btn) => {
     btn.addEventListener("click", () => {
@@ -103,6 +122,33 @@ function render() {
         <div><span>Proveedor</span>${esc(item.proveedor)}</div>
       </div>
     `}
+    
+    ${!isFiado && item.stock > 0 ? `
+      ${item.factura ? `
+        <div class="factura-box">
+          <h4>✅ Última venta facturada</h4>
+          <div><strong>Tipo:</strong> ${esc(compLabel(item.factura.tipo))}</div>
+          <div><strong>Número:</strong> ${esc(item.factura.numero)}</div>
+          <div><strong>Total:</strong> ${esc(money(item.factura.total))}</div>
+          <div><strong>CAE:</strong> <span class="cae">${esc(item.factura.cae)}</span></div>
+          <div><strong>Vto CAE:</strong> ${esc(item.factura.vto)}</div>
+        </div>
+      ` : ""}
+      <div class="arca-section">
+        <h4>🧾 Venta con ARCA</h4>
+        <label>Cantidad<input id="venta-cant" type="number" value="1" min="1" max="${item.stock}"></label>
+        <label>Tipo comprobante
+          <select id="venta-tipo">
+            ${COMPROBANTES.map((c) => `<option value="${c.id}">${esc(c.label)}</option>`).join("")}
+          </select>
+        </label>
+        <button class="btn-panel" type="button" id="registrar-venta" style="margin-top:10px;">
+          Vender y facturar (simulado)
+        </button>
+        <p style="font-size:11px;color:#64748b;margin-top:8px;">Demo: genera CAE simulado.</p>
+      </div>
+    ` : ""}
+    
     <form id="edit">
       ${isFiado ? `
         <label>Cliente<input name="fiadoCliente" value="${esc(item.fiado?.cliente || "")}"></label>
@@ -131,6 +177,29 @@ function render() {
       ${(item.history || []).map((h) => `<p><time>${esc(h.when)}</time>${esc(h.text)}</p>`).join("")}
     </div>
   `;
+  
+  // Registrar venta con ARCA
+  detail.querySelector("#registrar-venta")?.addEventListener("click", () => {
+    const cantidad = parseInt(detail.querySelector("#venta-cant").value) || 1;
+    const tipo = detail.querySelector("#venta-tipo").value;
+    if (cantidad > item.stock) { alert("Stock insuficiente"); return; }
+    
+    const cae = String(Math.floor(Math.random() * 99999999999999));
+    const numero = `0001-${String(Math.floor(Math.random() * 99999) + 1).padStart(8, "0")}`;
+    const total = item.precio * cantidad;
+    const vtoDate = new Date();
+    vtoDate.setDate(vtoDate.getDate() + 10);
+    const vto = vtoDate.toLocaleDateString("es-AR", { day: "numeric", month: "short" });
+    
+    item.stock -= cantidad;
+    item.status = stockStatus(item);
+    item.factura = { tipo, numero, cae, vto, total };
+    item.history = [{ when: "hoy", text: `Venta x${cantidad}. ${compLabel(tipo)}. CAE: ${cae}. Total: ${money(total)}` }, ...(item.history || [])];
+    
+    save(items);
+    showToast("Venta registrada");
+    render();
+  });
 
   detail.querySelector("#edit").addEventListener("submit", (event) => {
     event.preventDefault();
@@ -158,15 +227,30 @@ function render() {
     }
 
     save(items);
+    showToast("Cambios guardados");
     render();
   });
 
   detail.querySelector("#remove").addEventListener("click", () => {
+    if (!confirm("¿Eliminar este producto? Esta acción no se puede deshacer.")) return;
     items = items.filter((i) => i.id !== item.id);
     selected = items[0]?.id || "";
     save(items);
+    showToast("Producto eliminado");
     render();
   });
+}
+
+// Toast notification
+function showToast(message) {
+  const existing = document.querySelector(".toast");
+  if (existing) existing.remove();
+  const toast = document.createElement("div");
+  toast.className = "toast";
+  toast.textContent = message;
+  document.body.appendChild(toast);
+  setTimeout(() => toast.classList.add("show"), 10);
+  setTimeout(() => { toast.classList.remove("show"); setTimeout(() => toast.remove(), 300); }, 3000);
 }
 
 render();

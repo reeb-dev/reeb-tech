@@ -1,6 +1,7 @@
 let items = load();
 let selected = items[0]?.id || "";
 let filter = "todos";
+let searchTerm = "";
 
 document.getElementById("open-create").addEventListener("click", () => {
   document.getElementById("create").classList.toggle("open");
@@ -47,8 +48,16 @@ document.getElementById("create").addEventListener("submit", (event) => {
 });
 
 function visible() {
-  if (filter === "todos") return items;
-  return items.filter((item) => item.status === filter);
+  let result = filter === "todos" ? items : items.filter((item) => item.status === filter);
+  if (searchTerm) {
+    const term = searchTerm.toLowerCase();
+    result = result.filter((item) => 
+      item.cliente.nombre.toLowerCase().includes(term) || 
+      item.vehiculo.patente.toLowerCase().includes(term) ||
+      item.orden.toLowerCase().includes(term)
+    );
+  }
+  return result;
 }
 
 function render() {
@@ -67,7 +76,13 @@ function render() {
     <button type="button" data-filter="reparacion" class="${filter === "reparacion" ? "on" : ""}"><strong>${counts.reparacion}</strong>en rep.</button>
     <button type="button" data-filter="esperando" class="${filter === "esperando" ? "on" : ""}"><strong>${counts.esperando}</strong>esperando</button>
     <button type="button" data-filter="listo" class="${filter === "listo" ? "on" : ""}"><strong>${counts.listo}</strong>listos</button>
+    <input type="text" id="search" placeholder="🔍 Buscar..." value="${esc(searchTerm)}" style="margin-left:auto;padding:8px 12px;border:1px solid var(--line);border-radius:4px;width:180px;">
   `;
+  
+  document.getElementById("search").addEventListener("input", (e) => {
+    searchTerm = e.target.value;
+    render();
+  });
 
   document.querySelectorAll("[data-filter]").forEach((btn) => {
     btn.addEventListener("click", () => {
@@ -195,6 +210,7 @@ function render() {
       item.factura = { tipo, numero, cae, vto, total: calcTotal(item), cuit };
       item.history = [{ when: "hoy", text: `Factura ${compLabel(tipo)} emitida. CAE: ${cae}` }, ...(item.history || [])];
       save(items);
+      showToast("Factura emitida");
       render();
     });
   }
@@ -215,6 +231,7 @@ function render() {
     }
 
     save(items);
+    showToast("Cambios guardados");
     render();
   });
 
@@ -222,15 +239,30 @@ function render() {
     item.aprobado = true;
     item.history = [{ when: "hoy", text: "Presupuesto aprobado por el cliente." }, ...(item.history || [])];
     save(items);
+    showToast("Presupuesto aprobado");
     render();
   });
 
   detail.querySelector("#remove").addEventListener("click", () => {
+    if (!confirm("¿Eliminar esta orden? Esta acción no se puede deshacer.")) return;
     items = items.filter((i) => i.id !== item.id);
     selected = items[0]?.id || "";
     save(items);
+    showToast("Orden eliminada");
     render();
   });
+}
+
+// Toast notification
+function showToast(message) {
+  const existing = document.querySelector(".toast");
+  if (existing) existing.remove();
+  const toast = document.createElement("div");
+  toast.className = "toast";
+  toast.textContent = message;
+  document.body.appendChild(toast);
+  setTimeout(() => toast.classList.add("show"), 10);
+  setTimeout(() => { toast.classList.remove("show"); setTimeout(() => toast.remove(), 300); }, 3000);
 }
 
 render();

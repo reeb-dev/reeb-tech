@@ -4,6 +4,20 @@ const STATUSES = [
   { id: "caja", label: "Caja" }
 ];
 
+const COMPROBANTES = [
+  { id: "FA", label: "Factura A" },
+  { id: "FB", label: "Factura B" },
+  { id: "FC", label: "Factura C" }
+];
+
+function compLabel(comp) {
+  return COMPROBANTES.find((c) => c.id === comp)?.label || comp;
+}
+
+function money(amount) {
+  return "$ " + Number(amount || 0).toLocaleString("es-AR");
+}
+
 function seed() {
   return [
     {

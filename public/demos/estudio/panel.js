@@ -1,6 +1,7 @@
 let items = load();
 let selected = items[0]?.id || "";
 let filter = "todos";
+let searchTerm = "";
 
 document.getElementById("open-create").addEventListener("click", () => {
   document.getElementById("create").classList.toggle("open");
@@ -27,11 +28,21 @@ document.getElementById("create").addEventListener("submit", (event) => {
   save(items);
   event.target.reset();
   event.target.classList.remove("open");
+  showToast("Expediente agregado");
   render();
 });
 
 function visible() {
-  return filter === "todos" ? items : items.filter((item) => item.status === filter);
+  let result = filter === "todos" ? items : items.filter((item) => item.status === filter);
+  if (searchTerm) {
+    const term = searchTerm.toLowerCase();
+    result = result.filter((item) => 
+      item.caratula.toLowerCase().includes(term) || 
+      item.number.toLowerCase().includes(term) ||
+      (item.party || "").toLowerCase().includes(term)
+    );
+  }
+  return result;
 }
 
 function render() {
@@ -42,7 +53,14 @@ function render() {
       const count = items.filter((item) => item.status === status.id).length;
       return `<button type="button" data-filter="${status.id}" class="${filter === status.id ? "on" : ""}"><strong>${count}</strong>${esc(status.label)}</button>`;
     }).join("")}
-    <div><strong>${pending}</strong>con escrito</div>`;
+    <div><strong>${pending}</strong>con escrito</div>
+    <input type="text" id="search" placeholder="🔍 Buscar..." value="${esc(searchTerm)}" style="margin-left:auto;padding:8px 12px;border:1px solid var(--line);border-radius:4px;width:180px;">
+  `;
+  
+  document.getElementById("search").addEventListener("input", (e) => {
+    searchTerm = e.target.value;
+    render();
+  });
 
   document.querySelectorAll("[data-filter]").forEach((button) => {
     button.addEventListener("click", () => {
@@ -127,15 +145,30 @@ function render() {
       escrito
     });
     save(items);
+    showToast("Cambios guardados");
     render();
   });
 
   detail.querySelector("#remove").addEventListener("click", () => {
+    if (!confirm("¿Eliminar este expediente? Esta acción no se puede deshacer.")) return;
     items = items.filter((entry) => entry.id !== item.id);
     selected = items[0]?.id || "";
     save(items);
+    showToast("Expediente eliminado");
     render();
   });
+}
+
+// Toast notification
+function showToast(message) {
+  const existing = document.querySelector(".toast");
+  if (existing) existing.remove();
+  const toast = document.createElement("div");
+  toast.className = "toast";
+  toast.textContent = message;
+  document.body.appendChild(toast);
+  setTimeout(() => toast.classList.add("show"), 10);
+  setTimeout(() => { toast.classList.remove("show"); setTimeout(() => toast.remove(), 300); }, 3000);
 }
 
 render();

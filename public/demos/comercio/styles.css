@@ -152,3 +152,47 @@ input, select, textarea { width: 100%; font: inherit; padding: 8px; border: 1px 
   .hero, .modules, .flow, .layout, .create.open, .item-row { grid-template-columns: 1fr; }
   h1 { font-size: 36px; }
 }
+
+/* ARCA section */
+.arca-section {
+  background: #fff7ed;
+  border: 1px solid #fdba74;
+  border-radius: 6px;
+  padding: 12px;
+  margin: 12px 0;
+}
+.arca-section h4 { margin: 0 0 8px; font-size: 13px; color: var(--terracota); display: flex; align-items: center; gap: 6px; }
+.factura-box {
+  background: #f0fdf4;
+  border: 1px solid #86efac;
+  border-radius: 6px;
+  padding: 12px;
+  margin: 12px 0;
+  font-size: 13px;
+}
+.factura-box h4 { margin: 0 0 8px; font-size: 13px; color: #166534; }
+.factura-box .cae { font-family: monospace; color: #166534; }
+.btn-panel { background: var(--terracota); color: white; border: 0; padding: 10px 16px; border-radius: 4px; cursor: pointer; font-weight: 500; }
+.btn-panel:hover { opacity: 0.9; }
+
+/* Toast notifications */
+.toast {
+  position: fixed;
+  bottom: 24px;
+  left: 50%;
+  transform: translateX(-50%) translateY(100px);
+  background: #333;
+  color: white;
+  padding: 14px 28px;
+  border-radius: 8px;
+  font-size: 14px;
+  font-weight: 500;
+  z-index: 9999;
+  opacity: 0;
+  transition: transform 0.3s ease, opacity 0.3s ease;
+  box-shadow: 0 4px 20px rgba(0,0,0,0.3);
+}
+.toast.show {
+  transform: translateX(-50%) translateY(0);
+  opacity: 1;
+}

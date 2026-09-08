@@ -3,114 +3,774 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Inmobiliaria — propiedades, visitas y contratos</title>
+  <title>Inmobiliaria Reeb — Propiedades en venta y alquiler</title>
   <link rel="stylesheet" href="styles.css">
+  <style>
+    /* Portal Inmobiliario Styles */
+    :root {
+      --primary: #1e3a5f;
+      --primary-light: #2c5282;
+      --accent: #c9a227;
+      --success: #22c55e;
+      --danger: #ef4444;
+      --warning: #f59e0b;
+    }
+
+    /* Search Hero */
+    .search-hero {
+      background: linear-gradient(135deg, var(--primary) 0%, var(--primary-light) 100%);
+      padding: 48px 0;
+      color: white;
+    }
+    .search-hero h1 { font-size: 36px; margin: 0 0 8px; }
+    .search-hero p { opacity: 0.9; margin: 0 0 24px; }
+    
+    .search-box {
+      background: white;
+      border-radius: 12px;
+      padding: 24px;
+      box-shadow: 0 8px 32px rgba(0,0,0,0.2);
+    }
+    .search-row {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+      gap: 12px;
+      margin-bottom: 16px;
+    }
+    .search-box select, .search-box input {
+      padding: 12px;
+      border: 1px solid #ddd;
+      border-radius: 8px;
+      font-size: 14px;
+      background: white;
+    }
+    .search-box select:focus, .search-box input:focus {
+      border-color: var(--primary);
+      outline: none;
+    }
+    .search-btn {
+      background: var(--accent);
+      color: var(--primary);
+      border: none;
+      padding: 14px 32px;
+      border-radius: 8px;
+      font-weight: 700;
+      cursor: pointer;
+      font-size: 15px;
+    }
+    .search-btn:hover { background: #ddb832; }
+
+    /* Results Header */
+    .results-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 24px 0;
+      flex-wrap: wrap;
+      gap: 16px;
+    }
+    .results-count { color: var(--muted); }
+    .results-count strong { color: var(--primary); }
+    .view-toggle { display: flex; gap: 8px; }
+    .view-toggle button {
+      padding: 8px 12px;
+      border: 1px solid #ddd;
+      background: white;
+      border-radius: 6px;
+      cursor: pointer;
+    }
+    .view-toggle button.active { background: var(--primary); color: white; border-color: var(--primary); }
+
+    /* Property Cards */
+    .properties-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
+      gap: 24px;
+      padding-bottom: 48px;
+    }
+    .property-card {
+      background: white;
+      border-radius: 12px;
+      overflow: hidden;
+      box-shadow: 0 2px 12px rgba(0,0,0,0.08);
+      transition: transform 0.3s, box-shadow 0.3s;
+      cursor: pointer;
+    }
+    .property-card:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 12px 40px rgba(0,0,0,0.15);
+    }
+    .property-card .image {
+      position: relative;
+      height: 220px;
+      background: #eee;
+      overflow: hidden;
+    }
+    .property-card .image img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      transition: transform 0.4s;
+    }
+    .property-card:hover .image img { transform: scale(1.05); }
+    
+    .property-card .badges {
+      position: absolute;
+      top: 12px;
+      left: 12px;
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+    .badge {
+      padding: 6px 12px;
+      border-radius: 4px;
+      font-size: 11px;
+      font-weight: 600;
+      text-transform: uppercase;
+    }
+    .badge.venta { background: var(--success); color: white; }
+    .badge.alquiler { background: var(--accent); color: var(--primary); }
+    .badge.destacado { background: var(--primary); color: white; }
+    .badge.nuevo { background: var(--danger); color: white; }
+    .badge.reservada { background: var(--warning); color: white; }
+
+    .property-card .favorite {
+      position: absolute;
+      top: 12px;
+      right: 12px;
+      background: white;
+      border: none;
+      width: 36px;
+      height: 36px;
+      border-radius: 50%;
+      cursor: pointer;
+      font-size: 18px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+    }
+
+    .property-card .gallery-count {
+      position: absolute;
+      bottom: 12px;
+      right: 12px;
+      background: rgba(0,0,0,0.7);
+      color: white;
+      padding: 4px 10px;
+      border-radius: 4px;
+      font-size: 12px;
+    }
+
+    .property-card .body { padding: 16px; }
+    .property-card .type-location {
+      font-size: 12px;
+      color: var(--muted);
+      margin-bottom: 4px;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+    .property-card h3 {
+      margin: 0 0 8px;
+      font-size: 17px;
+      color: var(--primary);
+      line-height: 1.3;
+    }
+    .property-card .location {
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      font-size: 13px;
+      color: var(--muted);
+      margin-bottom: 12px;
+    }
+    .property-card .price {
+      font-size: 24px;
+      font-weight: 700;
+      color: var(--primary);
+      margin-bottom: 4px;
+    }
+    .property-card .price small {
+      font-size: 14px;
+      font-weight: 400;
+      color: var(--muted);
+    }
+    .property-card .expenses {
+      font-size: 12px;
+      color: var(--muted);
+      margin-bottom: 12px;
+    }
+    .property-card .specs {
+      display: flex;
+      gap: 16px;
+      padding-top: 12px;
+      border-top: 1px solid #eee;
+      font-size: 13px;
+      color: #555;
+    }
+    .property-card .specs span {
+      display: flex;
+      align-items: center;
+      gap: 4px;
+    }
+    .property-card .stats {
+      display: flex;
+      gap: 12px;
+      padding-top: 12px;
+      margin-top: 12px;
+      border-top: 1px solid #eee;
+      font-size: 11px;
+      color: var(--muted);
+    }
+
+    /* Modal */
+    .modal-overlay {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: rgba(0,0,0,0.8);
+      z-index: 1000;
+      overflow-y: auto;
+      padding: 24px;
+    }
+    .modal-overlay.open { display: flex; justify-content: center; align-items: flex-start; }
+    .modal {
+      background: white;
+      border-radius: 16px;
+      max-width: 900px;
+      width: 100%;
+      margin: 24px auto;
+      overflow: hidden;
+    }
+    .modal-close {
+      position: absolute;
+      top: 16px;
+      right: 16px;
+      background: white;
+      border: none;
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      font-size: 20px;
+      cursor: pointer;
+      z-index: 10;
+    }
+    .modal-gallery {
+      position: relative;
+      height: 400px;
+      background: #111;
+    }
+    .modal-gallery img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+    .modal-gallery .nav-btn {
+      position: absolute;
+      top: 50%;
+      transform: translateY(-50%);
+      background: white;
+      border: none;
+      width: 44px;
+      height: 44px;
+      border-radius: 50%;
+      font-size: 20px;
+      cursor: pointer;
+    }
+    .modal-gallery .nav-btn.prev { left: 16px; }
+    .modal-gallery .nav-btn.next { right: 16px; }
+    .modal-gallery .counter {
+      position: absolute;
+      bottom: 16px;
+      left: 50%;
+      transform: translateX(-50%);
+      background: rgba(0,0,0,0.7);
+      color: white;
+      padding: 6px 16px;
+      border-radius: 20px;
+      font-size: 13px;
+    }
+    .modal-content { padding: 24px; }
+    .modal-content .badges { display: flex; gap: 8px; margin-bottom: 12px; }
+    .modal-content h2 { margin: 0 0 8px; font-size: 24px; color: var(--primary); }
+    .modal-content .location { font-size: 15px; color: var(--muted); margin-bottom: 16px; }
+    .modal-content .price-box {
+      background: #f8f9fa;
+      padding: 16px;
+      border-radius: 8px;
+      margin-bottom: 24px;
+    }
+    .modal-content .price-box .price { font-size: 32px; font-weight: 700; color: var(--primary); }
+    .modal-content .price-box .expenses { color: var(--muted); font-size: 14px; }
+    
+    .modal-specs {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 16px;
+      margin-bottom: 24px;
+    }
+    .modal-specs .spec {
+      text-align: center;
+      padding: 16px;
+      background: #f8f9fa;
+      border-radius: 8px;
+    }
+    .modal-specs .spec .icon { font-size: 24px; margin-bottom: 4px; }
+    .modal-specs .spec .value { font-size: 18px; font-weight: 700; color: var(--primary); }
+    .modal-specs .spec .label { font-size: 12px; color: var(--muted); }
+
+    .modal-description { margin-bottom: 24px; line-height: 1.6; color: #444; }
+    
+    .modal-amenities { margin-bottom: 24px; }
+    .modal-amenities h4 { margin: 0 0 12px; color: var(--primary); }
+    .amenities-list { display: flex; flex-wrap: wrap; gap: 8px; }
+    .amenity-tag {
+      background: #e8f4fd;
+      color: var(--primary);
+      padding: 6px 12px;
+      border-radius: 20px;
+      font-size: 13px;
+    }
+
+    .modal-stats {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 12px;
+      margin-bottom: 24px;
+    }
+    .modal-stats .stat {
+      text-align: center;
+      padding: 12px;
+      background: #fff9e6;
+      border-radius: 8px;
+    }
+    .modal-stats .stat .value { font-size: 20px; font-weight: 700; color: var(--accent); }
+    .modal-stats .stat .label { font-size: 11px; color: var(--muted); }
+
+    .modal-contact {
+      background: var(--primary);
+      color: white;
+      padding: 24px;
+      border-radius: 12px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 16px;
+    }
+    .modal-contact h4 { margin: 0; font-size: 18px; }
+    .modal-contact p { margin: 4px 0 0; opacity: 0.9; font-size: 14px; }
+    .modal-contact .btns { display: flex; gap: 12px; }
+    .modal-contact .btn-whatsapp {
+      background: #25d366;
+      color: white;
+      padding: 12px 24px;
+      border-radius: 8px;
+      text-decoration: none;
+      font-weight: 600;
+    }
+    .modal-contact .btn-call {
+      background: white;
+      color: var(--primary);
+      padding: 12px 24px;
+      border-radius: 8px;
+      text-decoration: none;
+      font-weight: 600;
+    }
+
+    /* No results */
+    .no-results {
+      text-align: center;
+      padding: 64px;
+      color: var(--muted);
+    }
+    .no-results h3 { color: var(--primary); margin-bottom: 8px; }
+
+    /* Admin link */
+    .admin-section {
+      background: #f8f9fa;
+      padding: 48px 24px;
+      text-align: center;
+      margin-top: 48px;
+    }
+    .admin-section h3 { margin: 0 0 8px; color: var(--primary); }
+    .admin-section p { color: var(--muted); margin: 0 0 16px; }
+
+    @media (max-width: 768px) {
+      .search-row { grid-template-columns: 1fr; }
+      .properties-grid { grid-template-columns: 1fr; }
+      .modal-specs, .modal-stats { grid-template-columns: repeat(2, 1fr); }
+      .modal-gallery { height: 250px; }
+    }
+  </style>
 </head>
 <body>
   <header class="top">
     <div class="top-inner">
-      <a class="logo" href="index.html">INMOBILIARIA<small>Gestión de propiedades · demo</small></a>
+      <a class="logo" href="index.html">INMOBILIARIA<small>Propiedades en venta y alquiler</small></a>
       <nav>
-        <a href="#modulos">Módulos</a>
         <a href="#propiedades">Propiedades</a>
-        <a class="btn" href="panel.html">Abrir el panel</a>
+        <a href="#contacto">Contacto</a>
+        <a class="btn" href="panel.html">Panel Admin</a>
       </nav>
     </div>
   </header>
 
-  <main class="wrap">
-    <section class="hero">
-      <div>
-        <p class="kicker">Inmobiliaria de barrio · datos de ejemplo</p>
-        <h1>Propiedades, visitas y el estado de cada operación.</h1>
-        <p class="lead">No es una planilla de Excel. Es la cartera de la inmobiliaria: qué hay disponible, quién visitó, qué está reservado y qué se cerró.</p>
-        <a class="btn" href="panel.html">Ver propiedades de ejemplo</a>
-      </div>
-      <aside class="prop-card">
-        <div class="img">
-          <img src="https://images.unsplash.com/photo-1502672260266-1c1ef2d93688?w=800&h=400&fit=crop" alt="Interior departamento luminoso">
+  <!-- Search Hero -->
+  <section class="search-hero">
+    <div class="wrap">
+      <h1>Encontrá tu próxima propiedad</h1>
+      <p>Más de 100 propiedades en venta y alquiler en los mejores barrios</p>
+      
+      <div class="search-box">
+        <div class="search-row">
+          <select id="filterOperacion">
+            <option value="">Tipo de operación</option>
+            <option value="venta">Venta</option>
+            <option value="alquiler">Alquiler</option>
+          </select>
+          <select id="filterTipo">
+            <option value="">Tipo de propiedad</option>
+            <option value="departamento">Departamento</option>
+            <option value="casa">Casa</option>
+            <option value="ph">PH</option>
+            <option value="local">Local comercial</option>
+            <option value="oficina">Oficina</option>
+            <option value="terreno">Terreno</option>
+          </select>
+          <select id="filterZona">
+            <option value="">Ubicación</option>
+            <option value="CABA">CABA</option>
+            <option value="GBA Norte">GBA Norte</option>
+            <option value="GBA Oeste">GBA Oeste</option>
+          </select>
+          <select id="filterAmbientes">
+            <option value="">Ambientes</option>
+            <option value="1">1 ambiente</option>
+            <option value="2">2 ambientes</option>
+            <option value="3">3 ambientes</option>
+            <option value="4">4+ ambientes</option>
+          </select>
+          <select id="filterPrecio">
+            <option value="">Rango de precio</option>
+            <option value="0-200000">Hasta USD 200.000</option>
+            <option value="200000-400000">USD 200.000 - 400.000</option>
+            <option value="400000-1000000">USD 400.000 - 1.000.000</option>
+            <option value="0-500000">Hasta $500.000/mes</option>
+            <option value="500000-1500000">$500.000 - $1.500.000/mes</option>
+            <option value="1500000-5000000">Más de $1.500.000/mes</option>
+          </select>
+          <button class="search-btn" onclick="applyFilters()">🔍 Buscar</button>
         </div>
-        <div class="body">
-          <span class="op">Alquiler</span>
-          <h3>2 amb. luminoso con balcón</h3>
-          <p class="location">Av. Corrientes 3200, Almagro</p>
-          <p class="price">$ 380.000 /mes</p>
-          <div class="details">
-            <span>45 m²</span>
-            <span>2 ambientes</span>
-            <span>Expensas: $ 45.000</span>
-          </div>
-        </div>
-      </aside>
-    </section>
-
-    <section class="section" id="modulos">
-      <h2>Qué controla el sistema</h2>
-      <div class="modules">
-        <article>
-          <div class="module-icon">
-            <img src="https://images.unsplash.com/photo-1560518883-ce09059eeffa?w=80&h=80&fit=crop" alt="Edificios">
-          </div>
-          <h3>Propiedades</h3>
-          <p>Cada propiedad con dirección, tipo, precio, superficie y estado actual.</p>
-        </article>
-        <article>
-          <div class="module-icon">
-            <img src="https://images.unsplash.com/photo-1573497019940-1c28c88b4f3e?w=80&h=80&fit=crop" alt="Clientes">
-          </div>
-          <h3>Clientes</h3>
-          <p>Interesados, datos de contacto y qué propiedades visitaron.</p>
-        </article>
-        <article>
-          <div class="module-icon">
-            <img src="https://images.unsplash.com/photo-1506784983877-45594efa4cbe?w=80&h=80&fit=crop" alt="Calendario">
-          </div>
-          <h3>Visitas</h3>
-          <p>Registro de cada visita con fecha, cliente y observaciones.</p>
-        </article>
-        <article>
-          <div class="module-icon">
-            <img src="https://images.unsplash.com/photo-1554224155-6726b3ff858f?w=80&h=80&fit=crop" alt="Contratos">
-          </div>
-          <h3>Contratos</h3>
-          <p>Seguimiento de reservas, alquileres y ventas cerradas.</p>
-        </article>
       </div>
-    </section>
+    </div>
+  </section>
 
-    <section class="section" id="propiedades">
-      <h2>Propiedades de ejemplo</h2>
-      <p class="note">Direcciones y precios ficticios, para ver el panel cargado. No es una inmobiliaria real.</p>
-      <table>
-        <thead>
-          <tr>
-            <th>Código</th>
-            <th>Propiedad</th>
-            <th>Operación</th>
-            <th>Barrio</th>
-            <th class="amount">Precio</th>
-            <th>Estado</th>
-          </tr>
-        </thead>
-        <tbody id="preview"></tbody>
-      </table>
-      <p style="margin-top:16px;"><a class="btn" href="panel.html">Abrir el panel de propiedades</a></p>
-    </section>
+  <main class="wrap" id="propiedades">
+    <!-- Results Header -->
+    <div class="results-header">
+      <div class="results-count">
+        <strong id="resultsCount">0</strong> propiedades encontradas
+      </div>
+      <div class="view-toggle">
+        <button class="active" title="Vista de grilla">▦</button>
+        <button title="Vista de lista">☰</button>
+      </div>
+    </div>
+
+    <!-- Properties Grid -->
+    <div class="properties-grid" id="catalog"></div>
+
+    <!-- Admin Section -->
+    <div class="admin-section" id="contacto">
+      <h3>¿Sos agente inmobiliario?</h3>
+      <p>Accedé al panel de administración para gestionar propiedades, visitas y contratos.</p>
+      <a class="btn" href="panel.html">Acceder al panel</a>
+    </div>
   </main>
 
-  <footer class="wrap">Inmobiliaria · demo de producto · no es una inmobiliaria en actividad ni gestiona propiedades reales.</footer>
+  <!-- Property Detail Modal -->
+  <div class="modal-overlay" id="modal">
+    <div class="modal">
+      <button class="modal-close" onclick="closeModal()">✕</button>
+      <div class="modal-gallery">
+        <img id="modalImage" src="" alt="">
+        <button class="nav-btn prev" onclick="prevImage()">‹</button>
+        <button class="nav-btn next" onclick="nextImage()">›</button>
+        <div class="counter" id="imageCounter">1 / 3</div>
+      </div>
+      <div class="modal-content" id="modalContent"></div>
+    </div>
+  </div>
+
+  <footer class="wrap" style="padding: 32px 0;">
+    <p style="color: var(--muted); font-size: 14px;">Inmobiliaria · demo de producto · datos ficticios con fines ilustrativos.</p>
+  </footer>
 
   <script src="data.js"></script>
   <script>
-    document.getElementById("preview").innerHTML = seed().slice(0, 6).map((item) => `
-      <tr>
-        <td>${esc(item.codigo)}</td>
-        <td>${esc(item.titulo)}<br><small style="color:#666">${esc(tipoLabel(item.tipo))}</small></td>
-        <td>${esc(opLabel(item.operacion))}</td>
-        <td>${esc(item.barrio)}</td>
-        <td class="amount">${item.operacion === "venta" ? esc(money(item.precio, true)) : esc(money(item.precio))}</td>
-        <td><span class="tag ${esc(item.status)}">${esc(label(item.status))}</span></td>
-      </tr>`).join("");
+    let properties = seed();
+    let currentFilters = {};
+    let currentProperty = null;
+    let currentImageIndex = 0;
+
+    function formatPrice(price, operacion) {
+      if (operacion === "venta") {
+        return "USD " + Number(price).toLocaleString("es-AR");
+      }
+      return "$ " + Number(price).toLocaleString("es-AR") + "/mes";
+    }
+
+    function applyFilters() {
+      const operacion = document.getElementById("filterOperacion").value;
+      const tipo = document.getElementById("filterTipo").value;
+      const zona = document.getElementById("filterZona").value;
+      const ambientes = document.getElementById("filterAmbientes").value;
+      
+      currentFilters = { operacion, tipo, zona, ambientes };
+      renderProperties();
+    }
+
+    function filterProperties() {
+      return properties.filter(p => {
+        // Solo mostrar disponibles por defecto
+        if (p.status !== "disponible") return false;
+        
+        if (currentFilters.operacion && p.operacion !== currentFilters.operacion) return false;
+        if (currentFilters.tipo && p.tipo !== currentFilters.tipo) return false;
+        if (currentFilters.zona && p.zona !== currentFilters.zona) return false;
+        if (currentFilters.ambientes) {
+          const amb = parseInt(currentFilters.ambientes);
+          if (amb === 4 && p.ambientes < 4) return false;
+          if (amb < 4 && p.ambientes !== amb) return false;
+        }
+        return true;
+      });
+    }
+
+    function renderProperties() {
+      const filtered = filterProperties();
+      document.getElementById("resultsCount").textContent = filtered.length;
+
+      if (filtered.length === 0) {
+        document.getElementById("catalog").innerHTML = `
+          <div class="no-results" style="grid-column: 1/-1;">
+            <h3>No encontramos propiedades</h3>
+            <p>Probá ajustando los filtros de búsqueda</p>
+          </div>
+        `;
+        return;
+      }
+
+      // Ordenar: destacados primero, luego nuevos
+      filtered.sort((a, b) => {
+        if (a.destacado && !b.destacado) return -1;
+        if (!a.destacado && b.destacado) return 1;
+        if (a.nuevo && !b.nuevo) return -1;
+        if (!a.nuevo && b.nuevo) return 1;
+        return b.vistas - a.vistas;
+      });
+
+      document.getElementById("catalog").innerHTML = filtered.map(p => `
+        <article class="property-card" onclick="openModal('${p.id}')">
+          <div class="image">
+            <img src="${p.imagenes[0]}" alt="${esc(p.titulo)}">
+            <div class="badges">
+              <span class="badge ${p.operacion}">${opLabel(p.operacion)}</span>
+              ${p.destacado ? '<span class="badge destacado">Destacado</span>' : ''}
+              ${p.nuevo ? '<span class="badge nuevo">Nuevo</span>' : ''}
+              ${p.status === 'reservada' ? '<span class="badge reservada">Reservada</span>' : ''}
+            </div>
+            <button class="favorite" onclick="event.stopPropagation()">♡</button>
+            ${p.imagenes.length > 1 ? `<div class="gallery-count">📷 ${p.imagenes.length}</div>` : ''}
+          </div>
+          <div class="body">
+            <div class="type-location">${tipoLabel(p.tipo)} en ${esc(p.barrio)}</div>
+            <h3>${esc(p.titulo)}</h3>
+            <div class="location">📍 ${esc(p.direccion)}</div>
+            <div class="price">${formatPrice(p.precio, p.operacion)}</div>
+            ${p.expensas ? `<div class="expenses">+ Expensas: ${money(p.expensas)}</div>` : ''}
+            <div class="specs">
+              <span>📐 ${p.superficie} m²</span>
+              ${p.ambientes > 0 ? `<span>🚪 ${p.ambientes} amb.</span>` : ''}
+              ${p.dormitorios > 0 ? `<span>🛏️ ${p.dormitorios} dorm.</span>` : ''}
+              ${p.banos > 0 ? `<span>🚿 ${p.banos} baño${p.banos > 1 ? 's' : ''}</span>` : ''}
+              ${p.cochera ? `<span>🚗 Cochera</span>` : ''}
+            </div>
+            <div class="stats">
+              <span>👁️ ${p.vistas} vistas</span>
+              <span>💬 ${p.consultas} consultas</span>
+              <span>📅 ${p.diasPublicada} días</span>
+            </div>
+          </div>
+        </article>
+      `).join("");
+    }
+
+    function openModal(id) {
+      currentProperty = properties.find(p => p.id === id);
+      currentImageIndex = 0;
+      
+      if (!currentProperty) return;
+      
+      updateModalImage();
+      
+      const p = currentProperty;
+      const precioM2 = Math.round(p.precio / p.superficie);
+      const diffZona = Math.round(((precioM2 / p.precioM2Zona) - 1) * 100);
+      
+      document.getElementById("modalContent").innerHTML = `
+        <div class="badges">
+          <span class="badge ${p.operacion}">${opLabel(p.operacion)}</span>
+          ${p.destacado ? '<span class="badge destacado">Destacado</span>' : ''}
+          ${p.nuevo ? '<span class="badge nuevo">Nuevo</span>' : ''}
+        </div>
+        <h2>${esc(p.titulo)}</h2>
+        <div class="location">📍 ${esc(p.direccion)} · ${esc(p.barrio)}, ${esc(p.zona)}</div>
+        
+        <div class="price-box">
+          <div class="price">${formatPrice(p.precio, p.operacion)}</div>
+          ${p.expensas ? `<div class="expenses">+ Expensas: ${money(p.expensas)}</div>` : ''}
+          <div class="expenses">${p.operacion === 'venta' ? `USD ${precioM2.toLocaleString("es-AR")}/m²` : ''}</div>
+        </div>
+
+        <div class="modal-specs">
+          <div class="spec">
+            <div class="icon">📐</div>
+            <div class="value">${p.superficie}</div>
+            <div class="label">m² totales</div>
+          </div>
+          <div class="spec">
+            <div class="icon">🏠</div>
+            <div class="value">${p.cubierta || p.superficie}</div>
+            <div class="label">m² cubiertos</div>
+          </div>
+          <div class="spec">
+            <div class="icon">🚪</div>
+            <div class="value">${p.ambientes || '-'}</div>
+            <div class="label">Ambientes</div>
+          </div>
+          <div class="spec">
+            <div class="icon">🛏️</div>
+            <div class="value">${p.dormitorios || '-'}</div>
+            <div class="label">Dormitorios</div>
+          </div>
+        </div>
+
+        <div class="modal-description">
+          <h4>Descripción</h4>
+          <p>${esc(p.descripcion)}</p>
+        </div>
+
+        <div class="modal-specs" style="margin-bottom: 24px;">
+          <div class="spec">
+            <div class="icon">🚿</div>
+            <div class="value">${p.banos || '-'}</div>
+            <div class="label">Baños</div>
+          </div>
+          <div class="spec">
+            <div class="icon">📍</div>
+            <div class="value">${p.piso || 'PB'}</div>
+            <div class="label">Piso</div>
+          </div>
+          <div class="spec">
+            <div class="icon">🧭</div>
+            <div class="value">${p.orientacion || '-'}</div>
+            <div class="label">Orientación</div>
+          </div>
+          <div class="spec">
+            <div class="icon">📅</div>
+            <div class="value">${p.antiguedad !== null ? (p.antiguedad === 0 ? 'A estrenar' : p.antiguedad + ' años') : '-'}</div>
+            <div class="label">Antigüedad</div>
+          </div>
+        </div>
+
+        ${p.amenities.length > 0 ? `
+          <div class="modal-amenities">
+            <h4>Amenities y características</h4>
+            <div class="amenities-list">
+              ${p.amenities.map(a => `<span class="amenity-tag">${amenityIcon(a)} ${amenityLabel(a)}</span>`).join('')}
+            </div>
+          </div>
+        ` : ''}
+
+        <div class="modal-stats">
+          <div class="stat">
+            <div class="value">${p.vistas}</div>
+            <div class="label">Vistas</div>
+          </div>
+          <div class="stat">
+            <div class="value">${p.consultas}</div>
+            <div class="label">Consultas</div>
+          </div>
+          <div class="stat">
+            <div class="value">${p.diasPublicada}</div>
+            <div class="label">Días publicada</div>
+          </div>
+          <div class="stat">
+            <div class="value" style="color: ${diffZona >= 0 ? '#ef4444' : '#22c55e'}">${diffZona >= 0 ? '+' : ''}${diffZona}%</div>
+            <div class="label">vs. precio zona</div>
+          </div>
+        </div>
+
+        <div class="modal-contact">
+          <div>
+            <h4>¿Te interesa esta propiedad?</h4>
+            <p>Contactanos para coordinar una visita</p>
+          </div>
+          <div class="btns">
+            <a href="#" class="btn-whatsapp">📱 WhatsApp</a>
+            <a href="#" class="btn-call">📞 Llamar</a>
+          </div>
+        </div>
+      `;
+      
+      document.getElementById("modal").classList.add("open");
+      document.body.style.overflow = "hidden";
+    }
+
+    function closeModal() {
+      document.getElementById("modal").classList.remove("open");
+      document.body.style.overflow = "";
+      currentProperty = null;
+    }
+
+    function updateModalImage() {
+      if (!currentProperty) return;
+      const imgs = currentProperty.imagenes;
+      document.getElementById("modalImage").src = imgs[currentImageIndex];
+      document.getElementById("imageCounter").textContent = `${currentImageIndex + 1} / ${imgs.length}`;
+    }
+
+    function nextImage() {
+      if (!currentProperty) return;
+      const imgs = currentProperty.imagenes;
+      currentImageIndex = (currentImageIndex + 1) % imgs.length;
+      updateModalImage();
+    }
+
+    function prevImage() {
+      if (!currentProperty) return;
+      const imgs = currentProperty.imagenes;
+      currentImageIndex = (currentImageIndex - 1 + imgs.length) % imgs.length;
+      updateModalImage();
+    }
+
+    // Close modal on escape
+    document.addEventListener("keydown", (e) => {
+      if (e.key === "Escape") closeModal();
+      if (e.key === "ArrowRight") nextImage();
+      if (e.key === "ArrowLeft") prevImage();
+    });
+
+    // Close modal on overlay click
+    document.getElementById("modal").addEventListener("click", (e) => {
+      if (e.target.id === "modal") closeModal();
+    });
+
+    // Initial render
+    renderProperties();
   </script>
 </body>
 </html>

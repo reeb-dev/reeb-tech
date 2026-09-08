@@ -3,17 +3,35 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Kiosco — stock, ventas y fiado</title>
+  <title>Kiosco — Golosinas, bebidas y más</title>
   <link rel="stylesheet" href="styles.css">
+  <style>
+    .catalog-header { display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 16px; margin-bottom: 24px; }
+    .filters { display: flex; gap: 8px; flex-wrap: wrap; }
+    .filters button { background: var(--card); border: 1px solid var(--line); padding: 8px 16px; border-radius: 20px; cursor: pointer; font-size: 13px; transition: all 0.2s; }
+    .filters button:hover { border-color: var(--verde); }
+    .filters button.active { background: var(--verde); color: white; border-color: var(--verde); }
+    .products-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 16px; }
+    .product-card { background: var(--card); border-radius: 12px; padding: 16px; text-align: center; box-shadow: 0 2px 8px rgba(0,0,0,0.06); transition: transform 0.2s; }
+    .product-card:hover { transform: translateY(-2px); box-shadow: 0 4px 16px rgba(0,0,0,0.1); }
+    .product-card .emoji { font-size: 48px; margin-bottom: 12px; }
+    .product-card h3 { margin: 0 0 4px; font-size: 14px; color: var(--ink); }
+    .product-card .cat { font-size: 11px; color: var(--muted); margin-bottom: 8px; }
+    .product-card .price { font-size: 20px; font-weight: 700; color: var(--verde); }
+    .product-card .stock { font-size: 12px; margin-top: 8px; }
+    .product-card .stock.bajo { color: #e67e22; }
+    .product-card .stock.agotado { color: #e74c3c; }
+    .admin-link { text-align: center; margin-top: 32px; padding: 24px; background: var(--card); border-radius: 12px; }
+  </style>
 </head>
 <body>
   <header class="top">
     <div class="top-inner">
-      <a class="logo" href="index.html">KIOSCO<small>Stock y ventas · demo</small></a>
+      <a class="logo" href="index.html">KIOSCO<small>Golosinas, bebidas y más</small></a>
       <nav>
-        <a href="#modulos">Módulos</a>
-        <a href="#stock">Stock de ejemplo</a>
-        <a class="btn" href="panel.html">Abrir el kiosco</a>
+        <a href="#productos">Productos</a>
+        <a href="#info">Info</a>
+        <a class="btn" href="panel.html" style="background:var(--verde);">Panel Admin</a>
       </nav>
     </div>
   </header>
@@ -21,10 +39,10 @@
   <main class="wrap">
     <section class="hero">
       <div>
-        <p class="kicker">Kiosco de barrio · datos de ejemplo</p>
-        <h1>Stock, ventas del día y la libreta de fiado.</h1>
-        <p class="lead">No es una planilla suelta. Es el kiosco: qué hay en góndola, qué se vendió, qué falta reponer y quién debe.</p>
-        <a class="btn" href="panel.html" style="background:var(--verde);color:white;">Ver stock de ejemplo</a>
+        <p class="kicker">Tu kiosco de confianza</p>
+        <h1>Todo lo que necesitás, cerca de casa.</h1>
+        <p class="lead">Golosinas, bebidas, cigarrillos y artículos de almacén. Precios actualizados y stock disponible.</p>
+        <a class="btn" href="#productos" style="background:var(--verde);color:white;">Ver productos</a>
       </div>
       <aside class="ticket">
         <div class="ticket-img">
@@ -32,83 +50,113 @@
         </div>
         <div class="ticket-body">
           <header>
-            <span>Venta de ejemplo</span>
-            <span>hoy 14:32</span>
+            <span>🛒 Precios del día</span>
           </header>
           <div class="ticket-item">
-            <span class="name">Alfajor triple x2</span>
-            <span class="price">$ 1.700</span>
+            <span class="name">Alfajor triple</span>
+            <span class="price">$ 850</span>
           </div>
           <div class="ticket-item">
             <span class="name">Coca-Cola 500ml</span>
             <span class="price">$ 1.200</span>
           </div>
           <div class="ticket-item">
-            <span class="name">Chicles x5</span>
-            <span class="price">$ 500</span>
-          </div>
-          <div class="ticket-total">
-            <span>Total</span>
-            <span>$ 3.400</span>
+            <span class="name">Agua mineral 1.5L</span>
+            <span class="price">$ 900</span>
           </div>
         </div>
       </aside>
     </section>
 
-    <section class="section" id="modulos">
-      <h2>Qué controla el kiosco</h2>
-      <div class="modules">
-        <article>
-          <div class="mod-icon"><img src="https://images.unsplash.com/photo-1607082348824-0a96f2a4b9da?w=80&h=80&fit=crop" alt="Productos"></div>
-          <h3>Stock</h3>
-          <p>Cada producto con precio, stock actual y mínimo para reponer. Golosinas, bebidas, cigarrillos, almacén.</p>
-        </article>
-        <article>
-          <div class="mod-icon"><img src="https://images.unsplash.com/photo-1586528116311-ad8dd3c8310d?w=80&h=80&fit=crop" alt="Reposición"></div>
-          <h3>Reposición</h3>
-          <p>Cuando el stock baja del mínimo, el producto queda marcado. El proveedor y el historial de reposición están en la ficha.</p>
-        </article>
-        <article>
-          <div class="mod-icon"><img src="https://images.unsplash.com/photo-1554224155-6726b3ff858f?w=80&h=80&fit=crop" alt="Fiado"></div>
-          <h3>Fiado</h3>
-          <p>La libreta del barrio: quién debe, desde cuándo y qué llevó. No se pierde en un papel suelto.</p>
-        </article>
+    <!-- CATÁLOGO PÚBLICO -->
+    <section class="section" id="productos">
+      <div class="catalog-header">
+        <h2>Productos disponibles</h2>
+        <div class="filters">
+          <button class="active" data-filter="all">Todos</button>
+          <button data-filter="golosinas">🍬 Golosinas</button>
+          <button data-filter="bebidas">🥤 Bebidas</button>
+          <button data-filter="cigarrillos">🚬 Cigarrillos</button>
+          <button data-filter="almacen">🛒 Almacén</button>
+          <button data-filter="limpieza">🧹 Limpieza</button>
+        </div>
+      </div>
+      <div class="products-grid" id="catalog"></div>
+      <div class="admin-link">
+        <p>¿Sos el dueño del kiosco?</p>
+        <a class="btn" href="panel.html" style="background:var(--verde);color:white;">Acceder al panel de gestión</a>
       </div>
     </section>
 
-    <section class="section" id="stock">
-      <h2>Stock de ejemplo</h2>
-      <p class="note">Productos y precios ficticios, para ver el kiosco cargado. No es un comercio real.</p>
-      <table>
-        <thead>
-          <tr>
-            <th>Código</th>
-            <th>Producto</th>
-            <th>Categoría</th>
-            <th class="amount">Precio</th>
-            <th class="amount">Stock</th>
-            <th>Estado</th>
-          </tr>
-        </thead>
-        <tbody id="preview"></tbody>
-      </table>
-      <p style="margin-top:16px;"><a class="btn" href="panel.html" style="background:var(--verde);color:white;">Abrir el panel del kiosco</a></p>
+    <section class="section" id="info">
+      <h2>Información</h2>
+      <div class="modules" style="grid-template-columns: repeat(3, 1fr);">
+        <article>
+          <h3>🕐 Horario</h3>
+          <p>Lunes a sábado: 8:00 a 21:00</p>
+          <p>Domingos: 9:00 a 13:00</p>
+        </article>
+        <article>
+          <h3>📍 Ubicación</h3>
+          <p>Av. San Martín 1234</p>
+          <p>Barrio Centro</p>
+        </article>
+        <article>
+          <h3>💳 Pagos</h3>
+          <p>Efectivo, débito, crédito</p>
+          <p>Mercado Pago, transferencia</p>
+        </article>
+      </div>
     </section>
   </main>
 
-  <footer class="wrap">Kiosco · demo de producto · no es un comercio en actividad ni un sistema de facturación.</footer>
+  <footer class="wrap">Kiosco · demo de producto · no es un comercio en actividad.</footer>
 
   <script src="data.js"></script>
   <script>
-    document.getElementById("preview").innerHTML = seed().slice(0, 6).map((item) => `
-      <tr>
-        <td>${esc(item.codigo)}</td>
-        <td>${esc(item.nombre)}</td>
-        <td>${esc(catLabel(item.categoria))}</td>
-        <td class="amount">${esc(money(item.precio))}</td>
-        <td class="amount">${item.status === "fiado" ? "—" : item.stock}</td>
-        <td><span class="tag ${esc(stockStatus(item))}">${esc(label(stockStatus(item)))}</span></td>
-      </tr>`).join("");
+    const EMOJIS = {
+      golosinas: "🍬",
+      bebidas: "🥤",
+      cigarrillos: "🚬",
+      almacen: "🛒",
+      limpieza: "🧹",
+      varios: "📦"
+    };
+
+    let currentFilter = "all";
+    const products = seed().filter(p => p.status !== "fiado");
+
+    function renderCatalog() {
+      const filtered = currentFilter === "all" 
+        ? products 
+        : products.filter(p => p.categoria === currentFilter);
+
+      document.getElementById("catalog").innerHTML = filtered.map(p => {
+        const status = stockStatus(p);
+        return `
+          <article class="product-card">
+            <div class="emoji">${EMOJIS[p.categoria] || "📦"}</div>
+            <h3>${esc(p.nombre)}</h3>
+            <div class="cat">${esc(catLabel(p.categoria))}</div>
+            <div class="price">${money(p.precio)}</div>
+            <div class="stock ${status === "agotado" ? "agotado" : status === "bajo" ? "bajo" : ""}">
+              ${status === "agotado" ? "❌ Agotado" : status === "bajo" ? "⚠️ Últimas unidades" : "✅ Disponible"}
+            </div>
+          </article>
+        `;
+      }).join("");
+    }
+
+    document.querySelectorAll(".filters button").forEach(btn => {
+      btn.addEventListener("click", () => {
+        document.querySelectorAll(".filters button").forEach(b => b.classList.remove("active"));
+        btn.classList.add("active");
+        currentFilter = btn.dataset.filter;
+        renderCatalog();
+      });
+    });
+
+    renderCatalog();
   </script>
 </body>
 </html>

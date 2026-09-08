@@ -33,7 +33,7 @@
       <h1>Mis Publicaciones</h1>
     </div>
     <div style="display:flex; gap:8px;">
-      <button class="ghost" onclick="document.querySelector('.create').classList.toggle('open')">+ Nueva publicación</button>
+      <button class="ghost" id="open-create">+ Nueva publicación</button>
       <a href="index.html" class="btn-panel">Ver tienda</a>
     </div>
   </div>
@@ -50,333 +50,93 @@
   </div>
 
   <!-- Stats -->
-  <div class="stats">
-    <div class="on">
-      <strong>24</strong>
-      <span class="label">Publicaciones activas</span>
-    </div>
-    <div>
-      <strong>8</strong>
-      <span class="label">Pausadas</span>
-    </div>
-    <div class="verde">
-      <strong>156</strong>
-      <span class="label">Ventas este mes</span>
-    </div>
-    <div class="naranja">
-      <strong>12</strong>
-      <span class="label">Preguntas sin responder</span>
-    </div>
-    <div>
-      <strong>98%</strong>
-      <span class="label">Reputación</span>
-    </div>
-  </div>
+  <div class="stats" id="stats"></div>
 
   <!-- Create form -->
-  <div class="create">
+  <form class="create" id="create">
     <h3>Nueva Publicación</h3>
     <div class="create-grid">
       <div>
         <label>Título del producto</label>
-        <input type="text" placeholder="Ej: iPhone 15 Pro 256GB Negro">
+        <input type="text" name="titulo" placeholder="Ej: iPhone 15 Pro 256GB Negro" required>
       </div>
       <div>
         <label>Categoría</label>
-        <select>
-          <option>Seleccionar categoría...</option>
-          <option>Celulares y Smartphones</option>
-          <option>Computación</option>
-          <option>Electrónica</option>
-          <option>Electrodomésticos</option>
-          <option>Hogar y Muebles</option>
+        <select name="categoria">
+          <option value="celulares">Celulares</option>
+          <option value="computacion">Computación</option>
+          <option value="electronica">Electrónica</option>
+          <option value="electrodomesticos">Electrodomésticos</option>
+          <option value="hogar">Hogar</option>
+          <option value="deportes">Deportes</option>
+          <option value="moda">Moda</option>
         </select>
       </div>
       <div>
         <label>Precio</label>
-        <input type="number" placeholder="$ 0">
+        <input type="number" name="precio" placeholder="0" required>
       </div>
       <div>
         <label>Stock disponible</label>
-        <input type="number" value="1">
+        <input type="number" name="stock" value="1" min="0">
       </div>
       <div>
-        <label>Condición</label>
-        <select>
-          <option>Nuevo</option>
-          <option>Usado</option>
-          <option>Reacondicionado</option>
-        </select>
+        <label>Ubicación</label>
+        <input type="text" name="ubicacion" value="Capital Federal">
       </div>
       <div>
         <label>Tipo de publicación</label>
-        <select>
-          <option>Gratuita</option>
-          <option>Clásica (comisión 13%)</option>
-          <option>Premium (comisión 17%)</option>
+        <select name="tipoPub">
+          <option value="gratuita">Gratuita</option>
+          <option value="clasica">Clásica (13%)</option>
+          <option value="premium">Premium (17%)</option>
         </select>
       </div>
     </div>
     <div style="margin-top: 12px;">
       <label>Descripción</label>
-      <textarea rows="3" placeholder="Describí tu producto con detalle..."></textarea>
+      <textarea rows="3" name="descripcion" placeholder="Describí tu producto con detalle..."></textarea>
     </div>
-    <button class="btn-panel">Publicar producto</button>
-  </div>
+    <div style="margin-top: 12px;">
+      <label><input type="checkbox" name="envioGratis" checked> Envío gratis</label>
+    </div>
+    <button type="submit" class="btn-panel" style="margin-top: 12px;">Publicar producto</button>
+  </form>
 
   <!-- Workspace -->
   <div class="workspace">
     <!-- List -->
-    <div class="list">
-      <div class="pub-card on">
-        <header>
-          <span class="title">Samsung Galaxy S24 Ultra 256GB Titanium</span>
-          <span class="tag activa">Activa</span>
-        </header>
-        <div class="id">MLA-2847561234</div>
-        <div class="price">$ 1.249.999</div>
-        <div class="metrics">
-          <span><strong>2,340</strong> visitas</span>
-          <span><strong>45</strong> vendidos</span>
-          <span><strong>12</strong> preguntas</span>
-          <span>⭐ 4.9 (38 opiniones)</span>
-        </div>
-      </div>
-
-      <div class="pub-card">
-        <header>
-          <span class="title">iPhone 15 Pro Max 512GB Negro</span>
-          <span class="tag activa">Activa</span>
-        </header>
-        <div class="id">MLA-2847561235</div>
-        <div class="price">$ 2.199.000</div>
-        <div class="metrics">
-          <span><strong>5,120</strong> visitas</span>
-          <span><strong>23</strong> vendidos</span>
-          <span><strong>8</strong> preguntas</span>
-          <span>⭐ 5.0 (21 opiniones)</span>
-        </div>
-      </div>
-
-      <div class="pub-card">
-        <header>
-          <span class="title">MacBook Pro 14" M3 Pro 512GB</span>
-          <span class="tag activa">Activa</span>
-        </header>
-        <div class="id">MLA-2847561236</div>
-        <div class="price">$ 3.450.000</div>
-        <div class="metrics">
-          <span><strong>1,890</strong> visitas</span>
-          <span><strong>8</strong> vendidos</span>
-          <span><strong>15</strong> preguntas</span>
-          <span>⭐ 5.0 (8 opiniones)</span>
-        </div>
-      </div>
-
-      <div class="pub-card">
-        <header>
-          <span class="title">AirPods Pro 2da Gen USB-C</span>
-          <span class="tag activa">Activa</span>
-        </header>
-        <div class="id">MLA-2847561237</div>
-        <div class="price">$ 189.999</div>
-        <div class="metrics">
-          <span><strong>8,450</strong> visitas</span>
-          <span><strong>67</strong> vendidos</span>
-          <span><strong>5</strong> preguntas</span>
-          <span>⭐ 4.8 (62 opiniones)</span>
-        </div>
-      </div>
-
-      <div class="pub-card">
-        <header>
-          <span class="title">Apple Watch Ultra 2 49mm GPS+Cellular</span>
-          <span class="tag pausada">Pausada</span>
-        </header>
-        <div class="id">MLA-2847561238</div>
-        <div class="price">$ 899.000</div>
-        <div class="metrics">
-          <span><strong>920</strong> visitas</span>
-          <span><strong>3</strong> vendidos</span>
-          <span><strong>2</strong> preguntas</span>
-          <span>⭐ 5.0 (3 opiniones)</span>
-        </div>
-      </div>
-
-      <div class="pub-card">
-        <header>
-          <span class="title">PlayStation 5 Slim + 2 Joysticks</span>
-          <span class="tag activa">Activa</span>
-        </header>
-        <div class="id">MLA-2847561239</div>
-        <div class="price">$ 749.999</div>
-        <div class="metrics">
-          <span><strong>3,200</strong> visitas</span>
-          <span><strong>12</strong> vendidos</span>
-          <span><strong>18</strong> preguntas</span>
-          <span>⭐ 4.9 (11 opiniones)</span>
-        </div>
-      </div>
-    </div>
+    <div class="list" id="publist"></div>
 
     <!-- Detail -->
-    <div class="detail">
-      <span class="tag activa" style="margin-bottom: 8px;">Activa</span>
-      <h2>Samsung Galaxy S24 Ultra 256GB Titanium</h2>
-      <p style="color: var(--muted); font-size: 13px;">MLA-2847561234 • Publicación Premium</p>
-
-      <div class="meta">
-        <div>
-          <span>Precio</span>
-          <strong>$ 1.249.999</strong>
-        </div>
-        <div>
-          <span>Stock</span>
-          <strong>18 unidades</strong>
-        </div>
-        <div>
-          <span>Visitas (30 días)</span>
-          <strong>2,340</strong>
-        </div>
-        <div>
-          <span>Vendidos</span>
-          <strong>45 unidades</strong>
-        </div>
-      </div>
-
-      <!-- Ratings -->
-      <div class="ratings-display">
-        <div style="display: flex; align-items: center; gap: 12px;">
-          <span class="big">4.9</span>
-          <div>
-            <div class="stars">★★★★★</div>
-            <div class="count">38 opiniones</div>
-          </div>
-        </div>
-      </div>
-
-      <!-- Mercado Pago -->
-      <div class="mp-section">
-        <h4>💳 Mercado Pago</h4>
-        <div class="mp-balance">$ 4.856.320</div>
-        <div class="mp-available">Disponible para retirar: $ 3.245.000</div>
-        <div style="margin-top: 10px; font-size: 13px; color: var(--muted);">
-          Última venta: hace 2 horas • $ 1.249.999
-        </div>
-      </div>
-
-      <!-- Shipping -->
-      <div class="shipping-section">
-        <h4>🚚 Envíos pendientes</h4>
-        <div style="font-size: 14px;">
-          <strong>3 paquetes</strong> listos para despachar
-        </div>
-        <div class="tracking" style="margin-top: 8px;">
-          Próximo: OCA → José García (CABA)
-        </div>
-      </div>
-
-      <!-- Questions -->
-      <h4 style="margin-top: 20px; font-size: 14px;">Últimas preguntas</h4>
-      <div class="questions-list">
-        <div class="question-item">
-          <div class="q">¿Hacés envío al interior?</div>
-          <div class="a">Sí, llega en 3-5 días hábiles con Mercado Envíos. ¡Envío gratis!</div>
-          <div class="date">hace 2 horas</div>
-        </div>
-        <div class="question-item">
-          <div class="q">¿Tiene garantía oficial Samsung?</div>
-          <div class="a">Sí, 12 meses de garantía oficial Samsung Argentina.</div>
-          <div class="date">hace 5 horas</div>
-        </div>
-        <div class="question-item" style="background: #fff3cd;">
-          <div class="q">¿Aceptás permuta por iPhone 14 Pro?</div>
-          <div style="color: var(--naranja); font-size: 13px; font-weight: 500;">⏳ Sin responder</div>
-          <div class="date">hace 1 hora</div>
-        </div>
-      </div>
-
-      <!-- ARCA Facturación -->
-      <div class="arca-section">
-        <h4>🧾 Facturación ARCA</h4>
-        <div style="font-size: 13px;">
-          <strong>45 facturas</strong> emitidas este mes
-        </div>
-        <div style="font-size: 12px; color: var(--muted); margin-top: 4px;">
-          Última: FA-A 0001-00000789 • $ 1.249.999
-        </div>
-      </div>
-
-      <div class="factura-box">
-        <h4>✅ Última factura emitida</h4>
-        <div><strong>Tipo:</strong> Factura A</div>
-        <div><strong>Número:</strong> 0001-00000789</div>
-        <div><strong>Fecha:</strong> 08/09/2026 10:45</div>
-        <div><strong>Total:</strong> $ 1.249.999</div>
-        <div><strong>CAE:</strong> <span class="cae">74281956473829</span></div>
-        <div><strong>Vto CAE:</strong> 18/09/2026</div>
-      </div>
-
-      <!-- Sales history -->
-      <h4 style="margin-top: 20px; font-size: 14px;">Últimas ventas</h4>
-      <div class="sales-timeline">
-        <div class="sale-item">
-          <div>
-            <div class="buyer">María González</div>
-            <div style="font-size: 12px; color: var(--muted);">hace 2 horas • CABA</div>
-          </div>
-          <div class="amount">$ 1.249.999</div>
-        </div>
-        <div class="sale-item">
-          <div>
-            <div class="buyer">Carlos Rodríguez</div>
-            <div style="font-size: 12px; color: var(--muted);">hace 8 horas • Córdoba</div>
-          </div>
-          <div class="amount">$ 1.249.999</div>
-        </div>
-        <div class="sale-item">
-          <div>
-            <div class="buyer">Ana Martínez</div>
-            <div style="font-size: 12px; color: var(--muted);">ayer • Rosario</div>
-          </div>
-          <div class="amount">$ 1.249.999</div>
-        </div>
-      </div>
-
-      <div class="actions">
-        <button class="btn-panel">Editar publicación</button>
-        <button class="ghost">Pausar</button>
-        <button class="ghost">Ver en tienda</button>
-        <button class="ghost">Emitir factura</button>
-      </div>
+    <div class="detail" id="detail">
+      <p>Elegí una publicación del listado.</p>
     </div>
   </div>
 
-  <script>
-    // Tab switching
-    document.querySelectorAll('.tabs button').forEach(btn => {
-      btn.onclick = () => {
-        document.querySelectorAll('.tabs button').forEach(b => b.classList.remove('on'));
-        btn.classList.add('on');
-      };
-    });
-
-    // Publication selection
-    document.querySelectorAll('.pub-card').forEach(card => {
-      card.onclick = () => {
-        document.querySelectorAll('.pub-card').forEach(c => c.classList.remove('on'));
-        card.classList.add('on');
-      };
-    });
-
-    // Stats filter
-    document.querySelectorAll('.stats > div, .stats > button').forEach(stat => {
-      stat.onclick = () => {
-        document.querySelectorAll('.stats > div, .stats > button').forEach(s => s.classList.remove('on'));
-        stat.classList.add('on');
-      };
-    });
-  </script>
-
+  <style>
+    .toast {
+      position: fixed;
+      bottom: 24px;
+      left: 50%;
+      transform: translateX(-50%) translateY(100px);
+      background: #333;
+      color: white;
+      padding: 14px 28px;
+      border-radius: 8px;
+      font-size: 14px;
+      font-weight: 500;
+      z-index: 9999;
+      opacity: 0;
+      transition: transform 0.3s ease, opacity 0.3s ease;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.3);
+    }
+    .toast.show {
+      transform: translateX(-50%) translateY(0);
+      opacity: 1;
+    }
+  </style>
+  <script src="data.js"></script>
+  <script src="panel.js"></script>
 </body>
 </html>

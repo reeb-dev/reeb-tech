@@ -3,17 +3,41 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Restaurante — mesas, comandas y caja</title>
+  <title>Restaurante — Menú y Carta</title>
   <link rel="stylesheet" href="styles.css">
+  <style>
+    :root { --rojo: #c0392b; --rojo-light: #e74c3c; }
+    .catalog-header { display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 16px; margin-bottom: 24px; }
+    .filters { display: flex; gap: 8px; flex-wrap: wrap; }
+    .filters button { background: var(--card); border: 1px solid var(--line); padding: 8px 16px; border-radius: 20px; cursor: pointer; font-size: 13px; }
+    .filters button:hover { border-color: var(--rojo); }
+    .filters button.active { background: var(--rojo); color: white; border-color: var(--rojo); }
+    .menu-section { margin-bottom: 32px; }
+    .menu-section h3 { color: var(--rojo); margin-bottom: 16px; font-size: 20px; border-bottom: 2px solid var(--rojo); padding-bottom: 8px; }
+    .menu-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 16px; }
+    .menu-item { background: var(--card); border-radius: 12px; padding: 16px; display: flex; gap: 12px; box-shadow: 0 2px 8px rgba(0,0,0,0.06); }
+    .menu-item .emoji { font-size: 36px; }
+    .menu-item .info { flex: 1; }
+    .menu-item h4 { margin: 0 0 4px; font-size: 15px; color: var(--ink); }
+    .menu-item .desc { font-size: 12px; color: var(--muted); margin-bottom: 8px; }
+    .menu-item .price { font-size: 18px; font-weight: 700; color: var(--rojo); }
+    .menu-item .unavailable { opacity: 0.5; }
+    .menu-item .unavailable::after { content: " (No disponible)"; font-size: 11px; color: var(--muted); }
+    .reserva-box { background: linear-gradient(135deg, var(--rojo) 0%, var(--rojo-light) 100%); color: white; padding: 32px; border-radius: 12px; text-align: center; margin-top: 32px; }
+    .reserva-box h3 { margin: 0 0 12px; font-size: 24px; }
+    .reserva-box p { margin: 0 0 16px; opacity: 0.9; }
+    .reserva-box .tel { font-size: 28px; font-weight: 700; }
+    .admin-link { text-align: center; margin-top: 32px; padding: 24px; background: var(--card); border-radius: 12px; }
+  </style>
 </head>
 <body>
-  <header class="top">
+  <header class="top" style="background: var(--rojo);">
     <div class="top-inner">
-      <a class="logo" href="index.html">RESTAURANTE<small>Gestión de salón · demo</small></a>
+      <a class="logo" href="index.html">RESTAURANTE<small>Cocina casera argentina</small></a>
       <nav>
-        <a href="#modulos">Módulos</a>
-        <a href="#mesas">Mesas</a>
-        <a class="btn" href="panel.html">Abrir sistema</a>
+        <a href="#menu">Menú</a>
+        <a href="#reservas">Reservas</a>
+        <a class="btn" href="panel.html">Panel Admin</a>
       </nav>
     </div>
   </header>
@@ -21,73 +45,129 @@
   <main class="wrap">
     <section class="hero">
       <div>
-        <p class="kicker">Restaurante · datos de ejemplo</p>
-        <h1>Mesas, comandas, cocina y caja en un solo lugar.</h1>
-        <p class="lead">No es una libreta. Es el salón: qué mesa está ocupada, qué pidieron, qué está listo en cocina y cuánto es la cuenta. Con facturación ARCA integrada.</p>
-        <a class="btn" href="panel.html" style="background:var(--rojo);color:white;">Ver salón de ejemplo</a>
+        <p class="kicker">Bienvenidos</p>
+        <h1>Cocina casera con el sabor de siempre.</h1>
+        <p class="lead">Los mejores platos de la cocina argentina. Carnes, pastas, minutas y postres caseros. Te esperamos de martes a domingo.</p>
+        <a class="btn" href="#menu" style="background:var(--rojo);color:white;">Ver el menú</a>
       </div>
-      <aside class="mesas-preview" id="mesas-preview"></aside>
+      <aside class="mesas-preview" id="mesas-preview">
+        <img src="https://images.unsplash.com/photo-1414235077428-338989a2e8c0?w=400&h=300&fit=crop" alt="Plato de restaurante" style="width: 100%; border-radius: 12px;">
+      </aside>
     </section>
 
-    <section class="section" id="modulos">
-      <h2>Qué controla el sistema</h2>
-      <div class="modules">
-        <article>
-          <div class="mod-icon"><img src="https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?w=80&h=80&fit=crop" alt="Mesas"></div>
-          <h3>Mesas</h3>
-          <p>Estado de cada mesa: libre, ocupada, reservada. Capacidad y mozo asignado.</p>
-        </article>
-        <article>
-          <div class="mod-icon"><img src="https://images.unsplash.com/photo-1414235077428-338989a2e8c0?w=80&h=80&fit=crop" alt="Comandas"></div>
-          <h3>Comandas</h3>
-          <p>Pedidos por mesa con detalle de platos, notas especiales y estado de preparación.</p>
-        </article>
-        <article>
-          <div class="mod-icon"><img src="https://images.unsplash.com/photo-1556910103-1c02745aae4d?w=80&h=80&fit=crop" alt="Cocina"></div>
-          <h3>Cocina</h3>
-          <p>Vista de cocina: qué platos hay que preparar, en orden de llegada.</p>
-        </article>
-        <article>
-          <div class="mod-icon"><img src="https://images.unsplash.com/photo-1556742049-0cfed4f6a45d?w=80&h=80&fit=crop" alt="Caja"></div>
-          <h3>Caja ARCA</h3>
-          <p>Cierre de mesa con ticket o factura. Conexión simulada a AFIP/ARCA.</p>
-        </article>
+    <!-- MENÚ PÚBLICO -->
+    <section class="section" id="menu">
+      <div class="catalog-header">
+        <h2>Nuestra Carta</h2>
+        <div class="filters">
+          <button class="active" data-filter="all">Todo</button>
+          <button data-filter="entrada">Entradas</button>
+          <button data-filter="principal">Principales</button>
+          <button data-filter="guarnicion">Guarniciones</button>
+          <button data-filter="postre">Postres</button>
+          <button data-filter="bebida">Bebidas</button>
+        </div>
+      </div>
+      <div id="catalog"></div>
+      
+      <div class="admin-link">
+        <p>¿Sos administrador del restaurante?</p>
+        <a class="btn" href="panel.html" style="background:var(--rojo);color:white;">Acceder al sistema de gestión</a>
       </div>
     </section>
 
-    <section class="section" id="mesas">
-      <h2>Menú de ejemplo</h2>
-      <p class="note">Platos y precios ficticios. No es un restaurante real.</p>
-      <table>
-        <thead><tr><th>Código</th><th>Plato</th><th>Categoría</th><th class="amount">Precio</th><th>Disponible</th></tr></thead>
-        <tbody id="preview-menu"></tbody>
-      </table>
-      <p style="margin-top:16px;"><a class="btn" href="panel.html" style="background:var(--rojo);color:white;">Abrir el sistema</a></p>
+    <section class="section" id="reservas">
+      <div class="reserva-box">
+        <h3>📞 Reservas</h3>
+        <p>Reservá tu mesa llamando o por WhatsApp</p>
+        <div class="tel">011-4555-1234</div>
+      </div>
+    </section>
+
+    <section class="section">
+      <h2>Información</h2>
+      <div class="modules" style="grid-template-columns: repeat(3, 1fr);">
+        <article>
+          <h3>🕐 Horarios</h3>
+          <p>Martes a viernes: 12 a 15 y 20 a 24</p>
+          <p>Sábados y domingos: 12 a 16 y 20 a 01</p>
+        </article>
+        <article>
+          <h3>📍 Ubicación</h3>
+          <p>Av. Corrientes 1234</p>
+          <p>Almagro, CABA</p>
+        </article>
+        <article>
+          <h3>💳 Medios de pago</h3>
+          <p>Efectivo, débito, crédito</p>
+          <p>Mercado Pago, QR</p>
+        </article>
+      </div>
     </section>
   </main>
 
-  <footer class="wrap">Restaurante · demo de producto · no es un restaurante en actividad ni emite facturas reales.</footer>
+  <footer class="wrap">Restaurante · demo de producto · no es un restaurante en actividad.</footer>
 
   <script src="data.js"></script>
   <script>
-    // Mesas preview
-    document.getElementById("mesas-preview").innerHTML = seedMesas().slice(0, 8).map((m) => `
-      <div class="mesa-card ${esc(m.status)}">
-        <div class="numero">${m.numero}</div>
-        <div class="cap">${m.capacidad} personas</div>
-        <div class="status"><span class="tag ${esc(m.status)}">${esc(labelMesa(m.status))}</span></div>
-      </div>
-    `).join("");
+    const EMOJIS = {
+      entrada: "🥗",
+      principal: "🍖",
+      guarnicion: "🍟",
+      postre: "🍮",
+      bebida: "🍷",
+      menu: "📋"
+    };
 
-    // Menu preview
-    document.getElementById("preview-menu").innerHTML = seedMenu().slice(0, 8).map((item) => `
-      <tr>
-        <td>${esc(item.codigo)}</td>
-        <td>${esc(item.nombre)}</td>
-        <td>${esc(catLabel(item.categoria))}</td>
-        <td class="amount">${esc(money(item.precio))}</td>
-        <td>${item.disponible ? "✓" : "✗"}</td>
-      </tr>`).join("");
+    let currentFilter = "all";
+    const menu = seedMenu();
+
+    function renderMenu() {
+      const filtered = currentFilter === "all" 
+        ? menu 
+        : menu.filter(p => p.categoria === currentFilter);
+
+      // Agrupar por categoría
+      const grouped = {};
+      filtered.forEach(item => {
+        if (!grouped[item.categoria]) grouped[item.categoria] = [];
+        grouped[item.categoria].push(item);
+      });
+
+      let html = "";
+      Object.keys(grouped).forEach(cat => {
+        html += `
+          <div class="menu-section">
+            <h3>${EMOJIS[cat] || "🍽️"} ${catLabel(cat)}</h3>
+            <div class="menu-grid">
+              ${grouped[cat].map(item => `
+                <div class="menu-item ${!item.disponible ? 'unavailable' : ''}">
+                  <div class="emoji">${EMOJIS[item.categoria] || "🍽️"}</div>
+                  <div class="info">
+                    <h4>${esc(item.nombre)}</h4>
+                    ${item.descripcion ? `<div class="desc">${esc(item.descripcion)}</div>` : ''}
+                    <div class="price">${money(item.precio)}${!item.disponible ? ' <span style="font-size:12px;color:#999;">(No disponible)</span>' : ''}</div>
+                  </div>
+                </div>
+              `).join("")}
+            </div>
+          </div>
+        `;
+      });
+
+      document.getElementById("catalog").innerHTML = html;
+    }
+
+    document.querySelectorAll(".filters button").forEach(btn => {
+      btn.addEventListener("click", () => {
+        document.querySelectorAll(".filters button").forEach(b => b.classList.remove("active"));
+        btn.classList.add("active");
+        currentFilter = btn.dataset.filter;
+        renderMenu();
+      });
+    });
+
+    renderMenu();
   </script>
 </body>
 </html>

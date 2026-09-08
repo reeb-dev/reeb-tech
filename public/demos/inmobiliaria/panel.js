@@ -1,6 +1,7 @@
 let items = load();
 let selected = items[0]?.id || "";
 let filter = "todos";
+let searchTerm = "";
 
 document.getElementById("open-create").addEventListener("click", () => {
   document.getElementById("create").classList.toggle("open");
@@ -31,12 +32,21 @@ document.getElementById("create").addEventListener("submit", (event) => {
   save(items);
   event.target.reset();
   event.target.classList.remove("open");
+  showToast("Propiedad agregada");
   render();
 });
 
 function visible() {
-  if (filter === "todos") return items;
-  return items.filter((item) => item.status === filter);
+  let result = filter === "todos" ? items : items.filter((item) => item.status === filter);
+  if (searchTerm) {
+    const term = searchTerm.toLowerCase();
+    result = result.filter((item) => 
+      item.titulo.toLowerCase().includes(term) || 
+      item.direccion.toLowerCase().includes(term) ||
+      item.barrio.toLowerCase().includes(term)
+    );
+  }
+  return result;
 }
 
 function render() {
@@ -51,7 +61,13 @@ function render() {
     <button type="button" data-filter="reservada" class="${filter === "reservada" ? "on" : ""}"><strong>${reservadas}</strong>reservadas</button>
     <button type="button" data-filter="alquilada" class="${filter === "alquilada" ? "on" : ""}"><strong>${alquiladas}</strong>alquiladas</button>
     <button type="button" data-filter="vendida" class="${filter === "vendida" ? "on" : ""}"><strong>${vendidas}</strong>vendidas</button>
+    <input type="text" id="search" placeholder="🔍 Buscar..." value="${esc(searchTerm)}" style="margin-left:auto;padding:8px 12px;border:1px solid var(--line);border-radius:4px;width:180px;">
   `;
+  
+  document.getElementById("search").addEventListener("input", (e) => {
+    searchTerm = e.target.value;
+    render();
+  });
 
   document.querySelectorAll("[data-filter]").forEach((btn) => {
     btn.addEventListener("click", () => {
@@ -99,6 +115,40 @@ function render() {
       ${item.expensas ? `<div><span>Expensas</span>${esc(money(item.expensas))}</div>` : ""}
       ${item.cliente ? `<div><span>Cliente</span>${esc(item.cliente.nombre)}</div>` : ""}
     </div>
+    
+    ${item.factura ? `
+      <div class="factura-box">
+        <h4>✅ Operación facturada</h4>
+        <div><strong>Tipo:</strong> ${esc(compLabel(item.factura.tipo))}</div>
+        <div><strong>Número:</strong> ${esc(item.factura.numero)}</div>
+        <div><strong>Total:</strong> ${item.factura.total > 100000 ? money(item.factura.total, true) : money(item.factura.total)}</div>
+        <div><strong>CAE:</strong> <span class="cae">${esc(item.factura.cae)}</span></div>
+        <div><strong>Vto CAE:</strong> ${esc(item.factura.vto)}</div>
+      </div>
+    ` : `
+      <div class="arca-section">
+        <h4>🧾 Facturación ARCA</h4>
+        <label>CUIT cliente<input id="arca-cuit" placeholder="20-12345678-9"></label>
+        <label>Tipo comprobante
+          <select id="arca-tipo">
+            ${COMPROBANTES.map((c) => `<option value="${c.id}">${esc(c.label)}</option>`).join("")}
+          </select>
+        </label>
+        <label>Concepto
+          <select id="arca-concepto">
+            <option value="alquiler">Alquiler mensual</option>
+            <option value="comision">Comisión de venta</option>
+            <option value="reserva">Reserva</option>
+            <option value="expensas">Expensas</option>
+          </select>
+        </label>
+        <button class="btn-panel" type="button" id="emitir-factura" style="margin-top:10px;">
+          Emitir factura (simulado)
+        </button>
+        <p style="font-size:11px;color:#64748b;margin-top:8px;">Demo: genera CAE simulado. En producción se conecta a ARCA/AFIP.</p>
+      </div>
+    `}
+    
     <form id="edit">
       <label>Código<input name="codigo" value="${esc(item.codigo)}"></label>
       <label>Título<input name="titulo" value="${esc(item.titulo)}"></label>
@@ -145,6 +195,28 @@ function render() {
     </div>
   `;
 
+  // Emitir factura ARCA
+  detail.querySelector("#emitir-factura")?.addEventListener("click", () => {
+    const tipo = detail.querySelector("#arca-tipo").value;
+    const cuit = detail.querySelector("#arca-cuit").value;
+    const concepto = detail.querySelector("#arca-concepto").value;
+    const numero = `0001-${String(Math.floor(Math.random() * 99999) + 1).padStart(8, "0")}`;
+    const cae = String(Math.floor(Math.random() * 99999999999999));
+    const vtoDate = new Date();
+    vtoDate.setDate(vtoDate.getDate() + 10);
+    const vto = vtoDate.toLocaleDateString("es-AR", { day: "numeric", month: "short", year: "numeric" });
+    
+    const total = concepto === "comision" ? Math.round(item.precio * 0.03) : 
+                  concepto === "alquiler" ? item.precio : 
+                  concepto === "reserva" ? Math.round(item.precio * 0.1) : item.expensas || 0;
+
+    item.factura = { tipo, numero, cae, vto, total, cuit, concepto };
+    item.history = [{ when: "hoy", text: `Factura ${compLabel(tipo)} emitida. CAE: ${cae}` }, ...(item.history || [])];
+    save(items);
+    showToast("Factura emitida");
+    render();
+  });
+
   detail.querySelector("#edit").addEventListener("submit", (event) => {
     event.preventDefault();
     const data = new FormData(event.target);
@@ -172,15 +244,30 @@ function render() {
     }
 
     save(items);
+    showToast("Cambios guardados");
     render();
   });
 
   detail.querySelector("#remove").addEventListener("click", () => {
+    if (!confirm("¿Eliminar esta propiedad? Esta acción no se puede deshacer.")) return;
     items = items.filter((i) => i.id !== item.id);
     selected = items[0]?.id || "";
     save(items);
+    showToast("Propiedad eliminada");
     render();
   });
+}
+
+// Toast notification
+function showToast(message) {
+  const existing = document.querySelector(".toast");
+  if (existing) existing.remove();
+  const toast = document.createElement("div");
+  toast.className = "toast";
+  toast.textContent = message;
+  document.body.appendChild(toast);
+  setTimeout(() => toast.classList.add("show"), 10);
+  setTimeout(() => { toast.classList.remove("show"); setTimeout(() => toast.remove(), 300); }, 3000);
 }
 
 render();

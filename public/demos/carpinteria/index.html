@@ -3,17 +3,36 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Carpintería — pedidos, presupuestos y entregas</title>
+  <title>Carpintería — Muebles a medida</title>
   <link rel="stylesheet" href="styles.css">
+  <style>
+    :root { --marron: #8B4513; --marron-light: #A0522D; }
+    .portfolio-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 20px; }
+    .portfolio-card { background: var(--card); border-radius: 12px; overflow: hidden; box-shadow: 0 2px 12px rgba(0,0,0,0.08); }
+    .portfolio-card .img { height: 160px; background: linear-gradient(135deg, var(--marron) 0%, var(--marron-light) 100%); display: flex; align-items: center; justify-content: center; }
+    .portfolio-card .img .emoji { font-size: 64px; }
+    .portfolio-card .body { padding: 16px; }
+    .portfolio-card h3 { margin: 0 0 8px; font-size: 16px; }
+    .portfolio-card .desc { font-size: 13px; color: var(--muted); margin-bottom: 8px; }
+    .services-list { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 16px; margin-top: 24px; }
+    .service-item { background: var(--card); border-radius: 12px; padding: 16px; text-align: center; }
+    .service-item .emoji { font-size: 32px; margin-bottom: 8px; }
+    .service-item h4 { margin: 0; font-size: 14px; }
+    .presup-box { background: linear-gradient(135deg, var(--marron) 0%, var(--marron-light) 100%); color: white; padding: 32px; border-radius: 12px; text-align: center; margin-top: 32px; }
+    .presup-box h3 { margin: 0 0 8px; font-size: 24px; }
+    .presup-box .tel { font-size: 28px; font-weight: 700; margin-top: 12px; }
+    .admin-link { text-align: center; margin-top: 32px; padding: 24px; background: var(--card); border-radius: 12px; }
+  </style>
 </head>
 <body>
-  <header class="top">
+  <header class="top" style="background: var(--marron);">
     <div class="top-inner">
-      <a class="logo" href="index.html">CARPINTERÍA<small>Muebles a medida · demo</small></a>
+      <a class="logo" href="index.html">CARPINTERÍA<small>Muebles a medida</small></a>
       <nav>
-        <a href="#modulos">Módulos</a>
-        <a href="#pedidos">Pedidos</a>
-        <a class="btn" href="panel.html">Ver pedidos</a>
+        <a href="#portfolio">Trabajos</a>
+        <a href="#servicios">Servicios</a>
+        <a href="#presupuesto">Presupuesto</a>
+        <a class="btn" href="panel.html">Panel Admin</a>
       </nav>
     </div>
   </header>
@@ -21,87 +40,125 @@
   <main class="wrap">
     <section class="hero">
       <div>
-        <p class="kicker">Carpintería de muebles · datos de ejemplo</p>
-        <h1>El pedido, los materiales y la entrega en la misma ficha.</h1>
-        <p class="lead">No es un cuaderno. Es el taller: qué mueble pidieron, qué materiales lleva, cuánto sale y cuándo se entrega. Con facturación ARCA integrada.</p>
-        <a class="btn" href="panel.html" style="background:var(--marron);color:white;">Ver pedidos de ejemplo</a>
+        <p class="kicker">Carpintería artesanal</p>
+        <h1>Muebles a medida, hechos para vos.</h1>
+        <p class="lead">Placards, cocinas, escritorios, bibliotecas y más. Diseño personalizado, materiales de primera calidad y entrega puntual. Presupuesto sin cargo.</p>
+        <a class="btn" href="#presupuesto" style="background:var(--marron);color:white;">Pedir presupuesto</a>
       </div>
       <aside class="pedido-card">
-        <div class="pedido-img">
-          <img src="https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=400&h=150&fit=crop" alt="Taller carpintería">
-        </div>
-        <div class="pedido-body">
-          <header>
-            <span class="num">PED-2024-041</span>
-            <span class="status-badge">En producción</span>
-          </header>
-          <h3>Familia Rodríguez</h3>
-          <p class="tipo">Placard · 2.40 x 2.60 x 0.60</p>
-          <p class="desc">Placard 3 puertas corredizas con espejo. Melamina + vidrio.</p>
-          <p class="total">$ 555.000</p>
-        </div>
+        <img src="https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=400&h=280&fit=crop" alt="Taller carpintería" style="width:100%;border-radius:12px;">
       </aside>
     </section>
 
-    <section class="section" id="modulos">
-      <h2>Qué controla el sistema</h2>
-      <div class="modules">
-        <article>
-          <div class="mod-icon"><img src="https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=80&h=80&fit=crop" alt="Pedidos"></div>
-          <h3>Pedidos</h3>
-          <p>Cada pedido con cliente, tipo de mueble, medidas y fecha de entrega estimada.</p>
-        </article>
-        <article>
-          <div class="mod-icon"><img src="https://images.unsplash.com/photo-1416879595882-3373a0480b5b?w=80&h=80&fit=crop" alt="Materiales"></div>
-          <h3>Materiales</h3>
-          <p>Melamina, MDF, madera, herrajes. Cada material con cantidad y costo unitario.</p>
-        </article>
-        <article>
-          <div class="mod-icon"><img src="https://images.unsplash.com/photo-1554224155-6726b3ff858f?w=80&h=80&fit=crop" alt="Presupuestos"></div>
-          <h3>Presupuestos</h3>
-          <p>Materiales + mano de obra = total. Seña y saldo pendiente.</p>
-        </article>
-        <article>
-          <div class="mod-icon"><img src="https://images.unsplash.com/photo-1450101499163-c8848c66ca85?w=80&h=80&fit=crop" alt="Facturación"></div>
-          <h3>Facturación ARCA</h3>
-          <p>Factura electrónica conectada a AFIP/ARCA. CAE simulado para la demo.</p>
-        </article>
+    <!-- PORTFOLIO -->
+    <section class="section" id="portfolio">
+      <h2>Trabajos realizados</h2>
+      <div class="portfolio-grid" id="catalog"></div>
+    </section>
+
+    <section class="section" id="servicios">
+      <h2>Qué hacemos</h2>
+      <div class="services-list">
+        <div class="service-item">
+          <div class="emoji">🚪</div>
+          <h4>Placards</h4>
+        </div>
+        <div class="service-item">
+          <div class="emoji">🍳</div>
+          <h4>Cocinas</h4>
+        </div>
+        <div class="service-item">
+          <div class="emoji">🖥️</div>
+          <h4>Escritorios</h4>
+        </div>
+        <div class="service-item">
+          <div class="emoji">📚</div>
+          <h4>Bibliotecas</h4>
+        </div>
+        <div class="service-item">
+          <div class="emoji">🛋️</div>
+          <h4>Racks TV</h4>
+        </div>
+        <div class="service-item">
+          <div class="emoji">👔</div>
+          <h4>Vestidores</h4>
+        </div>
+        <div class="service-item">
+          <div class="emoji">🛏️</div>
+          <h4>Camas</h4>
+        </div>
+        <div class="service-item">
+          <div class="emoji">🪑</div>
+          <h4>Mesas</h4>
+        </div>
       </div>
     </section>
 
-    <section class="section" id="pedidos">
-      <h2>Pedidos de ejemplo</h2>
-      <p class="note">Clientes y muebles ficticios, para ver el taller cargado. No es una carpintería real.</p>
-      <table>
-        <thead>
-          <tr>
-            <th>Pedido</th>
-            <th>Cliente</th>
-            <th>Mueble</th>
-            <th>Entrega</th>
-            <th class="amount">Total</th>
-            <th>Estado</th>
-          </tr>
-        </thead>
-        <tbody id="preview"></tbody>
-      </table>
-      <p style="margin-top:16px;"><a class="btn" href="panel.html" style="background:var(--marron);color:white;">Abrir el panel de pedidos</a></p>
+    <section class="section" id="presupuesto">
+      <div class="presup-box">
+        <h3>📐 Presupuesto sin cargo</h3>
+        <p>Contanos qué necesitás y te visitamos para medir</p>
+        <div class="tel">📞 011-4555-1234</div>
+      </div>
+      <div class="admin-link">
+        <p>¿Sos el dueño del taller?</p>
+        <a class="btn" href="panel.html" style="background:var(--marron);color:white;">Acceder al panel de gestión</a>
+      </div>
+    </section>
+
+    <section class="section">
+      <h2>Información</h2>
+      <div class="modules" style="grid-template-columns: repeat(3, 1fr);">
+        <article>
+          <h3>🪵 Materiales</h3>
+          <p>Melamina, MDF, madera maciza</p>
+          <p>Herrajes importados</p>
+        </article>
+        <article>
+          <h3>📍 Taller</h3>
+          <p>Av. San Martín 3456</p>
+          <p>Villa Devoto, CABA</p>
+        </article>
+        <article>
+          <h3>🚚 Entrega</h3>
+          <p>Instalación incluida</p>
+          <p>Garantía 2 años</p>
+        </article>
+      </div>
     </section>
   </main>
 
-  <footer class="wrap">Carpintería · demo de producto · no es un taller en actividad ni emite facturas reales.</footer>
+  <footer class="wrap">Carpintería · demo de producto · no es un taller en actividad.</footer>
 
   <script src="data.js"></script>
   <script>
-    document.getElementById("preview").innerHTML = seed().slice(0, 6).map((item) => `
-      <tr>
-        <td>${esc(item.pedido)}</td>
-        <td>${esc(item.cliente.nombre)}</td>
-        <td>${esc(tipoLabel(item.tipo))}<br><small style="color:#666">${esc(item.medidas)}</small></td>
-        <td>${esc(item.fechaEntrega)}</td>
-        <td class="amount">${calcTotal(item) > 0 ? esc(money(calcTotal(item))) : "Pendiente"}</td>
-        <td><span class="tag ${esc(item.status)}">${esc(label(item.status))}</span></td>
-      </tr>`).join("");
+    const EMOJIS = {
+      placard: "🚪",
+      cocina: "🍳",
+      escritorio: "🖥️",
+      biblioteca: "📚",
+      mesa: "🪑",
+      sillas: "🪑",
+      cama: "🛏️",
+      vanitory: "🚿",
+      rack: "📺",
+      vestidor: "👔",
+      otro: "🔨"
+    };
+
+    // Mostrar trabajos entregados como portfolio
+    const trabajos = seed().filter(t => t.status === "entregado" || t.status === "produccion" || t.status === "terminado");
+    
+    document.getElementById("catalog").innerHTML = trabajos.slice(0, 6).map(t => `
+      <article class="portfolio-card">
+        <div class="img"><div class="emoji">${EMOJIS[t.tipo] || "🔨"}</div></div>
+        <div class="body">
+          <h3>${esc(tipoLabel(t.tipo))}</h3>
+          <div class="desc">${esc(t.descripcion)}</div>
+          <div style="font-size:12px;color:var(--muted);">📐 ${esc(t.medidas)}</div>
+        </div>
+      </article>
+    `).join("");
   </script>
 </body>
 </html>

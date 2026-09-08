@@ -1,6 +1,7 @@
 let items = load();
 let selected = items[0]?.id || "";
 let filter = "todos";
+let searchTerm = "";
 
 document.getElementById("open-create").addEventListener("click", () => {
   document.getElementById("create").classList.toggle("open");
@@ -36,8 +37,16 @@ document.getElementById("create").addEventListener("submit", (event) => {
 });
 
 function visible() {
-  if (filter === "todos") return items;
-  return items.filter((item) => item.status === filter);
+  let result = filter === "todos" ? items : items.filter((item) => item.status === filter);
+  if (searchTerm) {
+    const term = searchTerm.toLowerCase();
+    result = result.filter((item) => 
+      item.cliente.nombre.toLowerCase().includes(term) || 
+      item.turno.toLowerCase().includes(term) ||
+      item.profesional.toLowerCase().includes(term)
+    );
+  }
+  return result;
 }
 
 function render() {
@@ -52,7 +61,13 @@ function render() {
     <button type="button" data-filter="reservado" class="${filter === "reservado" ? "on" : ""}"><strong>${counts.reservado}</strong>reservados</button>
     <button type="button" data-filter="en_atencion" class="${filter === "en_atencion" ? "on" : ""}"><strong>${counts.en_atencion}</strong>en atención</button>
     <button type="button" data-filter="terminado" class="${filter === "terminado" ? "on" : ""}"><strong>${counts.terminado}</strong>terminados</button>
+    <input type="text" id="search" placeholder="🔍 Buscar..." value="${esc(searchTerm)}" style="margin-left:auto;padding:8px 12px;border:1px solid var(--line);border-radius:4px;width:180px;">
   `;
+  
+  document.getElementById("search").addEventListener("input", (e) => {
+    searchTerm = e.target.value;
+    render();
+  });
 
   document.querySelectorAll("[data-filter]").forEach((btn) => {
     btn.addEventListener("click", () => {
@@ -194,6 +209,7 @@ function render() {
       item.status = "terminado";
       item.history = [{ when: "hoy", text: `Cobrado. ${compLabel(tipo)} emitida. CAE: ${cae}` }, ...(item.history || [])];
       save(items);
+      showToast("Factura emitida");
       render();
     });
   }
@@ -213,15 +229,30 @@ function render() {
     }
 
     save(items);
+    showToast("Cambios guardados");
     render();
   });
 
   detail.querySelector("#remove").addEventListener("click", () => {
+    if (!confirm("¿Cancelar este turno? Esta acción no se puede deshacer.")) return;
     item.status = "cancelado";
     item.history = [{ when: "hoy", text: "Turno cancelado." }, ...(item.history || [])];
     save(items);
+    showToast("Turno cancelado");
     render();
   });
+}
+
+// Toast notification
+function showToast(message) {
+  const existing = document.querySelector(".toast");
+  if (existing) existing.remove();
+  const toast = document.createElement("div");
+  toast.className = "toast";
+  toast.textContent = message;
+  document.body.appendChild(toast);
+  setTimeout(() => toast.classList.add("show"), 10);
+  setTimeout(() => { toast.classList.remove("show"); setTimeout(() => toast.remove(), 300); }, 3000);
 }
 
 render();
