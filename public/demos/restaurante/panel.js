@@ -3,6 +3,7 @@ let mesasData = loadMesas();
 let pedidosData = loadPedidos();
 let tab = "mesas";
 let selectedMesa = mesasData[0]?.id || "";
+let selectedPlato = menuItems[0]?.id || "";
 
 document.querySelectorAll(".tabs button").forEach((btn) => {
   btn.addEventListener("click", () => {
@@ -52,7 +53,9 @@ function renderMesas() {
   if (!mesa) { detail.innerHTML = "<p>Elegí una mesa.</p>"; return; }
 
   const pedido = getPedidoByMesa(mesa.id);
-  const total = pedido ? calcTotalPedido(pedido) : 0;
+  const cerrado = !pedido && mesa.status === "cuenta" ? getUltimoPedidoMesa(mesa.id) : null;
+  const ticket = pedido || (cerrado?.factura ? cerrado : null);
+  const total = ticket ? calcTotalPedido(ticket) : 0;
 
   detail.innerHTML = `
     <p class="eyebrow">Mesa ${mesa.numero}</p>
@@ -60,7 +63,7 @@ function renderMesas() {
     <div class="meta">
       <div><span>Capacidad</span>${mesa.capacidad} personas</div>
       <div><span>Mozo</span>${esc(mesa.mozo) || "Sin asignar"}</div>
-      ${pedido ? `<div><span>Abierta</span>${esc(pedido.horaApertura)}</div>` : ""}
+      ${ticket ? `<div><span>Abierta</span>${esc(ticket.horaApertura)}</div>` : ""}
       ${mesa.reserva ? `<div><span>Reserva</span>${esc(mesa.reserva.nombre)} · ${esc(mesa.reserva.hora)}</div>` : ""}
     </div>
 
@@ -70,33 +73,42 @@ function renderMesas() {
       </div>
     ` : ""}
 
-    ${pedido ? `
+    ${ticket ? `
       <h3 style="font-size:14px;margin-top:16px;">Comanda</h3>
       <div class="comanda">
-        ${pedido.items.map((item) => {
+        ${ticket.items.map((item, idx) => {
           const menuItem = getMenuItem(item.menu);
+          const estado = ticket.factura ? "cobrado" : item.status;
           return `<div class="comanda-item">
-            <div>
+            <img class="thumb" src="${esc(fotoPlato(menuItem))}" alt="">
+            <div style="flex:1;">
               <span class="nombre">${esc(menuItem?.nombre || "—")} x${item.cantidad}</span>
               ${item.nota ? `<div class="nota">${esc(item.nota)}</div>` : ""}
+              ${pedido ? `<div class="actions" style="margin-top:6px;">
+                <button type="button" class="ghost" data-estado="pendiente" data-idx="${idx}">Pedido</button>
+                <button type="button" class="ghost" data-estado="preparando" data-idx="${idx}">Cocina</button>
+                <button type="button" class="ghost" data-estado="listo" data-idx="${idx}">Listo</button>
+              </div>` : ""}
             </div>
             <div>
-              <span class="tag ${esc(item.status)}">${esc(labelPedido(item.status))}</span>
+              <span class="tag ${esc(estado)}">${esc(labelPedido(estado))}</span>
               <span style="margin-left:8px;">${esc(money((menuItem?.precio || 0) * item.cantidad))}</span>
             </div>
           </div>`;
         }).join("")}
       </div>
       <div style="text-align:right;font-size:18px;font-weight:700;margin:12px 0;">
-        Total: ${esc(money(total))}
+        Total: ${esc(money(ticket.factura ? ticket.factura.total : total))}
       </div>
 
-      <label>Agregar plato</label>
-      <select id="agregar-plato">
-        <option value="">— Seleccionar —</option>
-        ${menuItems.filter(m => m.disponible).map((m) => `<option value="${m.id}">${esc(m.nombre)} - ${esc(money(m.precio))}</option>`).join("")}
-      </select>
-      <button class="ghost" id="btn-agregar" style="margin-top:6px;">+ Agregar</button>
+      ${pedido ? `
+        <label>Agregar plato</label>
+        <select id="agregar-plato">
+          <option value="">— Seleccionar —</option>
+          ${menuItems.filter(m => m.disponible).map((m) => `<option value="${m.id}">${esc(m.nombre)} - ${esc(money(m.precio))}</option>`).join("")}
+        </select>
+        <button class="ghost" id="btn-agregar" style="margin-top:6px;">+ Agregar</button>
+      ` : ""}
     ` : ""}
 
     ${pedido && !pedido.factura ? `
@@ -114,12 +126,12 @@ function renderMesas() {
       </div>
     ` : ""}
 
-    ${pedido?.factura ? `
+    ${ticket?.factura ? `
       <div class="factura-box">
-        <h4>✓ Mesa cerrada</h4>
-        <p><strong>${esc(compLabel(pedido.factura.tipo))}</strong> ${esc(pedido.factura.numero)}</p>
-        <p>CAE: <span class="cae">${esc(pedido.factura.cae)}</span></p>
-        <p>Total: ${esc(money(pedido.factura.total))}</p>
+        <h4>✓ Mesa cobrada</h4>
+        <p><strong>${esc(compLabel(ticket.factura.tipo))}</strong> ${esc(ticket.factura.numero)}</p>
+        <p>CAE: <span class="cae">${esc(ticket.factura.cae)}</span></p>
+        <p>Total: ${esc(money(ticket.factura.total))}</p>
         <button class="ghost" id="liberar-mesa" style="margin-top:8px;">Liberar mesa</button>
       </div>
     ` : ""}
@@ -143,6 +155,17 @@ function renderMesas() {
     render();
   });
 
+  detail.querySelectorAll("[data-estado]").forEach((btn) => {
+    btn.addEventListener("click", () => {
+      if (!pedido) return;
+      const idx = Number(btn.dataset.idx);
+      if (!pedido.items[idx]) return;
+      pedido.items[idx].status = btn.dataset.estado;
+      savePedidos();
+      render();
+    });
+  });
+
   detail.querySelector("#btn-agregar")?.addEventListener("click", () => {
     const platoId = detail.querySelector("#agregar-plato").value;
     if (!platoId || !pedido) return;
@@ -160,6 +183,7 @@ function renderMesas() {
     vtoDate.setDate(vtoDate.getDate() + 10);
     const vto = vtoDate.toLocaleDateString("es-AR", { day: "numeric", month: "short" });
 
+    pedido.items.forEach((item) => { item.status = "cobrado"; });
     pedido.factura = { tipo, numero, cae, vto, total };
     mesa.status = "cuenta";
     savePedidos();
@@ -199,15 +223,18 @@ function renderCocina() {
       ${pendientes.length === 0 ? "<p>No hay pedidos pendientes en cocina.</p>" : ""}
       ${pendientes.map((p) => `
         <div class="cocina-item ${p.item.status === "listo" ? "listo" : ""}" data-pedido="${esc(p.pedido.id)}" data-idx="${p.idx}">
-          <div class="mesa">Mesa ${p.mesa?.numero || "?"} · ${esc(p.pedido.mozo)}</div>
-          <div class="items">
-            <strong>${esc(p.menuItem?.nombre || "—")} x${p.item.cantidad}</strong>
-            ${p.item.nota ? ` · <em>${esc(p.item.nota)}</em>` : ""}
-          </div>
-          <div style="margin-top:8px;">
-            <span class="tag ${esc(p.item.status)}">${esc(labelPedido(p.item.status))}</span>
-            ${p.item.status === "pendiente" ? `<button class="ghost" data-action="preparando" style="margin-left:8px;">Preparando</button>` : ""}
-            ${p.item.status === "preparando" ? `<button class="ghost" data-action="listo" style="margin-left:8px;">Listo</button>` : ""}
+          <img class="thumb" src="${esc(fotoPlato(p.menuItem))}" alt="">
+          <div>
+            <div class="mesa">Mesa ${p.mesa?.numero || "?"} · ${esc(p.pedido.mozo)}</div>
+            <div class="items">
+              <strong>${esc(p.menuItem?.nombre || "—")} x${p.item.cantidad}</strong>
+              ${p.item.nota ? ` · <em>${esc(p.item.nota)}</em>` : ""}
+            </div>
+            <div style="margin-top:8px;">
+              <span class="tag ${esc(p.item.status)}">${esc(labelPedido(p.item.status))}</span>
+              ${p.item.status === "pendiente" ? `<button class="ghost" data-action="preparando" style="margin-left:8px;">A cocina</button>` : ""}
+              ${p.item.status === "preparando" ? `<button class="ghost" data-action="listo" style="margin-left:8px;">Listo</button>` : ""}
+            </div>
           </div>
         </div>
       `).join("")}
@@ -244,26 +271,47 @@ function renderMenu() {
   `;
 
   document.getElementById("list-area").innerHTML = `
-    <table>
-      <thead><tr><th>Código</th><th>Plato</th><th>Categoría</th><th class="amount">Precio</th><th>Disp.</th></tr></thead>
-      <tbody>
-        ${menuItems.map((m) => `
-          <tr>
-            <td>${esc(m.codigo)}</td>
-            <td>${esc(m.nombre)}</td>
-            <td>${esc(catLabel(m.categoria))}</td>
-            <td class="amount">${esc(money(m.precio))}</td>
-            <td>${m.disponible ? "✓" : "✗"}</td>
-          </tr>
-        `).join("")}
-      </tbody>
-    </table>
+    <div class="menu-admin">
+      ${menuItems.map((m) => `
+        <article class="${m.id === selectedPlato ? "on" : ""}" data-id="${esc(m.id)}">
+          <div class="card-photo"><img src="${esc(fotoPlato(m))}" alt="${esc(m.nombre)}"></div>
+          <div class="txt">
+            <h3>${esc(m.nombre)}</h3>
+            <div style="font-size:12px;color:var(--muted);">${esc(catLabel(m.categoria))}</div>
+            <div style="margin-top:6px;font-weight:700;color:var(--rojo);">${esc(money(m.precio))}</div>
+            <div style="font-size:12px;margin-top:4px;">${m.disponible ? "Disponible" : "No disponible"}</div>
+          </div>
+        </article>
+      `).join("")}
+    </div>
   `;
 
-  document.getElementById("detail").innerHTML = `
-    <h2>Menú</h2>
-    <p style="color:var(--muted);">Carta del restaurante con precios y disponibilidad.</p>
+  document.querySelectorAll(".menu-admin article").forEach((card) => {
+    card.addEventListener("click", () => { selectedPlato = card.dataset.id; render(); });
+  });
+
+  const plato = menuItems.find((m) => m.id === selectedPlato);
+  const detail = document.getElementById("detail");
+  if (!plato) { detail.innerHTML = "<p>Elegí un plato.</p>"; return; }
+
+  detail.innerHTML = `
+    <img src="${esc(fotoPlato(plato))}" alt="${esc(plato.nombre)}" style="width:100%;height:160px;object-fit:cover;border-radius:8px;">
+    <p class="eyebrow">${esc(plato.codigo)} · ${esc(catLabel(plato.categoria))}</p>
+    <h2>${esc(plato.nombre)}</h2>
+    <p style="color:var(--muted);">${esc(plato.descripcion || "")}</p>
+    <div class="meta">
+      <div><span>Precio</span>${esc(money(plato.precio))}</div>
+      <div><span>Estado</span>${plato.disponible ? "Disponible" : "No disponible"}</div>
+    </div>
+    <button class="btn-panel" type="button" id="toggle-disp">${plato.disponible ? "Marcar no disponible" : "Marcar disponible"}</button>
   `;
+
+  detail.querySelector("#toggle-disp")?.addEventListener("click", () => {
+    plato.disponible = !plato.disponible;
+    saveMenu();
+    showToast(plato.disponible ? "Plato disponible" : "Plato no disponible");
+    render();
+  });
 }
 
 // Toast notification
