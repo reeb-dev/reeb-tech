@@ -4,10 +4,10 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Libro de comprobantes</title>
-  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;600&family=IBM+Plex+Serif:wght@500&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;600&family=IBM+Plex+Serif:wght@500;600&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="styles.css">
 </head>
-<body>
+<body class="panel-body">
   <header class="band">
     <div class="band-inner">
       <a class="brand" href="index.html"><strong>Libro</strong><span>Comprobantes de ejemplo</span></a>
@@ -17,43 +17,83 @@
       </nav>
     </div>
   </header>
-  <main class="book">
-    <div class="head">
+
+  <div class="book">
+    <div class="toolbar">
       <div>
         <p class="kicker">Montos de ejemplo</p>
         <h1>Libro de comprobantes</h1>
       </div>
+      <label class="search-box">Buscar
+        <input type="search" id="search" placeholder="Receptor, número, CUIT o CAE">
+      </label>
     </div>
+
     <div class="totals" id="totals"></div>
+    <div class="type-filters" id="typeFilters"></div>
+
     <form class="create" id="create">
-      <select name="type"></select>
-      <input name="number" placeholder="Número" required>
-      <input name="receptor" placeholder="Receptor de ejemplo" required>
-      <input name="amount" type="number" min="0" placeholder="Monto" required>
-      <input name="due" type="date">
-      <input name="aviso" placeholder="Aviso de cobro">
-      <button type="submit">Cargar borrador</button>
+      <label>Tipo
+        <select name="type"></select>
+      </label>
+      <label>Número
+        <input name="number" placeholder="0001-00000000" required>
+      </label>
+      <label>Receptor
+        <input name="receptor" placeholder="Razón social de ejemplo" required>
+      </label>
+      <label>CUIT
+        <input name="cuit" placeholder="30-00000000-0" required>
+      </label>
+      <label>Condición IVA
+        <select name="ivaCond">
+          <option>IVA Responsable Inscripto</option>
+          <option>Consumidor Final</option>
+          <option>Monotributo</option>
+        </select>
+      </label>
+      <label>Monto
+        <input name="amount" type="number" min="0" placeholder="Importe" required>
+      </label>
+      <label>Vencimiento
+        <input name="due" type="date">
+      </label>
+      <label>Aviso de cobro
+        <input name="aviso" placeholder="Ej. Enviar esta semana">
+      </label>
+      <label class="full">Detalle
+        <input name="detalle" placeholder="Ítem del comprobante">
+      </label>
+      <button class="btn" type="submit">Cargar borrador</button>
     </form>
-    <table class="ledger">
-      <thead>
-        <tr>
-          <th>Tipo</th>
-          <th>Número</th>
-          <th>Receptor</th>
-          <th class="amount">Monto</th>
-          <th>Vencimiento</th>
-          <th>Estado</th>
-          <th>Aviso</th>
-        </tr>
-      </thead>
-      <tbody id="rows"></tbody>
-    </table>
-    <section class="sheet" id="sheet"></section>
-  </main>
+
+    <div class="workspace">
+      <section class="list">
+        <div class="table-scroll">
+          <table class="ledger">
+            <thead>
+              <tr>
+                <th>Tipo</th>
+                <th>Número</th>
+                <th>Receptor</th>
+                <th class="amount">Monto</th>
+                <th>Vencimiento</th>
+                <th>CAE</th>
+                <th>Estado</th>
+              </tr>
+            </thead>
+            <tbody id="rows"></tbody>
+          </table>
+        </div>
+      </section>
+      <aside class="sheet" id="sheet"></aside>
+    </div>
+  </div>
+
+  <div id="contacto"></div>
+  <footer class="wrap">Libro · demo de producto · no emite comprobantes fiscales ni reemplaza un sistema de facturación.</footer>
+
   <script src="data.js"></script>
-  <script>
-    document.querySelector("#create select").innerHTML = TYPES.map((type) => `<option>${type}</option>`).join("");
-  </script>
   <script src="panel.js"></script>
   <script src="../contacto.js" data-phone="5491140001234" data-text="Hola, quiero consultar por el libro de facturación" data-subject="Consulta demo — Facturación" data-title="Consultar" data-place="panel"></script>
 </body>

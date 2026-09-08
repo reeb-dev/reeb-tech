@@ -3,8 +3,8 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Libro — comprobantes y cobro</title>
-  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;600&family=IBM+Plex+Serif:wght@500&display=swap" rel="stylesheet">
+  <title>Libro — comprobantes A, B y NC</title>
+  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;600&family=IBM+Plex+Serif:wght@500;600&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="styles.css">
 </head>
 <body>
@@ -12,82 +12,120 @@
     <div class="band-inner">
       <a class="brand" href="index.html"><strong>Libro</strong><span>Comprobantes y cobro · demo</span></a>
       <nav>
-        <a href="#oficio">El libro</a>
-        <a href="#pasos">Emitir y cobrar</a>
-        <a href="#asientos">Asientos de ejemplo</a>
+        <a href="#comprobantes">A · B · NC</a>
+        <a href="#vencimientos">Vencimientos</a>
+        <a href="#arca">ARCA</a>
         <a class="btn" href="panel.html">Abrir el libro</a>
       </nav>
     </div>
   </header>
-  <main class="wrap">
-    <section class="hero">
+
+  <main>
+    <section class="hero wrap">
       <div>
-        <p class="kicker">Facturación de ejemplo</p>
-        <h1>El comprobante, el vencimiento y el aviso de cobro.</h1>
-        <p class="lead">Un libro para no mezclar borrador, emitido y a cobrar. Los montos se suman solo de estas filas y están marcados como ejemplo. No es un sistema fiscal.</p>
-        <a class="btn" href="panel.html">Ver el libro de ejemplo</a>
-      </div>
-      <aside class="folio">
-        <div class="folio-img">
-          <img src="https://images.unsplash.com/photo-1554224155-6726b3ff858f?w=400&h=140&fit=crop" alt="Facturas y calculadora">
+        <p class="kicker">Libro de comprobantes</p>
+        <h1>El asiento, el vencimiento y el CAE en la misma fila.</h1>
+        <p class="lead">Un libro para no mezclar borrador, emitido, a cobrar y cobrado. Factura A, Factura B y nota de crédito con CUIT, tipo y CAE de ejemplo. Los montos se suman de estas filas. No es un sistema fiscal.</p>
+        <div class="hero-actions">
+          <a class="btn" href="panel.html">Ver el libro de ejemplo</a>
+          <a class="btn btn-quiet" href="#comprobantes">Ver A, B y NC</a>
         </div>
-        <div class="folio-body">
-          <p>FA 0001-00001044 · Taller Sur · $ 186.000 · 12 sep · a cobrar</p>
-          <p>FB 0002-00000220 · Oficina del Parque · $ 42.500 · emitido</p>
-          <p>NC 0003-00000018 · Estudio Loma · $ 9.000 · borrador</p>
-          <p>FB 0002-00000088 · Consultorio Norte · vencido · falta aviso</p>
-        </div>
-      </aside>
+        <ul class="hero-facts">
+          <li><strong>10</strong> comprobantes de ejemplo</li>
+          <li><strong>ARCA</strong> simulado · CUIT, tipo, CAE</li>
+          <li><strong>Vto.</strong> marcado en rojo si ya pasó</li>
+        </ul>
+      </div>
+      <aside class="hero-stack" id="heroStack"></aside>
     </section>
-    <section class="section" id="oficio">
-      <div class="cols">
-        <article>
-          <div class="col-icon"><img src="https://images.unsplash.com/photo-1450101499163-c8848c66ca85?w=70&h=70&fit=crop" alt="Documentos"></div>
-          <h2>Borrador</h2><p>Todavía no se emite. Falta el ítem, el motivo de la nota o la fecha.</p>
-        </article>
-        <article>
-          <div class="col-icon"><img src="https://images.unsplash.com/photo-1586282391129-76a6df230234?w=70&h=70&fit=crop" alt="Factura"></div>
-          <h2>Emitido</h2><p>Ya tiene tipo y número. Falta enviarlo o acusar recibo.</p>
-        </article>
-        <article>
-          <div class="col-icon"><img src="https://images.unsplash.com/photo-1556742049-0cfed4f6a45d?w=70&h=70&fit=crop" alt="Cobro"></div>
-          <h2>A cobrar</h2><p>Venció o está por vencer. El aviso de cobro queda escrito en la ficha.</p>
-        </article>
+
+    <section class="section wrap" id="comprobantes">
+      <p class="kicker">Tipos</p>
+      <h2>Tres papeles que el libro distingue</h2>
+      <p class="section-lead">No es una carta vacía: cada tipo tiene letra, código, receptor y total. Tocá una pestaña para ver el comprobante de ejemplo.</p>
+      <div class="type-tabs" id="typeTabs">
+        <button type="button" data-type="Factura A" class="on">Factura A</button>
+        <button type="button" data-type="Factura B">Factura B</button>
+        <button type="button" data-type="Nota de crédito">Nota de crédito</button>
+      </div>
+      <div class="type-stage" id="typeStage"></div>
+    </section>
+
+    <section class="section wrap" id="vencimientos">
+      <p class="kicker">Cobro</p>
+      <h2>Vencimientos de esta semana</h2>
+      <p class="section-lead">El total de arriba del panel es la suma de estas filas, no una métrica inventada. Lo vencido queda en rojo hasta que se marca cobrado.</p>
+      <div class="due-grid" id="dueList"></div>
+    </section>
+
+    <section class="section arca-band" id="arca">
+      <div class="wrap arca-grid">
+        <div>
+          <p class="kicker light">ARCA simulado</p>
+          <h2>CUIT, tipo de comprobante y CAE</h2>
+          <p>En el panel, un borrador se emite con un CAE de 14 dígitos y un vencimiento a 10 días. Es una simulación para la demo: no consulta AFIP ni autoriza nada.</p>
+          <dl class="arca-dl">
+            <div><dt>Emisor</dt><dd>Libro Sur SRL · 30-71582391-4</dd></div>
+            <div><dt>Condición</dt><dd>IVA Responsable Inscripto</dd></div>
+            <div><dt>Tipos</dt><dd>FA código 01 · FB código 06 · NC código 03</dd></div>
+            <div><dt>CAE</dt><dd>14 dígitos de ejemplo · vto. +10 días</dd></div>
+          </dl>
+        </div>
+        <div id="arcaCard"></div>
       </div>
     </section>
-    <section class="section" id="pasos">
+
+    <section class="section wrap" id="pasos">
+      <p class="kicker">Uso</p>
       <h2>Cómo se usa el libro</h2>
       <div class="path">
-        <article><h2>1. Se carga el comprobante</h2><p>Tipo, número, receptor, monto de ejemplo y vencimiento.</p></article>
-        <article><h2>2. Se emite</h2><p>Pasa de borrador a emitido. El número no se inventa como métrica: es el del comprobante de ejemplo.</p></article>
-        <article><h2>3. Se avisa el cobro</h2><p>Si hay vencimiento, la ficha guarda el aviso. El total de arriba es la suma de esas filas.</p></article>
+        <article>
+          <span>01</span>
+          <h3>Se carga el comprobante</h3>
+          <p>Tipo, número, receptor, CUIT, monto de ejemplo y vencimiento. Queda en borrador.</p>
+        </article>
+        <article>
+          <span>02</span>
+          <h3>Se emite con CAE</h3>
+          <p>Pasa a emitido. El número y el CAE son del comprobante de ejemplo, no una métrica.</p>
+        </article>
+        <article>
+          <span>03</span>
+          <h3>Se avisa el cobro</h3>
+          <p>Si hay vencimiento, la ficha guarda el aviso. Cuando entra, se marca cobrado.</p>
+        </article>
       </div>
     </section>
-    <section class="section" id="asientos">
+
+    <section class="section wrap" id="asientos">
+      <p class="kicker">Libro</p>
       <h2>Asientos de ejemplo</h2>
       <p class="note">Receptores y montos ficticios. No son clientes ni una facturación emitida.</p>
-      <table>
-        <thead>
-          <tr><th>Tipo</th><th>Número</th><th>Receptor</th><th class="amount">Monto</th><th>Vencimiento</th><th>Estado</th></tr>
-        </thead>
-        <tbody id="preview"></tbody>
-      </table>
+      <div class="table-scroll">
+        <table>
+          <thead>
+            <tr>
+              <th>Tipo</th>
+              <th>Número</th>
+              <th>Receptor</th>
+              <th>CUIT</th>
+              <th class="amount">Monto</th>
+              <th>Vencimiento</th>
+              <th>CAE</th>
+              <th>Estado</th>
+            </tr>
+          </thead>
+          <tbody id="preview"></tbody>
+        </table>
+      </div>
       <p><a class="btn" href="panel.html">Abrir el libro</a></p>
     </section>
   </main>
+
+  <div id="contacto"></div>
   <footer class="wrap">Libro · demo de producto · no emite comprobantes fiscales ni reemplaza un sistema de facturación.</footer>
   <script src="data.js"></script>
-  <script>
-    document.getElementById("preview").innerHTML = seed().slice(0, 6).map((item) => `
-      <tr>
-        <td>${esc(item.type)}</td>
-        <td class="num">${esc(item.number)}</td>
-        <td>${esc(item.receptor)}</td>
-        <td class="amount">${esc(money(item.amount))}</td>
-        <td>${esc(formatDue(item.due))}</td>
-        <td><span class="state ${esc(item.status)}">${esc(label(item.status))}</span></td>
-      </tr>`).join("");
-  </script>
+  <script src="app.js"></script>
   <script src="../contacto.js" data-phone="5491140001234" data-text="Hola, quiero consultar por el libro de facturación" data-subject="Consulta demo — Facturación" data-title="Consultar"></script>
 </body>
 </html>
