@@ -23,7 +23,17 @@
           <span class="text-sm font-mono text-[#3B82F6] bg-[#3B82F6]/10 px-3 py-1 rounded-full whitespace-nowrap">{{ project.role }}</span>
         </div>
 
-        <p class="text-[#94A3B8] mb-6">{{ project.context }}</p>
+            <p class="text-[#94A3B8]" [class.mb-4]="project.links?.length" [class.mb-6]="!project.links?.length">{{ project.context }}</p>
+
+            <div *ngIf="project.links?.length" class="flex flex-wrap gap-3 mb-6">
+              <a
+                *ngFor="let link of project.links"
+                [href]="link.href"
+                target="_blank"
+                rel="noopener"
+                class="text-sm font-medium text-[#3B82F6] hover:underline"
+              >{{ link.label }}</a>
+            </div>
 
         <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
           <div class="p-4 bg-gray-50 dark:bg-[#020617] rounded-lg border border-gray-200 dark:border-[#1E293B]">

@@ -12,6 +12,11 @@ export interface CompanyCopy {
   current?: boolean;
 }
 
+export interface ProjectLink {
+  label: string;
+  href: string;
+}
+
 export interface ProjectCopy {
   title: string;
   context: string;
@@ -22,6 +27,7 @@ export interface ProjectCopy {
   metrics: string;
   tech: string[];
   url?: string;
+  links?: ProjectLink[];
 }
 
 export interface CertificateCopy {
@@ -70,7 +76,7 @@ export interface Dictionary {
   projects: {
     title: string;
     subtitle: string;
-    challenge: string;
+      challenge: string;
     solution: string;
     stack: string;
     items: ProjectCopy[];
@@ -260,9 +266,10 @@ export const translations: Record<Lang, Dictionary> = {
           role: 'Proyecto propio',
           environment: 'Android',
           challenge: 'Una app nativa chica, jugable, sin inflar el alcance.',
-          solution: 'Android nativo. Publicada como proyecto en LinkedIn y el código en GitHub.',
+          solution: 'Android nativo. El código está en GitHub.',
           metrics: 'GitHub',
           url: 'https://github.com/reeb-dev/daily-reflex-tap',
+          links: [{ label: 'Código', href: 'https://github.com/reeb-dev/daily-reflex-tap' }],
           tech: ['Android', 'Kotlin'],
         },
         {
@@ -271,9 +278,13 @@ export const translations: Record<Lang, Dictionary> = {
           role: 'Proyecto propio',
           environment: 'Web',
           challenge: 'Mostrar algo visual e interactivo, fuera del día a día enterprise.',
-          solution: 'Simulación 3D en la web, desplegada en Vercel.',
+          solution: 'Simulación 3D en la web, desplegada en Vercel. La demo y el código son públicos.',
           metrics: 'Demo',
           url: 'https://cosmos-simulation.vercel.app',
+          links: [
+            { label: 'Demo', href: 'https://cosmos-simulation.vercel.app' },
+            { label: 'Código', href: 'https://github.com/reeb-dev/cosmos-simulation' },
+          ],
           tech: ['JavaScript', 'Three.js'],
         },
       ],
@@ -558,9 +569,10 @@ export const translations: Record<Lang, Dictionary> = {
           role: 'Side project',
           environment: 'Android',
           challenge: 'A small, playable native app without inflating scope.',
-          solution: 'Native Android. Listed as a project on LinkedIn; code on GitHub.',
+          solution: 'Native Android. The code is on GitHub.',
           metrics: 'GitHub',
           url: 'https://github.com/reeb-dev/daily-reflex-tap',
+          links: [{ label: 'Code', href: 'https://github.com/reeb-dev/daily-reflex-tap' }],
           tech: ['Android', 'Kotlin'],
         },
         {
@@ -569,9 +581,13 @@ export const translations: Record<Lang, Dictionary> = {
           role: 'Side project',
           environment: 'Web',
           challenge: 'Something visual and interactive, outside day-to-day enterprise work.',
-          solution: '3D simulation on the web, deployed on Vercel.',
+          solution: '3D simulation on the web, deployed on Vercel. The demo and the code are public.',
           metrics: 'Demo',
           url: 'https://cosmos-simulation.vercel.app',
+          links: [
+            { label: 'Demo', href: 'https://cosmos-simulation.vercel.app' },
+            { label: 'Code', href: 'https://github.com/reeb-dev/cosmos-simulation' },
+          ],
           tech: ['JavaScript', 'Three.js'],
         },
       ],
