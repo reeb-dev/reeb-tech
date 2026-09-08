@@ -252,10 +252,11 @@ img { display: block; width: 100%; height: 100%; object-fit: cover; }
 
 .picks-wrap {
   border-bottom: 1px solid var(--line);
+  padding: 0 36px 32px;
 }
 
 .picks-head {
-  padding: 48px 36px 8px;
+  padding: 48px 0 18px;
 }
 
 .picks-head h2 {
@@ -287,23 +288,24 @@ img { display: block; width: 100%; height: 100%; object-fit: cover; }
 
 .picks {
   display: grid;
-  grid-template-columns: repeat(3, 1fr);
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 16px;
 }
 
 .pick {
-  border-right: 1px solid var(--line);
+  display: flex;
+  flex-direction: column;
+  border: 1px solid var(--line);
   background: var(--bg-2);
   transition: background 0.2s ease;
 }
 
 .pick:hover { background: #1a1613; }
 
-.pick:last-child { border-right: 0; }
-
 @media (max-width: 1100px) {
   .picks { grid-template-columns: 1fr; }
-  .pick { border-right: 0; border-bottom: 1px solid var(--line); }
-  .pick:last-child { border-bottom: 0; }
+  .pick,
+  .pick:last-child { border: 1px solid var(--line); }
   .who-benefits-list,
   .who-benefits-list-4 { grid-template-columns: 1fr 1fr; }
   .price-extras { grid-template-columns: 1fr 1fr; }
@@ -322,7 +324,14 @@ img { display: block; width: 100%; height: 100%; object-fit: cover; }
 
 .pick-media img { transition: transform 0.55s ease; }
 
-.pick-copy { padding: 28px 28px 36px; }
+.pick-copy {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  padding: 22px 22px 24px;
+}
+
+.pick-copy .ctas { margin-top: auto; }
 
 .pick-copy h3 {
   font-family: Fraunces, Georgia, serif;
@@ -1184,8 +1193,8 @@ img { display: block; width: 100%; height: 100%; object-fit: cover; }
 .catalog {
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: 14px;
-  padding: 18px 36px 28px;
+  gap: 18px;
+  padding: 22px 36px 36px;
   border-bottom: 1px solid var(--line);
 }
 
@@ -1195,7 +1204,7 @@ img { display: block; width: 100%; height: 100%; object-fit: cover; }
 }
 
 .catalog > .band {
-  padding: 28px 36px 8px;
+  padding: 22px 2px 4px;
 }
 
 .catalog-miss {
@@ -1232,9 +1241,11 @@ img { display: block; width: 100%; height: 100%; object-fit: cover; }
 
 .row {
   display: grid;
-  grid-template-columns: 148px minmax(0, 1fr);
-  min-height: 0;
+  grid-template-columns: 168px minmax(0, 1fr);
+  min-height: 176px;
+  align-items: stretch;
   border: 1px solid var(--line);
+  background: var(--bg-2);
 }
 
 .row:hover .row-media img { transform: scale(1.04); }
@@ -1249,7 +1260,7 @@ img { display: block; width: 100%; height: 100%; object-fit: cover; }
 .row-media img { transition: transform 0.55s ease; }
 
 .row.is-flip {
-  grid-template-columns: 132px minmax(0, 1fr);
+  grid-template-columns: 168px minmax(0, 1fr);
 }
 
 .row.is-flip .row-media { order: 0; }
@@ -1257,9 +1268,11 @@ img { display: block; width: 100%; height: 100%; object-fit: cover; }
 .row.is-flip .row-copy { background: var(--bg-2); }
 
 .row-copy {
-  padding: 20px 22px 20px;
+  padding: 22px 24px 20px;
   gap: 0;
 }
+
+.row .ctas { margin-top: auto; }
 
 .row .badge { margin-bottom: 8px; }
 
@@ -1468,7 +1481,8 @@ img { display: block; width: 100%; height: 100%; object-fit: cover; }
   .nav { gap: 10px; flex-direction: column; align-items: flex-start; }
   .nav-links { gap: 14px; }
   .hero { min-height: 0; padding-top: 128px; padding-bottom: 32px; }
-  .catalog { grid-template-columns: 1fr; padding: 14px 20px 22px; gap: 12px; }
+  .picks-wrap { padding-left: 20px; padding-right: 20px; }
+  .catalog { grid-template-columns: 1fr; padding: 16px 20px 28px; gap: 14px; }
   .catalog > .band,
   .catalog-miss { padding-left: 20px; padding-right: 20px; }
   .who-more { margin-left: 20px; margin-right: 20px; }
@@ -1480,7 +1494,7 @@ img { display: block; width: 100%; height: 100%; object-fit: cover; }
   }
   .row,
   .row.is-flip {
-    grid-template-columns: 112px minmax(0, 1fr);
+    grid-template-columns: 120px minmax(0, 1fr);
     min-height: 0;
   }
   .row.is-flip .row-media { order: 0; }
@@ -1488,9 +1502,9 @@ img { display: block; width: 100%; height: 100%; object-fit: cover; }
   .row-media { min-height: 120px; height: 120px; }
   .feat-copy { padding: 28px 20px 36px; }
   .row-copy { padding: 18px 16px 18px; }
-  .pick { border-right: 0; border-bottom: 1px solid var(--line); }
-  .pick:last-child { border-bottom: 0; }
-  .pick-copy { padding: 24px 20px 32px; }
+  .pick,
+  .pick:last-child { border: 1px solid var(--line); }
+  .pick-copy { padding: 20px 18px 22px; }
   .who { padding-top: 48px; padding-bottom: 48px; }
   .who-inner { grid-template-columns: 1fr; gap: 28px; }
   .who-points { grid-template-columns: 1fr; }
