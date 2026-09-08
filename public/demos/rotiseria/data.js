@@ -217,9 +217,18 @@ function loadIngredientes() {
   return ingredientes = parsed;
 }
 
-function saveProductos() { writeJson("rotiseria-productos-v1", productos); }
-function savePedidos() { writeJson("rotiseria-pedidos-v1", pedidos); }
-function saveIngredientes() { writeJson("rotiseria-ingredientes-v1", ingredientes); }
+function saveProductos(list) {
+  if (Array.isArray(list)) productos = list;
+  writeJson("rotiseria-productos-v1", productos);
+}
+function savePedidos(list) {
+  if (Array.isArray(list)) pedidos = list;
+  writeJson("rotiseria-pedidos-v1", pedidos);
+}
+function saveIngredientes(list) {
+  if (Array.isArray(list)) ingredientes = list;
+  writeJson("rotiseria-ingredientes-v1", ingredientes);
+}
 
 function loadSucursal() {
   if (sucursal) return sucursal;

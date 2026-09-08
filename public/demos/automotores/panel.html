@@ -24,8 +24,14 @@
     <div class="toolbar">
       <div>
         <p class="eyebrow">Datos de ejemplo</p>
-        <h1>Stock de vehículos</h1>
+        <h1 id="panelTitle">Stock de vehículos</h1>
       </div>
+    </div>
+
+    <div class="tabs" id="tabs">
+      <button type="button" data-tab="stock" class="on">Stock</button>
+      <button type="button" data-tab="consultas">Consultas</button>
+      <button type="button" data-tab="arca">ARCA</button>
     </div>
 
     <div class="stats" id="stats"></div>
@@ -49,7 +55,7 @@
       </select>
       <input name="modelo" placeholder="Modelo" required>
       <input name="version" placeholder="Versión">
-      <input name="ano" type="number" placeholder="Año" min="1990" max="2025" required>
+      <input name="ano" type="number" placeholder="Año" min="1990" max="2026" required>
       <select name="tipo">
         <option value="usado">Usado</option>
         <option value="0km">0 Km</option>
@@ -73,7 +79,16 @@
       <button class="btn-panel" type="submit">Agregar vehículo</button>
     </form>
 
-    <div class="workspace">
+    <form class="create" id="create-consulta">
+      <select name="vehiculoId" id="consulta-vehiculo" required></select>
+      <input name="nombre" placeholder="Nombre" required>
+      <input name="tel" placeholder="Teléfono">
+      <input name="email" placeholder="Email">
+      <input name="mensaje" placeholder="Consulta" required>
+      <button class="btn-panel" type="submit">Registrar consulta</button>
+    </form>
+
+    <div class="workspace" id="view-stock">
       <section class="list">
         <table>
           <thead>
@@ -90,6 +105,42 @@
         </table>
       </section>
       <aside class="detail" id="detail"></aside>
+    </div>
+
+    <div class="workspace" id="view-consultas" hidden>
+      <section class="list">
+        <table>
+          <thead>
+            <tr>
+              <th>Fecha</th>
+              <th>Cliente</th>
+              <th>Vehículo</th>
+              <th>Consulta</th>
+              <th>Estado</th>
+            </tr>
+          </thead>
+          <tbody id="consulta-rows"></tbody>
+        </table>
+      </section>
+      <aside class="detail" id="consulta-detail"></aside>
+    </div>
+
+    <div class="workspace" id="view-arca" hidden>
+      <section class="list">
+        <table>
+          <thead>
+            <tr>
+              <th>Código</th>
+              <th>Vehículo</th>
+              <th>Estado</th>
+              <th class="amount">USD</th>
+              <th>Factura</th>
+            </tr>
+          </thead>
+          <tbody id="arca-rows"></tbody>
+        </table>
+      </section>
+      <aside class="detail" id="arca-detail"></aside>
     </div>
   </div>
 

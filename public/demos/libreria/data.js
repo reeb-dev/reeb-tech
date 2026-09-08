@@ -655,6 +655,12 @@ function setPedidoEstado(id, estado) {
   return { ok: true, pedido };
 }
 
+function deletePedido(id) {
+  const pedidos = loadPedidos().filter((p) => p.id !== id);
+  savePedidos(pedidos);
+  return { ok: true };
+}
+
 function pedidoLabel(estado) {
   return PEDIDO_ESTADOS.find((s) => s.id === estado)?.label || estado;
 }

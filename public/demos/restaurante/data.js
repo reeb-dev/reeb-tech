@@ -171,9 +171,18 @@ function loadPedidos() {
   return pedidos = JSON.parse(raw);
 }
 
-function saveMenu() { localStorage.setItem(MENU_KEY, JSON.stringify(menu)); }
-function saveMesas() { localStorage.setItem(MESAS_KEY, JSON.stringify(mesas)); }
-function savePedidos() { localStorage.setItem(PEDIDOS_KEY, JSON.stringify(pedidos)); }
+function saveMenu(list) {
+  if (Array.isArray(list)) menu = list;
+  localStorage.setItem(MENU_KEY, JSON.stringify(menu));
+}
+function saveMesas(list) {
+  if (Array.isArray(list)) mesas = list;
+  localStorage.setItem(MESAS_KEY, JSON.stringify(mesas));
+}
+function savePedidos(list) {
+  if (Array.isArray(list)) pedidos = list;
+  localStorage.setItem(PEDIDOS_KEY, JSON.stringify(pedidos));
+}
 
 function labelMesa(status) { return STATUSES_MESA.find((s) => s.id === status)?.label || status; }
 function labelPedido(status) { return STATUSES_PEDIDO.find((s) => s.id === status)?.label || status; }

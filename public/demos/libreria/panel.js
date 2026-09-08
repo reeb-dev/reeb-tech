@@ -1,11 +1,21 @@
 let items = load();
 let selected = items[0]?.id || "";
+let selectedPedido = "";
 let filter = "todos";
 let searchTerm = "";
 let currentTab = "inventario";
 
-document.getElementById("open-create").addEventListener("click", () => {
-  document.getElementById("create").classList.toggle("open");
+const createForm = document.getElementById("create");
+const createPedido = document.getElementById("create-pedido");
+const openCreate = document.getElementById("open-create");
+
+openCreate.addEventListener("click", () => {
+  if (currentTab === "pedidos") createPedido.classList.toggle("open");
+  else {
+    currentTab = "inventario";
+    createForm.classList.toggle("open");
+  }
+  render();
 });
 
 document.getElementById("create").addEventListener("submit", (event) => {
@@ -39,10 +49,32 @@ document.getElementById("create").addEventListener("submit", (event) => {
   render();
 });
 
+createPedido.addEventListener("submit", (event) => {
+  event.preventDefault();
+  const data = new FormData(event.target);
+  const result = addPedidoEspecial({
+    titulo: data.get("titulo"),
+    autor: data.get("autor"),
+    contacto: data.get("contacto")
+  });
+  if (!result.ok) {
+    showToast("Completá título, autor y contacto");
+    return;
+  }
+  selectedPedido = result.pedido.id;
+  event.target.reset();
+  event.target.classList.remove("open");
+  currentTab = "pedidos";
+  showToast("Encargo registrado");
+  render();
+});
+
 document.getElementById("tabs").addEventListener("click", (event) => {
   const btn = event.target.closest("[data-tab]");
   if (!btn) return;
   currentTab = btn.dataset.tab;
+  createForm.classList.remove("open");
+  createPedido.classList.remove("open");
   render();
 });
 
@@ -73,7 +105,16 @@ function setTabVisibility() {
   document.getElementById("view-inventario").hidden = currentTab !== "inventario";
   document.getElementById("view-pedidos").hidden = currentTab !== "pedidos";
   document.getElementById("view-ventas").hidden = currentTab !== "ventas";
-  document.getElementById("create").style.display = currentTab === "inventario" ? "" : "none";
+  createForm.style.display = currentTab === "inventario" ? "" : "none";
+  createPedido.style.display = currentTab === "pedidos" ? "" : "none";
+  openCreate.style.display = currentTab === "ventas" ? "none" : "";
+  openCreate.textContent = currentTab === "pedidos" ? "Nuevo encargo" : "Nuevo producto";
+  const titles = {
+    inventario: "Inventario",
+    pedidos: "Encargos especiales",
+    ventas: "Ventas"
+  };
+  document.getElementById("panelTitle").textContent = titles[currentTab] || titles.inventario;
 }
 
 function renderVentas() {
@@ -104,12 +145,21 @@ function renderVentas() {
 function renderPedidos() {
   const pedidos = loadPedidos();
   const box = document.getElementById("pedidos");
-  if (!pedidos.length) {
-    box.innerHTML = `<p class="note">Todavía no hay encargos. Llegan desde el formulario de la vidriera.</p>`;
+  const term = searchTerm.toLowerCase();
+  const visible = term
+    ? pedidos.filter((p) =>
+        p.titulo.toLowerCase().includes(term) ||
+        (p.autor || "").toLowerCase().includes(term) ||
+        (p.contacto || "").toLowerCase().includes(term)
+      )
+    : pedidos;
+  if (!visible.length) {
+    box.innerHTML = `<p class="note">${pedidos.length ? "Ningún encargo coincide con la búsqueda." : "Todavía no hay encargos. Llegan desde la vidriera o con Nuevo encargo."}</p>`;
     return;
   }
-  box.innerHTML = pedidos.map((pedido) => `
-    <article class="pedido-card">
+  if (!selectedPedido && visible[0]) selectedPedido = visible[0].id;
+  box.innerHTML = visible.map((pedido) => `
+    <article class="pedido-card ${pedido.id === selectedPedido ? "on" : ""}" data-pick="${esc(pedido.id)}">
       <p class="eyebrow">${esc(formatFecha(pedido.fecha))}</p>
       <h3>${esc(pedido.titulo)}</h3>
       <p class="meta-line">${esc(pedido.autor)} · ${esc(pedido.contacto)}</p>
@@ -118,13 +168,30 @@ function renderPedidos() {
         ${PEDIDO_ESTADOS.map((estado) =>
           `<button class="ghost" type="button" data-pedido="${esc(pedido.id)}" data-estado="${esc(estado.id)}" ${pedido.estado === estado.id ? "disabled" : ""}>${esc(estado.label)}</button>`
         ).join("")}
+        <button class="ghost" type="button" data-borrar="${esc(pedido.id)}">Eliminar</button>
       </div>
     </article>`).join("");
 
+  box.querySelectorAll("[data-pick]").forEach((card) => {
+    card.addEventListener("click", (event) => {
+      if (event.target.closest("button")) return;
+      selectedPedido = card.dataset.pick;
+      render();
+    });
+  });
   box.querySelectorAll("[data-pedido]").forEach((btn) => {
     btn.addEventListener("click", () => {
       setPedidoEstado(btn.dataset.pedido, btn.dataset.estado);
       showToast("Estado actualizado");
+      render();
+    });
+  });
+  box.querySelectorAll("[data-borrar]").forEach((btn) => {
+    btn.addEventListener("click", () => {
+      if (!confirm("¿Eliminar este encargo? Esta acción no se puede deshacer.")) return;
+      deletePedido(btn.dataset.borrar);
+      selectedPedido = "";
+      showToast("Encargo eliminado");
       render();
     });
   });
@@ -228,15 +295,50 @@ function render() {
       <p style="font-size:11px;color:#64748b;margin-top:8px;">Demo: genera CAE simulado y descuenta stock.</p>
     </div>
 
-    <div class="actions" style="margin-top: 16px;">
-      <button class="ghost" type="button" id="remove">Eliminar producto</button>
-    </div>
+    <form id="edit">
+      <label>Código<input name="codigo" value="${esc(item.codigo)}"></label>
+      <label>Nombre<input name="nombre" value="${esc(item.nombre)}"></label>
+      <label>Autor<input name="autor" value="${esc(item.autor || "")}"></label>
+      <label>Categoría
+        <select name="categoria">
+          ${CATEGORIAS.map((c) => `<option value="${c.id}" ${item.categoria === c.id ? "selected" : ""}>${esc(c.label)}</option>`).join("")}
+        </select>
+      </label>
+      <label>Precio<input name="precio" type="number" value="${item.precio}"></label>
+      <label>Stock<input name="stock" type="number" value="${item.stock}"></label>
+      <label>Proveedor<input name="proveedor" value="${esc(item.proveedor || "")}"></label>
+      <label>Descripción<textarea name="descripcion" rows="3">${esc(item.descripcion || "")}</textarea></label>
+      <div class="actions">
+        <button class="btn-panel" type="submit">Guardar</button>
+        <button class="ghost" type="button" id="remove">Eliminar producto</button>
+      </div>
+    </form>
 
     <div class="timeline">
       <h3>Historial</h3>
       ${(item.history || []).map((h) => `<p><time>${esc(h.when)}</time>${esc(h.text)}</p>`).join("")}
     </div>
   `;
+
+  detail.querySelector("#edit")?.addEventListener("submit", (event) => {
+    event.preventDefault();
+    const data = new FormData(event.target);
+    Object.assign(item, {
+      codigo: String(data.get("codigo") || ""),
+      nombre: String(data.get("nombre") || ""),
+      autor: String(data.get("autor") || ""),
+      categoria: String(data.get("categoria") || item.categoria),
+      precio: Number(data.get("precio") || 0),
+      stock: Number(data.get("stock") || 0),
+      proveedor: String(data.get("proveedor") || ""),
+      descripcion: String(data.get("descripcion") || "")
+    });
+    item.status = stockStatus(item);
+    item.history = [{ when: "hoy", text: "Ficha actualizada." }, ...(item.history || [])];
+    save(items);
+    showToast("Cambios guardados");
+    render();
+  });
 
   detail.querySelector("#remove").addEventListener("click", () => {
     if (!confirm("¿Eliminar este producto? Esta acción no se puede deshacer.")) return;

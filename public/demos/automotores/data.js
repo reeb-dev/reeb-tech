@@ -1350,6 +1350,109 @@ function seed() {
   ];
 }
 
+const CONSULTA_ESTADOS = [
+  { id: "pendiente", label: "Pendiente" },
+  { id: "contactado", label: "Contactado" },
+  { id: "visita", label: "Visita" },
+  { id: "cerrada", label: "Cerrada" }
+];
+
+const CONSULTAS_KEY = "automotores-consultas-v1";
+let consultasCache = null;
+
+function seedConsultas() {
+  return [
+    {
+      id: "c1",
+      vehiculoId: "v1",
+      nombre: "Laura Gómez",
+      tel: "11-5555-1001",
+      email: "laura.gomez@mail.com",
+      mensaje: "¿Hay financiación en 36 cuotas para el Corolla?",
+      fecha: "2026-09-06T14:20:00",
+      estado: "pendiente",
+      history: [{ when: "6 sep", text: "Consulta recibida desde el catálogo." }]
+    },
+    {
+      id: "c2",
+      vehiculoId: "v4",
+      nombre: "Martín Pérez",
+      tel: "11-4444-8822",
+      email: "martin.perez@mail.com",
+      mensaje: "Quiero ver la Hilux esta semana. ¿Permuta por una Ranger 2018?",
+      fecha: "2026-09-05T11:05:00",
+      estado: "visita",
+      history: [
+        { when: "7 sep", text: "Visita coordinada para el sábado." },
+        { when: "5 sep", text: "Consulta recibida." }
+      ]
+    },
+    {
+      id: "c3",
+      vehiculoId: "v8",
+      nombre: "Sofía Álvarez",
+      tel: "11-3333-4400",
+      email: "sofia.alvarez@mail.com",
+      mensaje: "El Golf está reservado? Si se libera avisen.",
+      fecha: "2026-09-04T18:40:00",
+      estado: "contactado",
+      history: [
+        { when: "4 sep", text: "Se llamó y quedó en espera." },
+        { when: "4 sep", text: "Consulta recibida." }
+      ]
+    },
+    {
+      id: "c4",
+      vehiculoId: "v12",
+      nombre: "Diego Ruiz",
+      tel: "11-2222-1199",
+      email: "diego.ruiz@mail.com",
+      mensaje: "¿Aceptan seña del 10% para el Cronos?",
+      fecha: "2026-09-03T09:15:00",
+      estado: "cerrada",
+      history: [{ when: "3 sep", text: "Consulta cerrada: eligió otro vehículo." }]
+    }
+  ];
+}
+
+function loadConsultas() {
+  if (consultasCache) return consultasCache;
+  const raw = localStorage.getItem(CONSULTAS_KEY);
+  if (!raw) {
+    consultasCache = seedConsultas();
+    localStorage.setItem(CONSULTAS_KEY, JSON.stringify(consultasCache));
+    return consultasCache;
+  }
+  try {
+    const parsed = JSON.parse(raw);
+    consultasCache = Array.isArray(parsed) ? parsed : seedConsultas();
+  } catch {
+    consultasCache = seedConsultas();
+  }
+  return consultasCache;
+}
+
+function saveConsultas(list) {
+  if (Array.isArray(list)) consultasCache = list;
+  localStorage.setItem(CONSULTAS_KEY, JSON.stringify(consultasCache));
+}
+
+function consultaLabel(estado) {
+  return CONSULTA_ESTADOS.find((s) => s.id === estado)?.label || estado;
+}
+
+function vehiculoLabel(id, items) {
+  const v = (items || load()).find((x) => x.id === id);
+  return v ? `${v.marca} ${v.modelo} (${v.codigo})` : "Sin vehículo";
+}
+
+function formatFechaConsulta(iso) {
+  if (!iso) return "";
+  const d = new Date(iso);
+  if (Number.isNaN(d.getTime())) return String(iso);
+  return d.toLocaleString("es-AR", { day: "2-digit", month: "short", hour: "2-digit", minute: "2-digit" });
+}
+
 function load() {
   const raw = localStorage.getItem("automotores-demo-v4");
   if (!raw) {

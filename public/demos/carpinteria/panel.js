@@ -7,21 +7,29 @@ let editingTrabajo = "";
 
 const viewPedidos = document.getElementById("view-pedidos");
 const viewTrabajos = document.getElementById("view-trabajos");
+const viewArca = document.getElementById("view-arca");
 const tabPedidos = document.getElementById("tab-pedidos");
 const tabTrabajos = document.getElementById("tab-trabajos");
+const tabArca = document.getElementById("tab-arca");
 const openCreate = document.getElementById("open-create");
+let selectedArca = items.find((i) => i.factura)?.id || items[0]?.id || "";
+let filterArca = "todos";
+let searchTrabajo = "";
 
 tabPedidos.addEventListener("click", () => showView("pedidos"));
 tabTrabajos.addEventListener("click", () => showView("trabajos"));
+tabArca.addEventListener("click", () => showView("arca"));
 
 function showView(name) {
-  const pedidos = name === "pedidos";
-  viewPedidos.classList.toggle("panel-hidden", !pedidos);
-  viewTrabajos.classList.toggle("panel-hidden", pedidos);
-  tabPedidos.classList.toggle("on", pedidos);
-  tabTrabajos.classList.toggle("on", !pedidos);
-  openCreate.classList.toggle("panel-hidden", !pedidos);
-  if (!pedidos) renderTrabajos();
+  viewPedidos.classList.toggle("panel-hidden", name !== "pedidos");
+  viewTrabajos.classList.toggle("panel-hidden", name !== "trabajos");
+  viewArca.classList.toggle("panel-hidden", name !== "arca");
+  tabPedidos.classList.toggle("on", name === "pedidos");
+  tabTrabajos.classList.toggle("on", name === "trabajos");
+  tabArca.classList.toggle("on", name === "arca");
+  openCreate.classList.toggle("panel-hidden", name !== "pedidos");
+  if (name === "trabajos") renderTrabajos();
+  if (name === "arca") renderArca();
 }
 
 openCreate.addEventListener("click", () => {
@@ -157,9 +165,17 @@ function render() {
     ${item.materiales.length > 0 ? `
       <label>Materiales</label>
       <ul class="materiales-list">
-        ${item.materiales.map((m) => `<li><span>${esc(matLabel(m.id))} x${m.cantidad}</span><span>${esc(money(m.precio * m.cantidad))}</span></li>`).join("")}
+        ${item.materiales.map((m, idx) => `<li><span>${esc(matLabel(m.id))} x${m.cantidad}</span><span>${esc(money(m.precio * m.cantidad))}</span><button class="ghost" type="button" data-delmat="${idx}">Quitar</button></li>`).join("")}
       </ul>
     ` : `<p style="color:#999;font-size:13px;margin-top:12px;">Sin materiales cargados</p>`}
+
+    <label>Agregar material</label>
+    <select id="add-mat">
+      ${MATERIALES.map((m) => `<option value="${m.id}">${esc(m.label)}</option>`).join("")}
+    </select>
+    <label>Cantidad<input id="mat-cant" type="number" min="1" value="1"></label>
+    <label>Precio unitario<input id="mat-precio" type="number" min="0" value="15000"></label>
+    <button class="ghost" type="button" id="btn-add-mat" style="margin-top:6px;">+ Agregar material</button>
 
     <div class="meta" style="margin-top:16px;">
       <div><span>Materiales</span>${esc(money(calcMateriales(item)))}</div>
@@ -212,6 +228,29 @@ function render() {
       ${(item.history || []).map((h) => `<p><time>${esc(h.when)}</time>${esc(h.text)}</p>`).join("")}
     </div>
   `;
+
+  detail.querySelector("#btn-add-mat")?.addEventListener("click", () => {
+    const id = detail.querySelector("#add-mat").value;
+    const cantidad = Number(detail.querySelector("#mat-cant").value || 1);
+    const precio = Number(detail.querySelector("#mat-precio").value || 0);
+    item.materiales = item.materiales || [];
+    const existing = item.materiales.find((m) => m.id === id);
+    if (existing) existing.cantidad += cantidad;
+    else item.materiales.push({ id, cantidad, precio });
+    item.history = [{ when: "hoy", text: `Material agregado: ${matLabel(id)}.` }, ...(item.history || [])];
+    savePedidos(items);
+    showToast("Material agregado");
+    render();
+  });
+
+  detail.querySelectorAll("[data-delmat]").forEach((btn) => {
+    btn.addEventListener("click", () => {
+      item.materiales.splice(Number(btn.dataset.delmat), 1);
+      savePedidos(items);
+      showToast("Material quitado");
+      render();
+    });
+  });
 
   const emitirBtn = detail.querySelector("#emitir-factura");
   if (emitirBtn) {
@@ -299,7 +338,16 @@ document.getElementById("create-trabajo").addEventListener("submit", (event) => 
 });
 
 function renderTrabajos() {
-  document.getElementById("trabajosGrid").innerHTML = trabajos.map((t) => `
+  const term = (searchTrabajo || "").toLowerCase();
+  const visible = term
+    ? trabajos.filter((t) => t.titulo.toLowerCase().includes(term) || tipoLabel(t.tipo).toLowerCase().includes(term))
+    : trabajos;
+  document.getElementById("trabajosGrid").innerHTML = `
+    <div style="grid-column:1/-1;display:flex;gap:8px;align-items:center;margin-bottom:8px;">
+      <input type="text" id="search-trabajo" placeholder="Buscar trabajo..." value="${esc(searchTrabajo)}" style="padding:8px 12px;border:1px solid var(--line);border-radius:4px;width:220px;">
+      <span style="color:var(--muted);font-size:13px;">${visible.length} trabajo${visible.length === 1 ? "" : "s"}</span>
+    </div>
+    ${visible.map((t) => `
     <article class="trabajo-admin">
       <img src="${esc(t.imagen)}" alt="${esc(t.titulo)}">
       <div>
@@ -311,7 +359,12 @@ function renderTrabajos() {
         </div>
       </div>
     </article>
-  `).join("") || "<p style='padding:0 24px'>No hay trabajos en el portfolio.</p>";
+  `).join("") || "<p style='padding:0 24px'>No hay trabajos en el portfolio.</p>"}`;
+
+  document.getElementById("search-trabajo")?.addEventListener("input", (e) => {
+    searchTrabajo = e.target.value;
+    renderTrabajos();
+  });
 
   document.querySelectorAll("[data-edit]").forEach((btn) => {
     btn.addEventListener("click", () => {
@@ -338,6 +391,91 @@ function renderTrabajos() {
       showToast("Trabajo quitado");
       renderTrabajos();
     });
+  });
+}
+
+function emitirFacturaPedido(item, tipo, cuit) {
+  const numero = `0001-${String(Math.floor(Math.random() * 99999) + 1).padStart(8, "0")}`;
+  const cae = String(Math.floor(Math.random() * 99999999999999));
+  const vtoDate = new Date();
+  vtoDate.setDate(vtoDate.getDate() + 10);
+  const vto = vtoDate.toLocaleDateString("es-AR", { day: "numeric", month: "short" });
+  item.factura = { tipo, numero, cae, vto, total: calcTotal(item), cuit };
+  item.history = [{ when: "hoy", text: `Factura ${compLabel(tipo)} emitida. CAE: ${cae}` }, ...(item.history || [])];
+  savePedidos(items);
+}
+
+function renderArca() {
+  const facturados = items.filter((i) => i.factura);
+  const pendientes = items.filter((i) => !i.factura && calcTotal(i) > 0);
+  let visible = items;
+  if (filterArca === "facturado") visible = facturados;
+  else if (filterArca === "pendiente") visible = pendientes;
+
+  document.getElementById("arca-stats").innerHTML = `
+    <button type="button" data-afiltro="todos" class="${filterArca === "todos" ? "on" : ""}"><strong>${items.length}</strong>pedidos</button>
+    <button type="button" data-afiltro="pendiente" class="${filterArca === "pendiente" ? "on" : ""}"><strong>${pendientes.length}</strong>sin factura</button>
+    <button type="button" data-afiltro="facturado" class="${filterArca === "facturado" ? "on" : ""}"><strong>${facturados.length}</strong>facturados</button>
+  `;
+  document.querySelectorAll("[data-afiltro]").forEach((btn) => {
+    btn.addEventListener("click", () => { filterArca = btn.dataset.afiltro; renderArca(); });
+  });
+
+  if (!visible.find((i) => i.id === selectedArca) && visible[0]) selectedArca = visible[0].id;
+
+  document.getElementById("arca-rows").innerHTML = visible.map((item) => `
+    <tr class="row ${item.id === selectedArca ? "on" : ""}" data-id="${esc(item.id)}">
+      <td>${esc(item.pedido)}</td>
+      <td>${esc(item.cliente.nombre)}</td>
+      <td>${esc(tipoLabel(item.tipo))}</td>
+      <td class="amount">${calcTotal(item) > 0 ? esc(money(calcTotal(item))) : "—"}</td>
+      <td>${item.factura ? esc(item.factura.numero) : "Pendiente"}</td>
+    </tr>
+  `).join("") || `<tr><td colspan="5">No hay pedidos.</td></tr>`;
+
+  document.querySelectorAll("#arca-rows .row").forEach((row) => {
+    row.addEventListener("click", () => { selectedArca = row.dataset.id; renderArca(); });
+  });
+
+  const item = items.find((i) => i.id === selectedArca);
+  const detail = document.getElementById("arca-detail");
+  if (!item) { detail.innerHTML = "<p>Elegí un pedido.</p>"; return; }
+  const total = calcTotal(item);
+
+  detail.innerHTML = `
+    <p class="eyebrow">${esc(item.pedido)}</p>
+    <h2>${esc(item.cliente.nombre)}</h2>
+    <div class="meta">
+      <div><span>Trabajo</span>${esc(tipoLabel(item.tipo))}</div>
+      <div><span>Total</span>${esc(money(total))}</div>
+    </div>
+    ${item.factura ? `
+      <div class="factura-box">
+        <h4>Factura emitida</h4>
+        <p><strong>${esc(compLabel(item.factura.tipo))}</strong> ${esc(item.factura.numero)}</p>
+        <p>CAE: <span class="cae">${esc(item.factura.cae)}</span></p>
+        <p>Vto CAE: ${esc(item.factura.vto)} · Total: ${esc(money(item.factura.total))}</p>
+      </div>
+    ` : `
+      <div class="arca-section">
+        <h4>Facturación ARCA (AFIP)</h4>
+        <label>CUIT Cliente<input id="arca-cuit-tab" placeholder="20-12345678-9"></label>
+        <label>Tipo comprobante
+          <select id="arca-tipo-tab">
+            ${COMPROBANTES.filter((c) => c.id !== "PR").map((c) => `<option value="${c.id}">${esc(c.label)}</option>`).join("")}
+          </select>
+        </label>
+        <button class="btn-panel" type="button" id="emitir-factura-tab" style="margin-top:10px;" ${total === 0 ? "disabled" : ""}>
+          Emitir factura (simulado)
+        </button>
+      </div>
+    `}
+  `;
+
+  document.getElementById("emitir-factura-tab")?.addEventListener("click", () => {
+    emitirFacturaPedido(item, document.getElementById("arca-tipo-tab").value, document.getElementById("arca-cuit-tab").value);
+    showToast("Factura emitida");
+    renderArca();
   });
 }
 

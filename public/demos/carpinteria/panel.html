@@ -16,6 +16,7 @@
           <div class="panel-tabs">
             <button type="button" id="tab-pedidos" class="on">Pedidos</button>
             <button type="button" id="tab-trabajos">Trabajos</button>
+            <button type="button" id="tab-arca">ARCA</button>
           </div>
           <button class="btn" id="open-create" type="button">Nuevo pedido</button>
         </nav>
@@ -102,6 +103,33 @@
       </form>
 
       <div class="trabajos-grid" id="trabajosGrid"></div>
+    </div>
+
+    <div id="view-arca" class="panel-hidden">
+      <div class="toolbar">
+        <div>
+          <p class="eyebrow">Comprobantes simulados</p>
+          <h1>Facturación ARCA</h1>
+        </div>
+      </div>
+      <div class="stats" id="arca-stats"></div>
+      <div class="workspace">
+        <section class="list">
+          <table>
+            <thead>
+              <tr>
+                <th>Pedido</th>
+                <th>Cliente</th>
+                <th>Trabajo</th>
+                <th class="amount">Total</th>
+                <th>Factura</th>
+              </tr>
+            </thead>
+            <tbody id="arca-rows"></tbody>
+          </table>
+        </section>
+        <aside class="detail" id="arca-detail"></aside>
+      </div>
     </div>
   </div>
 

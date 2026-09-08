@@ -469,6 +469,7 @@ footer { padding: 40px 0; color: var(--muted); font-size: 13px; background: whit
 .stats .on { border-color: var(--azul); background: #f0f7ff; }
 .stats .verde strong { color: var(--verde); }
 .stats .naranja strong { color: var(--naranja); }
+.stats input[type="text"] { cursor: text; min-width: 180px; }
 
 /* Workspace */
 .workspace {

@@ -79,6 +79,14 @@ footer { padding: 36px 0 48px; color: var(--muted); font-size: 14px; }
 .tabs { display: flex; gap: 0; padding: 0 24px; background: var(--paper); border-bottom: 1px solid var(--line); }
 .tabs button { background: transparent; border: none; padding: 12px 20px; font: inherit; font-weight: 500; color: var(--muted); cursor: pointer; border-bottom: 3px solid transparent; margin-bottom: -1px; }
 .tabs button.on { color: var(--naranja); border-bottom-color: var(--naranja); }
+.create { display: none; background: white; border: 1px solid var(--line); border-radius: 6px; padding: 16px; margin: 0 24px 12px; }
+.create.open { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; }
+.create button { align-self: end; }
+.workspace[hidden], .create[hidden] { display: none !important; }
+.stats input[type="text"] { margin-left: auto; padding: 8px 12px; border: 1px solid var(--line); border-radius: 4px; width: 200px; cursor: text; }
+.prod-card { cursor: pointer; }
+.prod-card.on { outline: 2px solid var(--naranja); }
+.ing-row.on { background: var(--crema); }
 
 .stats { display: flex; gap: 8px; padding: 12px 24px; flex-wrap: wrap; background: var(--paper); }
 .stats button, .stats div { background: white; border: 1px solid var(--line); padding: 8px 12px; min-width: 90px; text-align: left; border-radius: 4px; cursor: pointer; }

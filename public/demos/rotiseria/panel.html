@@ -21,26 +21,79 @@
         <a class="logo" href="index.html">ROTISERÍA<small>Producción y ventas · demo</small></a>
         <nav>
           <a href="index.html">Inicio</a>
-          <button class="btn" id="nuevo-pedido" type="button">Nuevo pedido</button>
+          <button class="btn" id="open-create" type="button">Nuevo pedido</button>
         </nav>
       </div>
     </header>
     <div class="toolbar">
       <div>
         <p class="eyebrow">Turno activo</p>
-        <h1>Sistema de rotisería</h1>
+        <h1 id="panelTitle">Pedidos del día</h1>
       </div>
       <div class="sucursal-bar" id="sucursal-chip"></div>
     </div>
-    <div class="tabs">
-      <button data-tab="pedidos" class="on">📝 Pedidos</button>
-      <button data-tab="produccion">🍗 Producción</button>
-      <button data-tab="ingredientes">📦 Ingredientes</button>
+    <div class="tabs" id="tabs">
+      <button type="button" data-tab="pedidos" class="on">Pedidos</button>
+      <button type="button" data-tab="produccion">Producción</button>
+      <button type="button" data-tab="ingredientes">Ingredientes</button>
+      <button type="button" data-tab="delivery">Delivery</button>
     </div>
     <div class="stats" id="stats"></div>
-    <div class="workspace">
-      <section class="list" id="list-area"></section>
-      <aside class="detail" id="detail"></aside>
+
+    <form class="create" id="create-pedido">
+      <input name="cliente" placeholder="Cliente" required>
+      <input name="tel" placeholder="Teléfono">
+      <select name="tipo">
+        <option value="mostrador">Mostrador</option>
+        <option value="delivery">Delivery</option>
+      </select>
+      <input name="direccion" placeholder="Dirección (si es delivery)">
+      <input name="notas" placeholder="Notas">
+      <button class="btn-panel" type="submit">Crear pedido</button>
+    </form>
+
+    <form class="create" id="create-prod">
+      <input name="codigo" placeholder="Código" required>
+      <input name="nombre" placeholder="Nombre" required>
+      <select name="categoria">
+        <option value="pollos">Pollos</option>
+        <option value="empanadas">Empanadas</option>
+        <option value="milanesas">Milanesas</option>
+        <option value="tartas">Tartas y pizzas</option>
+        <option value="guarniciones">Guarniciones</option>
+        <option value="bebidas">Bebidas</option>
+        <option value="postres">Postres</option>
+      </select>
+      <input name="precio" type="number" placeholder="Precio" required>
+      <input name="produccionDia" type="number" placeholder="Producción del día" value="0">
+      <input name="stock" type="number" placeholder="Stock" value="0">
+      <button class="btn-panel" type="submit">Agregar producto</button>
+    </form>
+
+    <form class="create" id="create-ing">
+      <input name="nombre" placeholder="Ingrediente" required>
+      <input name="unidad" placeholder="Unidad (kg, litro…)" required>
+      <input name="stock" type="number" placeholder="Stock" required>
+      <input name="minimo" type="number" placeholder="Mínimo" required>
+      <input name="costo" type="number" placeholder="Costo" required>
+      <button class="btn-panel" type="submit">Agregar ingrediente</button>
+    </form>
+
+    <div class="workspace" id="view-pedidos">
+      <section class="list" id="pedidos-list"></section>
+      <aside class="detail" id="pedidos-detail"></aside>
+    </div>
+    <div class="workspace" id="view-produccion" hidden>
+      <section class="list" id="prod-list"></section>
+      <aside class="detail" id="prod-detail"></aside>
+    </div>
+    <div class="workspace" id="view-ingredientes" hidden>
+      <section class="list" id="ing-list"></section>
+      <aside class="detail" id="ing-detail"></aside>
+    </div>
+    <div class="workspace" id="view-delivery" hidden>
+      <section class="list" id="del-list"></section>
+      <aside class="detail" id="del-detail"></aside>
     </div>
   </div>
   <script src="data.js"></script>

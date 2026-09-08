@@ -20,12 +20,12 @@
     <div class="toolbar">
       <div>
         <p class="eyebrow">Datos de ejemplo</p>
-        <h1>Catálogo, encargos y ventas</h1>
+        <h1 id="panelTitle">Catálogo, encargos y ventas</h1>
       </div>
     </div>
     <div class="tabs" id="tabs">
       <button type="button" data-tab="inventario" class="on">Inventario</button>
-      <button type="button" data-tab="pedidos">Pedidos especiales</button>
+      <button type="button" data-tab="pedidos">Encargos</button>
       <button type="button" data-tab="ventas">Ventas</button>
     </div>
     <div class="stats" id="stats"></div>
@@ -46,6 +46,12 @@
       <input name="stock" type="number" placeholder="Stock">
       <input name="proveedor" placeholder="Proveedor">
       <button class="btn-panel" type="submit">Agregar</button>
+    </form>
+    <form class="create" id="create-pedido">
+      <input name="titulo" placeholder="Título" required>
+      <input name="autor" placeholder="Autor" required>
+      <input name="contacto" placeholder="Contacto (tel o email)" required>
+      <button class="btn-panel" type="submit">Registrar encargo</button>
     </form>
     <div class="workspace" id="view-inventario">
       <section class="list">

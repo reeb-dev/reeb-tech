@@ -124,6 +124,8 @@ input, select, textarea { width: 100%; font: inherit; padding: 8px; border: 1px 
 .create { display: none; background: white; border: 1px solid var(--line); border-radius: 6px; padding: 16px; margin: 0 24px 12px; }
 .create.open { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; }
 .create button { align-self: end; }
+.workspace[hidden], .panel-section[hidden], .create[hidden] { display: none !important; }
+.detail form#edit { display: grid; gap: 4px; margin-top: 12px; }
 
 .amount { text-align: right; font-variant-numeric: tabular-nums; }
 
@@ -259,7 +261,7 @@ body.ficha-open { overflow: hidden; }
 .tabs button { background: transparent; border: none; padding: 12px 20px; font: inherit; font-weight: 500; color: var(--muted); cursor: pointer; border-bottom: 3px solid transparent; margin-bottom: -1px; font-family: "Segoe UI", system-ui, sans-serif; }
 .tabs button.on { color: var(--purpura); border-bottom-color: var(--purpura); }
 .panel-section { padding: 16px 24px 32px; background: var(--paper); }
-.pedido-card { background: white; border: 1px solid var(--line); border-radius: 8px; padding: 14px; margin-bottom: 10px; }
+.pedido-card.on { outline: 2px solid var(--purpura); }
 .pedido-card h3 { margin: 0 0 6px; font-size: 16px; }
 .pedido-card .meta-line { font-size: 13px; color: var(--muted); margin: 0 0 8px; font-family: "Segoe UI", system-ui, sans-serif; }
 .pedido-card .actions { margin-top: 8px; }

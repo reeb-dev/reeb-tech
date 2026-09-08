@@ -6,6 +6,7 @@ let selectedVenta = "";
 let selectedPregunta = "";
 let ventaFiltro = "todas";
 let preguntaFiltro = "pendientes";
+let searchTerm = "";
 
 const TAB_TITLES = {
   publicaciones: "Mis Publicaciones",
@@ -187,10 +188,29 @@ function render() {
   else if (currentTab === "facturacion") renderFacturacion();
 }
 
+function bindSearch() {
+  document.getElementById("search")?.addEventListener("input", (e) => {
+    searchTerm = e.target.value;
+    render();
+  });
+}
+
+function searchField() {
+  return `<input type="text" id="search" placeholder="Buscar..." value="${esc(searchTerm)}" style="margin-left:auto;padding:8px 12px;border:1px solid var(--line);border-radius:6px;width:200px;">`;
+}
+
+function matchesSearch(text) {
+  if (!searchTerm) return true;
+  return String(text || "").toLowerCase().includes(searchTerm.toLowerCase());
+}
+
 function visiblePublicaciones() {
-  if (filter === "todos") return items;
-  if (filter === "agotado") return items.filter((item) => item.status === "agotado" || item.stock === 0);
-  return items.filter((item) => item.status === filter);
+  let list = items;
+  if (filter === "agotado") list = list.filter((item) => item.status === "agotado" || item.stock === 0);
+  else if (filter !== "todos") list = list.filter((item) => item.status === filter);
+  return list.filter((item) =>
+    matchesSearch(item.titulo) || matchesSearch(item.mla) || matchesSearch(item.ubicacion)
+  );
 }
 
 function renderPublicaciones() {
@@ -223,8 +243,10 @@ function renderPublicaciones() {
       <strong>${totalPreguntas}</strong>
       <span class="label">Preguntas</span>
     </div>
+    ${searchField()}
   `;
 
+  bindSearch();
   document.querySelectorAll("[data-filter]").forEach((btn) => {
     btn.addEventListener("click", () => {
       filter = btn.dataset.filter;
@@ -343,9 +365,13 @@ function renderPublicaciones() {
 }
 
 function ventasFiltradas() {
-  const list = loadVentas();
-  if (ventaFiltro === "todas") return list;
-  return list.filter((v) => v.envio.estado === ventaFiltro);
+  let list = loadVentas();
+  if (ventaFiltro !== "todas") list = list.filter((v) => v.envio.estado === ventaFiltro);
+  return list.filter((v) =>
+    matchesSearch(v.comprador?.nombre) ||
+    matchesSearch(v.comprador?.email) ||
+    (v.items || []).some((i) => matchesSearch(i.titulo))
+  );
 }
 
 function renderVentaCard(venta, selectedId) {
@@ -399,7 +425,9 @@ function renderVentas() {
     <div class="verde"><strong>${money(total)}</strong><span class="label">Facturado</span></div>
     <button type="button" data-vfiltro="pendiente" class="${ventaFiltro === "pendiente" ? "on" : ""}"><strong>${list.filter((v) => v.envio.estado === "pendiente").length}</strong><span class="label">Pendientes</span></button>
     <button type="button" data-vfiltro="entregado" class="${ventaFiltro === "entregado" ? "on" : ""}"><strong>${list.filter((v) => v.envio.estado === "entregado").length}</strong><span class="label">Entregadas</span></button>
+    ${searchField()}
   `;
+  bindSearch();
   document.querySelectorAll("[data-vfiltro]").forEach((btn) => {
     btn.addEventListener("click", () => {
       ventaFiltro = btn.dataset.vfiltro;
@@ -439,13 +467,18 @@ function renderVentas() {
 function renderPreguntas() {
   const list = loadPreguntas();
   const pendientes = list.filter((p) => !p.respuesta);
-  const visible = preguntaFiltro === "pendientes" ? pendientes : preguntaFiltro === "respondidas" ? list.filter((p) => p.respuesta) : list;
+  let visible = preguntaFiltro === "pendientes" ? pendientes : preguntaFiltro === "respondidas" ? list.filter((p) => p.respuesta) : list;
+  visible = visible.filter((p) =>
+    matchesSearch(p.nombreUsuario) || matchesSearch(p.productoTitulo) || matchesSearch(p.texto)
+  );
 
   document.getElementById("stats").innerHTML = `
     <button type="button" data-pfiltro="todas" class="${preguntaFiltro === "todas" ? "on" : ""}"><strong>${list.length}</strong><span class="label">Todas</span></button>
     <button type="button" data-pfiltro="pendientes" class="${preguntaFiltro === "pendientes" ? "on" : ""}"><strong>${pendientes.length}</strong><span class="label">Sin responder</span></button>
     <button type="button" data-pfiltro="respondidas" class="${preguntaFiltro === "respondidas" ? "on" : ""}"><strong>${list.length - pendientes.length}</strong><span class="label">Respondidas</span></button>
+    ${searchField()}
   `;
+  bindSearch();
   document.querySelectorAll("[data-pfiltro]").forEach((btn) => {
     btn.addEventListener("click", () => {
       preguntaFiltro = btn.dataset.pfiltro;
@@ -510,8 +543,9 @@ function renderEnvios() {
     <button type="button" data-vfiltro="${e.id}" class="${ventaFiltro === e.id ? "on" : ""}">
       <strong>${counts[e.id] || 0}</strong><span class="label">${esc(e.label)}</span>
     </button>
-  `).join("") + `<button type="button" data-vfiltro="todas" class="${ventaFiltro === "todas" ? "on" : ""}"><strong>${list.length}</strong><span class="label">Todos</span></button>`;
+  `).join("") + `<button type="button" data-vfiltro="todas" class="${ventaFiltro === "todas" ? "on" : ""}"><strong>${list.length}</strong><span class="label">Todos</span></button>${searchField()}`;
 
+  bindSearch();
   document.querySelectorAll("[data-vfiltro]").forEach((btn) => {
     btn.addEventListener("click", () => {
       ventaFiltro = btn.dataset.vfiltro;
@@ -665,9 +699,13 @@ function renderFacturacion() {
     <div><strong>${list.length}</strong><span class="label">Ventas</span></div>
     <div class="verde"><strong>${facturadas.length}</strong><span class="label">Facturadas</span></div>
     <div class="naranja"><strong>${pendientes.length}</strong><span class="label">Pendientes</span></div>
+    ${searchField()}
   `;
+  bindSearch();
 
-  document.getElementById("publist").innerHTML = list.map((v) => `
+  document.getElementById("publist").innerHTML = list.filter((v) =>
+    matchesSearch(v.comprador?.nombre) || matchesSearch(v.comprador?.email)
+  ).map((v) => `
     <div class="pub-card ${v.id === selectedVenta ? "on" : ""}" data-id="${esc(v.id)}">
       <header>
         <span class="title">${esc(v.comprador.nombre)}</span>

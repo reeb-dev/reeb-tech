@@ -13,26 +13,74 @@
         <a class="logo" href="index.html">DON ERNESTO<small>Salón · Honduras 4827</small></a>
         <nav>
           <a href="index.html">Inicio</a>
+          <button class="btn" id="open-create" type="button">Nueva mesa</button>
         </nav>
       </div>
     </header>
+
     <div class="toolbar">
       <div>
         <p class="eyebrow">Turno activo</p>
-        <h1>Salón del restaurante</h1>
+        <h1 id="panelTitle">Salón del restaurante</h1>
       </div>
     </div>
-    <div class="tabs">
-      <button data-tab="mesas" class="on">🪑 Mesas</button>
-      <button data-tab="cocina">👨‍🍳 Cocina</button>
-      <button data-tab="menu">📋 Menú</button>
+
+    <div class="tabs" id="tabs">
+      <button type="button" data-tab="mesas" class="on">Mesas</button>
+      <button type="button" data-tab="cocina">Cocina</button>
+      <button type="button" data-tab="carta">Carta</button>
     </div>
+
     <div class="stats" id="stats"></div>
-    <div class="workspace">
-      <section class="list" id="list-area"></section>
-      <aside class="detail" id="detail"></aside>
+
+    <form class="create" id="create-mesa">
+      <input name="numero" type="number" min="1" placeholder="Número de mesa" required>
+      <input name="capacidad" type="number" min="1" placeholder="Capacidad" value="4" required>
+      <select name="zona">
+        <option value="salón">Salón</option>
+        <option value="terraza">Terraza</option>
+      </select>
+      <select name="status">
+        <option value="libre">Libre</option>
+        <option value="reservada">Reservada</option>
+      </select>
+      <input name="reservaNombre" placeholder="Nombre reserva (opcional)">
+      <input name="reservaHora" placeholder="Hora (ej. 21:00)">
+      <button class="btn-panel" type="submit">Agregar mesa</button>
+    </form>
+
+    <form class="create" id="create-plato">
+      <input name="codigo" placeholder="Código (ej. PRI-09)" required>
+      <input name="nombre" placeholder="Nombre del plato" required>
+      <select name="categoria">
+        <option value="entrada">Entradas</option>
+        <option value="principal">Platos principales</option>
+        <option value="guarnicion">Guarniciones</option>
+        <option value="postre">Postres</option>
+        <option value="bebida">Vinos y bebidas</option>
+      </select>
+      <input name="precio" type="number" min="0" placeholder="Precio" required>
+      <select name="foto" id="foto-plato"></select>
+      <input name="descripcion" placeholder="Descripción">
+      <button class="btn-panel" type="submit">Agregar plato</button>
+    </form>
+
+    <div class="workspace" id="view-mesas">
+      <section class="list" id="mesas-list"></section>
+      <aside class="detail" id="mesa-detail"></aside>
+    </div>
+
+    <div class="workspace" id="view-cocina" hidden>
+      <section class="list" id="cocina-list"></section>
+      <aside class="detail" id="cocina-detail"></aside>
+    </div>
+
+    <div class="workspace" id="view-carta" hidden>
+      <section class="list" id="carta-list"></section>
+      <aside class="detail" id="carta-detail"></aside>
     </div>
   </div>
+
   <script src="data.js"></script>
   <script src="panel.js"></script>
   <script src="../contacto.js" data-phone="5491140001234" data-text="Hola, quiero consultar por una reserva o la carta" data-subject="Consulta demo — Restaurante" data-title="Reservar o consultar" data-place="panel"></script>

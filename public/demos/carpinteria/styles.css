@@ -296,7 +296,7 @@ input, select, textarea {
 .timeline time { display: block; color: var(--marron); font-size: 11px; font-weight: 600; }
 
 .materiales-list { margin: 8px 0; padding: 0; list-style: none; font-size: 13px; }
-.materiales-list li { padding: 6px 0; border-bottom: 1px dotted var(--line); display: flex; justify-content: space-between; }
+.materiales-list li { padding: 6px 0; border-bottom: 1px dotted var(--line); display: flex; justify-content: space-between; align-items: center; gap: 8px; }
 
 .factura-box {
   background: #f0fdf4;
