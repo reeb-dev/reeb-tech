@@ -181,20 +181,20 @@ tbody tr:hover { background: #fafafa; }
   font-size: 11px;
   font-weight: 600;
 }
+.tag.ingreso { background: #e2e8f0; color: #4a5568; }
+.tag.taller { background: #dbeafe; color: #1e40af; }
+.tag.listo { background: #d1fae5; color: #065f46; }
+.tag.entregado { background: #e5e7eb; color: #374151; }
 .tag.ingresado { background: #e2e8f0; color: #4a5568; }
 .tag.diagnostico { background: #fed7aa; color: #c05621; }
 .tag.esperando { background: #fef3c7; color: #92400e; }
 .tag.reparacion { background: #dbeafe; color: #1e40af; }
-.tag.listo { background: #d1fae5; color: #065f46; }
-.tag.entregado { background: #e5e7eb; color: #374151; }
 
 footer { padding: 32px 0 48px; color: var(--muted); font-size: 14px; }
 
 /* Panel App */
 .app {
   min-height: 100vh;
-  display: grid;
-  grid-template-rows: auto auto auto 1fr;
 }
 .toolbar {
   display: flex;
@@ -233,7 +233,7 @@ footer { padding: 32px 0 48px; color: var(--muted); font-size: 14px; }
 .workspace {
   display: grid;
   grid-template-columns: 1.2fr 0.8fr;
-  min-height: 0;
+  min-height: 62vh;
   background: var(--paper);
 }
 .list, .detail { padding: 0 24px 32px; }
@@ -355,4 +355,45 @@ input, select, textarea {
 .toast.show {
   transform: translateX(-50%) translateY(0);
   opacity: 1;
+}
+
+.panel-tabs { display: flex; gap: 8px; flex-wrap: wrap; }
+.panel-tabs button {
+  border: 1px solid rgba(255,255,255,0.35);
+  background: transparent;
+  color: white;
+  padding: 8px 14px;
+  border-radius: 20px;
+  cursor: pointer;
+  font-weight: 600;
+}
+.panel-tabs button.on { background: white; color: var(--gris); border-color: white; }
+.search-input {
+  width: min(280px, 100%);
+  padding: 10px 14px;
+  border: 1px solid var(--line);
+  border-radius: 6px;
+  background: white;
+  font: inherit;
+}
+.panel-section { padding: 8px 24px 40px; background: var(--paper); }
+.panel-section[hidden], .workspace[hidden] { display: none !important; }
+.card-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 14px; }
+.mesa-card {
+  background: white;
+  border: 1px solid var(--line);
+  border-left: 5px solid var(--rojo);
+  border-radius: 10px;
+  padding: 16px;
+}
+.mesa-head { display: flex; justify-content: space-between; gap: 8px; align-items: center; }
+.mesa-card h3 { margin: 8px 0 4px; font-size: 18px; }
+.mesa-card .presup { font-size: 22px; font-weight: 700; margin: 8px 0; }
+.muted { color: var(--muted); font-size: 13px; }
+.patente-line { font-family: ui-monospace, monospace; color: var(--muted); margin: 0 0 8px; }
+.rep-form { display: grid; grid-template-columns: 1.4fr 90px 70px auto; gap: 6px; margin: 8px 0 12px; }
+.tiny { padding: 0 6px; min-width: 28px; }
+.hint { font-size: 11px; color: #64748b; margin-top: 8px; }
+@media (max-width: 960px) {
+  .search-input, .rep-form { width: 100%; grid-template-columns: 1fr; }
 }

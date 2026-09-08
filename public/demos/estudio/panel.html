@@ -14,28 +14,52 @@
         <a class="mark" href="index.html"><strong>Estudio Norte</strong><span>Mesa de entradas · demo</span></a>
         <nav>
           <a href="index.html">Estudio</a>
+          <div class="panel-tabs" id="tabs">
+            <button type="button" data-tab="expedientes" class="on">Expedientes</button>
+            <button type="button" data-tab="plazos">Plazos</button>
+            <button type="button" data-tab="escritos">Escritos</button>
+            <button type="button" data-tab="historial">Historial</button>
+          </div>
           <button class="btn" id="open-create" type="button">Nuevo expediente</button>
         </nav>
       </div>
     </header>
+
     <div class="toolbar">
       <div>
         <p class="eyebrow">Datos de ejemplo</p>
-        <h1>Expedientes</h1>
+        <h1 id="panelTitle">Expedientes</h1>
       </div>
+      <input type="search" id="search" class="search-input" placeholder="Buscar carátula, n.º o parte">
     </div>
+
     <div class="stats" id="stats"></div>
+
     <form class="create" id="create">
-      <input name="number" placeholder="Número" required>
+      <input name="number" placeholder="Número (ej. 1842/2024)" required>
       <input name="caratula" placeholder="Carátula" required>
-      <input name="fuero" placeholder="Fuero">
+      <select name="fuero">
+        <option value="Civil">Civil</option>
+        <option value="Comercial">Comercial</option>
+        <option value="Familia">Familia</option>
+        <option value="Laboral">Laboral</option>
+      </select>
       <input name="juzgado" placeholder="Juzgado">
       <input name="party" placeholder="Parte" required>
-      <input name="due" placeholder="Plazo o audiencia">
+      <input name="abogado" placeholder="Abogado a cargo">
+      <input name="dueDate" type="date">
+      <select name="tipoPlazo">
+        <option value="audiencia">Audiencia</option>
+        <option value="presentacion">Presentación</option>
+        <option value="documentacion">Documentación</option>
+        <option value="notificacion">Notificación</option>
+        <option value="revision">Revisión interna</option>
+      </select>
       <input name="escrito" placeholder="Escrito pendiente">
-      <button type="submit">Cargar en consulta</button>
+      <button class="btn" type="submit">Cargar en la mesa</button>
     </form>
-    <div class="workspace">
+
+    <div class="workspace" id="view-expedientes">
       <section class="list">
         <table>
           <thead>
@@ -53,7 +77,23 @@
       </section>
       <aside class="detail" id="detail"></aside>
     </div>
+
+    <section class="panel-section" id="view-plazos" hidden>
+      <p class="note" id="plazosNote"></p>
+      <div class="card-grid" id="plazos"></div>
+    </section>
+
+    <section class="panel-section" id="view-escritos" hidden>
+      <p class="note">Escritos y presentaciones que todavía no salieron de la mesa.</p>
+      <div class="card-grid" id="escritos"></div>
+    </section>
+
+    <section class="panel-section" id="view-historial" hidden>
+      <p class="note">Movimiento reciente de todos los expedientes.</p>
+      <div class="history-feed" id="historial"></div>
+    </section>
   </div>
+
   <script src="data.js"></script>
   <script src="panel.js"></script>
   <script src="../contacto.js" data-phone="5491140001234" data-text="Hola, quiero consultar por un trámite o una consulta" data-subject="Consulta demo — Estudio" data-title="Consultar al estudio" data-place="panel"></script>

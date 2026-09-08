@@ -1,9 +1,7 @@
 const STATUSES = [
-  { id: "ingresado", label: "Ingresado" },
-  { id: "diagnostico", label: "En diagnóstico" },
-  { id: "esperando", label: "Esperando repuesto" },
-  { id: "reparacion", label: "En reparación" },
-  { id: "listo", label: "Listo para retirar" },
+  { id: "ingreso", label: "Ingreso" },
+  { id: "taller", label: "En taller" },
+  { id: "listo", label: "Listo" },
   { id: "entregado", label: "Entregado" }
 ];
 
@@ -45,7 +43,7 @@ function seed() {
         { nombre: "Pastillas de freno del.", precio: 28000, cantidad: 1 }
       ],
       manoObra: 35000,
-      status: "reparacion",
+      status: "taller",
       factura: null,
       fechaIngreso: "5 sep",
       fechaEstimada: "9 sep",
@@ -95,7 +93,7 @@ function seed() {
         { nombre: "Kit bujes barra estab.", precio: 18000, cantidad: 1 }
       ],
       manoObra: 55000,
-      status: "diagnostico",
+      status: "taller",
       factura: null,
       fechaIngreso: "7 sep",
       fechaEstimada: "Pendiente aprobación",
@@ -119,7 +117,7 @@ function seed() {
         { nombre: "Pastillas de freno del.", precio: 32000, cantidad: 1 }
       ],
       manoObra: 48000,
-      status: "esperando",
+      status: "taller",
       factura: null,
       fechaIngreso: "4 sep",
       fechaEstimada: "10 sep",
@@ -167,7 +165,7 @@ function seed() {
       aprobado: false,
       repuestos: [],
       manoObra: 0,
-      status: "ingresado",
+      status: "ingreso",
       factura: null,
       fechaIngreso: "8 sep",
       fechaEstimada: "Pendiente",
@@ -178,18 +176,27 @@ function seed() {
   ];
 }
 
+function normalizeStatus(status) {
+  if (status === "ingresado") return "ingreso";
+  if (["diagnostico", "esperando", "reparacion"].includes(status)) return "taller";
+  return status;
+}
+
 function load() {
-  const raw = localStorage.getItem("taller-demo-v1");
+  const raw = localStorage.getItem("taller-demo-v2");
   if (!raw) {
     const data = seed();
-    localStorage.setItem("taller-demo-v1", JSON.stringify(data));
+    localStorage.setItem("taller-demo-v2", JSON.stringify(data));
     return data;
   }
-  return JSON.parse(raw);
+  return JSON.parse(raw).map((item) => {
+    item.status = normalizeStatus(item.status);
+    return item;
+  });
 }
 
 function save(items) {
-  localStorage.setItem("taller-demo-v1", JSON.stringify(items));
+  localStorage.setItem("taller-demo-v2", JSON.stringify(items));
 }
 
 function label(status) {

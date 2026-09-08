@@ -10,9 +10,14 @@
   <div class="app">
     <header class="top">
       <div class="top-inner">
-        <a class="logo" href="index.html">TALLER<small>Gestión de vehículos · demo</small></a>
+        <a class="logo" href="index.html">TALLER<small>Órdenes, vehículos y presupuestos · demo</small></a>
         <nav>
           <a href="index.html">Inicio</a>
+          <div class="panel-tabs" id="tabs">
+            <button type="button" data-tab="ordenes" class="on">Órdenes</button>
+            <button type="button" data-tab="vehiculos">Vehículos</button>
+            <button type="button" data-tab="presupuestos">Presupuestos</button>
+          </div>
           <button class="btn" id="open-create" type="button">Nueva orden</button>
         </nav>
       </div>
@@ -21,8 +26,9 @@
     <div class="toolbar">
       <div>
         <p class="eyebrow">Datos de ejemplo</p>
-        <h1>Órdenes de trabajo</h1>
+        <h1 id="panelTitle">Órdenes de trabajo</h1>
       </div>
+      <input type="search" id="search" class="search-input" placeholder="Buscar patente, cliente u orden">
     </div>
 
     <div class="stats" id="stats"></div>
@@ -46,10 +52,11 @@
         <option value="otro">Otro</option>
       </select>
       <input name="descripcion" placeholder="Descripción del trabajo">
+      <input name="manoObra" type="number" placeholder="Mano de obra">
       <button class="btn-panel" type="submit">Crear orden</button>
     </form>
 
-    <div class="workspace">
+    <div class="workspace" id="view-ordenes">
       <section class="list">
         <table>
           <thead>
@@ -67,6 +74,16 @@
       </section>
       <aside class="detail" id="detail"></aside>
     </div>
+
+    <section class="panel-section" id="view-vehiculos" hidden>
+      <p class="note">Ficha de cada auto que pasó por el taller. Abrí la orden para editar.</p>
+      <div class="card-grid" id="vehiculos"></div>
+    </section>
+
+    <section class="panel-section" id="view-presupuestos" hidden>
+      <p class="note">Presupuestos armados con repuestos y mano de obra. El cliente aprueba antes de pasar a taller.</p>
+      <div class="card-grid" id="presupuestos"></div>
+    </section>
   </div>
 
   <script src="data.js"></script>

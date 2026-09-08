@@ -32,7 +32,7 @@ a { color: inherit; }
 }
 .logo { text-decoration: none; font-weight: 700; letter-spacing: 0.12em; font-size: 15px; }
 .logo small { display: block; letter-spacing: 0.04em; font-weight: 500; opacity: 0.7; font-size: 12px; }
-.top nav { display: flex; gap: 16px; align-items: center; }
+.top nav { display: flex; gap: 16px; align-items: center; flex-wrap: wrap; }
 .top nav a { text-decoration: none; }
 .btn, button { font: inherit; cursor: pointer; }
 .btn {
@@ -195,4 +195,44 @@ input, select, textarea { width: 100%; font: inherit; padding: 8px; border: 1px 
 .toast.show {
   transform: translateX(-50%) translateY(0);
   opacity: 1;
+}
+
+.app { min-height: 100vh; }
+.toolbar {
+  display: flex;
+  justify-content: space-between;
+  gap: 16px;
+  align-items: end;
+  padding: 20px 24px 8px;
+  max-width: 1180px;
+  margin: 0 auto;
+}
+.toolbar h1 { font-size: 32px; margin: 4px 0; }
+.search-input {
+  width: min(280px, 100%);
+  padding: 10px 14px;
+  border: 1px solid var(--line);
+  border-radius: 6px;
+  background: white;
+  font: inherit;
+}
+.panel-tabs { display: flex; gap: 8px; flex-wrap: wrap; }
+.panel-tabs button {
+  border: 1px solid rgba(247, 239, 230, 0.35);
+  background: transparent;
+  color: #f7efe6;
+  padding: 8px 14px;
+  border-radius: 20px;
+  cursor: pointer;
+  font-weight: 600;
+}
+.panel-tabs button.on { background: #f7efe6; color: var(--bar); border-color: #f7efe6; }
+.stats { max-width: 1180px; margin: 0 auto; padding: 0 24px 12px; }
+.layout { max-width: 1180px; margin: 0 auto; padding: 0 24px 40px; }
+.create { margin: 0 auto 12px; max-width: 1180px; width: calc(100% - 48px); }
+.empty { color: var(--muted); }
+.tag.faltante { color: var(--clay); }
+@media (max-width: 980px) {
+  .toolbar { flex-direction: column; align-items: start; }
+  .search-input { width: 100%; }
 }

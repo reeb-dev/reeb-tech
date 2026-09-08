@@ -134,6 +134,40 @@ function seedProductos() {
         { tipo: "ingreso", cantidad: 5, fecha: "10 ago", nota: "Compra" },
         { tipo: "egreso", cantidad: 1, fecha: "4 sep", nota: "Venta" }
       ]
+    },
+    {
+      id: "prod7",
+      codigo: "ALI-011",
+      nombre: "Café en grano 1 kg",
+      categoria: "alimentos",
+      precioCompra: 9800,
+      precioVenta: 14500,
+      stock: 2,
+      minimo: 6,
+      ubicacion: "Depósito C - Estante 1",
+      proveedor: "Mayorista del Centro",
+      status: "bajo",
+      movimientos: [
+        { tipo: "ingreso", cantidad: 12, fecha: "20 ago", nota: "Compra" },
+        { tipo: "egreso", cantidad: 10, fecha: "6 sep", nota: "Ventas" }
+      ]
+    },
+    {
+      id: "prod8",
+      codigo: "OFI-030",
+      nombre: "Toner láser negro",
+      categoria: "oficina",
+      precioCompra: 32000,
+      precioVenta: 48000,
+      stock: 1,
+      minimo: 4,
+      ubicacion: "Depósito A - Cajón 8",
+      proveedor: "Papelera Centro",
+      status: "bajo",
+      movimientos: [
+        { tipo: "ingreso", cantidad: 6, fecha: "12 ago", nota: "Compra" },
+        { tipo: "egreso", cantidad: 5, fecha: "5 sep", nota: "Ventas" }
+      ]
     }
   ];
 }
@@ -219,34 +253,36 @@ let facturas = null;
 
 function loadProductos() {
   if (productos) return productos;
-  const raw = localStorage.getItem("stockfac-productos-v1");
+  const raw = localStorage.getItem("stockfac-productos-v2");
   if (!raw) {
     productos = seedProductos();
-    localStorage.setItem("stockfac-productos-v1", JSON.stringify(productos));
+    localStorage.setItem("stockfac-productos-v2", JSON.stringify(productos));
     return productos;
   }
   productos = JSON.parse(raw);
   return productos;
 }
 
-function saveProductos() {
-  localStorage.setItem("stockfac-productos-v1", JSON.stringify(productos));
+function saveProductos(list) {
+  productos = list || productos;
+  localStorage.setItem("stockfac-productos-v2", JSON.stringify(productos));
 }
 
 function loadFacturas() {
   if (facturas) return facturas;
-  const raw = localStorage.getItem("stockfac-facturas-v1");
+  const raw = localStorage.getItem("stockfac-facturas-v2");
   if (!raw) {
     facturas = seedFacturas();
-    localStorage.setItem("stockfac-facturas-v1", JSON.stringify(facturas));
+    localStorage.setItem("stockfac-facturas-v2", JSON.stringify(facturas));
     return facturas;
   }
   facturas = JSON.parse(raw);
   return facturas;
 }
 
-function saveFacturas() {
-  localStorage.setItem("stockfac-facturas-v1", JSON.stringify(facturas));
+function saveFacturas(list) {
+  facturas = list || facturas;
+  localStorage.setItem("stockfac-facturas-v2", JSON.stringify(facturas));
 }
 
 function label(status) {
@@ -270,6 +306,22 @@ function stockStatus(prod) {
   if (prod.stock === 0) return "agotado";
   if (prod.stock < prod.minimo) return "bajo";
   return "activo";
+}
+
+function restockAlerts(list) {
+  return (list || []).filter((prod) => {
+    const status = stockStatus(prod);
+    return status === "bajo" || status === "agotado";
+  });
+}
+
+function allMovimientos(list) {
+  return (list || []).flatMap((prod) => (prod.movimientos || []).map((mov) => ({
+    ...mov,
+    codigo: prod.codigo,
+    nombre: prod.nombre,
+    prodId: prod.id
+  })));
 }
 
 function money(amount) {

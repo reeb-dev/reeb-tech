@@ -3,42 +3,71 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Turno · Mostrador</title>
+  <title>Mostrador · Almacén del Barrio</title>
   <link href="https://fonts.googleapis.com/css2?family=Barlow:wght@400;600;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-  <header class="top">
-    <div class="top-inner">
-      <a class="logo" href="index.html">MOSTRADOR<small>Turno de ejemplo</small></a>
-      <nav>
-        <a href="index.html">El local</a>
-        <button class="btn" id="open-create" type="button">Nuevo ticket</button>
-      </nav>
-    </div>
-  </header>
-  <main class="board">
-    <div class="head">
-      <div>
-        <p class="kicker">Datos de ejemplo</p>
-        <h1>Pedidos, góndola y caja</h1>
+  <div class="app">
+    <header class="top">
+      <div class="top-inner">
+        <a class="logo" href="index.html">MOSTRADOR<small>Pedidos, faltantes y caja · demo</small></a>
+        <nav>
+          <a href="index.html">El local</a>
+          <div class="panel-tabs" id="tabs">
+            <button type="button" data-tab="pedido" class="on">Pedidos</button>
+            <button type="button" data-tab="faltante">Faltantes</button>
+            <button type="button" data-tab="caja">Caja</button>
+          </div>
+          <button class="btn" id="open-create" type="button">Nuevo pedido</button>
+        </nav>
       </div>
+    </header>
+
+    <div class="toolbar">
+      <div>
+        <p class="kicker">Turno de ejemplo</p>
+        <h1 id="panelTitle">Pedidos a proveedor</h1>
+      </div>
+      <input type="search" id="search" class="search-input" placeholder="Buscar ticket, proveedor o ítem">
     </div>
+
     <div class="stats" id="stats"></div>
-    <form class="create" id="create">
-      <input name="ticket" placeholder="Ticket" required>
-      <input name="kind" placeholder="Pedido, faltante o caja" required>
-      <input name="origin" placeholder="Proveedor o sector" required>
-      <input name="due" placeholder="Cuándo">
+
+    <form class="create" id="create-pedido">
+      <input name="ticket" placeholder="Ticket (PED-453)" required>
+      <input name="origin" placeholder="Proveedor" required>
+      <input name="due" placeholder="Cuándo (hoy, 7:00)">
       <input name="item" placeholder="Primer ítem" required>
       <input name="qty" type="number" min="0" value="1">
-      <button type="submit">Cargar pedido</button>
+      <button class="btn" type="submit">Cargar pedido</button>
     </form>
+
+    <form class="create" id="create-faltante">
+      <input name="ticket" placeholder="Ticket (GON-22)" required>
+      <input name="origin" placeholder="Pasillo o góndola" required>
+      <input name="item" placeholder="Producto faltante" required>
+      <input name="qty" type="number" min="0" value="1" placeholder="Pedido">
+      <input name="missing" type="number" min="0" value="1" placeholder="Faltan">
+      <button class="btn" type="submit">Anotar faltante</button>
+    </form>
+
+    <form class="create" id="create-caja">
+      <input name="ticket" placeholder="Ticket (CAJA-HOY)" required>
+      <input name="origin" placeholder="Caja 1" required>
+      <input name="due" placeholder="Turno" value="Hoy">
+      <input name="efectivo" type="number" placeholder="Efectivo" required>
+      <input name="tarjetas" type="number" placeholder="Tarjetas" required>
+      <input name="contado" type="number" placeholder="Contado en caja" required>
+      <button class="btn" type="submit">Cerrar arqueo</button>
+    </form>
+
     <div class="layout">
       <section class="tickets" id="tickets"></section>
       <aside class="sheet" id="sheet"></aside>
     </div>
-  </main>
+  </div>
+
   <script src="data.js"></script>
   <script src="panel.js"></script>
   <script src="../contacto.js" data-phone="5491140001234" data-text="Hola, quiero consultar por productos del almacén" data-subject="Consulta demo — Comercio" data-title="Hacer un pedido" data-place="panel"></script>

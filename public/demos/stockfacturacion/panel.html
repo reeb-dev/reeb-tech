@@ -10,10 +10,16 @@
   <div class="app">
     <header class="top">
       <div class="top-inner">
-        <a class="logo" href="index.html">STOCK & FACTURACIÓN<small>Sistema integral · demo</small></a>
+        <a class="logo" href="index.html">STOCK & FACTURACIÓN<small>Stock, movimientos y ARCA · demo</small></a>
         <nav>
           <a href="index.html">Inicio</a>
-          <button class="btn" id="nueva-factura" type="button">Nueva factura</button>
+          <div class="panel-tabs" id="tabs">
+            <button type="button" data-tab="stock" class="on">Stock</button>
+            <button type="button" data-tab="facturas">Facturas</button>
+            <button type="button" data-tab="movimientos">Movimientos</button>
+            <button type="button" data-tab="alertas">Alertas</button>
+          </div>
+          <button class="btn" id="open-create" type="button">Nuevo producto</button>
         </nav>
       </div>
     </header>
@@ -21,26 +27,106 @@
     <div class="toolbar">
       <div>
         <p class="eyebrow">Datos de ejemplo</p>
-        <h1>Sistema de gestión</h1>
+        <h1 id="panelTitle">Stock</h1>
       </div>
-    </div>
-
-    <div class="tabs">
-      <button data-tab="stock" class="on">📦 Stock</button>
-      <button data-tab="facturas">🧾 Facturas</button>
+      <input type="search" id="search" class="search-input" placeholder="Buscar código, producto o cliente">
     </div>
 
     <div class="stats" id="stats"></div>
+    <div id="alertBanner"></div>
 
-    <div class="workspace">
+    <form class="create" id="create-prod">
+      <input name="codigo" placeholder="Código" required>
+      <input name="nombre" placeholder="Producto" required>
+      <select name="categoria">
+        <option value="electronica">Electrónica</option>
+        <option value="indumentaria">Indumentaria</option>
+        <option value="alimentos">Alimentos</option>
+        <option value="limpieza">Limpieza</option>
+        <option value="oficina">Oficina</option>
+        <option value="herramientas">Herramientas</option>
+        <option value="otros">Otros</option>
+      </select>
+      <input name="precioCompra" type="number" placeholder="Precio compra">
+      <input name="precioVenta" type="number" placeholder="Precio venta" required>
+      <input name="stock" type="number" placeholder="Stock">
+      <input name="minimo" type="number" placeholder="Mínimo">
+      <input name="proveedor" placeholder="Proveedor">
+      <input name="ubicacion" placeholder="Ubicación">
+      <button class="btn-panel" type="submit">Agregar producto</button>
+    </form>
+
+    <form class="create" id="create-fac">
+      <input name="nombre" placeholder="Cliente / razón social" required>
+      <input name="cuit" placeholder="CUIT (Factura A)">
+      <select name="tipo">
+        <option value="FB">Factura B</option>
+        <option value="FA">Factura A</option>
+        <option value="FC">Factura C</option>
+      </select>
+      <select name="prodId"></select>
+      <input name="cantidad" type="number" min="1" value="1">
+      <button class="btn-panel" type="submit">Crear borrador</button>
+    </form>
+
+    <div class="workspace" id="view-stock">
       <section class="list">
         <table>
-          <thead id="thead"></thead>
-          <tbody id="rows"></tbody>
+          <thead>
+            <tr>
+              <th>Código</th>
+              <th>Producto</th>
+              <th>Categoría</th>
+              <th class="amount">Venta</th>
+              <th class="amount">Stock</th>
+              <th>Estado</th>
+            </tr>
+          </thead>
+          <tbody id="rows-stock"></tbody>
         </table>
       </section>
-      <aside class="detail" id="detail"></aside>
+      <aside class="detail" id="detail-stock"></aside>
     </div>
+
+    <div class="workspace" id="view-facturas" hidden>
+      <section class="list">
+        <table>
+          <thead>
+            <tr>
+              <th>Tipo</th>
+              <th>Número</th>
+              <th>Fecha</th>
+              <th>Cliente</th>
+              <th class="amount">Total</th>
+              <th>Estado</th>
+            </tr>
+          </thead>
+          <tbody id="rows-fact"></tbody>
+        </table>
+      </section>
+      <aside class="detail" id="detail-fact"></aside>
+    </div>
+
+    <section class="panel-section" id="view-movimientos" hidden>
+      <p class="note">Ingresos, egresos, ajustes y devoluciones de todos los productos.</p>
+      <table>
+        <thead>
+          <tr>
+            <th>Fecha</th>
+            <th>Tipo</th>
+            <th>Producto</th>
+            <th class="amount">Cantidad</th>
+            <th>Nota</th>
+          </tr>
+        </thead>
+        <tbody id="rows-mov"></tbody>
+      </table>
+    </section>
+
+    <section class="panel-section" id="view-alertas" hidden>
+      <p class="note">Reposición: stock en cero o por debajo del mínimo.</p>
+      <div class="card-grid" id="alertas"></div>
+    </section>
   </div>
 
   <script src="data.js"></script>
