@@ -3,22 +3,30 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Panel Vendedor — MercadoDemo</title>
+  <title>Panel vendedor — Feria</title>
+  <script>
+    (function () {
+      var p = location.pathname;
+      if (p && p.charAt(p.length - 1) !== "/" && !/\.[a-zA-Z0-9]+$/.test(p)) {
+        location.replace(p + "/" + location.search + location.hash);
+      }
+    })();
+  </script>
   <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link href="https://fonts.googleapis.com/css2?family=Nunito+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,600&family=Outfit:wght@400;500;600;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="styles.css">
-  <style>body { font-family: "Nunito Sans", "Segoe UI", sans-serif; }</style>
 </head>
 <body class="app">
 
   <header class="panel-header">
     <div class="inner">
-      <a href="index.html" class="logo">MercadoDemo <small>Panel Vendedor</small></a>
+      <a href="index.html" class="logo">Feria <small>Panel vendedor</small></a>
       <nav>
         <button type="button" data-nav-tab="ventas">Ventas</button>
         <button type="button" data-nav-tab="publicaciones">Publicaciones</button>
-        <button type="button" data-nav-tab="preguntas">Mensajes</button>
-        <button type="button" data-nav-tab="mercadopago">Mercado Pago</button>
+        <button type="button" data-nav-tab="preguntas">Preguntas</button>
+        <button type="button" data-nav-tab="billetera">Billetera</button>
         <button type="button" data-nav-tab="facturacion">Facturación</button>
         <div class="notif-wrap">
           <button type="button" class="notif-btn" id="notif-btn" aria-label="Notificaciones">
@@ -33,12 +41,12 @@
 
   <div class="toolbar">
     <div>
-      <span class="eyebrow">Panel de Vendedor</span>
-      <h1 id="toolbar-title">Mis Publicaciones</h1>
+      <span class="eyebrow">Mostrador del vendedor</span>
+      <h1 id="toolbar-title">Mis publicaciones</h1>
     </div>
     <div style="display:flex; gap:8px;">
       <button class="ghost" id="open-create">+ Nueva publicación</button>
-      <a href="index.html" class="btn-panel">Ver tienda</a>
+      <a href="index.html" class="btn-panel">Ver Feria</a>
     </div>
   </div>
 
@@ -48,18 +56,18 @@
     <button type="button" data-tab="preguntas">Preguntas</button>
     <button type="button" data-tab="envios">Envíos</button>
     <button type="button" data-tab="calificaciones">Calificaciones</button>
-    <button type="button" data-tab="mercadopago">Mercado Pago</button>
+    <button type="button" data-tab="billetera">Billetera</button>
     <button type="button" data-tab="facturacion">Facturación ARCA</button>
   </div>
 
   <div class="stats" id="stats"></div>
 
   <form class="create" id="create">
-    <h3>Nueva Publicación</h3>
+    <h3>Nueva publicación</h3>
     <div class="create-grid">
       <div>
         <label>Título del producto</label>
-        <input type="text" name="titulo" placeholder="Ej: iPhone 15 Pro 256GB Negro" required>
+        <input type="text" name="titulo" placeholder="Ej: Cámara usada con estuche" required>
       </div>
       <div>
         <label>Categoría</label>
@@ -86,22 +94,18 @@
         <input type="text" name="ubicacion" value="Capital Federal">
       </div>
       <div>
-        <label>Tipo de publicación</label>
-        <select name="tipoPub">
-          <option value="gratuita">Gratuita</option>
-          <option value="clasica">Clásica (13%)</option>
-          <option value="premium">Premium (17%)</option>
-        </select>
+        <label>Foto</label>
+        <select name="imagen"></select>
       </div>
     </div>
     <div style="margin-top: 12px;">
       <label>Descripción</label>
-      <textarea rows="3" name="descripcion" placeholder="Describí tu producto con detalle..."></textarea>
+      <textarea rows="3" name="descripcion" placeholder="Estado, extras, cómo se entrega…"></textarea>
     </div>
     <div style="margin-top: 12px;">
-      <label><input type="checkbox" name="envioGratis" checked> Envío gratis</label>
+      <label><input type="checkbox" name="envioGratis" checked> Envío incluido</label>
     </div>
-    <button type="submit" class="btn-panel" style="margin-top: 12px;">Publicar producto</button>
+    <button type="submit" class="btn-panel" style="margin-top: 12px;">Publicar en Feria</button>
   </form>
 
   <div class="workspace" id="workspace">
@@ -113,6 +117,6 @@
 
   <script src="data.js"></script>
   <script src="panel.js"></script>
-  <script src="../contacto.js" data-phone="5491140001234" data-text="Hola, quiero consultar por una publicación" data-subject="Consulta demo — Marketplace" data-title="Consultar" data-place="panel"></script>
+  <script src="../contacto.js" data-phone="5491140001234" data-text="Hola, quiero consultar por una publicación en Feria" data-subject="Consulta demo — Feria" data-title="Consultar" data-place="panel"></script>
 </body>
 </html>

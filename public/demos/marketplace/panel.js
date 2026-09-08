@@ -9,12 +9,12 @@ let preguntaFiltro = "pendientes";
 let searchTerm = "";
 
 const TAB_TITLES = {
-  publicaciones: "Mis Publicaciones",
+  publicaciones: "Mis publicaciones",
   ventas: "Ventas",
   preguntas: "Preguntas",
   envios: "Envíos",
   calificaciones: "Calificaciones",
-  mercadopago: "Mercado Pago",
+  billetera: "Billetera",
   facturacion: "Facturación ARCA"
 };
 
@@ -137,7 +137,7 @@ document.getElementById("create").addEventListener("submit", (event) => {
   const data = new FormData(event.target);
   const item = {
     id: crypto.randomUUID(),
-    mla: `MLA-${Date.now().toString().slice(-10)}`,
+    mla: `FER-${Date.now().toString().slice(-10)}`,
     titulo: String(data.get("titulo") || ""),
     categoria: String(data.get("categoria") || "electronica"),
     precio: Number(data.get("precio") || 0),
@@ -146,10 +146,12 @@ document.getElementById("create").addEventListener("submit", (event) => {
     vendidos: 0,
     envioGratis: data.get("envioGratis") === "on",
     ubicacion: String(data.get("ubicacion") || "Capital Federal"),
-    condicion: "nuevo",
-    tipoPub: String(data.get("tipoPub") || "gratuita"),
+    condicion: "usado",
+    tipoPub: "mostrador",
     descripcion: String(data.get("descripcion") || ""),
-    imagen: "https://images.unsplash.com/photo-1505740420928-5e560c06d30e?w=400&h=400&fit=crop",
+    imagen: String(data.get("imagen") || "img/caja.jpg"),
+    imagenes: [String(data.get("imagen") || "img/caja.jpg")],
+    vendedor: { nombre: "Tu puesto en Feria", ciudad: String(data.get("ubicacion") || "Capital Federal"), ventas: 0, reputacion: null },
     status: "activo",
     visitas: 0,
     preguntas: 0,
@@ -184,7 +186,7 @@ function render() {
   else if (currentTab === "preguntas") renderPreguntas();
   else if (currentTab === "envios") renderEnvios();
   else if (currentTab === "calificaciones") renderCalificaciones();
-  else if (currentTab === "mercadopago") renderMercadoPago();
+  else if (currentTab === "billetera") renderBilletera();
   else if (currentTab === "facturacion") renderFacturacion();
 }
 
@@ -287,7 +289,8 @@ function renderPublicaciones() {
   detail.innerHTML = `
     <span class="tag ${esc(item.status)}" style="margin-bottom: 8px;">${esc(label(item.status))}</span>
     <h2>${esc(item.titulo)}</h2>
-    <p style="color: var(--muted); font-size: 13px;">${esc(item.mla)} · Publicación ${esc(tipoPubLabel(item.tipoPub))}</p>
+    <p style="color: var(--muted); font-size: 13px;">${esc(item.mla)} · ${esc(item.vendedor?.nombre || "Puesto Feria")}</p>
+    ${item.imagen ? `<img src="${esc(item.imagen)}" alt="" style="width:100%;max-height:180px;object-fit:cover;border-radius:12px;margin:8px 0;">` : ""}
     <div class="meta">
       <div><span>Precio</span><strong>${money(item.precio)}</strong></div>
       <div><span>Stock</span><strong>${item.stock} unidades</strong></div>
@@ -398,7 +401,7 @@ function renderVentaDetail(venta, extra = "") {
     <p style="color:var(--muted);font-size:13px;">${esc(venta.comprador.email)} · ${esc(formatFecha(venta.fecha))}</p>
     <div class="meta">
       <div><span>Total</span><strong>${money(venta.total)}</strong></div>
-      <div><span>Pago</span><strong>Mercado Pago</strong></div>
+      <div><span>Pago</span><strong>Billetera Feria</strong></div>
       <div><span>Envío</span><strong>${esc(envioLabel(venta.envio.estado))}</strong></div>
       <div><span>Tracking</span><strong>${esc(venta.envio.tracking || "Pendiente")}</strong></div>
     </div>
@@ -630,8 +633,8 @@ function renderCalificaciones() {
   ` : "<p>Cuando un comprador califique, vas a ver el detalle acá.</p>";
 }
 
-function renderMercadoPago() {
-  const mp = loadMercadoPago();
+function renderBilletera() {
+  const mp = loadBilletera();
   const ventasCount = loadVentas().length;
   document.getElementById("stats").innerHTML = `
     <div class="verde"><strong>${money(mp.saldoDisponible)}</strong><span class="label">Disponible</span></div>
@@ -641,9 +644,9 @@ function renderMercadoPago() {
 
   document.getElementById("publist").innerHTML = `
     <div class="mp-section">
-      <h4>Saldo Mercado Pago (simulado)</h4>
+      <h4>Billetera Feria (pago demo)</h4>
       <div class="mp-balance">${money(mp.saldoDisponible)}</div>
-      <div class="mp-available">Comisión demo: 5% por venta</div>
+      <div class="mp-available">Comisión demo: 5% por venta. No hay transferencia real.</div>
     </div>
     ${(mp.movimientos || []).map((m) => `
       <div class="sale-item">
@@ -761,5 +764,11 @@ function renderFacturacion() {
     render();
   });
 }
+
+(function fillFotos() {
+  const sel = document.querySelector('#create select[name="imagen"]');
+  if (!sel || typeof FOTOS_LOCALES === "undefined") return;
+  sel.innerHTML = FOTOS_LOCALES.map((f) => `<option value="${esc(f.id)}">${esc(f.label)}</option>`).join("");
+})();
 
 render();

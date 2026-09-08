@@ -28,11 +28,30 @@ const COMPROBANTES = [
   { id: "FC", label: "Factura C" }
 ];
 
+const FOTOS_LOCALES = [
+  { id: "img/caja.jpg", label: "Caja / genérico" },
+  { id: "img/celular.jpg", label: "Celular" },
+  { id: "img/notebook.jpg", label: "Notebook" },
+  { id: "img/auriculares.jpg", label: "Auriculares" },
+  { id: "img/reloj.jpg", label: "Reloj" },
+  { id: "img/monitor.jpg", label: "Monitor" },
+  { id: "img/consola.jpg", label: "Consola" },
+  { id: "img/camara.jpg", label: "Cámara" },
+  { id: "img/parlante.jpg", label: "Parlante" },
+  { id: "img/silla.jpg", label: "Silla" },
+  { id: "img/heladera.jpg", label: "Heladera" },
+  { id: "img/zapatillas.jpg", label: "Zapatillas" },
+  { id: "img/bici.jpg", label: "Bicicleta" }
+];
+
+const PRODUCTOS_KEY = "marketplace-productos-v2";
+const FAVORITOS_KEY = "marketplace-favoritos-v1";
+
 function resetCaches() {
   productos = null;
   ventas = null;
   preguntas = null;
-  mpData = null;
+  billetera = null;
   notificaciones = null;
 }
 
@@ -44,13 +63,15 @@ function formatFecha(iso) {
 }
 
 function generarTracking() {
-  return "MD-" + Date.now().toString(36).toUpperCase();
+  return "FER-" + Date.now().toString(36).toUpperCase();
 }
 
 function normalizeProducto(p) {
+  const imagen = p.imagen || "img/caja.jpg";
+  const imagenes = Array.isArray(p.imagenes) && p.imagenes.length ? p.imagenes : [imagen];
   return {
     ...p,
-    mla: p.mla || `MLA-${String(p.id).replace(/\W/g, "").slice(-10).toUpperCase()}`,
+    mla: p.mla || `FER-${String(p.id).replace(/\W/g, "").slice(-10).toUpperCase()}`,
     visitas: p.visitas || 0,
     preguntas: p.preguntas ?? 0,
     vendidos: p.vendidos || 0,
@@ -59,11 +80,19 @@ function normalizeProducto(p) {
     history: p.history || [],
     cuotas: p.cuotas || "Sin cuotas",
     envioGratis: Boolean(p.envioGratis),
-    stock: Number(p.stock || 0)
+    stock: Number(p.stock || 0),
+    imagen,
+    imagenes,
+    descripcion: p.descripcion || "",
+    vendedor: p.vendedor || {
+      nombre: "Feria",
+      ciudad: p.ubicacion || "Argentina",
+      ventas: p.vendidos || 0,
+      reputacion: p.rating || null
+    }
   };
 }
 
-// ========== VENTAS ==========
 let ventas = null;
 
 function loadVentas() {
@@ -112,7 +141,8 @@ function crearVenta(cartItems, compradorNombre, compradorEmail, direccion) {
     },
     calificacion: null,
     factura: null,
-    pagado: true
+    pagado: true,
+    medioPago: "billetera"
   };
 
   cartItems.forEach((item) => {
@@ -181,7 +211,6 @@ function emitirFacturaVenta(ventaId, tipo, cuit) {
   return venta;
 }
 
-// ========== PREGUNTAS ==========
 let preguntas = null;
 
 function loadPreguntas() {
@@ -241,7 +270,6 @@ function preguntasDeProducto(productoId) {
   return loadPreguntas().filter((p) => p.productoId === productoId);
 }
 
-// ========== CALIFICACIONES ==========
 function calificarVenta(ventaId, rating, comentario) {
   loadVentas();
   loadProductos();
@@ -273,35 +301,34 @@ function calificarVenta(ventaId, rating, comentario) {
   return venta;
 }
 
-// ========== MERCADO PAGO SIMULADO ==========
-let mpData = null;
+let billetera = null;
 
-function loadMercadoPago() {
-  if (mpData) return mpData;
+function loadBilletera() {
+  if (billetera) return billetera;
   const raw = localStorage.getItem("marketplace-mp-v1");
   if (!raw) {
-    mpData = {
+    billetera = {
       saldoDisponible: 0,
       saldoPendiente: 0,
       movimientos: [],
       retiros: []
     };
-    return mpData;
+    return billetera;
   }
-  return mpData = JSON.parse(raw);
+  return billetera = JSON.parse(raw);
 }
 
-function saveMercadoPago() {
-  localStorage.setItem("marketplace-mp-v1", JSON.stringify(mpData));
+function saveBilletera() {
+  localStorage.setItem("marketplace-mp-v1", JSON.stringify(billetera));
 }
 
 function acreditarVenta(monto, ventaId) {
-  loadMercadoPago();
+  loadBilletera();
   const comision = monto * 0.05;
   const neto = monto - comision;
 
-  mpData.saldoDisponible += neto;
-  mpData.movimientos.unshift({
+  billetera.saldoDisponible += neto;
+  billetera.movimientos.unshift({
     id: crypto.randomUUID(),
     tipo: "venta",
     monto: neto,
@@ -311,23 +338,23 @@ function acreditarVenta(monto, ventaId) {
     ventaId
   });
 
-  saveMercadoPago();
-  return mpData;
+  saveBilletera();
+  return billetera;
 }
 
 function retirarDinero(monto, cbu) {
-  loadMercadoPago();
-  if (monto <= 0 || monto > mpData.saldoDisponible) return null;
+  loadBilletera();
+  if (monto <= 0 || monto > billetera.saldoDisponible) return null;
 
-  mpData.saldoDisponible -= monto;
-  mpData.retiros.unshift({
+  billetera.saldoDisponible -= monto;
+  billetera.retiros.unshift({
     id: crypto.randomUUID(),
     monto,
     cbu,
     fecha: new Date().toISOString(),
     estado: "procesando"
   });
-  mpData.movimientos.unshift({
+  billetera.movimientos.unshift({
     id: crypto.randomUUID(),
     tipo: "retiro",
     monto: -monto,
@@ -335,11 +362,36 @@ function retirarDinero(monto, cbu) {
     descripcion: `Retiro a CBU ***${String(cbu).slice(-4)}`
   });
 
-  saveMercadoPago();
-  return mpData;
+  saveBilletera();
+  return billetera;
 }
 
-// ========== NOTIFICACIONES ==========
+function loadFavoritos() {
+  try {
+    const raw = JSON.parse(localStorage.getItem(FAVORITOS_KEY) || "[]");
+    return Array.isArray(raw) ? raw : [];
+  } catch {
+    return [];
+  }
+}
+
+function saveFavoritos(ids) {
+  localStorage.setItem(FAVORITOS_KEY, JSON.stringify(ids));
+}
+
+function esFavorito(id) {
+  return loadFavoritos().includes(id);
+}
+
+function toggleFavorito(id) {
+  const ids = loadFavoritos();
+  const i = ids.indexOf(id);
+  if (i >= 0) ids.splice(i, 1);
+  else ids.push(id);
+  saveFavoritos(ids);
+  return ids;
+}
+
 let notificaciones = null;
 
 function loadNotificaciones() {
@@ -400,7 +452,10 @@ function seedProductos() {
       vendidos: 234,
       envioGratis: true,
       ubicacion: "Capital Federal",
-      imagen: "https://images.unsplash.com/photo-1511707171634-5f897ff02aa9?w=400&h=400&fit=crop",
+      imagen: "img/celular.jpg",
+      imagenes: ["img/celular.jpg", "img/celular-b.jpg"],
+      descripcion: "Pantalla 6.8\", 256 GB, cámara de 200 MP. Equipo sellado, factura B incluida. Retiro en Palermo o envío a todo el país.",
+      vendedor: { nombre: "TecnoSur", ciudad: "Palermo, CABA", ventas: 1280, reputacion: 4.9 },
       status: "activo"
     },
     {
@@ -413,7 +468,10 @@ function seedProductos() {
       vendidos: 89,
       envioGratis: true,
       ubicacion: "Buenos Aires",
-      imagen: "https://images.unsplash.com/photo-1517336714731-489689fd1ca8?w=400&h=400&fit=crop",
+      imagen: "img/notebook.jpg",
+      imagenes: ["img/notebook.jpg", "img/notebook-b.jpg"],
+      descripcion: "Chip M3, 15 pulgadas, 512 GB. Color medianoche. Caja original y 12 meses de garantía del vendedor.",
+      vendedor: { nombre: "Notebooks del Bajo", ciudad: "San Isidro", ventas: 640, reputacion: 4.8 },
       status: "activo"
     },
     {
@@ -426,7 +484,10 @@ function seedProductos() {
       vendidos: 567,
       envioGratis: true,
       ubicacion: "Córdoba",
-      imagen: "https://images.unsplash.com/photo-1606220945770-b5b6c2c55bf1?w=400&h=400&fit=crop",
+      imagen: "img/auriculares.jpg",
+      imagenes: ["img/auriculares.jpg", "img/auriculares-b.jpg"],
+      descripcion: "Cancelación activa de ruido, estuche USB-C. Sellados. Envío desde Nueva Córdoba.",
+      vendedor: { nombre: "Audio Centro", ciudad: "Córdoba", ventas: 2104, reputacion: 4.7 },
       status: "activo"
     },
     {
@@ -439,7 +500,10 @@ function seedProductos() {
       vendidos: 156,
       envioGratis: true,
       ubicacion: "Rosario",
-      imagen: "https://images.unsplash.com/photo-1434493789847-2a75b0eb9a9f?w=400&h=400&fit=crop",
+      imagen: "img/reloj.jpg",
+      imagenes: ["img/reloj.jpg", "img/reloj-b.jpg"],
+      descripcion: "Caja de titanio 49 mm, GPS + celular. Correa ocean incluida. Ideal para trekking y natación.",
+      vendedor: { nombre: "Relojería Pampa", ciudad: "Rosario", ventas: 412, reputacion: 4.8 },
       status: "activo"
     },
     {
@@ -452,7 +516,10 @@ function seedProductos() {
       vendidos: 78,
       envioGratis: true,
       ubicacion: "Capital Federal",
-      imagen: "https://images.unsplash.com/photo-1527443224154-c4a3942d3acf?w=400&h=400&fit=crop",
+      imagen: "img/monitor.jpg",
+      imagenes: ["img/monitor.jpg", "img/monitor-b.jpg"],
+      descripcion: "27 pulgadas, 4K IPS, USB-C 65 W. Para diseño o edición. Envío con seguro desde Almagro.",
+      vendedor: { nombre: "Pantallas Norte", ciudad: "Almagro, CABA", ventas: 318, reputacion: 4.6 },
       status: "activo"
     },
     {
@@ -463,9 +530,12 @@ function seedProductos() {
       cuotas: "18 cuotas",
       stock: 3,
       vendidos: 445,
-      envioGratis: true,
+      envioGratis: false,
       ubicacion: "Buenos Aires",
-      imagen: "https://images.unsplash.com/photo-1606144042614-b2417e99c4e3?w=400&h=400&fit=crop",
+      imagen: "img/consola.jpg",
+      imagenes: ["img/consola.jpg", "img/consola-b.jpg"],
+      descripcion: "PS5 Slim Digital, un control DualSense. Sin lectora de discos. Envío a cargo del comprador.",
+      vendedor: { nombre: "Arcade Sur", ciudad: "Lanús", ventas: 890, reputacion: 4.7 },
       status: "activo"
     },
     {
@@ -478,7 +548,10 @@ function seedProductos() {
       vendidos: 34,
       envioGratis: true,
       ubicacion: "Capital Federal",
-      imagen: "https://images.unsplash.com/photo-1516035069371-29a1b244cc32?w=400&h=400&fit=crop",
+      imagen: "img/camara.jpg",
+      imagenes: ["img/camara.jpg", "img/camara-b.jpg"],
+      descripcion: "Body full frame 33 MP. Shutter 12.000 actuaciones. Incluye batería extra y correa.",
+      vendedor: { nombre: "Foto Plaza", ciudad: "Once, CABA", ventas: 156, reputacion: 5.0 },
       status: "activo"
     },
     {
@@ -491,7 +564,10 @@ function seedProductos() {
       vendidos: 123,
       envioGratis: true,
       ubicacion: "Mendoza",
-      imagen: "https://images.unsplash.com/photo-1608043152269-423dbba4e7e1?w=400&h=400&fit=crop",
+      imagen: "img/parlante.jpg",
+      imagenes: ["img/parlante.jpg", "img/parlante-b.jpg"],
+      descripcion: "160 W, luces, batería de 12 h. Para patio o evento chico. Envío gratis a Cuyo.",
+      vendedor: { nombre: "Sonido Andes", ciudad: "Mendoza", ventas: 274, reputacion: 4.5 },
       status: "activo"
     },
     {
@@ -502,9 +578,12 @@ function seedProductos() {
       cuotas: "12 cuotas",
       stock: 7,
       vendidos: 89,
-      envioGratis: true,
+      envioGratis: false,
       ubicacion: "Buenos Aires",
-      imagen: "https://images.unsplash.com/photo-1598550476439-6847785fcea6?w=400&h=400&fit=crop",
+      imagen: "img/silla.jpg",
+      imagenes: ["img/silla.jpg", "img/silla-b.jpg"],
+      descripcion: "Tela transpirable, lumbar y recline. Armado en el día en CABA. Envío al interior con cargo.",
+      vendedor: { nombre: "Muebles Taller", ciudad: "Avellaneda", ventas: 201, reputacion: 4.4 },
       status: "activo"
     },
     {
@@ -517,7 +596,10 @@ function seedProductos() {
       vendidos: 67,
       envioGratis: true,
       ubicacion: "Capital Federal",
-      imagen: "https://images.unsplash.com/photo-1571175443880-49e1d25b2bc5?w=400&h=400&fit=crop",
+      imagen: "img/heladera.jpg",
+      imagenes: ["img/heladera.jpg", "img/heladera-b.jpg"],
+      descripcion: "No Frost 394 litros, inverter. Entrega e instalación en CABA y GBA norte.",
+      vendedor: { nombre: "Línea Blanca Sur", ciudad: "Villa Crespo", ventas: 98, reputacion: 4.6 },
       status: "activo"
     },
     {
@@ -530,7 +612,10 @@ function seedProductos() {
       vendidos: 345,
       envioGratis: true,
       ubicacion: "Buenos Aires",
-      imagen: "https://images.unsplash.com/photo-1542291026-7eec264c27ff?w=400&h=400&fit=crop",
+      imagen: "img/zapatillas.jpg",
+      imagenes: ["img/zapatillas.jpg", "img/zapatillas-b.jpg"],
+      descripcion: "Air Max 90, talle 40 a 44. Originales. Cambio de talle en el local de Flores.",
+      vendedor: { nombre: "Calle 8 Store", ciudad: "Flores, CABA", ventas: 1560, reputacion: 4.8 },
       status: "activo"
     },
     {
@@ -541,9 +626,12 @@ function seedProductos() {
       cuotas: "12 cuotas sin interés",
       stock: 5,
       vendidos: 56,
-      envioGratis: true,
+      envioGratis: false,
       ubicacion: "Córdoba",
-      imagen: "https://images.unsplash.com/photo-1532298229144-0ec0c57515c7?w=400&h=400&fit=crop",
+      imagen: "img/bici.jpg",
+      imagenes: ["img/bici.jpg", "img/bici-b.jpg"],
+      descripcion: "R29, 21 velocidades, frenos a disco. Armada y regulada. Retiro en taller o flete a cargo.",
+      vendedor: { nombre: "Ciclos Sierras", ciudad: "Villa Carlos Paz", ventas: 88, reputacion: 4.9 },
       status: "activo"
     }
   ];
@@ -553,10 +641,10 @@ let productos = null;
 
 function loadProductos() {
   if (productos) return productos;
-  const raw = localStorage.getItem("marketplace-productos-v1");
+  const raw = localStorage.getItem(PRODUCTOS_KEY);
   if (!raw) {
     productos = seedProductos().map(normalizeProducto);
-    localStorage.setItem("marketplace-productos-v1", JSON.stringify(productos));
+    localStorage.setItem(PRODUCTOS_KEY, JSON.stringify(productos));
     return productos;
   }
   productos = JSON.parse(raw).map(normalizeProducto);
@@ -565,7 +653,7 @@ function loadProductos() {
 
 function saveProductos(list) {
   if (Array.isArray(list)) productos = list;
-  localStorage.setItem("marketplace-productos-v1", JSON.stringify(productos || []));
+  localStorage.setItem(PRODUCTOS_KEY, JSON.stringify(productos || []));
 }
 
 function catLabel(cat) {
