@@ -83,6 +83,7 @@ img { display: block; width: 100%; height: 100%; object-fit: cover; }
 .catalog-head[hidden],
 .who[hidden],
 .prices[hidden],
+.sistemas[hidden],
 .empty[hidden] {
   display: none !important;
 }
@@ -286,6 +287,9 @@ img { display: block; width: 100%; height: 100%; object-fit: cover; }
   .who-benefits-list,
   .who-benefits-list-4 { grid-template-columns: 1fr 1fr; }
   .price-extras { grid-template-columns: 1fr 1fr; }
+  .price-explain { grid-template-columns: 1fr 1fr; }
+  .sistemas-trades,
+  .sistemas-fns { grid-template-columns: 1fr 1fr; }
 }
 
 .pick-media {
@@ -508,9 +512,156 @@ img { display: block; width: 100%; height: 100%; object-fit: cover; }
 
 #destacados,
 #quien,
+#sistemas,
+#funciones,
 #precios,
+#cobros,
+#arca,
 #catalogo {
   scroll-margin-top: 200px;
+}
+
+.sistemas {
+  padding: 72px 36px;
+  background: var(--bg-2);
+  border-bottom: 1px solid var(--line);
+}
+
+.sistemas-inner {
+  max-width: 1120px;
+  margin: 0 auto;
+}
+
+.sistemas h2 {
+  font-family: Fraunces, Georgia, serif;
+  font-size: clamp(32px, 4.4vw, 48px);
+  font-weight: 560;
+  letter-spacing: -0.03em;
+  line-height: 1.08;
+  margin-bottom: 16px;
+}
+
+.sistemas h3 {
+  font-family: Fraunces, Georgia, serif;
+  font-size: clamp(22px, 3vw, 30px);
+  font-weight: 560;
+  letter-spacing: -0.02em;
+  margin: 36px 0 16px;
+}
+
+.sistemas-lead,
+.sistemas-sublead,
+.sistemas-note {
+  color: var(--muted);
+  font-size: 16px;
+  max-width: 72ch;
+  line-height: 1.55;
+}
+
+.sistemas-lead { margin-bottom: 8px; }
+
+.sistemas-sublead { margin-bottom: 20px; }
+
+.sistemas-note {
+  margin-top: 16px;
+  font-size: 14px;
+  max-width: 78ch;
+}
+
+.sistemas-table {
+  min-width: 1080px;
+}
+
+.sistemas-table tbody th {
+  white-space: normal;
+  min-width: 9.5rem;
+  font-size: 14px;
+}
+
+.sistemas-table td {
+  font-size: 13.5px;
+  line-height: 1.45;
+}
+
+.sistemas-trades {
+  list-style: none;
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 12px 18px;
+}
+
+.sistemas-trades li {
+  background: var(--bg);
+  border: 1px solid var(--line);
+  border-left: 3px solid var(--ember);
+  padding: 14px 16px 14px 16px;
+  color: var(--muted);
+  font-size: 14px;
+  line-height: 1.45;
+}
+
+.sistemas-trades strong {
+  display: block;
+  color: var(--ink);
+  font-size: 14px;
+  font-weight: 650;
+  margin-bottom: 4px;
+}
+
+.sistemas-fns {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 14px 16px;
+}
+
+.sistema-fn {
+  background: var(--bg);
+  border: 1px solid var(--line);
+  border-left: 3px solid var(--ember);
+  padding: 16px 16px 14px;
+}
+
+.sistema-fn h4 {
+  font-family: Fraunces, Georgia, serif;
+  font-size: 20px;
+  font-weight: 560;
+  letter-spacing: -0.02em;
+  color: var(--ink);
+  margin-bottom: 6px;
+}
+
+.sistema-fn > p {
+  color: var(--muted);
+  font-size: 14px;
+  line-height: 1.45;
+  margin-bottom: 12px;
+}
+
+.sistema-fn ul {
+  list-style: none;
+}
+
+.sistema-fn li {
+  color: var(--muted);
+  font-size: 13.5px;
+  line-height: 1.45;
+  margin-top: 8px;
+}
+
+.sistema-fn li:first-child { margin-top: 0; }
+
+.sistema-fn li strong {
+  display: inline;
+  color: var(--gold);
+  font-size: 12.5px;
+  font-weight: 700;
+  margin-right: 6px;
+}
+
+.sistemas-sublead a {
+  color: var(--gold);
+  text-decoration: underline;
+  text-underline-offset: 2px;
 }
 
 .prices {
@@ -622,6 +773,70 @@ img { display: block; width: 100%; height: 100%; object-fit: cover; }
   color: var(--muted);
   font-size: 15px;
 }
+
+.price-in,
+.price-out {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.price-in li,
+.price-out li {
+  position: relative;
+  padding-left: 14px;
+  margin-top: 6px;
+  font-size: 14px;
+  line-height: 1.4;
+}
+
+.price-in li:first-child,
+.price-out li:first-child { margin-top: 0; }
+
+.price-in li::before,
+.price-out li::before {
+  content: "·";
+  position: absolute;
+  left: 0;
+  color: var(--gold);
+  font-weight: 700;
+}
+
+.price-out a {
+  color: var(--gold);
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+
+.price-explain {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 16px;
+  margin: 32px 0 8px;
+}
+
+.price-explain article {
+  background: var(--bg-2);
+  border: 1px solid var(--line);
+  border-left: 3px solid var(--gold);
+  padding: 22px 20px 20px;
+}
+
+.price-explain h3 {
+  margin: 10px 0 12px;
+  font-size: clamp(20px, 2.6vw, 26px);
+}
+
+.price-explain p {
+  color: var(--muted);
+  font-size: 15px;
+  line-height: 1.5;
+  max-width: none;
+}
+
+.price-explain p + p { margin-top: 10px; }
+
+.price-explain strong { color: var(--ink); font-weight: 650; }
 
 .price-table td[data-label="Desde"],
 .price-table td[data-label="Desde (orientativo)"],
@@ -866,7 +1081,7 @@ img { display: block; width: 100%; height: 100%; object-fit: cover; }
 .demo-contacto .demo-mail-inline { color: var(--gold); margin-left: 18px; }
 
 @media (max-width: 860px) {
-  .nav, .hero, .bar, .band, .picks-head, .catalog-head, .who, .prices, .demo-contacto { padding-left: 20px; padding-right: 20px; }
+  .nav, .hero, .bar, .band, .picks-head, .catalog-head, .who, .sistemas, .prices, .demo-contacto { padding-left: 20px; padding-right: 20px; }
   .nav { gap: 10px; flex-direction: column; align-items: flex-start; }
   .nav-links { gap: 14px; }
   .hero { min-height: 86vh; padding-bottom: 48px; }
@@ -895,12 +1110,20 @@ img { display: block; width: 100%; height: 100%; object-fit: cover; }
   .who-benefits-list-4 { grid-template-columns: 1fr; gap: 14px; }
   #destacados,
   #quien,
+  #sistemas,
+  #funciones,
   #precios,
+  #cobros,
+  #arca,
   #catalogo {
     scroll-margin-top: 340px;
   }
 
+  .sistemas,
   .prices { padding-top: 48px; padding-bottom: 48px; }
+
+  .sistemas-trades,
+  .sistemas-fns { grid-template-columns: 1fr; }
 
   .price-table { min-width: 0; }
   .price-table-plans { min-width: 0; }
@@ -958,4 +1181,5 @@ img { display: block; width: 100%; height: 100%; object-fit: cover; }
   }
 
   .price-extras { grid-template-columns: 1fr; }
+  .price-explain { grid-template-columns: 1fr; }
 }
