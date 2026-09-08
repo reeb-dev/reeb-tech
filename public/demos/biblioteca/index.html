@@ -3,37 +3,25 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Biblioteca Pública — Catálogo de libros</title>
+  <title>Biblioteca Pública Almagro — Catálogo y préstamos</title>
+  <script>
+    (function () {
+      var p = location.pathname;
+      if (p && p.charAt(p.length - 1) !== "/" && !/\.[a-zA-Z0-9]+$/.test(p)) {
+        location.replace(p + "/" + location.search + location.hash);
+      }
+    })();
+  </script>
   <link rel="stylesheet" href="styles.css">
-  <style>
-    .catalog-header { display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 16px; margin-bottom: 24px; }
-    .filters { display: flex; gap: 8px; flex-wrap: wrap; }
-    .filters button { background: var(--card); border: 1px solid var(--line); padding: 8px 16px; border-radius: 20px; cursor: pointer; font-size: 13px; }
-    .filters button:hover { border-color: var(--azul); }
-    .filters button.active { background: var(--azul); color: white; border-color: var(--azul); }
-    .books-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 16px; }
-    .book-card { background: var(--card); border-radius: 12px; padding: 16px; display: flex; gap: 16px; box-shadow: 0 2px 8px rgba(0,0,0,0.06); }
-    .book-card .cover { font-size: 48px; width: 60px; text-align: center; }
-    .book-card .info { flex: 1; }
-    .book-card h3 { margin: 0 0 4px; font-size: 15px; }
-    .book-card .autor { font-size: 13px; color: var(--muted); margin-bottom: 4px; }
-    .book-card .meta { font-size: 12px; color: var(--muted); margin-bottom: 8px; }
-    .book-card .disponibilidad { font-size: 12px; padding: 4px 10px; border-radius: 12px; display: inline-block; }
-    .book-card .disponibilidad.si { background: #d4edda; color: #155724; }
-    .book-card .disponibilidad.no { background: #f8d7da; color: #721c24; }
-    .book-card .disponibilidad.reservado { background: #fff3cd; color: #856404; }
-    .socio-box { background: linear-gradient(135deg, var(--azul) 0%, var(--azul-light) 100%); color: white; padding: 24px; border-radius: 12px; margin-top: 32px; }
-    .socio-box h3 { margin: 0 0 8px; }
-    .admin-link { text-align: center; margin-top: 32px; padding: 24px; background: var(--card); border-radius: 12px; }
-  </style>
 </head>
 <body>
   <header class="top">
     <div class="top-inner">
-      <a class="logo" href="index.html">BIBLIOTECA<small>Catálogo público</small></a>
+      <a class="logo" href="index.html">BIBLIOTECA<small>Pública Almagro · préstamo</small></a>
       <nav>
         <a href="#catalogo">Catálogo</a>
-        <a href="#hacerse-socio">Ser socio</a>
+        <a href="#reservar">Reservar</a>
+        <a href="#horarios">Horarios</a>
         <a class="btn" href="panel.html">Panel Admin</a>
       </nav>
     </div>
@@ -42,126 +30,133 @@
   <main class="wrap">
     <section class="hero">
       <div>
-        <p class="kicker">Biblioteca Pública</p>
-        <h1>Explorá nuestro catálogo de libros.</h1>
-        <p class="lead">Miles de títulos disponibles para préstamo. Ficción, no ficción, técnicos, infantiles y más. Consultá disponibilidad y acercate a retirar.</p>
-        <a class="btn" href="#catalogo">Ver catálogo</a>
+        <p class="kicker">Biblioteca pública · escolar</p>
+        <h1>Consultá el catálogo y retirá en sala.</h1>
+        <p class="lead">No vendemos libros: prestamos ejemplares a socios. Buscá por título o autor, mirá el estante y reservá si el ejemplar está ocupado.</p>
+        <div class="hero-actions">
+          <a class="btn" href="#catalogo">Ver catálogo</a>
+          <a class="btn btn-line" href="#reservar">Reservar un ejemplar</a>
+        </div>
       </div>
-      <aside class="card-preview">
-        <img src="https://images.unsplash.com/photo-1507842217343-583bb7270b66?w=400&h=280&fit=crop" alt="Biblioteca" style="width:100%;border-radius:12px;">
+      <aside class="hero-photo">
+        <img src="img/hero-sala.jpg" alt="Sala de lectura de la biblioteca">
       </aside>
     </section>
 
-    <!-- Galería de la biblioteca -->
     <section class="section" style="padding-bottom: 0;">
-      <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 12px;">
-        <img src="https://images.unsplash.com/photo-1521587760476-6c12a4b040da?w=300&h=200&fit=crop" alt="Estantes de biblioteca" style="width:100%;height:140px;object-fit:cover;border-radius:8px;">
-        <img src="https://images.unsplash.com/photo-1524995997946-a1c2e315a42f?w=300&h=200&fit=crop" alt="Libros en estante" style="width:100%;height:140px;object-fit:cover;border-radius:8px;">
-        <img src="https://images.unsplash.com/photo-1568667256549-094345857637?w=300&h=200&fit=crop" alt="Sala de lectura" style="width:100%;height:140px;object-fit:cover;border-radius:8px;">
-        <img src="https://images.unsplash.com/photo-1497633762265-9d179a990aa6?w=300&h=200&fit=crop" alt="Libros abiertos" style="width:100%;height:140px;object-fit:cover;border-radius:8px;">
+      <div class="gallery">
+        <img src="img/biblio-nacional.jpg" alt="Fachada institucional de biblioteca">
+        <img src="img/estantes.jpg" alt="Estantes de consulta">
+        <img src="img/estanteria.jpg" alt="Colección en estantería">
       </div>
     </section>
 
-    <!-- CATÁLOGO PÚBLICO -->
     <section class="section" id="catalogo">
       <div class="catalog-header">
-        <h2>Catálogo de libros</h2>
-        <div class="filters">
-          <button class="active" data-filter="all">Todos</button>
-          <button data-filter="ficcion">📖 Ficción</button>
-          <button data-filter="noficcion">📚 No ficción</button>
-          <button data-filter="infantil">🧒 Infantil</button>
-          <button data-filter="juvenil">👦 Juvenil</button>
-          <button data-filter="tecnico">💻 Técnico</button>
+        <div>
+          <p class="kicker">Consulta pública</p>
+          <h2>Catálogo de libros</h2>
+        </div>
+        <div class="catalog-tools">
+          <div class="search-box">
+            <input id="search" type="search" placeholder="Buscar por título o autor" autocomplete="off">
+          </div>
+          <div class="filters" id="filters">
+            <button class="active" data-filter="all" type="button">Todos</button>
+            <button data-filter="ficcion" type="button">Ficción</button>
+            <button data-filter="noficcion" type="button">No ficción</button>
+            <button data-filter="infantil" type="button">Infantil</button>
+            <button data-filter="juvenil" type="button">Juvenil</button>
+            <button data-filter="tecnico" type="button">Técnico</button>
+            <button data-filter="referencia" type="button">Referencia</button>
+          </div>
         </div>
       </div>
       <div class="books-grid" id="catalog"></div>
+    </section>
 
-      <div class="socio-box" id="hacerse-socio">
-        <h3>📚 Hacete socio</h3>
-        <p>Con el carnet de socio podés retirar hasta 3 libros por vez. El préstamo es por 14 días con posibilidad de renovación.</p>
-        <p style="margin-top:12px;font-weight:600;">📍 Acercate con tu DNI a la biblioteca</p>
-      </div>
-
-      <div class="admin-link">
-        <p>¿Sos bibliotecario?</p>
-        <a class="btn" href="panel.html">Acceder al sistema de gestión</a>
+    <section class="section" id="reservar">
+      <h2>Reservar un ejemplar</h2>
+      <p class="lead">Si el título está prestado, dejá tu nombre de socio. Cuando vuelva a sala te avisamos (demo, queda guardado en este navegador).</p>
+      <div class="reserva-card">
+        <form id="form-reserva">
+          <div class="row-2">
+            <label>Nombre de socio
+              <input name="socioNombre" required placeholder="Como figura en el carnet" autocomplete="name">
+            </label>
+            <label>Teléfono (opcional)
+              <input name="tel" type="tel" placeholder="11 4000-1234" autocomplete="tel">
+            </label>
+          </div>
+          <label>Libro
+            <select name="libro" id="reserva-libro" required></select>
+          </label>
+          <p class="form-error" id="reserva-error" role="alert"></p>
+          <button class="btn" type="submit">Pedir reserva</button>
+        </form>
       </div>
     </section>
 
-    <section class="section">
+    <section class="section" id="horarios">
       <h2>Información</h2>
-      <div class="modules" style="grid-template-columns: repeat(3, 1fr);">
+      <div class="modules">
         <article>
-          <h3>🕐 Horarios</h3>
+          <h3>Horarios</h3>
           <p>Lunes a viernes: 9 a 19</p>
           <p>Sábados: 10 a 14</p>
+          <p>Domingo cerrado</p>
         </article>
         <article>
-          <h3>📍 Ubicación</h3>
+          <h3>Dirección</h3>
           <p>Av. Corrientes 1234</p>
           <p>Almagro, CABA</p>
         </article>
         <article>
-          <h3>📞 Contacto</h3>
-          <p>Tel: 011-4555-1234</p>
-          <p>biblioteca@demo.com</p>
+          <h3>Préstamo</h3>
+          <p>Hasta 3 libros por socio.</p>
+          <p>14 días, 2 renovaciones.</p>
+          <p>Multa: $ 200 por día de atraso.</p>
         </article>
+      </div>
+
+      <div class="socio-box" id="hacerse-socio">
+        <h3>Hacete socio</h3>
+        <p>Con el carnet podés retirar ejemplares. El alta se hace en mostrador con DNI. Esta web solo consulta el catálogo y toma reservas de ejemplo.</p>
+        <p>Acercate a Av. Corrientes 1234, Almagro.</p>
+      </div>
+
+      <div class="admin-link">
+        <p>¿Trabajás en sala?</p>
+        <a class="btn" href="panel.html">Sistema de préstamos</a>
       </div>
     </section>
   </main>
 
-  <footer class="wrap">Biblioteca · demo de producto · no es una biblioteca en actividad.</footer>
+  <div class="modal-back" id="ficha" hidden>
+    <article class="ficha" role="dialog" aria-modal="true" aria-labelledby="ficha-titulo">
+      <div class="ficha-cover"><img id="ficha-img" alt=""></div>
+      <div class="ficha-body">
+        <button class="close" type="button" id="ficha-cerrar" aria-label="Cerrar">×</button>
+        <p class="kicker" id="ficha-cat"></p>
+        <h2 id="ficha-titulo"></h2>
+        <p class="lead" id="ficha-autor" style="margin:0"></p>
+        <div class="ficha-meta">
+          <div><span>Ubicación</span><strong id="ficha-ubi"></strong></div>
+          <div><span>Disponibilidad</span><strong id="ficha-disp"></strong></div>
+          <div><span>Editorial</span><span id="ficha-edit"></span></div>
+          <div><span>Ejemplares</span><span id="ficha-ejem"></span></div>
+        </div>
+        <div class="actions">
+          <button class="btn" type="button" id="ficha-reservar">Reservar este título</button>
+        </div>
+      </div>
+    </article>
+  </div>
+
+  <footer class="wrap">Biblioteca Pública Almagro · demo de producto · no es una biblioteca en actividad.</footer>
 
   <script src="data.js"></script>
-  <script>
-    const COVERS = {
-      ficcion: "📖",
-      noficcion: "📚",
-      infantil: "🧒",
-      juvenil: "👦",
-      tecnico: "💻",
-      referencia: "📕"
-    };
-
-    let currentFilter = "all";
-    const libros = seedLibros();
-
-    function renderCatalog() {
-      const filtered = currentFilter === "all" 
-        ? libros 
-        : libros.filter(l => l.categoria === currentFilter);
-
-      document.getElementById("catalog").innerHTML = filtered.map(l => {
-        const disp = l.disponibles > 0;
-        return `
-          <article class="book-card">
-            <div class="cover">${COVERS[l.categoria] || "📖"}</div>
-            <div class="info">
-              <h3>${esc(l.titulo)}</h3>
-              <div class="autor">${esc(l.autor)}</div>
-              <div class="meta">${esc(l.editorial)} · ${l.año} · ${esc(catLabel(l.categoria))}</div>
-              <div class="meta">📍 ${esc(l.ubicacion)}</div>
-              <span class="disponibilidad ${disp ? 'si' : (l.status === 'reservado' ? 'reservado' : 'no')}">
-                ${disp ? `✅ ${l.disponibles} disponible${l.disponibles > 1 ? 's' : ''}` : (l.status === 'reservado' ? '⏳ Reservado' : '❌ Prestado')}
-              </span>
-            </div>
-          </article>
-        `;
-      }).join("");
-    }
-
-    document.querySelectorAll(".filters button").forEach(btn => {
-      btn.addEventListener("click", () => {
-        document.querySelectorAll(".filters button").forEach(b => b.classList.remove("active"));
-        btn.classList.add("active");
-        currentFilter = btn.dataset.filter;
-        renderCatalog();
-      });
-    });
-
-    renderCatalog();
-  </script>
+  <script src="app.js"></script>
   <script src="../contacto.js" data-phone="5491140001234" data-text="Hola, quiero consultar por préstamos o el catálogo" data-subject="Consulta demo — Biblioteca" data-title="Consultar"></script>
 </body>
 </html>
