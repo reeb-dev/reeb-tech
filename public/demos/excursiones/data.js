@@ -1,5 +1,5 @@
 const STORAGE_RESERVAS = "excursiones-reservas-v2";
-const STORAGE_TOURS = "excursiones-tours-v2";
+const STORAGE_TOURS = "excursiones-tours-v3";
 const STORAGE_SALIDAS = "excursiones-salidas-v2";
 const STORAGE_GUIAS = "excursiones-guias-v2";
 
@@ -11,6 +11,89 @@ const LOCAL = {
   telefono: "0291-491-1180",
   whatsapp: "5492915757934"
 };
+
+const LUGARES = [
+  {
+    id: "cerro",
+    nombre: "Cerro Ventana",
+    resumen: "Ventana natural. Trekking exigente.",
+    texto: "Monumento natural en el Parque Tornquist. La abertura de la cumbre es la postal de la comarca. Jornada completa; inscripción en el parque.",
+    foto: "img/cerro-ventana.jpg",
+    tags: ["Exigente", "6 h"]
+  },
+  {
+    id: "garganta",
+    nombre: "Garganta del Diablo",
+    resumen: "Cañadón y arroyo. Dificultad media.",
+    texto: "Sendero de paredones y agua. Media jornada. No conviene con lluvia fuerte.",
+    foto: "img/garganta.jpg",
+    tags: ["Media", "4 h"]
+  },
+  {
+    id: "cueva",
+    nombre: "Cueva del Toro",
+    resumen: "Cuarcita y cueva. Cupo chico.",
+    texto: "Formaciones de cuarcita y cueva. Linterna incluida en la salida guiada.",
+    foto: "img/cueva.jpg",
+    tags: ["Media", "5 h"]
+  },
+  {
+    id: "parque",
+    nombre: "Parque Provincial Ernesto Tornquist",
+    resumen: "Base Cerro Ventana, RP 76 km 226.",
+    texto: "Miradores, senderos cortos y acceso al cerro. Entrada al parque aparte del valor de la excursión.",
+    foto: "img/tornquist.jpg",
+    tags: ["Baja / media"]
+  },
+  {
+    id: "villa",
+    nombre: "Villa Ventana",
+    resumen: "Bosque, plaza y arroyo.",
+    texto: "Paseo por el pueblo, casas de té y tramo del Sauce Grande. Ritmo suave.",
+    foto: "img/villa-cartel.jpg",
+    tags: ["Baja", "3 h"]
+  },
+  {
+    id: "pueblo",
+    nombre: "Sierra de la Ventana",
+    resumen: "Av. San Martín y el Sauce Grande.",
+    texto: "Punto de encuentro de las salidas. Comercios, golf y el cauce del arroyo.",
+    foto: "img/pueblo-calle.jpg",
+    tags: ["Pueblo"]
+  },
+  {
+    id: "arroyo",
+    nombre: "Arroyo Sauce Grande",
+    resumen: "Cauce de la comarca.",
+    texto: "Tramos para caminar sin desnivel. Sauces, piedra y sombra.",
+    foto: "img/arroyo.jpg",
+    tags: ["Baja"]
+  },
+  {
+    id: "golf",
+    nombre: "Campo de golf",
+    resumen: "Cancha con sierras al fondo.",
+    texto: "El golf del pueblo, con pinos y el cordón de Ventania. No es una salida de trekking.",
+    foto: "img/golf.jpg",
+    tags: ["Pueblo"]
+  },
+  {
+    id: "miradores",
+    nombre: "Miradores",
+    resumen: "Vistas al valle y al cordón.",
+    texto: "Cerro Ceferino y miradores del parque. Buena foto del pueblo y de las sierras.",
+    foto: "img/mirador.jpg",
+    tags: ["Vistas"]
+  },
+  {
+    id: "sierras",
+    nombre: "Sierras de Ventania",
+    resumen: "El paisaje de todas las salidas.",
+    texto: "Cuarcita, pastizal y pinares. Cerro Ventana y Tres Picos marcan el horizonte.",
+    foto: "img/sierras-panorama.jpg",
+    tags: ["Ventania"]
+  }
+];
 
 const STATUSES = [
   { id: "pendiente", label: "Pendiente" },
@@ -61,8 +144,9 @@ const TOURS_SEED = [
     id: "ventana",
     nombre: "Cerro Ventana",
     categoria: "trekking",
-    descripcion: "Trekking al cerro con la ventana natural. Parque Provincial Ernesto Tornquist. Nivel medio.",
+    descripcion: "Trekking al cerro con la ventana natural. Parque Provincial Ernesto Tornquist. Jornada completa.",
     duracion: "6 h",
+    dificultad: "Exigente",
     horas: 6,
     cupo: 12,
     precio: 28000,
@@ -77,6 +161,7 @@ const TOURS_SEED = [
     categoria: "trekking",
     descripcion: "Cañadón, paredones y arroyo. Media jornada. Calzado con suela, no es apto con lluvia fuerte.",
     duracion: "4 h",
+    dificultad: "Media",
     horas: 4,
     cupo: 14,
     precio: 22000,
@@ -91,6 +176,7 @@ const TOURS_SEED = [
     categoria: "trekking",
     descripcion: "Formaciones de cuarcita y cueva. Linterna incluida. Cupo chico.",
     duracion: "5 h",
+    dificultad: "Media",
     horas: 5,
     cupo: 10,
     precio: 24000,
@@ -105,6 +191,7 @@ const TOURS_SEED = [
     categoria: "parque",
     descripcion: "Circuito de miradores y senderos cortos. Entrada al parque no incluida.",
     duracion: "5 h",
+    dificultad: "Baja / media",
     horas: 5,
     cupo: 16,
     precio: 18000,
@@ -119,6 +206,7 @@ const TOURS_SEED = [
     categoria: "pueblo",
     descripcion: "Paseo por el pueblo, plaza y tramo del arroyo Sauce Grande. Ritmo suave.",
     duracion: "3 h",
+    dificultad: "Baja",
     horas: 3,
     cupo: 20,
     precio: 12000,
@@ -133,6 +221,7 @@ const TOURS_SEED = [
     categoria: "cabalgata",
     descripcion: "Caballo por pastizal y lomas. Nivel inicial. Mate al final. Traslado desde Sierra de la Ventana.",
     duracion: "3 h",
+    dificultad: "Baja",
     horas: 3,
     cupo: 8,
     precio: 26000,

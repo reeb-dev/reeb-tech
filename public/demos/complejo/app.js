@@ -61,6 +61,48 @@
     document.body.style.overflow = "";
   }
 
+  function openLugar(id) {
+    const l = (typeof LUGARES !== "undefined" ? LUGARES : []).find((item) => item.id === id);
+    if (!l) return;
+    fichaBody.innerHTML = `
+      <img class="ficha-photo" src="${esc(l.foto)}" alt="${esc(l.nombre)}">
+      <p class="kicker">Qué visitar</p>
+      <h2 id="fichaTitle">${esc(l.nombre)}</h2>
+      <p>${esc(l.texto)}</p>
+      <p class="ficha-amenities">${(l.tags || []).map((t) => `<span>${esc(t)}</span>`).join("")}</p>
+    `;
+    overlay.hidden = false;
+    document.body.style.overflow = "hidden";
+  }
+
+  function renderLugares() {
+    const grid = document.getElementById("lugaresGrid");
+    if (!grid || typeof LUGARES === "undefined") return;
+    grid.innerHTML = LUGARES.map((l) => `
+      <button type="button" class="lugar-card" data-lugar="${esc(l.id)}">
+        <img src="${esc(l.foto)}" alt="${esc(l.nombre)}">
+        <div>
+          <h3>${esc(l.nombre)}</h3>
+          <p>${esc(l.resumen)}</p>
+        </div>
+      </button>
+    `).join("");
+    grid.querySelectorAll(".lugar-card").forEach((card) => {
+      card.addEventListener("click", () => openLugar(card.dataset.lugar));
+    });
+  }
+
+  function pintarMapa(elId, lat, lng, popup, zoom) {
+    const el = document.getElementById(elId);
+    if (!el || typeof L === "undefined") return;
+    const map = L.map(el, { scrollWheelZoom: false }).setView([lat, lng], zoom);
+    L.tileLayer("https://tile.openstreetmap.org/{z}/{x}/{y}.png", {
+      attribution: "&copy; OpenStreetMap"
+    }).addTo(map);
+    L.marker([lat, lng]).addTo(map).bindPopup(popup);
+    setTimeout(() => map.invalidateSize(), 80);
+  }
+
   fichaClose.addEventListener("click", closeFicha);
   overlay.addEventListener("click", (event) => {
     if (event.target === overlay) closeFicha();
@@ -175,4 +217,6 @@
   }
 
   renderCatalog();
+  renderLugares();
+  pintarMapa("mapa-local", -38.052, -62.01, "El Palomar · Ruta 76 km 227", 13);
 })();

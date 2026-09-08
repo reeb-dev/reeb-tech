@@ -496,8 +496,81 @@ input, select, textarea {
 }
 .cupo-bar span { display: block; height: 100%; background: var(--accent); }
 
+.lugares-grid, .predio-grid, .cerca-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+  gap: 18px;
+}
+.lugar-card, .predio-card {
+  background: var(--card);
+  border-radius: 12px;
+  overflow: hidden;
+  border: 1px solid var(--line);
+  cursor: pointer;
+  text-align: left;
+  padding: 0;
+  width: 100%;
+  font: inherit;
+  color: inherit;
+  display: block;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+.lugar-card:hover, .predio-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 12px 28px rgba(15, 46, 38, 0.12);
+}
+.lugar-card img, .predio-card img {
+  width: 100%;
+  height: 168px;
+  object-fit: cover;
+  display: block;
+}
+.lugar-card div, .predio-card div { padding: 14px 16px 16px; }
+.lugar-card h3, .predio-card h3 { margin: 0 0 6px; font-size: 16px; }
+.lugar-card p, .predio-card p { margin: 0; font-size: 13px; color: var(--muted); line-height: 1.45; }
+.predio-card { cursor: default; }
+.predio-card img { height: 200px; }
+
+.map-block {
+  display: grid;
+  grid-template-columns: 0.85fr 1.15fr;
+  gap: 24px;
+  align-items: start;
+}
+.map-embed {
+  position: relative;
+  border-radius: 12px;
+  overflow: hidden;
+  height: 280px;
+  background: #e8eef2;
+  isolation: isolate;
+  border: 1px solid var(--line);
+}
+.map-embed .map-canvas {
+  position: relative;
+  z-index: 1;
+  width: 100%;
+  height: 100%;
+  min-width: 0;
+  display: block;
+}
+.map-fallback {
+  position: absolute;
+  inset: 0;
+  margin: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #334155;
+  font-size: 14px;
+  padding: 16px;
+  text-align: center;
+}
+.map-caption { margin: 8px 0 0; font-size: 13px; color: var(--muted); }
+.map-caption a { color: var(--accent); }
+
 @media (max-width: 960px) {
-  .hero-inner, .reserva-card, .reserva-form, .ficha-meta, .info-grid, .workspace, .create.open, .modules { grid-template-columns: 1fr; }
+  .hero-inner, .reserva-card, .reserva-form, .ficha-meta, .info-grid, .workspace, .create.open, .modules, .map-block { grid-template-columns: 1fr; }
   .hero h1 { font-size: 34px; }
   .top-inner, .toolbar { flex-direction: column; align-items: start; }
   h1 { font-size: 32px; }

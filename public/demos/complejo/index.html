@@ -13,6 +13,7 @@
     })();
   </script>
   <link rel="stylesheet" href="styles.css">
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" crossorigin="">
 </head>
 <body>
   <header class="top">
@@ -20,8 +21,11 @@
       <a class="logo" href="index.html">EL PALOMAR<small>Complejo · Sierra de la Ventana</small></a>
       <nav>
         <a href="#paquetes">Paquetes</a>
+        <a href="#predio">El predio</a>
+        <a href="#visitar">Qué visitar</a>
         <a href="#actividades">Actividades</a>
         <a href="#spa">Spa</a>
+        <a href="#lugar">Mapa</a>
         <a class="btn" href="panel.html">Panel Admin</a>
       </nav>
     </div>
@@ -35,10 +39,10 @@
         <div>
           <p class="kicker light">Golf, spa y pileta · Ruta 76</p>
           <h1>Complejo El Palomar</h1>
-          <p class="lead light">Predio en Sierra de la Ventana: cancha, spa, pileta y sendero al arroyo. Paquetes de ejemplo; la reserva queda en este navegador.</p>
+          <p class="lead light">Predio tipo resort en Sierra de la Ventana: cancha, spa, pileta y sendero al arroyo. Al costado, el Parque Tornquist y las sierras. La reserva queda en este navegador.</p>
           <div class="hero-actions">
             <a class="btn" href="#reserva">Reservar paquete</a>
-            <a class="btn btn-ghost" href="#actividades">Qué hay hoy</a>
+            <a class="btn btn-ghost" href="#visitar">Paisajes del parque</a>
           </div>
         </div>
         <aside class="local-card">
@@ -62,6 +66,42 @@
           <button data-filter="spa" type="button">Spa</button>
         </div>
         <div class="catalog-grid" id="catalog"></div>
+      </section>
+
+      <section class="section" id="predio">
+        <p class="kicker">El predio</p>
+        <h2>Golf, spa y pileta</h2>
+        <p class="section-lead">Cancha con las sierras al fondo, circuito de spa y pileta al aire. El resto del día se sale al parque o al pueblo.</p>
+        <div class="predio-grid">
+          <article class="predio-card">
+            <img src="img/golf.jpg" alt="Campo de golf de Sierra de la Ventana con las sierras al fondo">
+            <div>
+              <h3>Golf</h3>
+              <p>Green fee de 9 hoyos. Césped y pinos, el cordón de Ventania al fondo. Turnos desde las 9.</p>
+            </div>
+          </article>
+          <article class="predio-card">
+            <img src="img/spa.jpg" alt="Turno de masaje en el spa del predio">
+            <div>
+              <h3>Spa</h3>
+              <p>Masaje, hidromasaje y sauna. Se puede pedir sin pernocte, en el formulario de abajo.</p>
+            </div>
+          </article>
+          <article class="predio-card">
+            <img src="img/pileta.jpg" alt="Pileta y jacuzzi del predio con las sierras atrás">
+            <div>
+              <h3>Pileta</h3>
+              <p>Pileta y jacuzzi al aire, reposeras y césped. En temporada fría el spa cubre el mismo ritmo.</p>
+            </div>
+          </article>
+        </div>
+      </section>
+
+      <section class="section" id="visitar">
+        <p class="kicker">Alrededor</p>
+        <h2>Paisajes del parque y la comarca</h2>
+        <p class="section-lead">El Parque Provincial Ernesto Tornquist queda a minutos por Ruta 76. Tocá una tarjeta: cerro, garganta, cueva, pueblos y arroyo.</p>
+        <div class="lugares-grid" id="lugaresGrid"></div>
       </section>
 
       <section class="section" id="actividades">
@@ -144,6 +184,34 @@
         </div>
       </section>
 
+      <section class="section" id="lugar">
+        <p class="kicker">Ubicación</p>
+        <h2>Ruta 76, Sierra de la Ventana</h2>
+        <div class="map-block">
+          <div>
+            <div class="modules info-grid" style="grid-template-columns:1fr">
+              <article>
+                <h3>Dirección</h3>
+                <p>Ruta 76 km 227</p>
+                <p>Sierra de la Ventana, partido de Tornquist</p>
+                <p>Cerca de la Base Cerro Ventana del Parque Tornquist (km 226).</p>
+              </article>
+              <article>
+                <h3>Alrededor</h3>
+                <p>Parque Tornquist a minutos. Villa Ventana a unos 20 min. Sierra de la Ventana pueblo por la misma ruta.</p>
+              </article>
+            </div>
+            <p class="map-caption"><a href="https://www.openstreetmap.org/?mlat=-38.052&amp;mlon=-62.01#map=13/-38.052/-62.01" target="_blank" rel="noopener">Ver mapa más grande</a></p>
+          </div>
+          <div>
+            <div class="map-embed">
+              <p class="map-fallback">Ruta 76 km 227, Sierra de la Ventana</p>
+              <div id="mapa-local" class="map-canvas" role="img" aria-label="Mapa del predio sobre Ruta 76, Sierra de la Ventana"></div>
+            </div>
+          </div>
+        </div>
+      </section>
+
       <section class="section" id="info">
         <h2>El predio</h2>
         <div class="modules info-grid">
@@ -176,6 +244,7 @@
   <div id="contacto"></div>
   <footer class="wrap">Complejo El Palomar · Ruta 76 km 227, Sierra de la Ventana · demo de producto · no es un complejo en actividad.</footer>
 
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" crossorigin=""></script>
   <script src="data.js"></script>
   <script src="app.js"></script>
   <script src="../contacto.js" data-phone="5492915757934" data-text="Hola, quiero consultar por un paquete en El Palomar, Sierra de la Ventana" data-subject="Consulta demo — Complejo El Palomar" data-title="Consultar el predio"></script>

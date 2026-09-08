@@ -10,6 +10,89 @@ const LOCAL = {
   whatsapp: "5492915757934"
 };
 
+const LUGARES = [
+  {
+    id: "cerro",
+    nombre: "Cerro Ventana",
+    resumen: "La ventana de cuarcita. Trekking de jornada.",
+    texto: "Monumento natural en el Parque Provincial Ernesto Tornquist. La abertura en la cumbre da nombre a la comarca. Salida de jornada; hay que inscribirse en el parque.",
+    foto: "img/cerro-ventana.jpg",
+    tags: ["Parque Tornquist", "Trekking"]
+  },
+  {
+    id: "garganta",
+    nombre: "Garganta del Diablo",
+    resumen: "Cañadón y arroyo. Media jornada.",
+    texto: "Sendero de cañadón, paredones y agua dentro del parque. Calzado con suela. No conviene con lluvia fuerte.",
+    foto: "img/garganta.jpg",
+    tags: ["Parque Tornquist", "Media jornada"]
+  },
+  {
+    id: "cueva",
+    nombre: "Cueva del Toro",
+    resumen: "Cuarcita y cueva. Cupo chico.",
+    texto: "Formaciones de cuarcita y cueva en el sistema de Ventania. Recorrido con linterna; el cupo es reducido.",
+    foto: "img/cueva.jpg",
+    tags: ["Trekking", "Geología"]
+  },
+  {
+    id: "parque",
+    nombre: "Parque Provincial Ernesto Tornquist",
+    resumen: "Base Cerro Ventana, RP 76 km 226.",
+    texto: "Acceso por el portón de la Ruta 76. Miradores, senderos cortos y el cerro. La entrada es arancelada; los senderos se habilitan según el clima.",
+    foto: "img/tornquist.jpg",
+    tags: ["RP 76", "Miradores"]
+  },
+  {
+    id: "villa",
+    nombre: "Villa Ventana",
+    resumen: "Pueblo de bosque y arroyo, a 17 km.",
+    texto: "Calles de ripio, casas de té y cabañas entre árboles. A 17 km de Sierra de la Ventana. El Sauce Grande pasa por el pueblo.",
+    foto: "img/villa-cartel.jpg",
+    tags: ["Pueblo", "Arroyo"]
+  },
+  {
+    id: "pueblo",
+    nombre: "Sierra de la Ventana",
+    resumen: "Pueblo sobre el Sauce Grande y Av. San Martín.",
+    texto: "Localidad de servicios de la comarca: avenida, golf y comercios. Base para salidas al parque y a Villa Ventana.",
+    foto: "img/pueblo-calle.jpg",
+    tags: ["Pueblo", "Av. San Martín"]
+  },
+  {
+    id: "arroyo",
+    nombre: "Arroyo Sauce Grande",
+    resumen: "Cauce que recorre Villa Ventana y el pueblo.",
+    texto: "Caminatas suaves, sauces y piedra en la orilla. Pasa junto a las cabañas del predio.",
+    foto: "img/arroyo.jpg",
+    tags: ["Caminata suave"]
+  },
+  {
+    id: "golf",
+    nombre: "Campo de golf",
+    resumen: "Cancha con las sierras al fondo.",
+    texto: "Campo de golf de Sierra de la Ventana. Césped, pinos y el cordón de Ventania detrás.",
+    foto: "img/golf.jpg",
+    tags: ["Sierra de la Ventana"]
+  },
+  {
+    id: "miradores",
+    nombre: "Miradores",
+    resumen: "Vistas al cordón y a los pueblos del valle.",
+    texto: "Cerro Ceferino en el pueblo y miradores del parque. Desde arriba se ven Villa Ventana, el valle y las sierras.",
+    foto: "img/mirador.jpg",
+    tags: ["Vistas", "Sierras"]
+  },
+  {
+    id: "sierras",
+    nombre: "Sierras de Ventania",
+    resumen: "El cordón del sudoeste bonaerense.",
+    texto: "Sistema serrano de cuarcita. Cerro Ventana, Tres Picos y pastizal. El paisaje de toda la comarca.",
+    foto: "img/sierras-panorama.jpg",
+    tags: ["Ventania"]
+  }
+];
+
 const STATUSES = [
   { id: "pendiente", label: "Pendiente" },
   { id: "confirmada", label: "Confirmada" },

@@ -13,6 +13,7 @@
     })();
   </script>
   <link rel="stylesheet" href="styles.css">
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" crossorigin="">
 </head>
 <body>
   <header class="top">
@@ -20,7 +21,9 @@
       <a class="logo" href="index.html">SENDEROS<small>Tornquist · Sierra de la Ventana</small></a>
       <nav>
         <a href="#tours">Excursiones</a>
+        <a href="#visitar">Qué visitar</a>
         <a href="#guias">Guías</a>
+        <a href="#lugar">Mapa</a>
         <a href="#reserva">Reservar plaza</a>
         <a class="btn" href="panel.html">Panel Admin</a>
       </nav>
@@ -35,10 +38,10 @@
         <div>
           <p class="kicker light">Agencia de tours · Sierra de la Ventana</p>
           <h1>Senderos Tornquist</h1>
-          <p class="lead light">Cerro Ventana, Garganta del Diablo, Cueva del Toro, Villa Ventana y cabalgata. Duración, cupo e idioma en cada ficha. La plaza se anota en este navegador.</p>
+          <p class="lead light">Cerro Ventana, Garganta del Diablo, Cueva del Toro, Villa Ventana y cabalgata. Cada salida tiene foto del lugar, duración y dificultad. La plaza se anota en este navegador.</p>
           <div class="hero-actions">
             <a class="btn" href="#reserva">Reservar plaza</a>
-            <a class="btn btn-ghost" href="#tours">Ver salidas</a>
+            <a class="btn btn-ghost" href="#visitar">Paisajes de la comarca</a>
           </div>
         </div>
         <aside class="local-card">
@@ -55,7 +58,7 @@
       <section class="section" id="tours">
         <p class="kicker">Catálogo</p>
         <h2>Excursiones</h2>
-        <p class="section-lead">Precio por persona. Tocá una tarjeta para el detalle y pedir plaza en una salida.</p>
+        <p class="section-lead">Precio por persona. En cada tarjeta: foto del lugar, duración y dificultad. Tocá para el detalle y pedir plaza.</p>
         <div class="filters" id="filters">
           <button class="active" data-filter="all" type="button">Todo</button>
           <button data-filter="trekking" type="button">Trekking</button>
@@ -65,11 +68,46 @@
         <div class="catalog-grid" id="catalog"></div>
       </section>
 
+      <section class="section" id="visitar">
+        <p class="kicker">Paisajes</p>
+        <h2>Qué visitar en la comarca</h2>
+        <p class="section-lead">Cerro, garganta, cueva, parque, pueblos, arroyo, golf y miradores. Tocá una tarjeta. Los senderos del parque se habilitan según el clima.</p>
+        <div class="lugares-grid" id="lugaresGrid"></div>
+      </section>
+
       <section class="section" id="guias">
         <p class="kicker">El equipo</p>
         <h2>Guías</h2>
         <img class="place-banner" src="img/tres-picos.jpg" alt="Cerro Tres Picos, partido de Tornquist">
         <div class="profesionales" id="guiasGrid"></div>
+      </section>
+
+      <section class="section" id="lugar">
+        <p class="kicker">Ubicación</p>
+        <h2>Sierra de la Ventana</h2>
+        <div class="map-block">
+          <div>
+            <div class="modules info-grid" style="grid-template-columns:1fr">
+              <article>
+                <h3>Punto de encuentro</h3>
+                <p>Av. San Martín 540</p>
+                <p>Sierra de la Ventana, partido de Tornquist</p>
+                <p>Algunas salidas salen del acceso al Parque Tornquist, RP 76 km 226.</p>
+              </article>
+              <article>
+                <h3>Qué llevar</h3>
+                <p>Agua, calzado con suela, gorra y documento. El cerro pide más piernas que la Garganta.</p>
+              </article>
+            </div>
+            <p class="map-caption"><a href="https://www.openstreetmap.org/?mlat=-38.1372&amp;mlon=-61.7958#map=15/-38.1372/-61.7958" target="_blank" rel="noopener">Ver mapa más grande</a></p>
+          </div>
+          <div>
+            <div class="map-embed">
+              <p class="map-fallback">Av. San Martín 540, Sierra de la Ventana</p>
+              <div id="mapa-local" class="map-canvas" role="img" aria-label="Mapa de Sierra de la Ventana"></div>
+            </div>
+          </div>
+        </div>
       </section>
 
       <section class="section" id="reserva">
@@ -143,6 +181,7 @@
   <div id="contacto"></div>
   <footer class="wrap">Senderos Tornquist · Av. San Martín 540, Sierra de la Ventana · demo de producto · no es una agencia en actividad.</footer>
 
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" crossorigin=""></script>
   <script src="data.js"></script>
   <script src="app.js"></script>
   <script src="../contacto.js" data-phone="5492915757934" data-text="Hola, quiero consultar por una excursión de Senderos Tornquist en Sierra de la Ventana" data-subject="Consulta demo — Senderos Tornquist" data-title="Consultar una salida"></script>

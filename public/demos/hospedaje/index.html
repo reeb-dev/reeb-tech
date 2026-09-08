@@ -13,6 +13,7 @@
     })();
   </script>
   <link rel="stylesheet" href="styles.css">
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" crossorigin="">
 </head>
 <body>
   <header class="top">
@@ -20,7 +21,9 @@
       <a class="logo" href="index.html">DEL SAUCE<small>Cabañas · Villa Ventana</small></a>
       <nav>
         <a href="#alojamientos">Alojamientos</a>
-        <a href="#lugar">El lugar</a>
+        <a href="#predio">El predio</a>
+        <a href="#visitar">Qué visitar</a>
+        <a href="#lugar">Mapa</a>
         <a href="#reserva">Reservar</a>
         <a class="btn" href="panel.html">Panel Admin</a>
       </nav>
@@ -33,12 +36,12 @@
       <div class="hero-shade"></div>
       <div class="wrap hero-inner">
         <div>
-          <p class="kicker light">Cabañas y alquiler temporario · Sierra de la Ventana</p>
+          <p class="kicker light">Cabañas entre sierras · Villa Ventana</p>
           <h1>Cabañas del Sauce</h1>
-          <p class="lead light">Seis unidades en Villa Ventana, partido de Tornquist. Arroyo, vista al cerro y pueblo. Reservá fechas desde la web; queda en este navegador para el panel.</p>
+          <p class="lead light">Unidades en Villa Ventana, entre el arroyo Sauce Grande y el cordón de Ventania. El predio, el pueblo y el Parque Tornquist a minutos. Reservá fechas; queda en este navegador.</p>
           <div class="hero-actions">
             <a class="btn" href="#reserva">Consultar fechas</a>
-            <a class="btn btn-ghost" href="#alojamientos">Ver cabañas</a>
+            <a class="btn btn-ghost" href="#visitar">Qué visitar cerca</a>
           </div>
         </div>
         <aside class="local-card">
@@ -65,23 +68,67 @@
         <div class="catalog-grid" id="catalog"></div>
       </section>
 
+      <section class="section" id="predio">
+        <p class="kicker">El entorno</p>
+        <h2>Cabañas entre sierras, no solo la unidad</h2>
+        <p class="section-lead">El predio queda en Villa Ventana: bosque, arroyo y vista al cordón. Las unidades son el punto de partida; el paisaje es el resto de la estadía.</p>
+        <div class="predio-grid">
+          <article class="predio-card">
+            <img src="img/cabanas.jpg" alt="Cabañas con pileta y las sierras al fondo en Villa Ventana">
+            <div>
+              <h3>Predio entre sierras</h3>
+              <p>Cabañas de ladrillo y madera, deck y césped. El cerro se ve desde el predio; el pueblo queda a pie.</p>
+            </div>
+          </article>
+          <article class="predio-card">
+            <img src="img/arroyo.jpg" alt="Arroyo Sauce Grande entre sauces en Villa Ventana">
+            <div>
+              <h3>Arroyo Sauce Grande</h3>
+              <p>El cauce pasa por Villa Ventana. Caminata suave, sombra de sauces y piedra en la orilla.</p>
+            </div>
+          </article>
+          <article class="predio-card">
+            <img src="img/cabana.jpg" alt="Cabaña de ladrillo y techo a dos aguas en Villa Ventana">
+            <div>
+              <h3>Cabaña con hogar</h3>
+              <p>Estufa a leña, jardín y bosque. Otoño y primavera son los más tranquilos en la comarca.</p>
+            </div>
+          </article>
+        </div>
+      </section>
+
+      <section class="section" id="visitar">
+        <p class="kicker">Paisajes</p>
+        <h2>Qué visitar cerca</h2>
+        <p class="section-lead">Lugares reales de la comarca. Tocá una tarjeta para el detalle. El Parque Tornquist cobra entrada; los senderos dependen del clima.</p>
+        <div class="lugares-grid" id="lugaresGrid"></div>
+      </section>
+
       <section class="section" id="lugar">
         <p class="kicker">Ubicación</p>
         <h2>Villa Ventana, partido de Tornquist</h2>
-        <img class="place-banner" src="img/sierras.jpg" alt="Sierras de Ventania desde un mirador">
-        <div class="modules info-grid">
-          <article>
-            <h3>Cómo llegar</h3>
-            <p>Ruta 76 hasta Sierra de la Ventana y desvío a Villa Ventana. Autopista a Bahía Blanca y 100 km de sierras.</p>
-          </article>
-          <article>
-            <h3>Alrededor</h3>
-            <p>Parque Provincial Ernesto Tornquist, Cerro Ventana, Garganta del Diablo y Cueva del Toro.</p>
-          </article>
-          <article>
-            <h3>Temporada</h3>
-            <p>Abierto todo el año. Otoño y primavera son los más tranquilos. Estufa a leña en las cabañas.</p>
-          </article>
+        <div class="map-block">
+          <div>
+            <div class="modules info-grid" style="grid-template-columns:1fr">
+              <article>
+                <h3>Dirección</h3>
+                <p>Calle Los Álamos s/n</p>
+                <p>Villa Ventana, Buenos Aires</p>
+                <p>A 17 km de Sierra de la Ventana por Ruta 76.</p>
+              </article>
+              <article>
+                <h3>Cómo llegar</h3>
+                <p>Ruta 76 hasta el desvío a Villa Ventana. Autopista a Bahía Blanca y unos 100 km de sierras.</p>
+              </article>
+            </div>
+            <p class="map-caption"><a href="https://www.openstreetmap.org/?mlat=-38.0694&amp;mlon=-61.9333#map=14/-38.0694/-61.9333" target="_blank" rel="noopener">Ver mapa más grande</a></p>
+          </div>
+          <div>
+            <div class="map-embed">
+              <p class="map-fallback">Calle Los Álamos s/n, Villa Ventana</p>
+              <div id="mapa-local" class="map-canvas" role="img" aria-label="Mapa de Villa Ventana, partido de Tornquist"></div>
+            </div>
+          </div>
         </div>
       </section>
 
@@ -159,6 +206,7 @@
   <div id="contacto"></div>
   <footer class="wrap">Cabañas del Sauce · Calle Los Álamos s/n, Villa Ventana · demo de producto · no es un hospedaje en actividad.</footer>
 
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" crossorigin=""></script>
   <script src="data.js"></script>
   <script src="app.js"></script>
   <script src="../contacto.js" data-phone="5492915757934" data-text="Hola, quiero consultar por una cabaña en Del Sauce, Villa Ventana" data-subject="Consulta demo — Cabañas del Sauce" data-title="Consultar estadía"></script>

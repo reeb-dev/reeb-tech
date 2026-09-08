@@ -12,6 +12,81 @@ const LOCAL = {
   whatsapp: "5492915757934"
 };
 
+const LUGARES = [
+  {
+    id: "cerro",
+    nombre: "Cerro Ventana",
+    resumen: "La postal del parque, a minutos del predio.",
+    texto: "Monumento natural dentro del Parque Tornquist. Desde El Palomar se llega por Ruta 76 hasta la Base Cerro Ventana (km 226).",
+    foto: "img/cerro-ventana.jpg",
+    tags: ["Parque Tornquist"]
+  },
+  {
+    id: "garganta",
+    nombre: "Garganta del Diablo",
+    resumen: "Cañadón del parque. Media jornada.",
+    texto: "Sendero de paredones y arroyo. Conviene calzado con suela y consultar si el sendero está habilitado.",
+    foto: "img/garganta.jpg",
+    tags: ["Parque Tornquist"]
+  },
+  {
+    id: "cueva",
+    nombre: "Cueva del Toro",
+    resumen: "Cuarcita y cueva.",
+    texto: "Formaciones del sistema de Ventania. Recorrido con linterna; cupo chico.",
+    foto: "img/cueva.jpg",
+    tags: ["Geología"]
+  },
+  {
+    id: "parque",
+    nombre: "Parque Provincial Ernesto Tornquist",
+    resumen: "A minutos por Ruta 76.",
+    texto: "El predio queda cerca de la Base Cerro Ventana. Miradores, senderos cortos y el cerro. Entrada al parque aparte.",
+    foto: "img/tornquist.jpg",
+    tags: ["RP 76 km 226"]
+  },
+  {
+    id: "villa",
+    nombre: "Villa Ventana",
+    resumen: "Bosque y arroyo, unos 20 minutos.",
+    texto: "Pueblo de ripio y casas de té. Buen paseo si no se sale al cerro ese día.",
+    foto: "img/villa-cartel.jpg",
+    tags: ["Pueblo"]
+  },
+  {
+    id: "pueblo",
+    nombre: "Sierra de la Ventana",
+    resumen: "Av. San Martín y servicios.",
+    texto: "La localidad sobre el Sauce Grande. Comercios, golf del pueblo y el cauce.",
+    foto: "img/pueblo-calle.jpg",
+    tags: ["Pueblo"]
+  },
+  {
+    id: "arroyo",
+    nombre: "Arroyo Sauce Grande",
+    resumen: "Sendero Sauce, en el predio y afuera.",
+    texto: "El arroyo recorre la comarca. En El Palomar hay un tramo para caminar a la tarde.",
+    foto: "img/arroyo.jpg",
+    tags: ["Predio"]
+  },
+  {
+    id: "miradores",
+    nombre: "Miradores",
+    resumen: "Vistas al cordón y al valle.",
+    texto: "Miradores del parque y del cerro Ceferino. Desde arriba se ven los pueblos y las sierras.",
+    foto: "img/mirador.jpg",
+    tags: ["Vistas"]
+  },
+  {
+    id: "sierras",
+    nombre: "Sierras de Ventania",
+    resumen: "El horizonte de todo el predio.",
+    texto: "Cordón de cuarcita del sudoeste bonaerense. Se ve desde la cancha, la pileta y las habitaciones.",
+    foto: "img/sierras-panorama.jpg",
+    tags: ["Ventania"]
+  }
+];
+
 const STATUSES = [
   { id: "pendiente", label: "Pendiente" },
   { id: "confirmada", label: "Confirmada" },
