@@ -38,19 +38,208 @@
       </aside>
     </section>
 
-    <section class="section" id="menu">
+    <section class="section carta" id="menu">
       <div class="catalog-header">
-        <h2>La carta</h2>
+        <div class="carta-intro">
+          <p class="kicker">Parrilla · Palermo</p>
+          <h2>Nuestra carta</h2>
+        </div>
         <div class="filters" id="filters">
           <button class="active" data-filter="all" type="button">Todo</button>
           <button data-filter="entrada" type="button">Entradas</button>
           <button data-filter="principal" type="button">Principales</button>
           <button data-filter="guarnicion" type="button">Guarniciones</button>
           <button data-filter="postre" type="button">Postres</button>
-          <button data-filter="bebida" type="button">Vinos y bebidas</button>
+          <button data-filter="bebida" type="button">Bebidas</button>
         </div>
       </div>
-      <div id="catalog"></div>
+      <div id="catalog">
+        <section class="menu-section" data-cat="entrada">
+          <h3>Entradas</h3>
+          <div class="menu-grid">
+            <article class="plato-card" data-id="m1" data-cat="entrada">
+              <div class="plato-photo"><img src="img/provoleta.jpg" alt="Provoleta"></div>
+              <div class="plato-body">
+                <h4>Provoleta</h4>
+                <p>Queso provolone a la parrilla, orégano y aceite de oliva.</p>
+                <div class="plato-foot"><span class="plato-precio">$ 7.800</span></div>
+              </div>
+            </article>
+            <article class="plato-card" data-id="m2" data-cat="entrada">
+              <div class="plato-photo"><img src="img/empanadas.jpg" alt="Empanadas de carne"></div>
+              <div class="plato-body">
+                <h4>Empanadas de carne</h4>
+                <p>Tres empanadas fritas, carne cortada a cuchillo.</p>
+                <div class="plato-foot"><span class="plato-precio">$ 5.200</span></div>
+              </div>
+            </article>
+            <article class="plato-card" data-id="m3" data-cat="entrada">
+              <div class="plato-photo"><img src="img/tabla.jpg" alt="Tabla de fiambres"></div>
+              <div class="plato-body">
+                <h4>Tabla de fiambres</h4>
+                <p>Jamón, salame, quesos y aceitunas, para compartir.</p>
+                <div class="plato-foot"><span class="plato-precio">$ 14.800</span></div>
+              </div>
+            </article>
+          </div>
+        </section>
+        <section class="menu-section" data-cat="principal">
+          <h3>Principales</h3>
+          <div class="menu-grid">
+            <article class="plato-card" data-id="m4" data-cat="principal">
+              <div class="plato-photo"><img src="img/bife-chorizo.jpg" alt="Bife de chorizo"></div>
+              <div class="plato-body">
+                <h4>Bife de chorizo</h4>
+                <p>Corte jugoso a la parrilla. Pedilo jugoso, a punto o cocido.</p>
+                <div class="plato-foot"><span class="plato-precio">$ 19.800</span></div>
+              </div>
+            </article>
+            <article class="plato-card" data-id="m5" data-cat="principal">
+              <div class="plato-photo"><img src="img/ojo-bife.jpg" alt="Ojo de bife"></div>
+              <div class="plato-body">
+                <h4>Ojo de bife</h4>
+                <p>Bife ancho con hueso, a la parrilla.</p>
+                <div class="plato-foot"><span class="plato-precio">$ 22.400</span></div>
+              </div>
+            </article>
+            <article class="plato-card" data-id="m6" data-cat="principal">
+              <div class="plato-photo"><img src="img/asado.jpg" alt="Asado a la parrilla"></div>
+              <div class="plato-body">
+                <h4>Asado a la parrilla</h4>
+                <p>Parrillada de cortes, chorizo y achuras, con chimichurri.</p>
+                <div class="plato-foot"><span class="plato-precio">$ 18.600</span></div>
+              </div>
+            </article>
+            <article class="plato-card" data-id="m7" data-cat="principal">
+              <div class="plato-photo"><img src="img/milanesa.jpg" alt="Milanesa napolitana"></div>
+              <div class="plato-body">
+                <h4>Milanesa napolitana</h4>
+                <p>Napolitana con jamón, salsa de tomate y muzzarella.</p>
+                <div class="plato-foot"><span class="plato-precio">$ 16.200</span></div>
+              </div>
+            </article>
+            <article class="plato-card" data-id="m8" data-cat="principal">
+              <div class="plato-photo"><img src="img/pastas.jpg" alt="Penne a la bolognesa"></div>
+              <div class="plato-body">
+                <h4>Penne a la bolognesa</h4>
+                <p>Pasta al dente con salsa de carne y queso rallado.</p>
+                <div class="plato-foot"><span class="plato-precio">$ 12.400</span></div>
+              </div>
+            </article>
+            <article class="plato-card" data-id="m9" data-cat="principal">
+              <div class="plato-photo"><img src="img/risotto.jpg" alt="Risotto de hongos"></div>
+              <div class="plato-body">
+                <h4>Risotto de hongos</h4>
+                <p>Arroz cremoso con hongos y queso.</p>
+                <div class="plato-foot"><span class="plato-precio">$ 13.600</span></div>
+              </div>
+            </article>
+            <article class="plato-card is-off" data-id="m10" data-cat="principal">
+              <div class="plato-photo"><img src="img/pescado.jpg" alt="Salmón a la plancha"></div>
+              <div class="plato-body">
+                <h4>Salmón a la plancha</h4>
+                <p>Salmón grillado con vegetales. Hoy no hay.</p>
+                <div class="plato-foot"><span class="plato-precio">$ 21.800</span><span class="plato-off">Hoy no</span></div>
+              </div>
+            </article>
+            <article class="plato-card" data-id="m20" data-cat="principal">
+              <div class="plato-photo"><img src="img/hero-salon.jpg" alt="Menú del mediodía"></div>
+              <div class="plato-body">
+                <h4>Menú del mediodía</h4>
+                <p>Plato del día + guarnición + bebida. Martes a viernes, almuerzo.</p>
+                <div class="plato-foot"><span class="plato-precio">$ 15.600</span></div>
+              </div>
+            </article>
+          </div>
+        </section>
+        <section class="menu-section" data-cat="guarnicion">
+          <h3>Guarniciones</h3>
+          <div class="menu-grid">
+            <article class="plato-card" data-id="m11" data-cat="guarnicion">
+              <div class="plato-photo"><img src="img/papas.jpg" alt="Papas fritas"></div>
+              <div class="plato-body">
+                <h4>Papas fritas</h4>
+                <p>Porción de papas fritas crocantes.</p>
+                <div class="plato-foot"><span class="plato-precio">$ 4.800</span></div>
+              </div>
+            </article>
+            <article class="plato-card" data-id="m12" data-cat="guarnicion">
+              <div class="plato-photo"><img src="img/pure.jpg" alt="Puré de papas"></div>
+              <div class="plato-body">
+                <h4>Puré de papas</h4>
+                <p>Puré casero, manteca y un toque de nuez moscada.</p>
+                <div class="plato-foot"><span class="plato-precio">$ 4.200</span></div>
+              </div>
+            </article>
+            <article class="plato-card" data-id="m13" data-cat="guarnicion">
+              <div class="plato-photo"><img src="img/ensalada.jpg" alt="Ensalada mixta"></div>
+              <div class="plato-body">
+                <h4>Ensalada mixta</h4>
+                <p>Lechuga, tomate y cebolla, con aceite y vinagre.</p>
+                <div class="plato-foot"><span class="plato-precio">$ 4.500</span></div>
+              </div>
+            </article>
+          </div>
+        </section>
+        <section class="menu-section" data-cat="postre">
+          <h3>Postres</h3>
+          <div class="menu-grid">
+            <article class="plato-card" data-id="m14" data-cat="postre">
+              <div class="plato-photo"><img src="img/flan.jpg" alt="Flan con dulce de leche"></div>
+              <div class="plato-body">
+                <h4>Flan con dulce de leche</h4>
+                <p>Flan casero con caramelo y dulce de leche.</p>
+                <div class="plato-foot"><span class="plato-precio">$ 5.800</span></div>
+              </div>
+            </article>
+            <article class="plato-card" data-id="m15" data-cat="postre">
+              <div class="plato-photo"><img src="img/panqueque.jpg" alt="Panqueque de dulce de leche"></div>
+              <div class="plato-body">
+                <h4>Panqueque de dulce de leche</h4>
+                <p>Panqueque tibio, relleno de dulce de leche.</p>
+                <div class="plato-foot"><span class="plato-precio">$ 6.200</span></div>
+              </div>
+            </article>
+          </div>
+        </section>
+        <section class="menu-section" data-cat="bebida">
+          <h3>Bebidas</h3>
+          <div class="menu-grid">
+            <article class="plato-card" data-id="m16" data-cat="bebida">
+              <div class="plato-photo"><img src="img/malbec.jpg" alt="Copa de malbec"></div>
+              <div class="plato-body">
+                <h4>Copa de malbec</h4>
+                <p>Copa de malbec de la casa.</p>
+                <div class="plato-foot"><span class="plato-precio">$ 4.900</span></div>
+              </div>
+            </article>
+            <article class="plato-card" data-id="m17" data-cat="bebida">
+              <div class="plato-photo"><img src="img/malbec-botella.jpg" alt="Malbec botella"></div>
+              <div class="plato-body">
+                <h4>Malbec botella</h4>
+                <p>Botella de malbec para la mesa.</p>
+                <div class="plato-foot"><span class="plato-precio">$ 16.800</span></div>
+              </div>
+            </article>
+            <article class="plato-card" data-id="m18" data-cat="bebida">
+              <div class="plato-photo"><img src="img/agua.jpg" alt="Agua mineral 500 ml"></div>
+              <div class="plato-body">
+                <h4>Agua mineral 500 ml</h4>
+                <p>Agua sin gas.</p>
+                <div class="plato-foot"><span class="plato-precio">$ 2.200</span></div>
+              </div>
+            </article>
+            <article class="plato-card" data-id="m19" data-cat="bebida">
+              <div class="plato-photo"><img src="img/gaseosa.jpg" alt="Gaseosa de línea"></div>
+              <div class="plato-body">
+                <h4>Gaseosa de línea</h4>
+                <p>Vaso de gaseosa de la casa.</p>
+                <div class="plato-foot"><span class="plato-precio">$ 2.800</span></div>
+              </div>
+            </article>
+          </div>
+        </section>
+      </div>
       <div class="admin-link">
         <p>¿Sos quien atiende el salón?</p>
         <a class="btn" href="panel.html">Abrir mesas, cocina y carta</a>
@@ -163,43 +352,17 @@
     }
 
     function renderMenu() {
-      const filtered = currentFilter === "all"
-        ? carta
-        : carta.filter((p) => p.categoria === currentFilter);
-
-      const order = ["entrada", "principal", "guarnicion", "postre", "bebida"];
-      const grouped = {};
-      filtered.forEach((item) => {
-        if (!grouped[item.categoria]) grouped[item.categoria] = [];
-        grouped[item.categoria].push(item);
-      });
-
-      const cats = Object.keys(grouped).sort((a, b) => order.indexOf(a) - order.indexOf(b));
-      document.getElementById("catalog").innerHTML = cats.map((cat) => `
-        <div class="menu-section">
-          <h3>${esc(catLabel(cat))}</h3>
-          <div class="menu-grid">
-            ${grouped[cat].map((item) => `
-              <article class="menu-card ${item.disponible ? "" : "unavailable"}" data-id="${esc(item.id)}">
-                <div class="card-photo">
-                  <img src="${esc(fotoPlato(item))}" alt="${esc(item.nombre)}" loading="lazy">
-                </div>
-                <div class="menu-card-body">
-                  <h4>${esc(item.nombre)}</h4>
-                  <p class="desc">${esc(item.descripcion || "")}</p>
-                  <div class="price-row">
-                    <span class="price">${esc(money(item.precio))}</span>
-                    <span class="disp ${item.disponible ? "si" : "no"}">${item.disponible ? "Disponible" : "No disponible"}</span>
-                  </div>
-                </div>
-              </article>
-            `).join("")}
-          </div>
-        </div>
-      `).join("");
-
-      document.querySelectorAll(".menu-card").forEach((card) => {
-        card.addEventListener("click", () => openPlato(card.dataset.id));
+      const catalog = document.getElementById("catalog");
+      if (!catalog) return;
+      catalog.querySelectorAll(".menu-section").forEach((section) => {
+        const cards = section.querySelectorAll(".plato-card");
+        let visible = 0;
+        cards.forEach((card) => {
+          const show = currentFilter === "all" || card.dataset.cat === currentFilter;
+          card.hidden = !show;
+          if (show) visible += 1;
+        });
+        section.hidden = visible === 0;
       });
     }
 
@@ -223,6 +386,11 @@
     document.getElementById("plato-modal-close").addEventListener("click", closePlato);
     document.getElementById("plato-modal").addEventListener("click", (ev) => {
       if (ev.target.id === "plato-modal") closePlato();
+    });
+
+    document.getElementById("catalog").addEventListener("click", (ev) => {
+      const card = ev.target.closest(".plato-card");
+      if (card) openPlato(card.dataset.id);
     });
 
     document.querySelectorAll("#filters button").forEach((btn) => {
