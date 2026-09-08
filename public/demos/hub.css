@@ -478,6 +478,79 @@ img { display: block; width: 100%; height: 100%; object-fit: cover; }
 
 .who-mail a:hover { text-decoration: underline; }
 
+.who-demos {
+  margin-top: 20px;
+  padding-top: 16px;
+  border-top: 1px solid var(--line);
+}
+
+.who-demos summary {
+  cursor: pointer;
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--gold);
+  list-style: none;
+}
+
+.who-demos summary::-webkit-details-marker,
+.who-demos summary::marker {
+  display: none;
+  content: "";
+}
+
+.who-demos summary::after {
+  content: " +";
+  font-weight: 650;
+  color: var(--muted);
+}
+
+.who-demos[open] summary::after {
+  content: " −";
+}
+
+.who-demos-list {
+  list-style: none;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0 12px;
+  margin-top: 12px;
+  max-height: 260px;
+  overflow-y: auto;
+  padding-right: 4px;
+}
+
+.who-demos-group {
+  grid-column: 1 / -1;
+  margin-top: 10px;
+  padding-top: 8px;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--gold);
+  border-top: 1px solid var(--line);
+}
+
+.who-demos-group:first-child {
+  margin-top: 0;
+  padding-top: 0;
+  border-top: 0;
+}
+
+.who-demos-list a {
+  display: block;
+  font-size: 13px;
+  line-height: 1.3;
+  padding: 5px 0;
+  color: var(--ink);
+}
+
+.who-demos-list a:hover {
+  color: var(--gold);
+}
+
 .who-benefits {
   max-width: 1120px;
   margin: 40px auto 0;
@@ -1206,4 +1279,6 @@ img { display: block; width: 100%; height: 100%; object-fit: cover; }
 
   .price-extras { grid-template-columns: 1fr; }
   .price-explain { grid-template-columns: 1fr; }
+
+  .who-demos-list { max-height: 200px; }
 }
