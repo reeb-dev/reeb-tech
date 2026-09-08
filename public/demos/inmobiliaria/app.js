@@ -1,4 +1,4 @@
-const properties = seed();
+let properties = load();
 const favorites = new Set();
 let currentFilters = {
   operacion: "",
@@ -10,6 +10,7 @@ let currentFilters = {
 let currentView = "grid";
 let currentProperty = null;
 let currentImageIndex = 0;
+let countedViewId = null;
 
 function formatPrice(price, operacion) {
   if (operacion === "venta") {
@@ -173,8 +174,8 @@ function renderProperties() {
             ${p.cochera ? "<span>Cochera</span>" : ""}
           </div>
           <div class="stats">
-            <span>${p.vistas} vistas</span>
-            <span>${p.consultas} consultas</span>
+            <span>${Number(p.vistas || 0)} visitas</span>
+            <span>${Number(p.consultas || 0)} consultas</span>
             <span>${p.diasPublicada} días</span>
           </div>
         </div>
@@ -183,10 +184,37 @@ function renderProperties() {
   }).join("");
 }
 
+function refreshListingStats() {
+  if (currentProperty) {
+    const vistasEl = document.querySelector("[data-stat-vistas]");
+    const consultasEl = document.querySelector("[data-stat-consultas]");
+    if (vistasEl) vistasEl.textContent = Number(currentProperty.vistas || 0);
+    if (consultasEl) consultasEl.textContent = Number(currentProperty.consultas || 0);
+  }
+  renderProperties();
+}
+
+function showFichaToast(message) {
+  document.querySelector(".ficha-toast")?.remove();
+  const toast = document.createElement("div");
+  toast.className = "ficha-toast";
+  toast.textContent = message;
+  document.body.appendChild(toast);
+  window.setTimeout(() => toast.remove(), 2800);
+}
+
 function openModal(id) {
-  currentProperty = properties.find((p) => p.id === id);
+  const found = properties.find((p) => p.id === id);
+  if (!found) return;
+
+  const isNewOpen = countedViewId !== id;
+  currentProperty = found;
   currentImageIndex = 0;
-  if (!currentProperty) return;
+
+  if (isNewOpen) {
+    countedViewId = id;
+    recordListingView(properties, id);
+  }
 
   updateModalImage();
 
@@ -270,11 +298,11 @@ function openModal(id) {
 
     <div class="modal-stats">
       <div class="stat">
-        <div class="value">${p.vistas}</div>
-        <div class="label">Vistas</div>
+        <div class="value" data-stat-vistas>${Number(p.vistas || 0)}</div>
+        <div class="label">Visitas</div>
       </div>
       <div class="stat">
-        <div class="value">${p.consultas}</div>
+        <div class="value" data-stat-consultas>${Number(p.consultas || 0)}</div>
         <div class="label">Consultas</div>
       </div>
       <div class="stat">
@@ -290,23 +318,31 @@ function openModal(id) {
     <div class="modal-contact">
       <div>
         <h4>¿Te interesa esta propiedad?</h4>
-        <p>Número y mail de ejemplo. El mensaje no sale a un servidor.</p>
+        <p>Consulta de ejemplo. El mensaje no sale a un servidor.</p>
       </div>
       <div class="btns">
-        <a href="#" class="btn-whatsapp">WhatsApp</a>
-        <a href="tel:+5491140001234" class="btn-call">Llamar</a>
+        <a class="btn-ficha-wa" data-consulta="wa" href="${esc(propertyWaUrl(p))}" target="_blank" rel="noopener">WhatsApp</a>
+        <a class="btn-ficha-call" data-consulta="call" href="tel:+5491140001234">Llamar</a>
       </div>
+      <form class="modal-consulta" id="modalConsulta" novalidate>
+        <input name="nombre" autocomplete="name" placeholder="Nombre">
+        <input name="email" type="email" autocomplete="email" required placeholder="correo@ejemplo.com">
+        <textarea name="mensaje" required placeholder="Consulta sobre ${esc(p.titulo)}"></textarea>
+        <button type="submit">Consultar</button>
+      </form>
     </div>
   `;
 
   document.getElementById("modal").classList.add("open");
   document.body.style.overflow = "hidden";
+  renderProperties();
 }
 
 function closeModal() {
   document.getElementById("modal").classList.remove("open");
   document.body.style.overflow = "";
   currentProperty = null;
+  countedViewId = null;
 }
 
 function updateModalImage() {
@@ -391,6 +427,34 @@ document.addEventListener("keydown", (e) => {
 
 document.getElementById("modal").addEventListener("click", (e) => {
   if (e.target.id === "modal") closeModal();
+});
+
+document.getElementById("modalContent").addEventListener("click", (event) => {
+  const action = event.target.closest("[data-consulta]");
+  if (!action || !currentProperty) return;
+  recordListingConsulta(properties, currentProperty.id);
+  refreshListingStats();
+});
+
+document.getElementById("modalContent").addEventListener("submit", (event) => {
+  const form = event.target.closest("#modalConsulta");
+  if (!form || !currentProperty) return;
+  event.preventDefault();
+  const data = new FormData(form);
+  const email = String(data.get("email") || "").trim();
+  const mensaje = String(data.get("mensaje") || "").trim();
+  if (!email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+    showFichaToast("Ingresá un email válido.");
+    return;
+  }
+  if (!mensaje) {
+    showFichaToast("El mensaje no puede estar vacío.");
+    return;
+  }
+  recordListingConsulta(properties, currentProperty.id);
+  form.reset();
+  showFichaToast("Consulta enviada (demo)");
+  refreshListingStats();
 });
 
 populateBarrios();

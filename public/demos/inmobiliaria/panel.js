@@ -106,9 +106,11 @@ function render() {
       <td>${esc(opLabel(item.operacion))}</td>
       <td>${esc(item.barrio)}</td>
       <td class="amount">${item.operacion === "venta" ? esc(money(item.precio, true)) : esc(money(item.precio))}</td>
+      <td class="amount">${Number(item.vistas || 0)}</td>
+      <td class="amount">${Number(item.consultas || 0)}</td>
       <td><span class="tag ${esc(item.status)}">${esc(label(item.status))}</span></td>
     </tr>`;
-  }).join("") || `<tr><td colspan="7">No hay propiedades en este estado.</td></tr>`;
+  }).join("") || `<tr><td colspan="9">No hay propiedades en este estado.</td></tr>`;
 
   document.querySelectorAll(".row").forEach((row) => {
     row.addEventListener("click", () => {
@@ -139,6 +141,10 @@ function render() {
       <div><span>Ambientes</span>${item.ambientes || "—"}</div>
       ${item.expensas ? `<div><span>Expensas</span>${esc(money(item.expensas))}</div>` : ""}
       ${item.cliente ? `<div><span>Cliente</span>${esc(item.cliente.nombre)}</div>` : ""}
+    </div>
+    <div class="metric-box">
+      <div><span>Visitas al anuncio</span><strong>${Number(item.vistas || 0)}</strong></div>
+      <div><span>Consultas</span><strong>${Number(item.consultas || 0)}</strong></div>
     </div>
     
     ${item.factura ? `
@@ -205,7 +211,7 @@ function render() {
     </form>
     ${(item.visitas || []).length > 0 ? `
       <div class="visitas">
-        <h3>Visitas registradas</h3>
+        <h3>Visitas presenciales</h3>
         ${item.visitas.map((v) => `
           <div class="visita-item">
             <strong>${esc(v.fecha)}</strong> — ${esc(v.cliente)}<br>

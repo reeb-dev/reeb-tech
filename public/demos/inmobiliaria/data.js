@@ -120,8 +120,8 @@ function seed() {
       status: "disponible",
       destacado: true,
       nuevo: false,
-      vistas: 234,
-      consultas: 12,
+      vistas: 14,
+      consultas: 2,
       diasPublicada: 15,
       precioM2Zona: 12000,
       cliente: null,
@@ -159,8 +159,8 @@ function seed() {
       status: "disponible",
       destacado: true,
       nuevo: false,
-      vistas: 567,
-      consultas: 28,
+      vistas: 22,
+      consultas: 4,
       diasPublicada: 22,
       precioM2Zona: 2100,
       cliente: null,
@@ -199,8 +199,8 @@ function seed() {
       status: "alquilada",
       destacado: false,
       nuevo: true,
-      vistas: 189,
-      consultas: 15,
+      vistas: 8,
+      consultas: 1,
       diasPublicada: 8,
       precioM2Zona: 13500,
       cliente: { nombre: "Sofía Paredes", tel: "11-4444-5678", desde: "1 sep" },
@@ -236,8 +236,8 @@ function seed() {
       status: "disponible",
       destacado: true,
       nuevo: false,
-      vistas: 423,
-      consultas: 19,
+      vistas: 18,
+      consultas: 3,
       diasPublicada: 30,
       precioM2Zona: 2100,
       cliente: null,
@@ -275,8 +275,8 @@ function seed() {
       status: "disponible",
       destacado: false,
       nuevo: false,
-      vistas: 156,
-      consultas: 8,
+      vistas: 6,
+      consultas: 1,
       diasPublicada: 60,
       precioM2Zona: 11000,
       cliente: null,
@@ -311,8 +311,8 @@ function seed() {
       status: "reservada",
       destacado: false,
       nuevo: false,
-      vistas: 245,
-      consultas: 11,
+      vistas: 11,
+      consultas: 2,
       diasPublicada: 22,
       precioM2Zona: 15000,
       cliente: { nombre: "Estudio Contable Ruiz", tel: "11-3333-9999", desde: "6 sep" },
@@ -349,8 +349,8 @@ function seed() {
       status: "disponible",
       destacado: true,
       nuevo: true,
-      vistas: 892,
-      consultas: 45,
+      vistas: 28,
+      consultas: 5,
       diasPublicada: 5,
       precioM2Zona: 3200,
       cliente: null,
@@ -385,8 +385,8 @@ function seed() {
       status: "disponible",
       destacado: true,
       nuevo: false,
-      vistas: 567,
-      consultas: 23,
+      vistas: 19,
+      consultas: 3,
       diasPublicada: 12,
       precioM2Zona: 35000,
       cliente: null,
@@ -421,8 +421,8 @@ function seed() {
       status: "disponible",
       destacado: true,
       nuevo: false,
-      vistas: 1234,
-      consultas: 56,
+      vistas: 31,
+      consultas: 4,
       diasPublicada: 60,
       precioM2Zona: 4500,
       cliente: null,
@@ -457,8 +457,8 @@ function seed() {
       status: "disponible",
       destacado: false,
       nuevo: true,
-      vistas: 345,
-      consultas: 18,
+      vistas: 9,
+      consultas: 2,
       diasPublicada: 3,
       precioM2Zona: 14000,
       cliente: null,
@@ -493,8 +493,8 @@ function seed() {
       status: "disponible",
       destacado: false,
       nuevo: false,
-      vistas: 198,
-      consultas: 9,
+      vistas: 7,
+      consultas: 1,
       diasPublicada: 18,
       precioM2Zona: 2400,
       cliente: null,
@@ -529,8 +529,8 @@ function seed() {
       status: "disponible",
       destacado: false,
       nuevo: true,
-      vistas: 276,
-      consultas: 14,
+      vistas: 12,
+      consultas: 2,
       diasPublicada: 9,
       precioM2Zona: 1300,
       cliente: null,
@@ -542,7 +542,8 @@ function seed() {
   ];
 }
 
-const STORAGE_KEY = "inmobiliaria-demo-v2";
+const STORAGE_KEY = "inmobiliaria-demo-v3";
+const DEMO_WA_PHONE = "5491140001234";
 
 function load() {
   const raw = localStorage.getItem(STORAGE_KEY);
@@ -556,6 +557,27 @@ function load() {
 
 function save(items) {
   localStorage.setItem(STORAGE_KEY, JSON.stringify(items));
+}
+
+function recordListingView(list, id) {
+  const item = list.find((p) => p.id === id);
+  if (!item) return null;
+  item.vistas = Number(item.vistas || 0) + 1;
+  save(list);
+  return item;
+}
+
+function recordListingConsulta(list, id) {
+  const item = list.find((p) => p.id === id);
+  if (!item) return null;
+  item.consultas = Number(item.consultas || 0) + 1;
+  save(list);
+  return item;
+}
+
+function propertyWaUrl(p) {
+  const text = `Hola, quiero consultar por ${p.codigo}: ${p.titulo}`;
+  return "https://wa.me/" + DEMO_WA_PHONE + "?text=" + encodeURIComponent(text);
 }
 
 function label(status) {
