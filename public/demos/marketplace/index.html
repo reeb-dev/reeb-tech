@@ -1,0 +1,250 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>MercadoDemo — Marketplace de Compra y Venta</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Nunito+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css">
+  <style>body { font-family: "Nunito Sans", "Segoe UI", sans-serif; }</style>
+</head>
+<body>
+
+  <!-- Header ML style -->
+  <header class="top">
+    <div class="top-inner">
+      <a href="#" class="logo">
+        MercadoDemo
+        <small>Comprá y vendé online</small>
+      </a>
+      <div class="search-bar">
+        <input type="text" placeholder="Buscar productos, marcas y más...">
+        <button>🔍</button>
+      </div>
+      <nav>
+        <a href="#">Creá tu cuenta</a>
+        <a href="#">Ingresá</a>
+        <a href="#">Mis compras</a>
+        <button class="cart-btn">🛒 <span class="cart-badge">3</span></button>
+      </nav>
+    </div>
+  </header>
+
+  <!-- Categories -->
+  <div class="categories-bar">
+    <div class="wrap">
+      <a href="#">Electrónica</a>
+      <a href="#">Celulares</a>
+      <a href="#">Computación</a>
+      <a href="#">Electrodomésticos</a>
+      <a href="#">Hogar</a>
+      <a href="#">Deportes</a>
+      <a href="#">Herramientas</a>
+      <a href="#">Construcción</a>
+      <a href="#">Moda</a>
+      <a href="#">Juguetes</a>
+      <a href="#">Bebés</a>
+      <a href="#">Más categorías</a>
+    </div>
+  </div>
+
+  <!-- Hero -->
+  <main class="wrap">
+    <section class="hero">
+      <div>
+        <span class="kicker">Marketplace Argentino</span>
+        <h1>Comprá y vendé de todo en un solo lugar</h1>
+        <p class="lead">
+          El marketplace más grande de Argentina. Publicá tus productos gratis, 
+          llegá a millones de compradores y gestioná tu negocio online con envíos, 
+          pagos y facturación integrados.
+        </p>
+        <div style="display:flex; gap:12px; margin-top:24px;">
+          <a href="panel.html" class="btn amarillo">Empezá a vender</a>
+          <a href="#" class="btn">Explorar productos</a>
+        </div>
+      </div>
+      <div class="product-preview">
+        <div class="prod-card">
+          <div class="img"><img src="https://images.unsplash.com/photo-1511707171634-5f897ff02aa9?w=200&h=200&fit=crop" alt="Celular"></div>
+          <div class="price">$ 549.999</div>
+          <div class="cuotas">Hasta 12 cuotas sin interés</div>
+          <div class="title">Samsung Galaxy S24 Ultra 256GB</div>
+          <div class="envio">Envío gratis</div>
+          <div class="location">Capital Federal</div>
+        </div>
+        <div class="prod-card">
+          <div class="img"><img src="https://images.unsplash.com/photo-1517336714731-489689fd1ca8?w=200&h=200&fit=crop" alt="Laptop"></div>
+          <div class="price">$ 1.299.000</div>
+          <div class="cuotas">Mismo precio en 6 cuotas</div>
+          <div class="title">MacBook Air M3 15" 512GB SSD</div>
+          <div class="envio">Envío gratis</div>
+          <div class="location">Buenos Aires</div>
+        </div>
+        <div class="prod-card">
+          <div class="img"><img src="https://images.unsplash.com/photo-1606220945770-b5b6c2c55bf1?w=200&h=200&fit=crop" alt="Auriculares"></div>
+          <div class="price">$ 89.999</div>
+          <div class="cuotas">3 cuotas sin interés</div>
+          <div class="title">AirPods Pro 2da Generación</div>
+          <div class="envio">Envío gratis</div>
+          <div class="location">Córdoba</div>
+        </div>
+        <div class="prod-card">
+          <div class="img"><img src="https://images.unsplash.com/photo-1434493789847-2a75b0eb9a9f?w=200&h=200&fit=crop" alt="Smartwatch"></div>
+          <div class="price">$ 349.999</div>
+          <div class="cuotas">6 cuotas sin interés</div>
+          <div class="title">Apple Watch Ultra 2 49mm GPS</div>
+          <div class="envio">Envío gratis</div>
+          <div class="location">Rosario</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Modules -->
+    <section class="section">
+      <div class="section-header">
+        <h2>Todo lo que necesitás para vender</h2>
+        <a href="panel.html" class="btn">Ir al panel</a>
+      </div>
+      <div class="modules">
+        <article>
+          <div class="mod-icon"><img src="https://images.unsplash.com/photo-1586528116311-ad8dd3c8310d?w=60&h=60&fit=crop" alt="Publicaciones"></div>
+          <h3>Publicaciones</h3>
+          <p>Creá publicaciones gratuitas o premium. Gestioná stock, precios y variantes desde un solo lugar.</p>
+        </article>
+        <article>
+          <div class="mod-icon"><img src="https://images.unsplash.com/photo-1607082348824-0a96f2a4b9da?w=60&h=60&fit=crop" alt="Categorías"></div>
+          <h3>Categorías</h3>
+          <p>Más de 1000 categorías disponibles. Clasificá tus productos para mejor visibilidad.</p>
+        </article>
+        <article>
+          <div class="mod-icon"><img src="https://images.unsplash.com/photo-1577563908411-5077b6dc7624?w=60&h=60&fit=crop" alt="Preguntas"></div>
+          <h3>Preguntas</h3>
+          <p>Respondé consultas de compradores al instante. Mejor respuesta = más ventas.</p>
+        </article>
+        <article>
+          <div class="mod-icon"><img src="https://images.unsplash.com/photo-1556742049-0cfed4f6a45d?w=60&h=60&fit=crop" alt="Pagos"></div>
+          <h3>Mercado Pago</h3>
+          <p>Cobrá con tarjetas, transferencias o efectivo. Tu dinero disponible al instante.</p>
+        </article>
+        <article>
+          <div class="mod-icon"><img src="https://images.unsplash.com/photo-1566576912321-d58ddd7a6088?w=60&h=60&fit=crop" alt="Envíos"></div>
+          <h3>Envíos</h3>
+          <p>Mercado Envíos con seguimiento. Etiquetas automáticas y protección al vendedor.</p>
+        </article>
+        <article>
+          <div class="mod-icon"><img src="https://images.unsplash.com/photo-1573497019940-1c28c88b4f3e?w=60&h=60&fit=crop" alt="Calificaciones"></div>
+          <h3>Calificaciones</h3>
+          <p>Construí tu reputación. Los compradores confían en vendedores bien calificados.</p>
+        </article>
+        <article>
+          <div class="mod-icon"><img src="https://images.unsplash.com/photo-1551288049-bebda4e38f71?w=60&h=60&fit=crop" alt="Métricas"></div>
+          <h3>Métricas</h3>
+          <p>Analizá visitas, conversiones y comparate con la competencia. Datos en tiempo real.</p>
+        </article>
+        <article>
+          <div class="mod-icon"><img src="https://images.unsplash.com/photo-1554224155-6726b3ff858f?w=60&h=60&fit=crop" alt="Facturación"></div>
+          <h3>Facturación ARCA</h3>
+          <p>Generá facturas electrónicas automáticamente. Integración directa con AFIP/ARCA.</p>
+        </article>
+      </div>
+    </section>
+
+    <!-- Featured products -->
+    <section class="section">
+      <div class="section-header">
+        <h2>Ofertas del día</h2>
+        <a href="#">Ver todas →</a>
+      </div>
+      <div class="products-grid">
+        <div class="prod-card">
+          <div class="img">🖥️</div>
+          <div class="price">$ 799.000</div>
+          <div class="cuotas">12 cuotas sin interés</div>
+          <div class="title">Monitor LG 27" 4K UHD IPS</div>
+          <div class="envio">Envío gratis</div>
+        </div>
+        <div class="prod-card">
+          <div class="img">🎮</div>
+          <div class="price">$ 649.999</div>
+          <div class="cuotas">18 cuotas</div>
+          <div class="title">PlayStation 5 Slim Digital</div>
+          <div class="envio">Envío gratis</div>
+        </div>
+        <div class="prod-card">
+          <div class="img">📷</div>
+          <div class="price">$ 1.450.000</div>
+          <div class="cuotas">12 cuotas sin interés</div>
+          <div class="title">Sony Alpha A7 IV Body</div>
+          <div class="envio">Envío gratis</div>
+        </div>
+        <div class="prod-card">
+          <div class="img">🔊</div>
+          <div class="price">$ 189.999</div>
+          <div class="cuotas">6 cuotas sin interés</div>
+          <div class="title">JBL Partybox 110 Bluetooth</div>
+          <div class="envio">Envío gratis</div>
+        </div>
+        <div class="prod-card">
+          <div class="img">🪑</div>
+          <div class="price">$ 249.999</div>
+          <div class="cuotas">12 cuotas</div>
+          <div class="title">Silla Gamer Corsair T3 Rush</div>
+          <div class="envio">Envío gratis</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- How it works -->
+    <section class="section">
+      <h2>¿Cómo funciona?</h2>
+      <div class="modules">
+        <article>
+          <h3>1. Registrate gratis</h3>
+          <p>Creá tu cuenta en segundos. Solo necesitás email y una contraseña.</p>
+        </article>
+        <article>
+          <h3>2. Publicá tu producto</h3>
+          <p>Subí fotos, escribí la descripción y poné el precio. Es gratis.</p>
+        </article>
+        <article>
+          <h3>3. Vendé y cobrá</h3>
+          <p>Cuando alguien compra, te avisamos. Cobrás por Mercado Pago.</p>
+        </article>
+        <article>
+          <h3>4. Enviá el producto</h3>
+          <p>Imprimí la etiqueta y llevalo al punto de despacho más cercano.</p>
+        </article>
+      </div>
+    </section>
+
+    <!-- Stats -->
+    <section class="section" style="text-align: center; padding: 48px 0;">
+      <h2 style="margin-bottom: 32px;">El marketplace líder de Argentina</h2>
+      <div style="display: flex; justify-content: center; gap: 48px; flex-wrap: wrap;">
+        <div>
+          <div style="font-size: 48px; font-weight: 700; color: var(--azul);">+5M</div>
+          <div style="color: var(--muted);">Vendedores activos</div>
+        </div>
+        <div>
+          <div style="font-size: 48px; font-weight: 700; color: var(--verde);">+50M</div>
+          <div style="color: var(--muted);">Compradores</div>
+        </div>
+        <div>
+          <div style="font-size: 48px; font-weight: 700; color: var(--naranja);">+100M</div>
+          <div style="color: var(--muted);">Productos publicados</div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <div class="wrap">
+      <p>MercadoDemo — Demo educativa de marketplace. Datos ficticios con fines ilustrativos.</p>
+      <p style="margin-top: 8px; font-size: 12px; opacity: 0.7;">Integración ARCA/AFIP simulada • Mercado Pago simulado • Sin transacciones reales</p>
+    </div>
+  </footer>
+
+</body>
+</html>

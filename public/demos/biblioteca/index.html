@@ -1,0 +1,105 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Biblioteca — catálogo, socios y préstamos</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <header class="top">
+    <div class="top-inner">
+      <a class="logo" href="index.html">BIBLIOTECA<small>Gestión de préstamos · demo</small></a>
+      <nav>
+        <a href="#modulos">Módulos</a>
+        <a href="#catalogo">Catálogo</a>
+        <a class="btn" href="panel.html">Abrir sistema</a>
+      </nav>
+    </div>
+  </header>
+
+  <main class="wrap">
+    <section class="hero">
+      <div>
+        <p class="kicker">Biblioteca pública · datos de ejemplo</p>
+        <h1>Catálogo, socios, préstamos y devoluciones.</h1>
+        <p class="lead">No es una lista de libros. Es la biblioteca completa: catálogo con ubicación, socios con carnet, préstamos con vencimiento, reservas y multas.</p>
+        <a class="btn" href="panel.html" style="background:var(--azul);color:white;">Ver sistema de ejemplo</a>
+      </div>
+      <aside class="card-preview">
+        <div class="card-img">
+          <img src="https://images.unsplash.com/photo-1507842217343-583bb7270b66?w=400&h=130&fit=crop" alt="Biblioteca">
+        </div>
+        <div class="card-body">
+          <div class="socio">
+            <div class="avatar">MG</div>
+            <div>
+              <div class="nombre">María García</div>
+              <div class="numero">SOC-001 · Socio activo</div>
+            </div>
+          </div>
+          <div class="prestamo">
+            <div class="titulo">📖 Rayuela - Julio Cortázar</div>
+            <div class="fecha">Préstamo: 1 sep · Devolver: 15 sep</div>
+          </div>
+          <div class="prestamo">
+            <div class="titulo">📖 El Principito</div>
+            <div class="fecha">Préstamo: 5 sep · Devolver: 19 sep</div>
+          </div>
+        </div>
+      </aside>
+    </section>
+
+    <section class="section" id="modulos">
+      <h2>Qué controla el sistema</h2>
+      <div class="modules">
+        <article>
+          <div class="mod-icon"><img src="https://images.unsplash.com/photo-1507842217343-583bb7270b66?w=80&h=80&fit=crop" alt="Catálogo"></div>
+          <h3>Catálogo</h3>
+          <p>Libros con autor, editorial, ubicación física y cantidad de ejemplares disponibles.</p>
+        </article>
+        <article>
+          <div class="mod-icon"><img src="https://images.unsplash.com/photo-1573497019940-1c28c88b4f3e?w=80&h=80&fit=crop" alt="Socios"></div>
+          <h3>Socios</h3>
+          <p>Alta de socios con DNI, carnet numerado, historial de préstamos y multas.</p>
+        </article>
+        <article>
+          <div class="mod-icon"><img src="https://images.unsplash.com/photo-1456513080510-7bf3a84b82f8?w=80&h=80&fit=crop" alt="Préstamos"></div>
+          <h3>Préstamos</h3>
+          <p>Registro de préstamos con fecha de devolución, renovaciones y control de vencidos.</p>
+        </article>
+        <article>
+          <div class="mod-icon"><img src="https://images.unsplash.com/photo-1611532736597-de2d4265fba3?w=80&h=80&fit=crop" alt="Multas"></div>
+          <h3>Multas</h3>
+          <p>Cálculo automático de multas por demora. Bloqueo de préstamos hasta regularizar.</p>
+        </article>
+      </div>
+    </section>
+
+    <section class="section" id="catalogo">
+      <h2>Catálogo de ejemplo</h2>
+      <p class="note">Libros ficticios. No es una biblioteca real.</p>
+      <table>
+        <thead><tr><th>Código</th><th>Título</th><th>Autor</th><th>Categoría</th><th>Disponibles</th><th>Estado</th></tr></thead>
+        <tbody id="preview"></tbody>
+      </table>
+      <p style="margin-top:16px;"><a class="btn" href="panel.html" style="background:var(--azul);color:white;">Abrir el sistema</a></p>
+    </section>
+  </main>
+
+  <footer class="wrap">Biblioteca · demo de producto · no es una biblioteca en actividad.</footer>
+
+  <script src="data.js"></script>
+  <script>
+    document.getElementById("preview").innerHTML = seedLibros().map((item) => `
+      <tr>
+        <td>${esc(item.codigo)}</td>
+        <td>${esc(item.titulo)}</td>
+        <td>${esc(item.autor)}</td>
+        <td>${esc(catLabel(item.categoria))}</td>
+        <td>${item.disponibles} / ${item.ejemplares}</td>
+        <td><span class="tag ${esc(item.status)}">${esc(labelLibro(item.status))}</span></td>
+      </tr>`).join("");
+  </script>
+</body>
+</html>

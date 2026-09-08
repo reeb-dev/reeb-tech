@@ -1,0 +1,107 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Peluquería — turnos, servicios y caja</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <header class="top">
+    <div class="top-inner">
+      <a class="logo" href="index.html">PELUQUERÍA<small>Turnos y servicios · demo</small></a>
+      <nav>
+        <a href="#modulos">Módulos</a>
+        <a href="#turnos">Agenda</a>
+        <a class="btn" href="panel.html">Abrir agenda</a>
+      </nav>
+    </div>
+  </header>
+
+  <main class="wrap">
+    <section class="hero">
+      <div>
+        <p class="kicker">Salón de belleza · datos de ejemplo</p>
+        <h1>Turnos, servicios y el total listo para cobrar.</h1>
+        <p class="lead">No es un cuaderno. Es el salón: quién viene, a qué hora, qué servicios pidió y con quién. Con facturación ARCA para emitir comprobante.</p>
+        <a class="btn" href="panel.html" style="background:var(--rosa);color:white;">Ver agenda de ejemplo</a>
+      </div>
+      <aside class="turno-card">
+        <div class="turno-img">
+          <img src="https://images.unsplash.com/photo-1560066984-138dadb4c035?w=400&h=150&fit=crop" alt="Salón de peluquería">
+        </div>
+        <div class="turno-body">
+          <header>
+            <span class="hora">10:00</span>
+            <span class="status-badge">En atención</span>
+          </header>
+          <h3>Carolina Méndez</h3>
+          <p class="servicios">Corte dama + Brushing</p>
+          <p class="profesional">👩‍🦰 Lucía · Duración: 75 min</p>
+          <p class="total">$ 20.000</p>
+        </div>
+      </aside>
+    </section>
+
+    <section class="section" id="modulos">
+      <h2>Qué controla el sistema</h2>
+      <div class="modules">
+        <article>
+          <div class="mod-icon"><img src="https://images.unsplash.com/photo-1506784983877-45594efa4cbe?w=80&h=80&fit=crop" alt="Agenda"></div>
+          <h3>Agenda</h3>
+          <p>Turnos por día y horario. Cada turno con cliente, servicios y profesional asignado.</p>
+        </article>
+        <article>
+          <div class="mod-icon"><img src="https://images.unsplash.com/photo-1522337360788-8b13dee7a37e?w=80&h=80&fit=crop" alt="Servicios"></div>
+          <h3>Servicios</h3>
+          <p>Catálogo de servicios con precio y duración. Cortes, tinturas, tratamientos, manicura.</p>
+        </article>
+        <article>
+          <div class="mod-icon"><img src="https://images.unsplash.com/photo-1573497019940-1c28c88b4f3e?w=80&h=80&fit=crop" alt="Clientes"></div>
+          <h3>Clientes</h3>
+          <p>Historial de cada cliente: qué servicios pidió, notas especiales, alergias.</p>
+        </article>
+        <article>
+          <div class="mod-icon"><img src="https://images.unsplash.com/photo-1556742049-0cfed4f6a45d?w=80&h=80&fit=crop" alt="Caja"></div>
+          <h3>Caja ARCA</h3>
+          <p>Cobro y facturación electrónica conectada a AFIP/ARCA. CAE simulado para la demo.</p>
+        </article>
+      </div>
+    </section>
+
+    <section class="section" id="turnos">
+      <h2>Agenda de ejemplo</h2>
+      <p class="note">Clientes y turnos ficticios, para ver el salón cargado. No es una peluquería real.</p>
+      <table>
+        <thead>
+          <tr>
+            <th>Hora</th>
+            <th>Cliente</th>
+            <th>Servicios</th>
+            <th>Profesional</th>
+            <th class="amount">Total</th>
+            <th>Estado</th>
+          </tr>
+        </thead>
+        <tbody id="preview"></tbody>
+      </table>
+      <p style="margin-top:16px;"><a class="btn" href="panel.html" style="background:var(--rosa);color:white;">Abrir la agenda</a></p>
+    </section>
+  </main>
+
+  <footer class="wrap">Peluquería · demo de producto · no es un salón en actividad ni emite facturas reales.</footer>
+
+  <script src="data.js"></script>
+  <script>
+    document.getElementById("preview").innerHTML = seed().filter(t => t.fecha === "8 sep").map((item) => `
+      <tr>
+        <td><strong>${esc(item.hora)}</strong><br><small style="color:#999">${esc(item.fecha)}</small></td>
+        <td>${esc(item.cliente.nombre)}</td>
+        <td>${item.servicios.map(s => esc(servicioLabel(s))).join(", ")}</td>
+        <td>${esc(item.profesional)}</td>
+        <td class="amount">${esc(money(calcTotal(item)))}</td>
+        <td><span class="tag ${esc(item.status)}">${esc(label(item.status))}</span></td>
+      </tr>`).join("");
+  </script>
+</body>
+</html>

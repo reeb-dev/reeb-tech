@@ -1,0 +1,59 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Libro de comprobantes</title>
+  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;600&family=IBM+Plex+Serif:wght@500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <header class="band">
+    <div class="band-inner">
+      <a class="brand" href="index.html"><strong>Libro</strong><span>Comprobantes de ejemplo</span></a>
+      <nav>
+        <a href="index.html">Qué es</a>
+        <button class="btn" id="open-create" type="button">Nuevo comprobante</button>
+      </nav>
+    </div>
+  </header>
+  <main class="book">
+    <div class="head">
+      <div>
+        <p class="kicker">Montos de ejemplo</p>
+        <h1>Libro de comprobantes</h1>
+      </div>
+    </div>
+    <div class="totals" id="totals"></div>
+    <form class="create" id="create">
+      <select name="type"></select>
+      <input name="number" placeholder="Número" required>
+      <input name="receptor" placeholder="Receptor de ejemplo" required>
+      <input name="amount" type="number" min="0" placeholder="Monto" required>
+      <input name="due" type="date">
+      <input name="aviso" placeholder="Aviso de cobro">
+      <button type="submit">Cargar borrador</button>
+    </form>
+    <table class="ledger">
+      <thead>
+        <tr>
+          <th>Tipo</th>
+          <th>Número</th>
+          <th>Receptor</th>
+          <th class="amount">Monto</th>
+          <th>Vencimiento</th>
+          <th>Estado</th>
+          <th>Aviso</th>
+        </tr>
+      </thead>
+      <tbody id="rows"></tbody>
+    </table>
+    <section class="sheet" id="sheet"></section>
+  </main>
+  <script src="data.js"></script>
+  <script>
+    document.querySelector("#create select").innerHTML = TYPES.map((type) => `<option>${type}</option>`).join("");
+  </script>
+  <script src="panel.js"></script>
+</body>
+</html>

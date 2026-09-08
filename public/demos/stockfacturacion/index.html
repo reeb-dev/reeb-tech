@@ -1,0 +1,146 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Stock y Facturación — inventario, movimientos y ARCA</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <header class="top">
+    <div class="top-inner">
+      <a class="logo" href="index.html">STOCK & FACTURACIÓN<small>Sistema integral · demo</small></a>
+      <nav>
+        <a href="#modulos">Módulos</a>
+        <a href="#productos">Stock</a>
+        <a href="#facturas">Facturas</a>
+        <a class="btn" href="panel.html">Abrir sistema</a>
+      </nav>
+    </div>
+  </header>
+
+  <main class="wrap">
+    <section class="hero">
+      <div>
+        <p class="kicker">Sistema de gestión · datos de ejemplo</p>
+        <h1>Inventario, movimientos de stock y facturación electrónica ARCA.</h1>
+        <p class="lead">No es una planilla. Es un sistema integral: productos con stock y ubicación, movimientos de entrada/salida, alertas de reposición y facturación conectada a AFIP/ARCA.</p>
+        <a class="btn" href="panel.html" style="background:var(--azul);color:white;">Abrir el sistema</a>
+      </div>
+      <aside class="dashboard-preview">
+        <div class="dash-header">
+          <img src="https://images.unsplash.com/photo-1586528116311-ad8dd3c8310d?w=400&h=120&fit=crop" alt="Almacén inventario">
+        </div>
+        <div class="dash-cards">
+          <div class="dash-card">
+            <h4>Productos</h4>
+            <div class="value">6</div>
+          </div>
+          <div class="dash-card verde">
+            <h4>En stock</h4>
+            <div class="value">4</div>
+          </div>
+          <div class="dash-card naranja">
+            <h4>Stock bajo</h4>
+            <div class="value">1</div>
+          </div>
+          <div class="dash-card">
+            <h4>Facturas mes</h4>
+            <div class="value">4</div>
+          </div>
+        </div>
+      </aside>
+    </section>
+
+    <section class="section" id="modulos">
+      <h2>Módulos del sistema</h2>
+      <div class="modules">
+        <article>
+          <div class="mod-icon"><img src="https://images.unsplash.com/photo-1586528116311-ad8dd3c8310d?w=80&h=80&fit=crop" alt="Inventario"></div>
+          <h3>Inventario</h3>
+          <p>Productos con código, precio de compra/venta, stock actual, mínimo y ubicación física.</p>
+        </article>
+        <article>
+          <div class="mod-icon"><img src="https://images.unsplash.com/photo-1600880292203-757bb62b4baf?w=80&h=80&fit=crop" alt="Movimientos"></div>
+          <h3>Movimientos</h3>
+          <p>Ingresos, egresos, ajustes y devoluciones. Cada movimiento queda registrado con fecha y motivo.</p>
+        </article>
+        <article>
+          <div class="mod-icon"><img src="https://images.unsplash.com/photo-1611532736597-de2d4265fba3?w=80&h=80&fit=crop" alt="Alertas"></div>
+          <h3>Alertas</h3>
+          <p>Productos con stock bajo o agotado destacados. Reportes de reposición pendiente.</p>
+        </article>
+        <article>
+          <div class="mod-icon"><img src="https://images.unsplash.com/photo-1554224155-6726b3ff858f?w=80&h=80&fit=crop" alt="Facturación"></div>
+          <h3>Facturación ARCA</h3>
+          <p>Factura A, B, C, Notas de Crédito/Débito. Conexión simulada a AFIP/ARCA con CAE.</p>
+        </article>
+      </div>
+    </section>
+
+    <section class="section" id="productos">
+      <h2>Stock de ejemplo</h2>
+      <p class="note">Productos y precios ficticios. No es un negocio real.</p>
+      <table>
+        <thead>
+          <tr>
+            <th>Código</th>
+            <th>Producto</th>
+            <th>Categoría</th>
+            <th class="amount">P. Compra</th>
+            <th class="amount">P. Venta</th>
+            <th class="amount">Stock</th>
+            <th>Estado</th>
+          </tr>
+        </thead>
+        <tbody id="preview-stock"></tbody>
+      </table>
+    </section>
+
+    <section class="section" id="facturas">
+      <h2>Facturas de ejemplo</h2>
+      <p class="note">Comprobantes ficticios con CAE simulado. No son facturas reales.</p>
+      <table>
+        <thead>
+          <tr>
+            <th>Tipo</th>
+            <th>Número</th>
+            <th>Fecha</th>
+            <th>Cliente</th>
+            <th class="amount">Total</th>
+            <th>CAE</th>
+          </tr>
+        </thead>
+        <tbody id="preview-facturas"></tbody>
+      </table>
+      <p style="margin-top:16px;"><a class="btn" href="panel.html" style="background:var(--azul);color:white;">Abrir el sistema completo</a></p>
+    </section>
+  </main>
+
+  <footer class="wrap">Stock y Facturación · demo de producto · no emite facturas reales ni se conecta a AFIP.</footer>
+
+  <script src="data.js"></script>
+  <script>
+    document.getElementById("preview-stock").innerHTML = seedProductos().map((item) => `
+      <tr>
+        <td>${esc(item.codigo)}</td>
+        <td>${esc(item.nombre)}</td>
+        <td>${esc(catLabel(item.categoria))}</td>
+        <td class="amount">${esc(money(item.precioCompra))}</td>
+        <td class="amount">${esc(money(item.precioVenta))}</td>
+        <td class="amount">${item.stock}</td>
+        <td><span class="tag ${esc(stockStatus(item))}">${esc(label(stockStatus(item)))}</span></td>
+      </tr>`).join("");
+
+    document.getElementById("preview-facturas").innerHTML = seedFacturas().map((item) => `
+      <tr>
+        <td><strong>${esc(compLabel(item.tipo))}</strong></td>
+        <td>${esc(item.numero)}</td>
+        <td>${esc(item.fecha)}</td>
+        <td>${esc(item.cliente.nombre)}</td>
+        <td class="amount">${esc(money(item.total))}</td>
+        <td style="font-family:monospace;font-size:12px;">${esc(item.cae)}</td>
+      </tr>`).join("");
+  </script>
+</body>
+</html>

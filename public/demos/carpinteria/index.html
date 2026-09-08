@@ -1,0 +1,107 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Carpintería — pedidos, presupuestos y entregas</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <header class="top">
+    <div class="top-inner">
+      <a class="logo" href="index.html">CARPINTERÍA<small>Muebles a medida · demo</small></a>
+      <nav>
+        <a href="#modulos">Módulos</a>
+        <a href="#pedidos">Pedidos</a>
+        <a class="btn" href="panel.html">Ver pedidos</a>
+      </nav>
+    </div>
+  </header>
+
+  <main class="wrap">
+    <section class="hero">
+      <div>
+        <p class="kicker">Carpintería de muebles · datos de ejemplo</p>
+        <h1>El pedido, los materiales y la entrega en la misma ficha.</h1>
+        <p class="lead">No es un cuaderno. Es el taller: qué mueble pidieron, qué materiales lleva, cuánto sale y cuándo se entrega. Con facturación ARCA integrada.</p>
+        <a class="btn" href="panel.html" style="background:var(--marron);color:white;">Ver pedidos de ejemplo</a>
+      </div>
+      <aside class="pedido-card">
+        <div class="pedido-img">
+          <img src="https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=400&h=150&fit=crop" alt="Taller carpintería">
+        </div>
+        <div class="pedido-body">
+          <header>
+            <span class="num">PED-2024-041</span>
+            <span class="status-badge">En producción</span>
+          </header>
+          <h3>Familia Rodríguez</h3>
+          <p class="tipo">Placard · 2.40 x 2.60 x 0.60</p>
+          <p class="desc">Placard 3 puertas corredizas con espejo. Melamina + vidrio.</p>
+          <p class="total">$ 555.000</p>
+        </div>
+      </aside>
+    </section>
+
+    <section class="section" id="modulos">
+      <h2>Qué controla el sistema</h2>
+      <div class="modules">
+        <article>
+          <div class="mod-icon"><img src="https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=80&h=80&fit=crop" alt="Pedidos"></div>
+          <h3>Pedidos</h3>
+          <p>Cada pedido con cliente, tipo de mueble, medidas y fecha de entrega estimada.</p>
+        </article>
+        <article>
+          <div class="mod-icon"><img src="https://images.unsplash.com/photo-1416879595882-3373a0480b5b?w=80&h=80&fit=crop" alt="Materiales"></div>
+          <h3>Materiales</h3>
+          <p>Melamina, MDF, madera, herrajes. Cada material con cantidad y costo unitario.</p>
+        </article>
+        <article>
+          <div class="mod-icon"><img src="https://images.unsplash.com/photo-1554224155-6726b3ff858f?w=80&h=80&fit=crop" alt="Presupuestos"></div>
+          <h3>Presupuestos</h3>
+          <p>Materiales + mano de obra = total. Seña y saldo pendiente.</p>
+        </article>
+        <article>
+          <div class="mod-icon"><img src="https://images.unsplash.com/photo-1450101499163-c8848c66ca85?w=80&h=80&fit=crop" alt="Facturación"></div>
+          <h3>Facturación ARCA</h3>
+          <p>Factura electrónica conectada a AFIP/ARCA. CAE simulado para la demo.</p>
+        </article>
+      </div>
+    </section>
+
+    <section class="section" id="pedidos">
+      <h2>Pedidos de ejemplo</h2>
+      <p class="note">Clientes y muebles ficticios, para ver el taller cargado. No es una carpintería real.</p>
+      <table>
+        <thead>
+          <tr>
+            <th>Pedido</th>
+            <th>Cliente</th>
+            <th>Mueble</th>
+            <th>Entrega</th>
+            <th class="amount">Total</th>
+            <th>Estado</th>
+          </tr>
+        </thead>
+        <tbody id="preview"></tbody>
+      </table>
+      <p style="margin-top:16px;"><a class="btn" href="panel.html" style="background:var(--marron);color:white;">Abrir el panel de pedidos</a></p>
+    </section>
+  </main>
+
+  <footer class="wrap">Carpintería · demo de producto · no es un taller en actividad ni emite facturas reales.</footer>
+
+  <script src="data.js"></script>
+  <script>
+    document.getElementById("preview").innerHTML = seed().slice(0, 6).map((item) => `
+      <tr>
+        <td>${esc(item.pedido)}</td>
+        <td>${esc(item.cliente.nombre)}</td>
+        <td>${esc(tipoLabel(item.tipo))}<br><small style="color:#666">${esc(item.medidas)}</small></td>
+        <td>${esc(item.fechaEntrega)}</td>
+        <td class="amount">${calcTotal(item) > 0 ? esc(money(calcTotal(item))) : "Pendiente"}</td>
+        <td><span class="tag ${esc(item.status)}">${esc(label(item.status))}</span></td>
+      </tr>`).join("");
+  </script>
+</body>
+</html>

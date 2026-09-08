@@ -1,0 +1,107 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Taller Mecánico — turnos, presupuestos y repuestos</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <header class="top">
+    <div class="top-inner">
+      <a class="logo" href="index.html">TALLER<small>Gestión de vehículos · demo</small></a>
+      <nav>
+        <a href="#modulos">Módulos</a>
+        <a href="#ordenes">Órdenes</a>
+        <a class="btn" href="panel.html">Abrir el taller</a>
+      </nav>
+    </div>
+  </header>
+
+  <main class="wrap">
+    <section class="hero">
+      <div>
+        <p class="kicker">Taller mecánico · datos de ejemplo</p>
+        <h1>El vehículo, el presupuesto y el repuesto en la misma orden.</h1>
+        <p class="lead">No es una libreta. Es el taller: qué vehículo entró, qué diagnóstico tiene, qué repuestos hacen falta y cuánto sale el trabajo. Con facturación ARCA integrada.</p>
+        <a class="btn" href="panel.html">Ver órdenes de ejemplo</a>
+      </div>
+      <aside class="order-card">
+        <div class="order-img">
+          <img src="https://images.unsplash.com/photo-1619642751034-765dfdf7c58e?w=400&h=160&fit=crop" alt="Taller mecánico">
+        </div>
+        <div class="order-body">
+          <header>
+            <span class="ot">OT-2024-0089</span>
+            <span class="status-badge">En reparación</span>
+          </header>
+          <h3>Volkswagen Gol Trend 2018</h3>
+          <p class="patente">AC 123 BD · 85.000 km</p>
+          <p class="trabajo">Service 80.000 km completo + pastillas de freno</p>
+          <p class="presup">$ 125.000</p>
+        </div>
+      </aside>
+    </section>
+
+    <section class="section" id="modulos">
+      <h2>Qué controla el sistema</h2>
+      <div class="modules">
+        <article>
+          <div class="mod-icon"><img src="https://images.unsplash.com/photo-1489824904134-891ab64532f1?w=80&h=80&fit=crop" alt="Vehículos"></div>
+          <h3>Vehículos</h3>
+          <p>Ficha del vehículo: marca, modelo, patente, km. Historial de trabajos.</p>
+        </article>
+        <article>
+          <div class="mod-icon"><img src="https://images.unsplash.com/photo-1619642751034-765dfdf7c58e?w=80&h=80&fit=crop" alt="Órdenes"></div>
+          <h3>Órdenes de trabajo</h3>
+          <p>Desde el ingreso hasta la entrega: diagnóstico, presupuesto, repuestos, mano de obra.</p>
+        </article>
+        <article>
+          <div class="mod-icon"><img src="https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=80&h=80&fit=crop" alt="Repuestos"></div>
+          <h3>Repuestos</h3>
+          <p>Cada repuesto con precio y cantidad. Stock propio o pedido al proveedor.</p>
+        </article>
+        <article>
+          <div class="mod-icon"><img src="https://images.unsplash.com/photo-1554224155-6726b3ff858f?w=80&h=80&fit=crop" alt="Facturación"></div>
+          <h3>Facturación ARCA</h3>
+          <p>Factura electrónica conectada a AFIP/ARCA. CAE simulado para la demo.</p>
+        </article>
+      </div>
+    </section>
+
+    <section class="section" id="ordenes">
+      <h2>Órdenes de trabajo de ejemplo</h2>
+      <p class="note">Vehículos y clientes ficticios, para ver el taller cargado. No es un taller real.</p>
+      <table>
+        <thead>
+          <tr>
+            <th>Orden</th>
+            <th>Vehículo</th>
+            <th>Cliente</th>
+            <th>Trabajo</th>
+            <th class="amount">Presupuesto</th>
+            <th>Estado</th>
+          </tr>
+        </thead>
+        <tbody id="preview"></tbody>
+      </table>
+      <p style="margin-top:16px;"><a class="btn" href="panel.html">Abrir el panel del taller</a></p>
+    </section>
+  </main>
+
+  <footer class="wrap">Taller · demo de producto · no es un taller en actividad ni emite facturas reales.</footer>
+
+  <script src="data.js"></script>
+  <script>
+    document.getElementById("preview").innerHTML = seed().slice(0, 6).map((item) => `
+      <tr>
+        <td>${esc(item.orden)}</td>
+        <td>${esc(item.vehiculo.marca)} ${esc(item.vehiculo.modelo)}<br><small style="color:#666">${esc(item.vehiculo.patente)}</small></td>
+        <td>${esc(item.cliente.nombre)}</td>
+        <td>${esc(tipoLabel(item.tipo))}</td>
+        <td class="amount">${item.presupuesto ? esc(money(item.presupuesto)) : "Pendiente"}</td>
+        <td><span class="tag ${esc(item.status)}">${esc(label(item.status))}</span></td>
+      </tr>`).join("");
+  </script>
+</body>
+</html>

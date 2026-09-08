@@ -1,0 +1,89 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Mostrador — pedidos, faltantes y caja</title>
+  <link href="https://fonts.googleapis.com/css2?family=Barlow:wght@400;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <header class="top">
+    <div class="top-inner">
+      <a class="logo" href="index.html">MOSTRADOR<small>Sistema de local · demo</small></a>
+      <nav>
+        <a href="#dia">El día</a>
+        <a href="#oficio">Cómo se usa</a>
+        <a href="#lista">Turno de ejemplo</a>
+        <a class="btn" href="panel.html">Abrir el turno</a>
+      </nav>
+    </div>
+  </header>
+  <main class="wrap">
+    <section class="hero">
+      <div>
+        <p class="kicker">Comercio de barrio · datos de ejemplo</p>
+        <h1>Pedido, faltante de góndola y cierre de caja.</h1>
+        <p class="lead">El mostrador no es una lista de contactos. Es el turno: qué se pidió, qué no llegó a la góndola y si la caja quedó cerrada.</p>
+        <a class="btn" href="panel.html">Ver el turno de ejemplo</a>
+      </div>
+      <aside class="day">
+        <div class="day-img">
+          <img src="https://images.unsplash.com/photo-1604719312566-8912e9227c6a?w=400&h=160&fit=crop" alt="Local comercial">
+        </div>
+        <div class="day-body">
+          <header><span>Turno de ejemplo</span><span>hoy</span></header>
+          <div class="slip"><strong>PED-441 · Mayorista Norte</strong>Azúcar: faltan 3. El pedido quedó incompleto.</div>
+          <div class="slip"><strong>GON-18 · Pasillo seco</strong>Fideos y harina fuera de góndola.</div>
+          <div class="slip"><strong>CAJA-SAB · Caja 1</strong>El sábado no se hizo el arqueo.</div>
+        </div>
+      </aside>
+    </section>
+    <section class="section" id="dia">
+      <div class="modules">
+        <article>
+          <div class="mod-icon"><img src="https://images.unsplash.com/photo-1586528116311-ad8dd3c8310d?w=80&h=80&fit=crop" alt="Pedidos"></div>
+          <h2>Pedido</h2><p>Lo que sale al proveedor: ítems, cantidades y lo que no confirmaron.</p>
+        </article>
+        <article>
+          <div class="mod-icon"><img src="https://images.unsplash.com/photo-1604719312566-8912e9227c6a?w=80&h=80&fit=crop" alt="Góndola"></div>
+          <h2>En local</h2><p>Lo recibido que todavía no está en góndola o en mostrador. El faltante se cuenta por ítem.</p>
+        </article>
+        <article>
+          <div class="mod-icon"><img src="https://images.unsplash.com/photo-1556742049-0cfed4f6a45d?w=80&h=80&fit=crop" alt="Caja"></div>
+          <h2>Caja</h2><p>El cierre del turno. Si hay diferencia, queda escrita en el ticket, no en un papel suelto.</p>
+        </article>
+      </div>
+    </section>
+    <section class="section" id="oficio">
+      <h2>Cómo corre el día</h2>
+      <div class="flow">
+        <article><h2>1. Se carga el pedido</h2><p>Proveedor, ítems y cantidades. Si llega de menos, el faltante se anota en la línea.</p></article>
+        <article><h2>2. Se mira la góndola</h2><p>Un hueco en sala no es lo mismo que un pedido al mayorista. El ticket dice de dónde sale.</p></article>
+        <article><h2>3. Se cierra la caja</h2><p>El arqueo pasa a estado caja. La diferencia queda con motivo, o marcada como pendiente.</p></article>
+      </div>
+    </section>
+    <section class="section" id="lista">
+      <h2>Turno de ejemplo</h2>
+      <p class="note">Tickets ficticios de un local de ejemplo. No son ventas reales ni un comercio identificable.</p>
+      <table>
+        <thead><tr><th>Ticket</th><th>Origen</th><th>Ítems</th><th>Faltante</th><th>Estado</th></tr></thead>
+        <tbody id="preview"></tbody>
+      </table>
+      <p><a class="btn" href="panel.html">Abrir el panel del turno</a></p>
+    </section>
+  </main>
+  <footer class="wrap">Mostrador · demo de producto · no es un local en actividad ni un sistema de facturación.</footer>
+  <script src="data.js"></script>
+  <script>
+    document.getElementById("preview").innerHTML = seed().slice(0, 5).map((item) => `
+      <tr>
+        <td>${esc(item.ticket)}<br>${esc(item.kind)}</td>
+        <td>${esc(item.origin)}</td>
+        <td>${esc((item.items || []).map((line) => line.name).join(", "))}</td>
+        <td>${missingCount(item)}</td>
+        <td><span class="tag ${esc(item.status)}">${esc(label(item.status))}</span></td>
+      </tr>`).join("");
+  </script>
+</body>
+</html>

@@ -1,0 +1,143 @@
+let items = load();
+let selected = items[0]?.id || "";
+let filter = "todos";
+
+document.getElementById("open-create").addEventListener("click", () => {
+  document.getElementById("create").classList.toggle("open");
+});
+
+document.getElementById("create").addEventListener("submit", (event) => {
+  event.preventDefault();
+  const data = new FormData(event.target);
+  const item = {
+    id: crypto.randomUUID(),
+    codigo: String(data.get("codigo") || ""),
+    nombre: String(data.get("nombre") || ""),
+    categoria: String(data.get("categoria") || "libros"),
+    autor: String(data.get("autor") || ""),
+    editorial: "",
+    isbn: "",
+    precio: Number(data.get("precio") || 0),
+    costo: Math.round(Number(data.get("precio") || 0) * 0.65),
+    stock: Number(data.get("stock") || 0),
+    minimo: 3,
+    proveedor: String(data.get("proveedor") || ""),
+    status: "stock",
+    history: [{ when: "hoy", text: "Producto agregado." }]
+  };
+  item.status = stockStatus(item);
+  items = [item, ...items];
+  selected = item.id;
+  save(items);
+  event.target.reset();
+  event.target.classList.remove("open");
+  render();
+});
+
+function visible() {
+  if (filter === "todos") return items;
+  return items.filter((item) => stockStatus(item) === filter || item.status === filter);
+}
+
+function render() {
+  const counts = {
+    stock: items.filter((i) => stockStatus(i) === "stock").length,
+    bajo: items.filter((i) => stockStatus(i) === "bajo").length,
+    agotado: items.filter((i) => stockStatus(i) === "agotado").length,
+    pedido: items.filter((i) => i.status === "pedido").length
+  };
+
+  document.getElementById("stats").innerHTML = `
+    <button type="button" data-filter="todos" class="${filter === "todos" ? "on" : ""}"><strong>${items.length}</strong>productos</button>
+    <button type="button" data-filter="stock" class="${filter === "stock" ? "on" : ""}"><strong>${counts.stock}</strong>en stock</button>
+    <button type="button" data-filter="bajo" class="${filter === "bajo" ? "on" : ""}"><strong>${counts.bajo}</strong>stock bajo</button>
+    <button type="button" data-filter="pedido" class="${filter === "pedido" ? "on" : ""}"><strong>${counts.pedido}</strong>ped. especial</button>
+  `;
+
+  document.querySelectorAll("[data-filter]").forEach((btn) => {
+    btn.addEventListener("click", () => { filter = btn.dataset.filter; render(); });
+  });
+
+  const rows = visible();
+  document.getElementById("rows").innerHTML = rows.map((item) => `
+    <tr class="row ${item.id === selected ? "on" : ""}" data-id="${esc(item.id)}">
+      <td>${esc(item.codigo)}</td>
+      <td>${esc(item.nombre)}${item.autor ? `<br><small style="color:#666">${esc(item.autor)}</small>` : ""}</td>
+      <td>${esc(catLabel(item.categoria))}</td>
+      <td class="amount">${esc(money(item.precio))}</td>
+      <td class="amount">${item.status === "pedido" ? "—" : item.stock}</td>
+      <td><span class="tag ${esc(stockStatus(item))}">${esc(label(stockStatus(item)))}</span></td>
+    </tr>`).join("") || `<tr><td colspan="6">No hay productos.</td></tr>`;
+
+  document.querySelectorAll(".row").forEach((row) => {
+    row.addEventListener("click", () => { selected = row.dataset.id; render(); });
+  });
+
+  const item = items.find((i) => i.id === selected);
+  const detail = document.getElementById("detail");
+  if (!item) { detail.innerHTML = "<p>Elegí un producto.</p>"; return; }
+
+  const isPedido = item.status === "pedido";
+
+  detail.innerHTML = `
+    <p class="eyebrow">${esc(item.codigo)} · ${esc(catLabel(item.categoria))}</p>
+    <h2>${esc(item.nombre)}</h2>
+    ${item.autor ? `<p style="color:var(--muted);font-size:14px;">${esc(item.autor)} · ${esc(item.editorial)}</p>` : ""}
+    <div class="meta">
+      <div><span>Precio</span>${esc(money(item.precio))}</div>
+      <div><span>Costo</span>${esc(money(item.costo))}</div>
+      <div><span>Stock</span>${isPedido ? "Pedido especial" : `${item.stock} / mín: ${item.minimo}`}</div>
+      <div><span>Proveedor</span>${esc(item.proveedor)}</div>
+    </div>
+
+    ${isPedido && item.pedidoEspecial ? `
+      <div class="pedido-especial">
+        <h4>📝 Pedido especial</h4>
+        <p><strong>${esc(item.pedidoEspecial.cliente)}</strong> · ${esc(item.pedidoEspecial.tel)}</p>
+        <p>Pedido: ${esc(item.pedidoEspecial.fechaPedido)} · Seña: ${esc(money(item.pedidoEspecial.seña))}</p>
+      </div>
+    ` : ""}
+
+    <div class="arca-section">
+      <h4>🧾 Venta con ARCA</h4>
+      <label>Cantidad<input id="venta-cant" type="number" value="1" min="1" ${isPedido ? "" : `max="${item.stock}"`}></label>
+      <label>Tipo comprobante
+        <select id="venta-tipo">
+          ${COMPROBANTES.map((c) => `<option value="${c.id}">${esc(c.label)}</option>`).join("")}
+        </select>
+      </label>
+      <button class="btn-panel" type="button" id="registrar-venta" style="margin-top:10px;" ${!isPedido && item.stock === 0 ? "disabled" : ""}>
+        Vender y facturar (simulado)
+      </button>
+      <p style="font-size:11px;color:#64748b;margin-top:8px;">Demo: genera CAE simulado.</p>
+    </div>
+
+    <div class="timeline">
+      <h3>Historial</h3>
+      ${(item.history || []).map((h) => `<p><time>${esc(h.when)}</time>${esc(h.text)}</p>`).join("")}
+    </div>
+  `;
+
+  detail.querySelector("#registrar-venta")?.addEventListener("click", () => {
+    const cantidad = parseInt(detail.querySelector("#venta-cant").value) || 1;
+    const tipo = detail.querySelector("#venta-tipo").value;
+    if (!isPedido && cantidad > item.stock) { alert("Stock insuficiente"); return; }
+    
+    const cae = String(Math.floor(Math.random() * 99999999999999));
+    const total = item.precio * cantidad;
+    
+    if (!isPedido) item.stock -= cantidad;
+    item.status = stockStatus(item);
+    item.history = [{ when: "hoy", text: `Venta x${cantidad}. ${compLabel(tipo)}. CAE: ${cae}. Total: ${money(total)}` }, ...(item.history || [])];
+    
+    if (isPedido) {
+      item.status = "agotado";
+      item.pedidoEspecial = null;
+    }
+    
+    save(items);
+    render();
+  });
+}
+
+render();

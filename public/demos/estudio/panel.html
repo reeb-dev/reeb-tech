@@ -1,0 +1,60 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Mesa de entradas · Estudio Norte</title>
+  <link href="https://fonts.googleapis.com/css2?family=Libre+Baskerville:wght@700&family=Source+Sans+3:wght@400;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <div class="app">
+    <header class="mast">
+      <div class="mast-inner">
+        <a class="mark" href="index.html"><strong>Estudio Norte</strong><span>Mesa de entradas · demo</span></a>
+        <nav>
+          <a href="index.html">Estudio</a>
+          <button class="btn" id="open-create" type="button">Nuevo expediente</button>
+        </nav>
+      </div>
+    </header>
+    <div class="toolbar">
+      <div>
+        <p class="eyebrow">Datos de ejemplo</p>
+        <h1>Expedientes</h1>
+      </div>
+    </div>
+    <div class="stats" id="stats"></div>
+    <form class="create" id="create">
+      <input name="number" placeholder="Número" required>
+      <input name="caratula" placeholder="Carátula" required>
+      <input name="fuero" placeholder="Fuero">
+      <input name="juzgado" placeholder="Juzgado">
+      <input name="party" placeholder="Parte" required>
+      <input name="due" placeholder="Plazo o audiencia">
+      <input name="escrito" placeholder="Escrito pendiente">
+      <button type="submit">Cargar en consulta</button>
+    </form>
+    <div class="workspace">
+      <section class="list">
+        <table>
+          <thead>
+            <tr>
+              <th>Expediente</th>
+              <th>Carátula</th>
+              <th>Fuero / juzgado</th>
+              <th>Parte</th>
+              <th>Plazo</th>
+              <th>Estado</th>
+            </tr>
+          </thead>
+          <tbody id="rows"></tbody>
+        </table>
+      </section>
+      <aside class="detail" id="detail"></aside>
+    </div>
+  </div>
+  <script src="data.js"></script>
+  <script src="panel.js"></script>
+</body>
+</html>

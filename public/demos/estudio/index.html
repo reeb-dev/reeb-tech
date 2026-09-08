@@ -1,0 +1,104 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Estudio Norte — mesa de entradas</title>
+  <link href="https://fonts.googleapis.com/css2?family=Libre+Baskerville:wght@700&family=Source+Sans+3:wght@400;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <header class="mast">
+    <div class="mast-inner">
+      <a class="mark" href="index.html"><strong>Estudio Norte</strong><span>Mesa de entradas · demo</span></a>
+      <nav>
+        <a href="#materias">Materias</a>
+        <a href="#movimiento">Movimiento</a>
+        <a href="#mesa">Expedientes</a>
+        <a class="btn" href="panel.html">Abrir la mesa</a>
+      </nav>
+    </div>
+  </header>
+  <main class="wrap">
+    <section class="hero">
+      <div>
+        <p class="eyebrow">Estudio jurídico · datos de ejemplo</p>
+        <h1>La carátula, el juzgado y el plazo, en la misma ficha.</h1>
+        <p class="lead">No es una agenda de contactos. Es la mesa de un estudio: consulta, trámite y escrito, con el plazo a la vista antes de que venza.</p>
+        <a class="btn" href="panel.html">Ver expedientes de ejemplo</a>
+      </div>
+      <aside class="docket">
+        <div class="docket-img">
+          <img src="https://images.unsplash.com/photo-1589829545856-d10d557cf95f?w=400&h=180&fit=crop" alt="Oficina legal">
+        </div>
+        <div class="docket-body">
+          <p class="file">Exp. 1842/2024 · Civil</p>
+          <h2>Ferreyra, Lucía s/ sucesión ab intestato</h2>
+          <p>Juzgado Civil n.º 12 · en trámite</p>
+          <div class="meta">
+            <div><span>Parte</span>Ferreyra, Lucía</div>
+            <div><span>Plazo</span>18 sep · audiencia</div>
+            <div><span>Escrito pendiente</span>Inventario de bienes</div>
+            <div><span>Estado</span>En trámite</div>
+          </div>
+        </div>
+      </aside>
+    </section>
+    <section class="section" id="materias">
+      <h2>Materias que sigue la mesa</h2>
+      <div class="areas">
+        <article>
+          <div class="area-icon"><img src="https://images.unsplash.com/photo-1589829545856-d10d557cf95f?w=80&h=80&fit=crop" alt="Balanza justicia"></div>
+          <h3>Civil</h3><p>Daños, desalojo y contratos. El número de expediente y el juzgado quedan en la carátula.</p>
+        </article>
+        <article>
+          <div class="area-icon"><img src="https://images.unsplash.com/photo-1491438590914-bc09fcaaf77a?w=80&h=80&fit=crop" alt="Familia"></div>
+          <h3>Familia</h3><p>Alimentos y divorcio. La ficha marca qué documento falta antes de redactar.</p>
+        </article>
+        <article>
+          <div class="area-icon"><img src="https://images.unsplash.com/photo-1450101499163-c8848c66ca85?w=80&h=80&fit=crop" alt="Documentos"></div>
+          <h3>Sucesiones</h3><p>El inventario y la audiencia no se pierden en un mail suelto.</p>
+        </article>
+        <article>
+          <div class="area-icon"><img src="https://images.unsplash.com/photo-1554224155-6726b3ff858f?w=80&h=80&fit=crop" alt="Comercial"></div>
+          <h3>Comercial</h3><p>Consultas sin radicar, hasta que haya contrato y escrito.</p>
+        </article>
+      </div>
+    </section>
+    <section class="section" id="movimiento">
+      <h2>Cómo se mueve un expediente</h2>
+      <div class="steps">
+        <article><h3>1. Consulta</h3><p>Todavía no hay número, o falta el relato. No se presenta nada.</p></article>
+        <article><h3>2. En trámite</h3><p>Ya está radicado. Hay plazo, audiencia o notificación pendiente.</p></article>
+        <article><h3>3. Escrito</h3><p>Hay una presentación para revisar o presentar. El texto queda en la ficha.</p></article>
+        <article><h3>4. Historial</h3><p>Cada nota de la mesa queda fechada. No reemplaza el expediente judicial.</p></article>
+      </div>
+    </section>
+    <section class="section" id="mesa">
+      <h2>Expedientes de ejemplo</h2>
+      <p class="note">Personas y causas ficticias, para ver la mesa cargada. No son clientes del estudio.</p>
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr><th>Expediente</th><th>Carátula</th><th>Fuero</th><th>Plazo</th><th>Estado</th></tr>
+          </thead>
+          <tbody id="preview"></tbody>
+        </table>
+      </div>
+      <p><a class="btn" href="panel.html">Abrir la mesa de entradas</a></p>
+    </section>
+  </main>
+  <footer class="wrap">Estudio Norte · demo de producto · no es un estudio en actividad ni un sistema judicial.</footer>
+  <script src="data.js"></script>
+  <script>
+    document.getElementById("preview").innerHTML = seed().slice(0, 5).map((item) => `
+      <tr>
+        <td>${esc(item.number)}</td>
+        <td>${esc(item.caratula)}</td>
+        <td>${esc(item.fuero)} · ${esc(item.juzgado)}</td>
+        <td>${esc(item.due)}</td>
+        <td><span class="pill">${esc(label(item.status))}</span></td>
+      </tr>`).join("");
+  </script>
+</body>
+</html>

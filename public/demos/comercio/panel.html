@@ -1,0 +1,45 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Turno · Mostrador</title>
+  <link href="https://fonts.googleapis.com/css2?family=Barlow:wght@400;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <header class="top">
+    <div class="top-inner">
+      <a class="logo" href="index.html">MOSTRADOR<small>Turno de ejemplo</small></a>
+      <nav>
+        <a href="index.html">El local</a>
+        <button class="btn" id="open-create" type="button">Nuevo ticket</button>
+      </nav>
+    </div>
+  </header>
+  <main class="board">
+    <div class="head">
+      <div>
+        <p class="kicker">Datos de ejemplo</p>
+        <h1>Pedidos, góndola y caja</h1>
+      </div>
+    </div>
+    <div class="stats" id="stats"></div>
+    <form class="create" id="create">
+      <input name="ticket" placeholder="Ticket" required>
+      <input name="kind" placeholder="Pedido, faltante o caja" required>
+      <input name="origin" placeholder="Proveedor o sector" required>
+      <input name="due" placeholder="Cuándo">
+      <input name="item" placeholder="Primer ítem" required>
+      <input name="qty" type="number" min="0" value="1">
+      <button type="submit">Cargar pedido</button>
+    </form>
+    <div class="layout">
+      <section class="tickets" id="tickets"></section>
+      <aside class="sheet" id="sheet"></aside>
+    </div>
+  </main>
+  <script src="data.js"></script>
+  <script src="panel.js"></script>
+</body>
+</html>

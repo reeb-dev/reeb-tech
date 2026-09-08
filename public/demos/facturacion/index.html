@@ -1,0 +1,92 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Libro — comprobantes y cobro</title>
+  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;600&family=IBM+Plex+Serif:wght@500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <header class="band">
+    <div class="band-inner">
+      <a class="brand" href="index.html"><strong>Libro</strong><span>Comprobantes y cobro · demo</span></a>
+      <nav>
+        <a href="#oficio">El libro</a>
+        <a href="#pasos">Emitir y cobrar</a>
+        <a href="#asientos">Asientos de ejemplo</a>
+        <a class="btn" href="panel.html">Abrir el libro</a>
+      </nav>
+    </div>
+  </header>
+  <main class="wrap">
+    <section class="hero">
+      <div>
+        <p class="kicker">Facturación de ejemplo</p>
+        <h1>El comprobante, el vencimiento y el aviso de cobro.</h1>
+        <p class="lead">Un libro para no mezclar borrador, emitido y a cobrar. Los montos se suman solo de estas filas y están marcados como ejemplo. No es un sistema fiscal.</p>
+        <a class="btn" href="panel.html">Ver el libro de ejemplo</a>
+      </div>
+      <aside class="folio">
+        <div class="folio-img">
+          <img src="https://images.unsplash.com/photo-1554224155-6726b3ff858f?w=400&h=140&fit=crop" alt="Facturas y calculadora">
+        </div>
+        <div class="folio-body">
+          <p>FA 0001-00001044 · Taller Sur · $ 186.000 · 12 sep · a cobrar</p>
+          <p>FB 0002-00000220 · Oficina del Parque · $ 42.500 · emitido</p>
+          <p>NC 0003-00000018 · Estudio Loma · $ 9.000 · borrador</p>
+          <p>FB 0002-00000088 · Consultorio Norte · vencido · falta aviso</p>
+        </div>
+      </aside>
+    </section>
+    <section class="section" id="oficio">
+      <div class="cols">
+        <article>
+          <div class="col-icon"><img src="https://images.unsplash.com/photo-1450101499163-c8848c66ca85?w=70&h=70&fit=crop" alt="Documentos"></div>
+          <h2>Borrador</h2><p>Todavía no se emite. Falta el ítem, el motivo de la nota o la fecha.</p>
+        </article>
+        <article>
+          <div class="col-icon"><img src="https://images.unsplash.com/photo-1586282391129-76a6df230234?w=70&h=70&fit=crop" alt="Factura"></div>
+          <h2>Emitido</h2><p>Ya tiene tipo y número. Falta enviarlo o acusar recibo.</p>
+        </article>
+        <article>
+          <div class="col-icon"><img src="https://images.unsplash.com/photo-1556742049-0cfed4f6a45d?w=70&h=70&fit=crop" alt="Cobro"></div>
+          <h2>A cobrar</h2><p>Venció o está por vencer. El aviso de cobro queda escrito en la ficha.</p>
+        </article>
+      </div>
+    </section>
+    <section class="section" id="pasos">
+      <h2>Cómo se usa el libro</h2>
+      <div class="path">
+        <article><h2>1. Se carga el comprobante</h2><p>Tipo, número, receptor, monto de ejemplo y vencimiento.</p></article>
+        <article><h2>2. Se emite</h2><p>Pasa de borrador a emitido. El número no se inventa como métrica: es el del comprobante de ejemplo.</p></article>
+        <article><h2>3. Se avisa el cobro</h2><p>Si hay vencimiento, la ficha guarda el aviso. El total de arriba es la suma de esas filas.</p></article>
+      </div>
+    </section>
+    <section class="section" id="asientos">
+      <h2>Asientos de ejemplo</h2>
+      <p class="note">Receptores y montos ficticios. No son clientes ni una facturación emitida.</p>
+      <table>
+        <thead>
+          <tr><th>Tipo</th><th>Número</th><th>Receptor</th><th class="amount">Monto</th><th>Vencimiento</th><th>Estado</th></tr>
+        </thead>
+        <tbody id="preview"></tbody>
+      </table>
+      <p><a class="btn" href="panel.html">Abrir el libro</a></p>
+    </section>
+  </main>
+  <footer class="wrap">Libro · demo de producto · no emite comprobantes fiscales ni reemplaza un sistema de facturación.</footer>
+  <script src="data.js"></script>
+  <script>
+    document.getElementById("preview").innerHTML = seed().slice(0, 6).map((item) => `
+      <tr>
+        <td>${esc(item.type)}</td>
+        <td class="num">${esc(item.number)}</td>
+        <td>${esc(item.receptor)}</td>
+        <td class="amount">${esc(money(item.amount))}</td>
+        <td>${esc(formatDue(item.due))}</td>
+        <td><span class="state ${esc(item.status)}">${esc(label(item.status))}</span></td>
+      </tr>`).join("");
+  </script>
+</body>
+</html>

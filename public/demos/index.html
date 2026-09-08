@@ -1,0 +1,389 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Demos de Sistemas por Rubro</title>
+  <style>
+    :root {
+      --ink: #1a1a1a;
+      --primary: #2563eb;
+      --primary-dark: #1d4ed8;
+      --muted: #64748b;
+      --bg: #f8fafc;
+      --card: #ffffff;
+      --line: #e2e8f0;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: "Segoe UI", system-ui, -apple-system, sans-serif;
+      background: var(--bg);
+      color: var(--ink);
+      line-height: 1.6;
+    }
+    a { color: inherit; text-decoration: none; }
+    
+    .header {
+      background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+      color: white;
+      padding: 80px 24px;
+      text-align: center;
+    }
+    .header h1 {
+      font-size: 48px;
+      font-weight: 700;
+      margin-bottom: 16px;
+    }
+    .header p {
+      font-size: 20px;
+      opacity: 0.9;
+      max-width: 600px;
+      margin: 0 auto;
+    }
+    
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 48px 24px;
+    }
+    
+    .section-title {
+      font-size: 28px;
+      font-weight: 700;
+      margin-bottom: 24px;
+      color: var(--ink);
+    }
+    
+    .demos-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+      gap: 24px;
+    }
+    
+    .demo-card {
+      background: var(--card);
+      border-radius: 16px;
+      overflow: hidden;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+    .demo-card:hover {
+      transform: translateY(-8px);
+      box-shadow: 0 12px 40px rgba(0,0,0,0.15);
+    }
+    .demo-card .img {
+      height: 160px;
+      overflow: hidden;
+    }
+    .demo-card .img img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      transition: transform 0.4s ease;
+    }
+    .demo-card:hover .img img {
+      transform: scale(1.1);
+    }
+    .demo-card .body {
+      padding: 20px;
+    }
+    .demo-card h3 {
+      font-size: 20px;
+      font-weight: 700;
+      margin-bottom: 8px;
+      color: var(--ink);
+    }
+    .demo-card p {
+      color: var(--muted);
+      font-size: 14px;
+      margin-bottom: 16px;
+    }
+    .demo-card .tags {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+      margin-bottom: 16px;
+    }
+    .demo-card .tag {
+      background: #e0e7ff;
+      color: var(--primary);
+      font-size: 11px;
+      font-weight: 600;
+      padding: 4px 10px;
+      border-radius: 20px;
+    }
+    .demo-card .btn {
+      display: inline-block;
+      background: var(--primary);
+      color: white;
+      font-weight: 600;
+      padding: 10px 20px;
+      border-radius: 8px;
+      transition: background 0.2s ease;
+    }
+    .demo-card .btn:hover {
+      background: var(--primary-dark);
+    }
+    
+    .footer {
+      text-align: center;
+      padding: 48px 24px;
+      color: var(--muted);
+      font-size: 14px;
+      border-top: 1px solid var(--line);
+      margin-top: 48px;
+    }
+    .footer a { color: var(--primary); }
+    
+    @media (max-width: 768px) {
+      .header h1 { font-size: 32px; }
+      .header p { font-size: 16px; }
+    }
+  </style>
+</head>
+<body>
+
+  <header class="header">
+    <h1>Demos de Sistemas por Rubro</h1>
+    <p>14 demos funcionales para distintos tipos de negocios. CRUD completo, persistencia en localStorage, diseño responsive.</p>
+  </header>
+
+  <main class="container">
+    <h2 class="section-title">Todas las demos</h2>
+    
+    <div class="demos-grid">
+      
+      <a href="inmobiliaria/" class="demo-card">
+        <div class="img">
+          <img src="https://images.unsplash.com/photo-1560518883-ce09059eeffa?w=600&h=300&fit=crop" alt="Inmobiliaria">
+        </div>
+        <div class="body">
+          <h3>Inmobiliaria</h3>
+          <p>Gestión de propiedades en alquiler y venta. Fichas con visitas, clientes y estados.</p>
+          <div class="tags">
+            <span class="tag">Propiedades</span>
+            <span class="tag">Visitas</span>
+            <span class="tag">Contratos</span>
+          </div>
+          <span class="btn">Ver demo →</span>
+        </div>
+      </a>
+      
+      <a href="estudio/" class="demo-card">
+        <div class="img">
+          <img src="https://images.unsplash.com/photo-1589829545856-d10d557cf95f?w=600&h=300&fit=crop" alt="Estudio jurídico">
+        </div>
+        <div class="body">
+          <h3>Estudio Jurídico</h3>
+          <p>Mesa de entradas para estudios de abogados. Expedientes, plazos y escritos.</p>
+          <div class="tags">
+            <span class="tag">Expedientes</span>
+            <span class="tag">Plazos</span>
+            <span class="tag">Civil/Familia</span>
+          </div>
+          <span class="btn">Ver demo →</span>
+        </div>
+      </a>
+      
+      <a href="comercio/" class="demo-card">
+        <div class="img">
+          <img src="https://images.unsplash.com/photo-1604719312566-8912e9227c6a?w=600&h=300&fit=crop" alt="Comercio">
+        </div>
+        <div class="body">
+          <h3>Comercio de Barrio</h3>
+          <p>Pedidos a proveedores, control de góndola y cierre de caja diario.</p>
+          <div class="tags">
+            <span class="tag">Pedidos</span>
+            <span class="tag">Stock</span>
+            <span class="tag">Caja</span>
+          </div>
+          <span class="btn">Ver demo →</span>
+        </div>
+      </a>
+      
+      <a href="facturacion/" class="demo-card">
+        <div class="img">
+          <img src="https://images.unsplash.com/photo-1554224155-6726b3ff858f?w=600&h=300&fit=crop" alt="Facturación">
+        </div>
+        <div class="body">
+          <h3>Facturación</h3>
+          <p>Libro de comprobantes con borradores, emitidos y cuentas a cobrar.</p>
+          <div class="tags">
+            <span class="tag">Facturas</span>
+            <span class="tag">Cobros</span>
+            <span class="tag">ARCA</span>
+          </div>
+          <span class="btn">Ver demo →</span>
+        </div>
+      </a>
+      
+      <a href="kiosco/" class="demo-card">
+        <div class="img">
+          <img src="https://images.unsplash.com/photo-1604719312566-8912e9227c6a?w=600&h=300&fit=crop" alt="Kiosco">
+        </div>
+        <div class="body">
+          <h3>Kiosco</h3>
+          <p>Stock de productos, alertas de reposición y libreta de fiado del barrio.</p>
+          <div class="tags">
+            <span class="tag">Stock</span>
+            <span class="tag">Fiado</span>
+            <span class="tag">Reposición</span>
+          </div>
+          <span class="btn">Ver demo →</span>
+        </div>
+      </a>
+      
+      <a href="taller/" class="demo-card">
+        <div class="img">
+          <img src="https://images.unsplash.com/photo-1619642751034-765dfdf7c58e?w=600&h=300&fit=crop" alt="Taller mecánico">
+        </div>
+        <div class="body">
+          <h3>Taller Mecánico</h3>
+          <p>Órdenes de trabajo con diagnóstico, presupuesto, repuestos y mano de obra.</p>
+          <div class="tags">
+            <span class="tag">Órdenes</span>
+            <span class="tag">Repuestos</span>
+            <span class="tag">Presupuestos</span>
+          </div>
+          <span class="btn">Ver demo →</span>
+        </div>
+      </a>
+      
+      <a href="peluqueria/" class="demo-card">
+        <div class="img">
+          <img src="https://images.unsplash.com/photo-1560066984-138dadb4c035?w=600&h=300&fit=crop" alt="Peluquería">
+        </div>
+        <div class="body">
+          <h3>Peluquería</h3>
+          <p>Agenda de turnos con servicios, profesionales y cobro con factura.</p>
+          <div class="tags">
+            <span class="tag">Turnos</span>
+            <span class="tag">Servicios</span>
+            <span class="tag">Caja</span>
+          </div>
+          <span class="btn">Ver demo →</span>
+        </div>
+      </a>
+      
+      <a href="carpinteria/" class="demo-card">
+        <div class="img">
+          <img src="https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=600&h=300&fit=crop" alt="Carpintería">
+        </div>
+        <div class="body">
+          <h3>Carpintería</h3>
+          <p>Pedidos de muebles a medida con materiales, presupuesto y entregas.</p>
+          <div class="tags">
+            <span class="tag">Pedidos</span>
+            <span class="tag">Materiales</span>
+            <span class="tag">Entregas</span>
+          </div>
+          <span class="btn">Ver demo →</span>
+        </div>
+      </a>
+      
+      <a href="stockfacturacion/" class="demo-card">
+        <div class="img">
+          <img src="https://images.unsplash.com/photo-1586528116311-ad8dd3c8310d?w=600&h=300&fit=crop" alt="Stock y Facturación">
+        </div>
+        <div class="body">
+          <h3>Stock + Facturación</h3>
+          <p>Sistema integral de inventario con movimientos y facturación ARCA.</p>
+          <div class="tags">
+            <span class="tag">Inventario</span>
+            <span class="tag">Movimientos</span>
+            <span class="tag">Facturas</span>
+          </div>
+          <span class="btn">Ver demo →</span>
+        </div>
+      </a>
+      
+      <a href="libreria/" class="demo-card">
+        <div class="img">
+          <img src="https://images.unsplash.com/photo-1481627834876-b7833e8f5570?w=600&h=300&fit=crop" alt="Librería">
+        </div>
+        <div class="body">
+          <h3>Librería</h3>
+          <p>Catálogo de libros y útiles, stock y pedidos especiales con seña.</p>
+          <div class="tags">
+            <span class="tag">Catálogo</span>
+            <span class="tag">Pedidos</span>
+            <span class="tag">Stock</span>
+          </div>
+          <span class="btn">Ver demo →</span>
+        </div>
+      </a>
+      
+      <a href="biblioteca/" class="demo-card">
+        <div class="img">
+          <img src="https://images.unsplash.com/photo-1507842217343-583bb7270b66?w=600&h=300&fit=crop" alt="Biblioteca">
+        </div>
+        <div class="body">
+          <h3>Biblioteca</h3>
+          <p>Gestión de préstamos con socios, devoluciones y control de multas.</p>
+          <div class="tags">
+            <span class="tag">Préstamos</span>
+            <span class="tag">Socios</span>
+            <span class="tag">Multas</span>
+          </div>
+          <span class="btn">Ver demo →</span>
+        </div>
+      </a>
+      
+      <a href="restaurante/" class="demo-card">
+        <div class="img">
+          <img src="https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?w=600&h=300&fit=crop" alt="Restaurante">
+        </div>
+        <div class="body">
+          <h3>Restaurante</h3>
+          <p>Mesas, comandas, vista de cocina y cierre de mesa con factura.</p>
+          <div class="tags">
+            <span class="tag">Mesas</span>
+            <span class="tag">Comandas</span>
+            <span class="tag">Cocina</span>
+          </div>
+          <span class="btn">Ver demo →</span>
+        </div>
+      </a>
+      
+      <a href="rotiseria/" class="demo-card">
+        <div class="img">
+          <img src="https://images.unsplash.com/photo-1598515214211-89d3c73ae83b?w=600&h=300&fit=crop" alt="Rotisería">
+        </div>
+        <div class="body">
+          <h3>Rotisería</h3>
+          <p>Producción diaria, pedidos de mostrador y delivery con seguimiento.</p>
+          <div class="tags">
+            <span class="tag">Producción</span>
+            <span class="tag">Pedidos</span>
+            <span class="tag">Delivery</span>
+          </div>
+          <span class="btn">Ver demo →</span>
+        </div>
+      </a>
+      
+      <a href="marketplace/" class="demo-card">
+        <div class="img">
+          <img src="https://images.unsplash.com/photo-1556742049-0cfed4f6a45d?w=600&h=300&fit=crop" alt="Marketplace">
+        </div>
+        <div class="body">
+          <h3>Marketplace</h3>
+          <p>Publicaciones, ventas, preguntas, envíos y pagos estilo MercadoLibre.</p>
+          <div class="tags">
+            <span class="tag">Publicaciones</span>
+            <span class="tag">Ventas</span>
+            <span class="tag">Envíos</span>
+          </div>
+          <span class="btn">Ver demo →</span>
+        </div>
+      </a>
+      
+    </div>
+  </main>
+
+  <footer class="footer">
+    <p>Demos educativas con fines ilustrativos. No son sistemas en producción.</p>
+    <p style="margin-top: 8px;">Desarrollado por <a href="https://github.com/reeb-dev" target="_blank">reeb-dev</a></p>
+  </footer>
+
+</body>
+</html>

@@ -1,0 +1,216 @@
+let items = load();
+let selected = items[0]?.id || "";
+let filter = "todos";
+
+document.getElementById("open-create").addEventListener("click", () => {
+  document.getElementById("create").classList.toggle("open");
+});
+
+document.getElementById("create").addEventListener("submit", (event) => {
+  event.preventDefault();
+  const data = new FormData(event.target);
+  const count = items.length + 1;
+  const item = {
+    id: crypto.randomUUID(),
+    pedido: `PED-2024-${String(count + 45).padStart(3, "0")}`,
+    cliente: {
+      nombre: String(data.get("cliente") || ""),
+      tel: String(data.get("tel") || ""),
+      direccion: String(data.get("direccion") || "")
+    },
+    tipo: String(data.get("tipo") || "otro"),
+    descripcion: String(data.get("descripcion") || ""),
+    medidas: String(data.get("medidas") || ""),
+    materiales: [],
+    manoObra: 0,
+    seña: 0,
+    status: "consulta",
+    fechaPedido: "hoy",
+    fechaEntrega: "Pendiente",
+    factura: null,
+    history: [{ when: "hoy", text: "Pedido creado como consulta." }]
+  };
+  items = [item, ...items];
+  selected = item.id;
+  save(items);
+  event.target.reset();
+  event.target.classList.remove("open");
+  render();
+});
+
+function visible() {
+  if (filter === "todos") return items;
+  return items.filter((item) => item.status === filter);
+}
+
+function render() {
+  const counts = {
+    consulta: items.filter((i) => i.status === "consulta").length,
+    presupuestado: items.filter((i) => i.status === "presupuestado").length,
+    produccion: items.filter((i) => i.status === "produccion").length,
+    terminado: items.filter((i) => i.status === "terminado").length
+  };
+
+  document.getElementById("stats").innerHTML = `
+    <button type="button" data-filter="todos" class="${filter === "todos" ? "on" : ""}"><strong>${items.length}</strong>pedidos</button>
+    <button type="button" data-filter="consulta" class="${filter === "consulta" ? "on" : ""}"><strong>${counts.consulta}</strong>consultas</button>
+    <button type="button" data-filter="produccion" class="${filter === "produccion" ? "on" : ""}"><strong>${counts.produccion}</strong>en prod.</button>
+    <button type="button" data-filter="terminado" class="${filter === "terminado" ? "on" : ""}"><strong>${counts.terminado}</strong>terminados</button>
+  `;
+
+  document.querySelectorAll("[data-filter]").forEach((btn) => {
+    btn.addEventListener("click", () => {
+      filter = btn.dataset.filter;
+      render();
+    });
+  });
+
+  const rows = visible();
+  document.getElementById("rows").innerHTML = rows.map((item) => `
+    <tr class="row ${item.id === selected ? "on" : ""}" data-id="${esc(item.id)}">
+      <td>${esc(item.pedido)}</td>
+      <td>${esc(item.cliente.nombre)}</td>
+      <td>${esc(tipoLabel(item.tipo))}<br><small style="color:#666">${esc(item.medidas)}</small></td>
+      <td>${esc(item.fechaEntrega)}</td>
+      <td class="amount">${calcTotal(item) > 0 ? esc(money(calcTotal(item))) : "—"}</td>
+      <td><span class="tag ${esc(item.status)}">${esc(label(item.status))}</span></td>
+    </tr>`).join("") || `<tr><td colspan="6">No hay pedidos en este estado.</td></tr>`;
+
+  document.querySelectorAll(".row").forEach((row) => {
+    row.addEventListener("click", () => {
+      selected = row.dataset.id;
+      render();
+    });
+  });
+
+  const item = items.find((i) => i.id === selected);
+  const detail = document.getElementById("detail");
+  if (!item) {
+    detail.innerHTML = "<p>Elegí un pedido del listado.</p>";
+    return;
+  }
+
+  const total = calcTotal(item);
+  const saldo = total - (item.seña || 0);
+
+  detail.innerHTML = `
+    <p class="eyebrow">${esc(item.pedido)} · ${esc(tipoLabel(item.tipo))}</p>
+    <h2>${esc(item.cliente.nombre)}</h2>
+    <p style="color:var(--muted);font-size:14px;">${esc(item.cliente.tel) || "Sin teléfono"} · ${esc(item.cliente.direccion) || "Sin dirección"}</p>
+    
+    <div class="meta">
+      <div><span>Medidas</span>${esc(item.medidas) || "—"}</div>
+      <div><span>Fecha pedido</span>${esc(item.fechaPedido)}</div>
+      <div><span>Entrega estimada</span>${esc(item.fechaEntrega)}</div>
+      <div><span>Estado</span>${esc(label(item.status))}</div>
+    </div>
+
+    <label>Descripción</label>
+    <p style="font-size:14px;margin:4px 0;background:#f9fafb;padding:8px;border-radius:4px;">${esc(item.descripcion) || "Sin descripción"}</p>
+
+    ${item.materiales.length > 0 ? `
+      <label>Materiales</label>
+      <ul class="materiales-list">
+        ${item.materiales.map((m) => `<li><span>${esc(matLabel(m.id))} x${m.cantidad}</span><span>${esc(money(m.precio * m.cantidad))}</span></li>`).join("")}
+      </ul>
+    ` : `<p style="color:#999;font-size:13px;margin-top:12px;">Sin materiales cargados</p>`}
+
+    <div class="meta" style="margin-top:16px;">
+      <div><span>Materiales</span>${esc(money(calcMateriales(item)))}</div>
+      <div><span>Mano de obra</span>${esc(money(item.manoObra))}</div>
+      <div><span>Total</span><strong>${esc(money(total))}</strong></div>
+      <div><span>Seña</span>${esc(money(item.seña))}</div>
+      <div><span>Saldo</span><strong style="color:${saldo > 0 ? 'var(--marron)' : '#666'}">${esc(money(saldo))}</strong></div>
+    </div>
+
+    ${item.factura ? `
+      <div class="factura-box">
+        <h4>✓ Factura emitida</h4>
+        <p><strong>${esc(compLabel(item.factura.tipo))}</strong> ${esc(item.factura.numero)}</p>
+        <p>CAE: <span class="cae">${esc(item.factura.cae)}</span></p>
+        <p>Vto CAE: ${esc(item.factura.vto)} · Total: ${esc(money(item.factura.total))}</p>
+      </div>
+    ` : `
+      <div class="arca-section">
+        <h4>🧾 Facturación ARCA (AFIP)</h4>
+        <label>CUIT Cliente<input id="arca-cuit" placeholder="20-12345678-9"></label>
+        <label>Tipo comprobante
+          <select id="arca-tipo">
+            ${COMPROBANTES.filter(c => c.id !== "PR").map((c) => `<option value="${c.id}">${esc(c.label)}</option>`).join("")}
+          </select>
+        </label>
+        <button class="btn-panel" type="button" id="emitir-factura" style="margin-top:10px;" ${total === 0 ? "disabled" : ""}>
+          Emitir factura (simulado)
+        </button>
+        <p style="font-size:11px;color:#64748b;margin-top:8px;">Demo: genera CAE simulado. En producción se conecta a ARCA/AFIP.</p>
+      </div>
+    `}
+
+    <form id="edit">
+      <label>Estado
+        <select name="status">
+          ${STATUSES.map((s) => `<option value="${s.id}" ${item.status === s.id ? "selected" : ""}>${esc(s.label)}</option>`).join("")}
+        </select>
+      </label>
+      <label>Mano de obra<input name="manoObra" type="number" value="${item.manoObra}"></label>
+      <label>Seña recibida<input name="seña" type="number" value="${item.seña}"></label>
+      <label>Fecha entrega<input name="fechaEntrega" value="${esc(item.fechaEntrega)}"></label>
+      <div class="actions">
+        <button class="btn-panel" type="submit">Guardar</button>
+        <button class="ghost" type="button" id="remove">Eliminar pedido</button>
+      </div>
+    </form>
+
+    <div class="timeline">
+      <h3>Historial</h3>
+      ${(item.history || []).map((h) => `<p><time>${esc(h.when)}</time>${esc(h.text)}</p>`).join("")}
+    </div>
+  `;
+
+  // Emitir factura simulada ARCA
+  const emitirBtn = detail.querySelector("#emitir-factura");
+  if (emitirBtn) {
+    emitirBtn.addEventListener("click", () => {
+      const tipo = detail.querySelector("#arca-tipo").value;
+      const cuit = detail.querySelector("#arca-cuit").value;
+      const numero = `0001-${String(Math.floor(Math.random() * 99999) + 1).padStart(8, "0")}`;
+      const cae = String(Math.floor(Math.random() * 99999999999999));
+      const vtoDate = new Date();
+      vtoDate.setDate(vtoDate.getDate() + 10);
+      const vto = vtoDate.toLocaleDateString("es-AR", { day: "numeric", month: "short" });
+
+      item.factura = { tipo, numero, cae, vto, total: calcTotal(item), cuit };
+      item.history = [{ when: "hoy", text: `Factura ${compLabel(tipo)} emitida. CAE: ${cae}` }, ...(item.history || [])];
+      save(items);
+      render();
+    });
+  }
+
+  detail.querySelector("#edit").addEventListener("submit", (event) => {
+    event.preventDefault();
+    const data = new FormData(event.target);
+    const prevStatus = item.status;
+    const newStatus = String(data.get("status") || item.status);
+
+    item.manoObra = Number(data.get("manoObra") || 0);
+    item.seña = Number(data.get("seña") || 0);
+    item.fechaEntrega = String(data.get("fechaEntrega") || "");
+    item.status = newStatus;
+
+    if (prevStatus !== newStatus) {
+      item.history = [{ when: "hoy", text: `Estado: ${label(newStatus)}.` }, ...(item.history || [])];
+    }
+
+    save(items);
+    render();
+  });
+
+  detail.querySelector("#remove").addEventListener("click", () => {
+    items = items.filter((i) => i.id !== item.id);
+    selected = items[0]?.id || "";
+    save(items);
+    render();
+  });
+}
+
+render();
