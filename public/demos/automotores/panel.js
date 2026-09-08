@@ -27,7 +27,7 @@ document.getElementById("create").addEventListener("submit", (event) => {
     puertas: 4,
     motor: "",
     descripcion: "",
-    imagenes: ["https://images.unsplash.com/photo-1552519507-da3b142c6e3d?w=800&h=500&fit=crop"],
+    imagenes: [fotoModelo(String(data.get("marca") || ""), String(data.get("modelo") || ""))],
     financiacion: true,
     permuta: true,
     destacado: false,

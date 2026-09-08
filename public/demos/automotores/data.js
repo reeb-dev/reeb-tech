@@ -57,20 +57,20 @@ const MARCA_COLORS = {
   "Hyundai": { primary: "#002C5F", secondary: "#FFFFFF", accent: "#00274C" }
 };
 
-// Logos SVG por marca (simplificados)
+// Logos SVG locales por marca (Wikimedia Commons)
 const MARCA_LOGOS = {
-  "Toyota": `<svg viewBox="0 0 100 60" fill="currentColor"><ellipse cx="50" cy="30" rx="45" ry="25" fill="none" stroke="currentColor" stroke-width="4"/><ellipse cx="50" cy="30" rx="28" ry="16" fill="none" stroke="currentColor" stroke-width="4"/><ellipse cx="50" cy="30" rx="12" ry="25" fill="none" stroke="currentColor" stroke-width="4"/></svg>`,
-  "Volkswagen": `<svg viewBox="0 0 100 100" fill="currentColor"><circle cx="50" cy="50" r="45" fill="none" stroke="currentColor" stroke-width="5"/><path d="M50 10 L30 50 L50 90 L70 50 Z" fill="none" stroke="currentColor" stroke-width="5"/><path d="M25 35 L75 35 M25 65 L75 65" stroke="currentColor" stroke-width="5"/></svg>`,
-  "Ford": `<svg viewBox="0 0 120 50" fill="currentColor"><ellipse cx="60" cy="25" rx="55" ry="22" fill="currentColor"/><text x="60" y="33" text-anchor="middle" font-family="serif" font-size="24" font-style="italic" fill="white">Ford</text></svg>`,
-  "Fiat": `<svg viewBox="0 0 100 100" fill="currentColor"><circle cx="50" cy="50" r="45" fill="none" stroke="currentColor" stroke-width="4"/><text x="50" y="58" text-anchor="middle" font-family="sans-serif" font-weight="bold" font-size="28" fill="currentColor">FIAT</text></svg>`,
-  "Chevrolet": `<svg viewBox="0 0 100 60" fill="currentColor"><rect x="5" y="20" width="90" height="20" fill="none" stroke="currentColor" stroke-width="4"/><rect x="20" y="10" width="60" height="40" fill="none" stroke="currentColor" stroke-width="4"/></svg>`,
-  "Renault": `<svg viewBox="0 0 80 100" fill="currentColor"><path d="M40 5 L75 30 L75 70 L40 95 L5 70 L5 30 Z" fill="none" stroke="currentColor" stroke-width="5"/></svg>`,
-  "Peugeot": `<svg viewBox="0 0 100 100" fill="currentColor"><path d="M50 10 C30 30 25 50 30 70 C35 85 45 95 50 95 C55 95 65 85 70 70 C75 50 70 30 50 10" fill="currentColor"/></svg>`,
-  "Citroën": `<svg viewBox="0 0 100 80" fill="currentColor"><path d="M10 25 L50 5 L90 25 L50 45 Z" fill="currentColor"/><path d="M10 55 L50 35 L90 55 L50 75 Z" fill="currentColor"/></svg>`,
-  "Jeep": `<svg viewBox="0 0 120 40" fill="currentColor"><text x="60" y="32" text-anchor="middle" font-family="sans-serif" font-weight="bold" font-size="32" fill="currentColor">JEEP</text></svg>`,
-  "Honda": `<svg viewBox="0 0 100 80" fill="currentColor"><path d="M20 70 L20 10 L35 10 L35 35 L50 10 L65 35 L65 10 L80 10 L80 70 L65 70 L65 45 L50 70 L35 45 L35 70 Z" fill="currentColor"/></svg>`,
-  "Nissan": `<svg viewBox="0 0 120 60" fill="currentColor"><circle cx="60" cy="30" r="28" fill="none" stroke="currentColor" stroke-width="4"/><rect x="15" y="24" width="90" height="12" fill="currentColor"/><text x="60" y="34" text-anchor="middle" font-family="sans-serif" font-weight="bold" font-size="12" fill="white">NISSAN</text></svg>`,
-  "Hyundai": `<svg viewBox="0 0 100 100" fill="currentColor"><ellipse cx="50" cy="50" rx="45" ry="35" fill="none" stroke="currentColor" stroke-width="4"/><text x="50" y="58" text-anchor="middle" font-family="sans-serif" font-weight="bold" font-style="italic" font-size="28" fill="currentColor">H</text></svg>`
+  "Toyota": `<img src="img/logo-toyota.svg" alt="Toyota">`,
+  "Volkswagen": `<img src="img/logo-volkswagen.svg" alt="Volkswagen">`,
+  "Ford": `<img src="img/logo-ford.svg" alt="Ford">`,
+  "Fiat": `<img src="img/logo-fiat.svg" alt="Fiat">`,
+  "Chevrolet": `<img src="img/logo-chevrolet.svg" alt="Chevrolet">`,
+  "Renault": `<img src="img/logo-renault.svg" alt="Renault">`,
+  "Peugeot": `<img src="img/logo-peugeot.svg" alt="Peugeot">`,
+  "Citroën": `<img src="img/logo-citroen.svg" alt="Citroën">`,
+  "Jeep": `<img src="img/logo-jeep.svg" alt="Jeep">`,
+  "Honda": `<img src="img/logo-honda.svg" alt="Honda">`,
+  "Nissan": `<img src="img/logo-nissan.svg" alt="Nissan">`,
+  "Hyundai": `<img src="img/logo-hyundai.svg" alt="Hyundai">`
 };
 
 // Cotización USD simulada
@@ -98,9 +98,7 @@ function seed() {
       motor: "2.0L 170cv",
       descripcion: "Toyota Corolla XEi 2024 0km. Equipamiento completo: pantalla táctil 9\", Android Auto/Apple CarPlay, control crucero adaptativo, 7 airbags, cámara de retroceso. Financiación disponible.",
       imagenes: [
-        "https://images.unsplash.com/photo-1621007947382-bb3c3994e3fb?w=800&h=500&fit=crop",
-        "https://images.unsplash.com/photo-1619682817481-e994891cd1f5?w=800&h=500&fit=crop",
-        "https://images.unsplash.com/photo-1590362891991-f776e747a588?w=800&h=500&fit=crop"
+        "img/toyota-corolla.jpg"
       ],
       financiacion: true,
       permuta: true,
@@ -131,8 +129,7 @@ function seed() {
       motor: "1.5L 107cv",
       descripcion: "Toyota Etios XLS sedan, único dueño. Service oficial al día. Excelente mecánica, cubiertas nuevas. Ideal primer auto o uso urbano.",
       imagenes: [
-        "https://images.unsplash.com/photo-1549317661-bd32c8ce0db2?w=800&h=500&fit=crop",
-        "https://images.unsplash.com/photo-1542282088-72c9c27ed0cd?w=800&h=500&fit=crop"
+        "img/toyota-etios.jpg"
       ],
       financiacion: true,
       permuta: true,
@@ -163,8 +160,7 @@ function seed() {
       motor: "1.5L 107cv",
       descripcion: "Toyota Yaris XLS hatchback automático. Pantalla táctil, cámara, control crucero. Un solo dueño, service concesionario oficial.",
       imagenes: [
-        "https://images.unsplash.com/photo-1552519507-da3b142c6e3d?w=800&h=500&fit=crop",
-        "https://images.unsplash.com/photo-1544636331-e26879cd4d9b?w=800&h=500&fit=crop"
+        "img/toyota-yaris.jpg"
       ],
       financiacion: true,
       permuta: true,
@@ -195,9 +191,7 @@ function seed() {
       motor: "2.8L TD 204cv",
       descripcion: "Toyota Hilux SRX tope de gama. Cuero, pantalla 8\", cámara 360°, control de descenso. Service al día en concesionario oficial.",
       imagenes: [
-        "https://images.unsplash.com/photo-1559416523-140ddc3d238c?w=800&h=500&fit=crop",
-        "https://images.unsplash.com/photo-1612544448445-b8232cff3b6c?w=800&h=500&fit=crop",
-        "https://images.unsplash.com/photo-1558383409-27c7f2e1e4b5?w=800&h=500&fit=crop"
+        "img/toyota-hilux.jpg"
       ],
       financiacion: true,
       permuta: false,
@@ -231,9 +225,7 @@ function seed() {
       motor: "2.8L TD 204cv",
       descripcion: "Toyota SW4 SRX 7 plazas. Cuero, techo solar, JBL premium, control de descenso. Service oficial Toyota al día.",
       imagenes: [
-        "https://images.unsplash.com/photo-1519641471654-76ce0107ad1b?w=800&h=500&fit=crop",
-        "https://images.unsplash.com/photo-1606664515524-ed2f786a0bd6?w=800&h=500&fit=crop",
-        "https://images.unsplash.com/photo-1494976388531-d1058494cdd8?w=800&h=500&fit=crop"
+        "img/toyota-sw4.jpg"
       ],
       financiacion: true,
       permuta: false,
@@ -264,8 +256,7 @@ function seed() {
       motor: "2.5L Hybrid 222cv",
       descripcion: "Toyota RAV4 Hybrid Limited 0km. AWD inteligente, consumo 4.7L/100km. Pantalla 10.5\", JBL, techo panorámico. Entrega inmediata.",
       imagenes: [
-        "https://images.unsplash.com/photo-1606664515524-ed2f786a0bd6?w=800&h=500&fit=crop",
-        "https://images.unsplash.com/photo-1533473359331-0135ef1b58bf?w=800&h=500&fit=crop"
+        "img/toyota-rav4.jpg"
       ],
       financiacion: true,
       permuta: true,
@@ -298,8 +289,7 @@ function seed() {
       motor: "1.4L TSI 150cv",
       descripcion: "VW Golf Highline impecable. Único dueño, service oficial completo. Techo solar, cuero, navegador, sensores de estacionamiento.",
       imagenes: [
-        "https://images.unsplash.com/photo-1471444928139-48c5bf5173f8?w=800&h=500&fit=crop",
-        "https://images.unsplash.com/photo-1552519507-da3b142c6e3d?w=800&h=500&fit=crop"
+        "img/volkswagen-golf.jpg"
       ],
       financiacion: true,
       permuta: true,
@@ -330,8 +320,7 @@ function seed() {
       motor: "1.6L 110cv",
       descripcion: "VW Polo Trendline con pack eléctrico. Bajo consumo, ideal ciudad. Un dueño, service oficial VW al día.",
       imagenes: [
-        "https://images.unsplash.com/photo-1549317661-bd32c8ce0db2?w=800&h=500&fit=crop",
-        "https://images.unsplash.com/photo-1542282088-72c9c27ed0cd?w=800&h=500&fit=crop"
+        "img/volkswagen-polo.jpg"
       ],
       financiacion: true,
       permuta: true,
@@ -362,8 +351,7 @@ function seed() {
       motor: "1.4L TSI 150cv",
       descripcion: "VW Virtus Highline 0km. Climatronic, ACC, Lane Assist, techo solar. El sedán más equipado del segmento. Financiación Plan VW.",
       imagenes: [
-        "https://images.unsplash.com/photo-1550355291-bbee04a92027?w=800&h=500&fit=crop",
-        "https://images.unsplash.com/photo-1544636331-e26879cd4d9b?w=800&h=500&fit=crop"
+        "img/volkswagen-virtus.jpg"
       ],
       financiacion: true,
       permuta: true,
@@ -394,8 +382,7 @@ function seed() {
       motor: "1.4L TSI 150cv",
       descripcion: "VW Vento Comfortline automático. Climatronic, App-Connect, sensores de estacionamiento. Sedán cómodo y confiable, service oficial.",
       imagenes: [
-        "https://images.unsplash.com/photo-1550355291-bbee04a92027?w=800&h=500&fit=crop",
-        "https://images.unsplash.com/photo-1503376780353-7e6692767b70?w=800&h=500&fit=crop"
+        "img/volkswagen-vento.jpg"
       ],
       financiacion: true,
       permuta: true,
@@ -426,9 +413,7 @@ function seed() {
       motor: "1.4L TSI 150cv",
       descripcion: "VW Tiguan Allspace 7 plazas. Techo panorámico, cuero, ACC, asistente de carril. Un solo dueño, service oficial.",
       imagenes: [
-        "https://images.unsplash.com/photo-1606664515524-ed2f786a0bd6?w=800&h=500&fit=crop",
-        "https://images.unsplash.com/photo-1519641471654-76ce0107ad1b?w=800&h=500&fit=crop",
-        "https://images.unsplash.com/photo-1494976388531-d1058494cdd8?w=800&h=500&fit=crop"
+        "img/volkswagen-tiguan.jpg"
       ],
       financiacion: true,
       permuta: true,
@@ -459,8 +444,7 @@ function seed() {
       motor: "1.4L TSI 150cv",
       descripcion: "VW T-Cross Highline turbo. Beats audio, Digital Cockpit, techo bicolor. Como nuevo, garantía de fábrica vigente.",
       imagenes: [
-        "https://images.unsplash.com/photo-1533473359331-0135ef1b58bf?w=800&h=500&fit=crop",
-        "https://images.unsplash.com/photo-1568844293986-8c4a5b3c9c85?w=800&h=500&fit=crop"
+        "img/volkswagen-t-cross.jpg"
       ],
       financiacion: true,
       permuta: true,
@@ -491,8 +475,7 @@ function seed() {
       motor: "1.4L TSI 150cv",
       descripcion: "VW Taos Highline 0km. Digital Cockpit Pro, techo solar, ACC. SUV media con baúl real. Plan de ahorro y financiación.",
       imagenes: [
-        "https://images.unsplash.com/photo-1606664515524-ed2f786a0bd6?w=800&h=500&fit=crop",
-        "https://images.unsplash.com/photo-1519641471654-76ce0107ad1b?w=800&h=500&fit=crop"
+        "img/volkswagen-taos.jpg"
       ],
       financiacion: true,
       permuta: true,
@@ -523,8 +506,7 @@ function seed() {
       motor: "3.0L V6 TDI 258cv",
       descripcion: "VW Amarok V6 Extreme, la pickup más potente. Cuero, Discover Pro, cámara 360°, diferencial trasero. Impecable estado.",
       imagenes: [
-        "https://images.unsplash.com/photo-1559416523-140ddc3d238c?w=800&h=500&fit=crop",
-        "https://images.unsplash.com/photo-1612544448445-b8232cff3b6c?w=800&h=500&fit=crop"
+        "img/volkswagen-amarok.jpg"
       ],
       financiacion: true,
       permuta: false,
@@ -557,8 +539,7 @@ function seed() {
       motor: "2.0L 170cv",
       descripcion: "Ford Focus SE Plus excelente estado. Control de estabilidad, 6 airbags, SYNC 3. Cubiertas nuevas. Ideal primer auto.",
       imagenes: [
-        "https://images.unsplash.com/photo-1544636331-e26879cd4d9b?w=800&h=500&fit=crop",
-        "https://images.unsplash.com/photo-1503376780353-7e6692767b70?w=800&h=500&fit=crop"
+        "img/ford-focus.jpg"
       ],
       financiacion: true,
       permuta: true,
@@ -589,8 +570,7 @@ function seed() {
       motor: "1.6L 120cv",
       descripcion: "Ford Fiesta SE PowerShift. SYNC, 6 airbags, control de estabilidad. Ágil y económico, cubiertas nuevas. Ideal ciudad.",
       imagenes: [
-        "https://images.unsplash.com/photo-1552519507-da3b142c6e3d?w=800&h=500&fit=crop",
-        "https://images.unsplash.com/photo-1542282088-72c9c27ed0cd?w=800&h=500&fit=crop"
+        "img/ford-fiesta.jpg"
       ],
       financiacion: true,
       permuta: true,
@@ -621,8 +601,7 @@ function seed() {
       motor: "1.5L 123cv",
       descripcion: "Ford Ka SEL automático. SYNC, control crucero, sensor de lluvia. Muy económico, excelente para ciudad.",
       imagenes: [
-        "https://images.unsplash.com/photo-1552519507-da3b142c6e3d?w=800&h=500&fit=crop",
-        "https://images.unsplash.com/photo-1542282088-72c9c27ed0cd?w=800&h=500&fit=crop"
+        "img/ford-ka.jpg"
       ],
       financiacion: true,
       permuta: true,
@@ -653,9 +632,7 @@ function seed() {
       motor: "3.2L TD 200cv",
       descripcion: "Ford Ranger Limited 2024 0km. Nueva generación: SYNC 4, pantalla 12\", Pro Trailer Backup, 360°. Entrega inmediata.",
       imagenes: [
-        "https://images.unsplash.com/photo-1612544448445-b8232cff3b6c?w=800&h=500&fit=crop",
-        "https://images.unsplash.com/photo-1558383409-27c7f2e1e4b5?w=800&h=500&fit=crop",
-        "https://images.unsplash.com/photo-1559416523-140ddc3d238c?w=800&h=500&fit=crop"
+        "img/ford-ranger.jpg"
       ],
       financiacion: true,
       permuta: true,
@@ -686,8 +663,7 @@ function seed() {
       motor: "1.5L Turbo 143cv",
       descripcion: "Ford Territory Titanium. Co-Pilot 360, techo panorámico, cuero. SUV espacioso y equipado. Garantía extendida.",
       imagenes: [
-        "https://images.unsplash.com/photo-1519641471654-76ce0107ad1b?w=800&h=500&fit=crop",
-        "https://images.unsplash.com/photo-1533473359331-0135ef1b58bf?w=800&h=500&fit=crop"
+        "img/ford-territory.jpg"
       ],
       financiacion: true,
       permuta: true,
@@ -720,8 +696,7 @@ function seed() {
       motor: "1.8L 130cv",
       descripcion: "Fiat Cronos Precision automático. Pantalla Uconnect, cámara, sensores, climatizador. Service oficial al día.",
       imagenes: [
-        "https://images.unsplash.com/photo-1550355291-bbee04a92027?w=800&h=500&fit=crop",
-        "https://images.unsplash.com/photo-1542282088-72c9c27ed0cd?w=800&h=500&fit=crop"
+        "img/fiat-cronos.jpg"
       ],
       financiacion: true,
       permuta: true,
@@ -752,8 +727,7 @@ function seed() {
       motor: "1.3L Firefly 99cv",
       descripcion: "Fiat Argo Trekking 0km. Estética off-road, suspensión elevada, Uconnect 7\", Start&Stop. Económico y versátil.",
       imagenes: [
-        "https://images.unsplash.com/photo-1533473359331-0135ef1b58bf?w=800&h=500&fit=crop",
-        "https://images.unsplash.com/photo-1549317661-bd32c8ce0db2?w=800&h=500&fit=crop"
+        "img/fiat-argo.jpg"
       ],
       financiacion: true,
       permuta: true,
@@ -784,8 +758,7 @@ function seed() {
       motor: "1.0L Firefly 77cv",
       descripcion: "Fiat Mobi Trekking, el city car más económico. Bajo consumo, fácil de estacionar. Ideal primer auto o segundo vehículo.",
       imagenes: [
-        "https://images.unsplash.com/photo-1552519507-da3b142c6e3d?w=800&h=500&fit=crop",
-        "https://images.unsplash.com/photo-1542282088-72c9c27ed0cd?w=800&h=500&fit=crop"
+        "img/fiat-mobi.jpg"
       ],
       financiacion: true,
       permuta: true,
@@ -818,8 +791,7 @@ function seed() {
       motor: "1.4L Turbo 153cv",
       descripcion: "Chevrolet Cruze LTZ turbo automático. MyLink, OnStar, alerta de colisión, cámara. Muy buen estado.",
       imagenes: [
-        "https://images.unsplash.com/photo-1549317661-bd32c8ce0db2?w=800&h=500&fit=crop",
-        "https://images.unsplash.com/photo-1503376780353-7e6692767b70?w=800&h=500&fit=crop"
+        "img/chevrolet-cruze.jpg"
       ],
       financiacion: true,
       permuta: true,
@@ -850,8 +822,7 @@ function seed() {
       motor: "1.0L Turbo 116cv",
       descripcion: "Chevrolet Onix Premier 0km. WiFi integrado, pantalla 8\", 6 airbags, alerta de colisión frontal. El hatch más vendido.",
       imagenes: [
-        "https://images.unsplash.com/photo-1550355291-bbee04a92027?w=800&h=500&fit=crop",
-        "https://images.unsplash.com/photo-1544636331-e26879cd4d9b?w=800&h=500&fit=crop"
+        "img/chevrolet-onix.jpg"
       ],
       financiacion: true,
       permuta: true,
@@ -882,8 +853,7 @@ function seed() {
       motor: "1.2L Turbo 133cv",
       descripcion: "Chevrolet Tracker Premier turbo. Techo solar, cuero, asistentes de conducción. La SUV compacta más equipada.",
       imagenes: [
-        "https://images.unsplash.com/photo-1519641471654-76ce0107ad1b?w=800&h=500&fit=crop",
-        "https://images.unsplash.com/photo-1568844293986-8c4a5b3c9c85?w=800&h=500&fit=crop"
+        "img/chevrolet-tracker.jpg"
       ],
       financiacion: true,
       permuta: true,
@@ -914,8 +884,7 @@ function seed() {
       motor: "1.5L Turbo 170cv",
       descripcion: "Chevrolet Equinox Premier AWD. Techo panorámico, Bose, asientos de cuero, OnStar. SUV media con tracción integral.",
       imagenes: [
-        "https://images.unsplash.com/photo-1606664515524-ed2f786a0bd6?w=800&h=500&fit=crop",
-        "https://images.unsplash.com/photo-1519641471654-76ce0107ad1b?w=800&h=500&fit=crop"
+        "img/chevrolet-equinox.jpg"
       ],
       financiacion: true,
       permuta: true,
@@ -946,8 +915,7 @@ function seed() {
       motor: "2.8L TD 200cv",
       descripcion: "Chevrolet S10 High Country tope de gama. Cuero, MyLink, cámara trasera. Excelente estado, service oficial.",
       imagenes: [
-        "https://images.unsplash.com/photo-1559416523-140ddc3d238c?w=800&h=500&fit=crop",
-        "https://images.unsplash.com/photo-1612544448445-b8232cff3b6c?w=800&h=500&fit=crop"
+        "img/chevrolet-s10.jpg"
       ],
       financiacion: true,
       permuta: true,
@@ -980,8 +948,7 @@ function seed() {
       motor: "1.6L 115cv",
       descripcion: "Renault Sandero Intens CVT. Easy Link 8\", cámara, climatizador. Espacioso y cómodo para familia.",
       imagenes: [
-        "https://images.unsplash.com/photo-1552519507-da3b142c6e3d?w=800&h=500&fit=crop",
-        "https://images.unsplash.com/photo-1549317661-bd32c8ce0db2?w=800&h=500&fit=crop"
+        "img/renault-sandero.jpg"
       ],
       financiacion: true,
       permuta: true,
@@ -1012,8 +979,7 @@ function seed() {
       motor: "1.6L 115cv",
       descripcion: "Renault Logan Intens CVT. Baúl amplio, Easy Link, aire digital. Ideal familia o flota, bajo costo de mantenimiento.",
       imagenes: [
-        "https://images.unsplash.com/photo-1549317661-bd32c8ce0db2?w=800&h=500&fit=crop",
-        "https://images.unsplash.com/photo-1550355291-bbee04a92027?w=800&h=500&fit=crop"
+        "img/renault-logan.jpg"
       ],
       financiacion: true,
       permuta: true,
@@ -1044,8 +1010,7 @@ function seed() {
       motor: "1.3L TCe 163cv",
       descripcion: "Nueva Renault Duster Iconic 2024. Diseño renovado, Multi-Sense, Easy Link 8\", cámara 360°. Financiación hasta 60 cuotas.",
       imagenes: [
-        "https://images.unsplash.com/photo-1533473359331-0135ef1b58bf?w=800&h=500&fit=crop",
-        "https://images.unsplash.com/photo-1568844293986-8c4a5b3c9c85?w=800&h=500&fit=crop"
+        "img/renault-duster.jpg"
       ],
       financiacion: true,
       permuta: true,
@@ -1076,8 +1041,7 @@ function seed() {
       motor: "1.0L 66cv",
       descripcion: "Renault Kwid Outsider, el SUV de entrada. Estética robusta, Media Evolution, aire acondicionado. El más económico.",
       imagenes: [
-        "https://images.unsplash.com/photo-1542282088-72c9c27ed0cd?w=800&h=500&fit=crop",
-        "https://images.unsplash.com/photo-1550355291-bbee04a92027?w=800&h=500&fit=crop"
+        "img/renault-kwid.jpg"
       ],
       financiacion: true,
       permuta: true,
@@ -1110,8 +1074,7 @@ function seed() {
       motor: "1.6L 115cv",
       descripcion: "Peugeot 208 Allure automático. i-Cockpit 3D, Mirror Screen, control crucero. Único dueño, excelente estado.",
       imagenes: [
-        "https://images.unsplash.com/photo-1552519507-da3b142c6e3d?w=800&h=500&fit=crop",
-        "https://images.unsplash.com/photo-1542282088-72c9c27ed0cd?w=800&h=500&fit=crop"
+        "img/peugeot-208.jpg"
       ],
       financiacion: true,
       permuta: true,
@@ -1142,8 +1105,7 @@ function seed() {
       motor: "1.6L THP 165cv",
       descripcion: "Peugeot 308 Allure turbo. i-Cockpit, techo panorámico, Full LED. Hatch premium con muy buen manejo.",
       imagenes: [
-        "https://images.unsplash.com/photo-1471444928139-48c5bf5173f8?w=800&h=500&fit=crop",
-        "https://images.unsplash.com/photo-1544636331-e26879cd4d9b?w=800&h=500&fit=crop"
+        "img/peugeot-308.jpg"
       ],
       financiacion: true,
       permuta: true,
@@ -1174,8 +1136,7 @@ function seed() {
       motor: "1.6L 115cv",
       descripcion: "Peugeot 2008 Allure Pack. i-Cockpit 3D 10\", techo panorámico, cámara 180°. SUV con diseño premium.",
       imagenes: [
-        "https://images.unsplash.com/photo-1519641471654-76ce0107ad1b?w=800&h=500&fit=crop",
-        "https://images.unsplash.com/photo-1533473359331-0135ef1b58bf?w=800&h=500&fit=crop"
+        "img/peugeot-2008.jpg"
       ],
       financiacion: true,
       permuta: true,
@@ -1208,8 +1169,7 @@ function seed() {
       motor: "2.0L TD 170cv",
       descripcion: "Jeep Compass Limited diésel 4x4. Equipamiento full: cuero, techo, navegador, Beats audio. Service oficial.",
       imagenes: [
-        "https://images.unsplash.com/photo-1533473359331-0135ef1b58bf?w=800&h=500&fit=crop",
-        "https://images.unsplash.com/photo-1568844293986-8c4a5b3c9c85?w=800&h=500&fit=crop"
+        "img/jeep-compass.jpg"
       ],
       financiacion: true,
       permuta: true,
@@ -1243,8 +1203,7 @@ function seed() {
       motor: "1.8L 130cv",
       descripcion: "Jeep Renegade Longitude. Uconnect 8.4\", techo My Sky removible, cámara trasera. Estilo Jeep auténtico.",
       imagenes: [
-        "https://images.unsplash.com/photo-1568844293986-8c4a5b3c9c85?w=800&h=500&fit=crop",
-        "https://images.unsplash.com/photo-1519641471654-76ce0107ad1b?w=800&h=500&fit=crop"
+        "img/jeep-renegade.jpg"
       ],
       financiacion: true,
       permuta: true,
@@ -1277,8 +1236,7 @@ function seed() {
       motor: "2.3L TD 190cv",
       descripcion: "Nissan Frontier X-Gear biturbo. Asistente de frenado, Around View Monitor, diferencial trasero. Pickup robusta y moderna.",
       imagenes: [
-        "https://images.unsplash.com/photo-1559416523-140ddc3d238c?w=800&h=500&fit=crop",
-        "https://images.unsplash.com/photo-1612544448445-b8232cff3b6c?w=800&h=500&fit=crop"
+        "img/nissan-frontier.jpg"
       ],
       financiacion: true,
       permuta: true,
@@ -1311,8 +1269,7 @@ function seed() {
       motor: "2.0L 156cv",
       descripcion: "Hyundai Tucson Limited AWD. Diseño paramétrico, BlueLink, pantalla 10.25\", asientos ventilados. Como nueva.",
       imagenes: [
-        "https://images.unsplash.com/photo-1519641471654-76ce0107ad1b?w=800&h=500&fit=crop",
-        "https://images.unsplash.com/photo-1606664515524-ed2f786a0bd6?w=800&h=500&fit=crop"
+        "img/hyundai-tucson.jpg"
       ],
       financiacion: true,
       permuta: true,
@@ -1345,8 +1302,7 @@ function seed() {
       motor: "1.6L 115cv",
       descripcion: "Citroën C4 Cactus Feel Pack. Airbumps, asientos Advanced Comfort, Connect Nav. Diseño único y confortable.",
       imagenes: [
-        "https://images.unsplash.com/photo-1533473359331-0135ef1b58bf?w=800&h=500&fit=crop",
-        "https://images.unsplash.com/photo-1568844293986-8c4a5b3c9c85?w=800&h=500&fit=crop"
+        "img/citroen-c4-cactus.jpg"
       ],
       financiacion: true,
       permuta: true,
@@ -1379,8 +1335,7 @@ function seed() {
       motor: "1.8L i-VTEC 140cv",
       descripcion: "Honda HR-V EXL CVT. Asientos Magic Seat, Honda Sensing, LaneWatch. Confiabilidad Honda con bajo consumo.",
       imagenes: [
-        "https://images.unsplash.com/photo-1519641471654-76ce0107ad1b?w=800&h=500&fit=crop",
-        "https://images.unsplash.com/photo-1533473359331-0135ef1b58bf?w=800&h=500&fit=crop"
+        "img/honda-hr-v.jpg"
       ],
       financiacion: true,
       permuta: true,
@@ -1396,17 +1351,17 @@ function seed() {
 }
 
 function load() {
-  const raw = localStorage.getItem("automotores-demo-v3");
+  const raw = localStorage.getItem("automotores-demo-v4");
   if (!raw) {
     const data = seed();
-    localStorage.setItem("automotores-demo-v3", JSON.stringify(data));
+    localStorage.setItem("automotores-demo-v4", JSON.stringify(data));
     return data;
   }
   return JSON.parse(raw);
 }
 
 function save(items) {
-  localStorage.setItem("automotores-demo-v3", JSON.stringify(items));
+  localStorage.setItem("automotores-demo-v4", JSON.stringify(items));
 }
 
 function label(status) {
@@ -1467,4 +1422,27 @@ function getMarcaColor(marca) {
 
 function getMarcaLogo(marca) {
   return MARCA_LOGOS[marca] || "";
+}
+
+function fotoModelo(marca, modelo) {
+  const slug = String(marca + "-" + modelo)
+    .toLowerCase()
+    .normalize("NFD")
+    .replace(/[\u0300-\u036f]/g, "")
+    .replace(/[^a-z0-9]+/g, "-")
+    .replace(/^-+|-+$/g, "");
+  const conocidos = [
+    "toyota-corolla", "toyota-etios", "toyota-yaris", "toyota-hilux", "toyota-sw4", "toyota-rav4",
+    "volkswagen-golf", "volkswagen-polo", "volkswagen-virtus", "volkswagen-vento", "volkswagen-tiguan",
+    "volkswagen-t-cross", "volkswagen-taos", "volkswagen-amarok",
+    "ford-focus", "ford-fiesta", "ford-ka", "ford-ranger", "ford-territory",
+    "fiat-cronos", "fiat-argo", "fiat-mobi",
+    "chevrolet-cruze", "chevrolet-onix", "chevrolet-tracker", "chevrolet-equinox", "chevrolet-s10",
+    "renault-sandero", "renault-logan", "renault-duster", "renault-kwid",
+    "peugeot-208", "peugeot-308", "peugeot-2008",
+    "jeep-compass", "jeep-renegade", "nissan-frontier", "hyundai-tucson",
+    "citroen-c4-cactus", "honda-hr-v"
+  ];
+  if (conocidos.includes(slug)) return "img/" + slug + ".jpg";
+  return "img/toyota-corolla.jpg";
 }
