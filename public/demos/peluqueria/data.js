@@ -13,7 +13,7 @@ const LOCAL = {
     "Lunes y domingo: cerrado"
   ],
   telefono: "011-4783-4410",
-  whatsapp: "5491140001234"
+  whatsapp: "5492915757934"
 };
 
 const STATUSES = [

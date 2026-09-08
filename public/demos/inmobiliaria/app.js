@@ -322,7 +322,7 @@ function openModal(id) {
       </div>
       <div class="btns">
         <a class="btn-ficha-wa" data-consulta="wa" href="${esc(propertyWaUrl(p))}" target="_blank" rel="noopener">WhatsApp</a>
-        <a class="btn-ficha-call" data-consulta="call" href="tel:+5491140001234">Llamar</a>
+        <a class="btn-ficha-call" data-consulta="call" href="tel:+5492915757934">Llamar</a>
       </div>
       <form class="modal-consulta" id="modalConsulta" novalidate>
         <input name="nombre" autocomplete="name" placeholder="Nombre">

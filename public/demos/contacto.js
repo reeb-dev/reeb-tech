@@ -2,12 +2,12 @@
   var script = document.currentScript;
   if (!script || document.getElementById("wa-float")) return;
 
-  var phone = script.getAttribute("data-phone") || "5491140001234";
+  var phone = script.getAttribute("data-phone") || "5492915757934";
   var text = script.getAttribute("data-text") || "Hola, quiero consultar por esta demo";
   var subject = script.getAttribute("data-subject") || "Consulta demo";
   var title = script.getAttribute("data-title") || "Escribinos";
   var place = script.getAttribute("data-place") || "landing";
-  var mail = "contacto@demo.local";
+  var mail = "manuelreeb@icloud.com";
   var waUrl = "https://wa.me/" + phone + "?text=" + encodeURIComponent(text);
 
   var base = script.src.replace(/contacto\.js(\?.*)?$/, "");
@@ -52,8 +52,8 @@
   var lead = place === "panel"
     ? "Canal de ejemplo para un mensaje del cliente. No sale a un servidor."
     : place === "hub"
-      ? "Consultá por las demos del portfolio. Número y correo de ejemplo, sin métricas ni envío real."
-      : "Dejá un mensaje o escribí por WhatsApp. Número y correo de ejemplo.";
+      ? "Consultá por las demos del portfolio."
+      : "Dejá un mensaje o escribí por WhatsApp.";
 
   section.innerHTML =
     "<h2>" + title + "</h2>" +
@@ -66,7 +66,7 @@
       '<p class="demo-contacto-error" role="alert"></p>' +
       '<button type="submit">Enviar mensaje</button>' +
     "</form>" +
-    '<a class="demo-wa-inline" href="' + waUrl + '" target="_blank" rel="noopener">WhatsApp · +54 9 11 4000-1234</a>';
+    '<a class="demo-wa-inline" href="' + waUrl + '" target="_blank" rel="noopener">WhatsApp · +54 9 2915 75-7934</a>';
 
   var host = document.getElementById("contacto");
   var info = document.getElementById("info");

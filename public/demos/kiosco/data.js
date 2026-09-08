@@ -9,7 +9,7 @@ const LOCAL = {
   direccion: "Av. San Martín 1840",
   barrio: "Villa del Parque, CABA",
   telefono: "011-4555-1840",
-  whatsapp: "5491140001234",
+  whatsapp: "5492915757934",
   horarios: [
     "Lunes a sábado: 7 a 22",
     "Domingos: 8 a 14"

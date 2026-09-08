@@ -543,7 +543,7 @@ function seed() {
 }
 
 const STORAGE_KEY = "inmobiliaria-demo-v3";
-const DEMO_WA_PHONE = "5491140001234";
+const DEMO_WA_PHONE = "5492915757934";
 
 function load() {
   const raw = localStorage.getItem(STORAGE_KEY);
