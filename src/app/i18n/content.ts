@@ -389,8 +389,8 @@ export const translations: Record<Lang, Dictionary> = {
       todayValue: 'Software Engineer en BP4. Fuera de la consultora, un freelance a la vez, con alcance cerrado y plan escrito.',
     },
     demos: {
-      title: 'Sistemas para oficios y comercios',
-      subtitle: 'Demos de ejemplo para comercios y oficios argentinos. El catálogo se busca y se filtra por rubro: landing para el cliente y panel de administración, con datos ficticios. No son sistemas en producción.',
+      title: 'Sistemas a medida para oficios y comercios',
+      subtitle: 'Desarrollo a medida: sitios y paneles de administración para kiosco, inmobiliaria, turismo y otros rubros. Las demos son ejemplos para clientes, no un producto SaaS. Si su negocio se parece, contacte para un sistema equivalente.',
       viewDemo: 'Ver demo',
       openPanel: 'Panel',
       viewCatalog: 'Ver el catálogo',
@@ -902,8 +902,8 @@ export const translations: Record<Lang, Dictionary> = {
       todayValue: 'Software Engineer at BP4. Outside consulting, one freelance engagement at a time, closed scope, written plan.',
     },
     demos: {
-      title: 'Systems for Argentine trades and shops',
-      subtitle: 'Sample demos for Argentine shops and trades. The catalog can be searched and filtered by vertical: client landing page and admin panel, with fictional data. These are not production systems.',
+      title: 'Custom systems for shops and trades',
+      subtitle: 'Custom development: websites and admin panels for kiosks, real estate, tourism, and other trades. These demos are examples for clients, not a SaaS product. If your business looks similar, get in touch for an equivalent system.',
       viewDemo: 'View demo',
       openPanel: 'Panel',
       viewCatalog: 'View the catalog',

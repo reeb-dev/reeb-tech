@@ -52,7 +52,7 @@
   var lead = place === "panel"
     ? "Canal de ejemplo para un mensaje del cliente. No sale a un servidor."
     : place === "hub"
-      ? "Consultá por las demos del portfolio."
+      ? "Si necesita un sistema parecido al de su rubro, escriba por este formulario, WhatsApp o correo."
       : "Dejá un mensaje o escribí por WhatsApp.";
 
   section.innerHTML =

@@ -118,21 +118,29 @@ img { display: block; width: 100%; height: 100%; object-fit: cover; }
   margin-bottom: 16px;
 }
 
+.hero-role {
+  font-size: 14px;
+  font-weight: 650;
+  letter-spacing: 0.06em;
+  color: var(--ink);
+  margin-bottom: 18px;
+}
+
 .hero h1 {
   font-family: Fraunces, Georgia, serif;
-  font-size: clamp(40px, 7vw, 76px);
+  font-size: clamp(36px, 6.2vw, 68px);
   font-weight: 560;
   line-height: 0.98;
   letter-spacing: -0.03em;
-  max-width: 14ch;
+  max-width: 16ch;
   margin-bottom: 22px;
 }
 
 .hero-lead {
   font-size: 18px;
   color: var(--muted);
-  max-width: min(46ch, 100%);
-  margin-bottom: 28px;
+  max-width: min(52ch, 100%);
+  margin-bottom: 16px;
 }
 
 .hero-note {
