@@ -35,17 +35,19 @@
     if (!p) return;
     fichaBody.innerHTML = `
       <img class="ficha-photo" src="${esc(p.imagen)}" alt="${esc(p.nombre)}">
-      <p class="kicker">El Palomar</p>
-      <h2 id="fichaTitle">${esc(p.nombre)}</h2>
-      <p>${esc(p.descripcion)}</p>
-      <dl class="ficha-meta">
-        <div><dt>Precio</dt><dd>${esc(money(p.precio))}</dd></div>
-        <div><dt>Huéspedes</dt><dd>Hasta ${p.pax}</dd></div>
-        <div><dt>Noches</dt><dd>${p.noches || "Día"}</dd></div>
-        <div><dt>Lugar</dt><dd>Ruta 76 km 227</dd></div>
-      </dl>
-      <p class="ficha-amenities">${(p.incluye || []).map((a) => `<span>${esc(a)}</span>`).join("")}</p>
-      <a class="btn" href="#reserva" id="fichaReservar">Pedir este paquete</a>
+      <div class="ficha-copy">
+        <p class="kicker">El Palomar</p>
+        <h2 id="fichaTitle">${esc(p.nombre)}</h2>
+        <p>${esc(p.descripcion)}</p>
+        <dl class="ficha-meta">
+          <div><dt>Precio</dt><dd>${esc(money(p.precio))}</dd></div>
+          <div><dt>Huéspedes</dt><dd>Hasta ${p.pax}</dd></div>
+          <div><dt>Noches</dt><dd>${p.noches || "Día"}</dd></div>
+          <div><dt>Lugar</dt><dd>Ruta 76 km 227</dd></div>
+        </dl>
+        <p class="ficha-amenities">${(p.incluye || []).map((a) => `<span>${esc(a)}</span>`).join("")}</p>
+        <a class="btn" href="#reserva" id="fichaReservar">Pedir este paquete</a>
+      </div>
     `;
     overlay.hidden = false;
     document.body.style.overflow = "hidden";
@@ -66,10 +68,12 @@
     if (!l) return;
     fichaBody.innerHTML = `
       <img class="ficha-photo" src="${esc(l.foto)}" alt="${esc(l.nombre)}">
-      <p class="kicker">Qué visitar</p>
-      <h2 id="fichaTitle">${esc(l.nombre)}</h2>
-      <p>${esc(l.texto)}</p>
-      <p class="ficha-amenities">${(l.tags || []).map((t) => `<span>${esc(t)}</span>`).join("")}</p>
+      <div class="ficha-copy">
+        <p class="kicker">Qué visitar</p>
+        <h2 id="fichaTitle">${esc(l.nombre)}</h2>
+        <p>${esc(l.texto)}</p>
+        <p class="ficha-amenities">${(l.tags || []).map((t) => `<span>${esc(t)}</span>`).join("")}</p>
+      </div>
     `;
     overlay.hidden = false;
     document.body.style.overflow = "hidden";
@@ -95,12 +99,34 @@
   function pintarMapa(elId, lat, lng, popup, zoom) {
     const el = document.getElementById(elId);
     if (!el || typeof L === "undefined") return;
-    const map = L.map(el, { scrollWheelZoom: false }).setView([lat, lng], zoom);
+    const map = L.map(el, {
+      scrollWheelZoom: false,
+      preferCanvas: true
+    }).setView([lat, lng], zoom);
     L.tileLayer("https://tile.openstreetmap.org/{z}/{x}/{y}.png", {
-      attribution: "&copy; OpenStreetMap"
+      attribution: "&copy; OpenStreetMap",
+      maxZoom: 19
     }).addTo(map);
     L.marker([lat, lng]).addTo(map).bindPopup(popup);
-    setTimeout(() => map.invalidateSize(), 80);
+    const refresh = () => map.invalidateSize();
+    setTimeout(refresh, 80);
+    setTimeout(refresh, 400);
+    window.addEventListener("resize", refresh);
+  }
+
+  const navToggle = document.querySelector(".nav-toggle");
+  const topEl = document.querySelector("header.top");
+  if (navToggle && topEl) {
+    navToggle.addEventListener("click", () => {
+      const open = topEl.classList.toggle("is-open");
+      navToggle.setAttribute("aria-expanded", open ? "true" : "false");
+    });
+    topEl.querySelectorAll("nav a").forEach((link) => {
+      link.addEventListener("click", () => {
+        topEl.classList.remove("is-open");
+        navToggle.setAttribute("aria-expanded", "false");
+      });
+    });
   }
 
   fichaClose.addEventListener("click", closeFicha);

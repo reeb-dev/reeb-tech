@@ -120,9 +120,16 @@ export interface Dictionary {
   demos: {
     title: string;
     subtitle: string;
+    whyTitle: string;
+    whyBody: string;
+    provechoTitle: string;
+    provechoBody: string;
+    mobileTitle: string;
+    mobileBody: string;
     viewDemo: string;
     openPanel: string;
     viewCatalog: string;
+    hubUrl: string;
     port: string;
     withArca: string;
     items: DemoCopy[];
@@ -390,12 +397,19 @@ export const translations: Record<Lang, Dictionary> = {
     },
     demos: {
       title: 'Sistemas a medida para oficios y comercios',
-      subtitle: 'Desarrollo a medida: sitios y paneles de administración para kiosco, inmobiliaria, turismo y otros rubros. Las demos son ejemplos para clientes, no un producto SaaS. Si su negocio se parece, contacte para un sistema equivalente.',
+      subtitle: 'Desarrollo a medida: sitios y paneles para kiosco, inmobiliaria, turismo, construcción y otros rubros. Las demos son ejemplos para clientes, no un producto de suscripción. Si su negocio se parece, contacte para un sistema equivalente.',
+      whyTitle: 'Por qué conviene tener una web',
+      whyBody: 'Quien busca el oficio puede encontrarlo. La oferta queda a la vista a cualquier hora y las consultas llegan más claras. Usted administra catálogo, turnos o comprobantes en un panel, no en un Excel suelto.',
+      provechoTitle: 'Provecho concreto',
+      provechoBody: 'Menos respuestas repetidas, un enlace profesional en lugar de fotos por chat, un canal que no depende de una red social, y constancia de pedidos o consultas. El sitio puede crecer con turnos o avisos cuando lo necesite.',
+      mobileTitle: 'También aplicaciones móviles',
+      mobileBody: 'Android nativo (Kotlin/Java), el mismo frente que en LinkedIn. Una app del negocio — turnos, catálogo, avisos — como complemento del sitio, a medida. No es un producto de tienda ni un recuento de descargas.',
       viewDemo: 'Ver demo',
       openPanel: 'Panel',
-      viewCatalog: 'Ver el catálogo',
+      viewCatalog: 'Ver el catálogo completo',
+      hubUrl: 'demos/',
       port: 'Puerto',
-      withArca: 'Con facturación ARCA de ejemplo',
+      withArca: 'ARCA de ejemplo',
       items: [
         {
           id: 'estudio',
@@ -594,6 +608,39 @@ export const translations: Record<Lang, Dictionary> = {
           port: 4220,
           features: ['Paquetes de estadía y spa', 'Actividades del día', 'Huéspedes', 'Turnos de spa'],
           hasArca: true
+        },
+        {
+          id: 'arquitectura',
+          name: 'Estudio Loma',
+          description: 'Casa, reforma o PH: proyectos, dirección de obra y consulta de presupuesto.',
+          category: 'Construcción',
+          icon: '📐',
+          color: '#44403c',
+          port: 4221,
+          features: ['Proyectos de obra', 'Dirección de obra', 'Consulta de presupuesto', 'Ficha del cliente'],
+          hasArca: false
+        },
+        {
+          id: 'materiales',
+          name: 'Corralón El Árido',
+          description: 'Cemento, ladrillo, hierro y arena: catálogo con stock y pedido a obra.',
+          category: 'Construcción',
+          icon: '🧱',
+          color: '#9a3412',
+          port: 4222,
+          features: ['Catálogo de materiales', 'Stock por rubro', 'Pedido a obra', 'Proveedores'],
+          hasArca: true
+        },
+        {
+          id: 'steelframe',
+          name: 'Framehaus',
+          description: 'Modelos de vivienda steel frame: casa, dúplex, PH y ampliación, con obras en taller.',
+          category: 'Construcción',
+          icon: '🏠',
+          color: '#334155',
+          port: 4223,
+          features: ['Modelos de vivienda', 'Casa, dúplex y PH', 'Obras en taller', 'Ampliación'],
+          hasArca: false
         }
       ]
     },
@@ -903,12 +950,19 @@ export const translations: Record<Lang, Dictionary> = {
     },
     demos: {
       title: 'Custom systems for shops and trades',
-      subtitle: 'Custom development: websites and admin panels for kiosks, real estate, tourism, and other trades. These demos are examples for clients, not a SaaS product. If your business looks similar, get in touch for an equivalent system.',
+      subtitle: 'Custom development: websites and admin panels for kiosks, real estate, tourism, construction, and other trades. These demos are examples for clients, not a subscription product. If your business looks similar, get in touch for an equivalent system.',
+      whyTitle: 'Why a website is worth it',
+      whyBody: 'People looking for your trade can find you. Your offer stays visible at any hour, and inquiries arrive clearer. You manage catalog, appointments, or receipts in one panel — not a loose spreadsheet.',
+      provechoTitle: 'Concrete payoff',
+      provechoBody: 'Fewer repeated answers, a professional link instead of photos in chat, a channel that does not depend on a social network, and a record of orders or inquiries. The site can later add appointments or notices when you need them.',
+      mobileTitle: 'Mobile apps as well',
+      mobileBody: 'Native Android (Kotlin/Java), the same track as on LinkedIn. A business app — appointments, catalog, notices — as a complement to the website, built to order. Not a store product and not a download count.',
       viewDemo: 'View demo',
       openPanel: 'Panel',
-      viewCatalog: 'View the catalog',
+      viewCatalog: 'View the full catalog',
+      hubUrl: 'demos/',
       port: 'Port',
-      withArca: 'With sample ARCA billing',
+      withArca: 'Sample ARCA billing',
       items: [
         {
           id: 'estudio',
@@ -1107,6 +1161,39 @@ export const translations: Record<Lang, Dictionary> = {
           port: 4220,
           features: ['Stay and spa packages', 'Day activities', 'Guests', 'Spa slots'],
           hasArca: true
+        },
+        {
+          id: 'arquitectura',
+          name: 'Estudio Loma',
+          description: 'House, renovation, or PH: projects, site direction, and a quote request.',
+          category: 'Construction',
+          icon: '📐',
+          color: '#44403c',
+          port: 4221,
+          features: ['Building projects', 'Site direction', 'Quote request', 'Client file'],
+          hasArca: false
+        },
+        {
+          id: 'materiales',
+          name: 'Corralón El Árido',
+          description: 'Cement, brick, steel, and sand: catalog with stock and job-site orders.',
+          category: 'Construction',
+          icon: '🧱',
+          color: '#9a3412',
+          port: 4222,
+          features: ['Materials catalog', 'Stock by type', 'Job-site orders', 'Suppliers'],
+          hasArca: true
+        },
+        {
+          id: 'steelframe',
+          name: 'Framehaus',
+          description: 'Steel-frame home models: house, duplex, PH, and extension, with shop-floor builds.',
+          category: 'Construction',
+          icon: '🏠',
+          color: '#334155',
+          port: 4223,
+          features: ['Home models', 'House, duplex, and PH', 'Shop-floor builds', 'Extensions'],
+          hasArca: false
         }
       ]
     },

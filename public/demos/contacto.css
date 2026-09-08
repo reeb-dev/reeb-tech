@@ -86,6 +86,18 @@
 }
 .demo-contacto .demo-wa-inline:hover { text-decoration: underline; }
 
+.demo-contacto .demo-mail-inline {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  margin: 12px 0 0 18px;
+  color: inherit;
+  font-weight: 650;
+  text-decoration: none;
+}
+
+.demo-contacto .demo-mail-inline:hover { text-decoration: underline; }
+
 .demo-toast {
   position: fixed;
   left: 50%;

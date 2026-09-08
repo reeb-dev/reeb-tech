@@ -38,21 +38,23 @@
     const salidas = loadSalidas().filter((s) => s.tourId === t.id);
     fichaBody.innerHTML = `
       <img class="ficha-photo" src="${esc(t.imagen)}" alt="${esc(t.nombre)}">
-      <p class="kicker">${esc(t.dificultad || idiomaLabel(t.idioma))}</p>
-      <h2 id="fichaTitle">${esc(t.nombre)}</h2>
-      <p>${esc(t.descripcion)}</p>
-      <dl class="ficha-meta">
-        <div><dt>Duración</dt><dd>${esc(t.duracion)}</dd></div>
-        <div><dt>Dificultad</dt><dd>${esc(t.dificultad || "—")}</dd></div>
-        <div><dt>Precio</dt><dd>${esc(money(t.precio))} / pers.</dd></div>
-        <div><dt>Guía</dt><dd>${esc(t.guia)}</dd></div>
-      </dl>
-      <p style="margin:0 22px 12px;font-size:14px;color:var(--muted)">Próximas salidas: ${
+      <div class="ficha-copy">
+        <p class="kicker">${esc(t.dificultad || idiomaLabel(t.idioma))}</p>
+        <h2 id="fichaTitle">${esc(t.nombre)}</h2>
+        <p>${esc(t.descripcion)}</p>
+        <dl class="ficha-meta">
+          <div><dt>Duración</dt><dd>${esc(t.duracion)}</dd></div>
+          <div><dt>Dificultad</dt><dd>${esc(t.dificultad || "—")}</dd></div>
+          <div><dt>Precio</dt><dd>${esc(money(t.precio))} / pers.</dd></div>
+          <div><dt>Guía</dt><dd>${esc(t.guia)}</dd></div>
+        </dl>
+        <p style="margin:0 0 12px;font-size:14px;color:var(--muted)">Próximas salidas: ${
         salidas.length
           ? salidas.map((s) => `${fmtDate(s.fecha)} ${s.hora} (${cupoLibre(s, t)} libres)`).join(" · ")
           : "a coordinar"
       }</p>
-      <a class="btn" href="#reserva" id="fichaReservar">Pedir plaza</a>
+        <a class="btn" href="#reserva" id="fichaReservar">Pedir plaza</a>
+      </div>
     `;
     overlay.hidden = false;
     document.body.style.overflow = "hidden";
@@ -73,10 +75,12 @@
     if (!l) return;
     fichaBody.innerHTML = `
       <img class="ficha-photo" src="${esc(l.foto)}" alt="${esc(l.nombre)}">
-      <p class="kicker">Qué visitar</p>
-      <h2 id="fichaTitle">${esc(l.nombre)}</h2>
-      <p>${esc(l.texto)}</p>
-      <p class="ficha-amenities">${(l.tags || []).map((t) => `<span>${esc(t)}</span>`).join("")}</p>
+      <div class="ficha-copy">
+        <p class="kicker">Qué visitar</p>
+        <h2 id="fichaTitle">${esc(l.nombre)}</h2>
+        <p>${esc(l.texto)}</p>
+        <p class="ficha-amenities">${(l.tags || []).map((t) => `<span>${esc(t)}</span>`).join("")}</p>
+      </div>
     `;
     overlay.hidden = false;
     document.body.style.overflow = "hidden";
@@ -102,12 +106,34 @@
   function pintarMapa(elId, lat, lng, popup, zoom) {
     const el = document.getElementById(elId);
     if (!el || typeof L === "undefined") return;
-    const map = L.map(el, { scrollWheelZoom: false }).setView([lat, lng], zoom);
+    const map = L.map(el, {
+      scrollWheelZoom: false,
+      preferCanvas: true
+    }).setView([lat, lng], zoom);
     L.tileLayer("https://tile.openstreetmap.org/{z}/{x}/{y}.png", {
-      attribution: "&copy; OpenStreetMap"
+      attribution: "&copy; OpenStreetMap",
+      maxZoom: 19
     }).addTo(map);
     L.marker([lat, lng]).addTo(map).bindPopup(popup);
-    setTimeout(() => map.invalidateSize(), 80);
+    const refresh = () => map.invalidateSize();
+    setTimeout(refresh, 80);
+    setTimeout(refresh, 400);
+    window.addEventListener("resize", refresh);
+  }
+
+  const navToggle = document.querySelector(".nav-toggle");
+  const topEl = document.querySelector("header.top");
+  if (navToggle && topEl) {
+    navToggle.addEventListener("click", () => {
+      const open = topEl.classList.toggle("is-open");
+      navToggle.setAttribute("aria-expanded", open ? "true" : "false");
+    });
+    topEl.querySelectorAll("nav a").forEach((link) => {
+      link.addEventListener("click", () => {
+        topEl.classList.remove("is-open");
+        navToggle.setAttribute("aria-expanded", "false");
+      });
+    });
   }
 
   fichaClose.addEventListener("click", closeFicha);

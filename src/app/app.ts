@@ -6,6 +6,7 @@ import { ProjectsComponent } from './components/projects/projects';
 import { StackComponent } from './components/stack/stack';
 import { CertificatesComponent } from './components/certificates/certificates';
 import { AboutComponent } from './components/about/about';
+import { DemosComponent } from './components/demos/demos';
 import { ServicesComponent } from './components/services/services';
 import { ContactComponent } from './components/contact/contact';
 import { FooterComponent } from './components/footer/footer';
@@ -21,6 +22,7 @@ import { I18nService } from './services/i18n';
     StackComponent,
     CertificatesComponent,
     AboutComponent,
+    DemosComponent,
     ServicesComponent,
     ContactComponent,
     FooterComponent,

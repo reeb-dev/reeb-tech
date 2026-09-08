@@ -468,7 +468,7 @@ h1 { font-size: 40px; line-height: 1.2; margin: 12px 0; color: var(--azul); }
 
 .modal-stats {
   display: grid;
-  grid-template-columns: repeat(4, 1fr);
+  grid-template-columns: repeat(2, 1fr);
   gap: 12px;
   margin-bottom: 24px;
 }

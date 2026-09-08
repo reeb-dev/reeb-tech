@@ -174,24 +174,12 @@ function renderProperties() {
             ${p.cochera ? "<span>Cochera</span>" : ""}
           </div>
           <div class="stats">
-            <span>${Number(p.vistas || 0)} visitas</span>
-            <span>${Number(p.consultas || 0)} consultas</span>
             <span>${p.diasPublicada} días</span>
           </div>
         </div>
       </article>
     `;
   }).join("");
-}
-
-function refreshListingStats() {
-  if (currentProperty) {
-    const vistasEl = document.querySelector("[data-stat-vistas]");
-    const consultasEl = document.querySelector("[data-stat-consultas]");
-    if (vistasEl) vistasEl.textContent = Number(currentProperty.vistas || 0);
-    if (consultasEl) consultasEl.textContent = Number(currentProperty.consultas || 0);
-  }
-  renderProperties();
 }
 
 function showFichaToast(message) {
@@ -298,14 +286,6 @@ function openModal(id) {
 
     <div class="modal-stats">
       <div class="stat">
-        <div class="value" data-stat-vistas>${Number(p.vistas || 0)}</div>
-        <div class="label">Visitas</div>
-      </div>
-      <div class="stat">
-        <div class="value" data-stat-consultas>${Number(p.consultas || 0)}</div>
-        <div class="label">Consultas</div>
-      </div>
-      <div class="stat">
         <div class="value">${p.diasPublicada}</div>
         <div class="label">Días publicada</div>
       </div>
@@ -335,7 +315,6 @@ function openModal(id) {
 
   document.getElementById("modal").classList.add("open");
   document.body.style.overflow = "hidden";
-  renderProperties();
 }
 
 function closeModal() {
@@ -433,7 +412,6 @@ document.getElementById("modalContent").addEventListener("click", (event) => {
   const action = event.target.closest("[data-consulta]");
   if (!action || !currentProperty) return;
   recordListingConsulta(properties, currentProperty.id);
-  refreshListingStats();
 });
 
 document.getElementById("modalContent").addEventListener("submit", (event) => {
@@ -454,7 +432,6 @@ document.getElementById("modalContent").addEventListener("submit", (event) => {
   recordListingConsulta(properties, currentProperty.id);
   form.reset();
   showFichaToast("Consulta enviada (demo)");
-  refreshListingStats();
 });
 
 populateBarrios();
