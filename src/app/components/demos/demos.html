@@ -20,29 +20,37 @@
       </div>
     </div>
 
-    <div id="precios" class="max-w-4xl mx-auto mb-16 text-left scroll-mt-24">
+    <div id="precios" class="max-w-6xl mx-auto mb-16 text-left scroll-mt-24">
       <h3 class="text-xl font-semibold text-gray-900 dark:text-white mb-2">{{ i18n.t().demos.pricesTitle }}</h3>
       <p class="text-sm text-[#94A3B8] mb-6">{{ i18n.t().demos.pricesLead }}</p>
 
       <h4 class="text-sm font-semibold text-gray-900 dark:text-white mb-3">{{ i18n.t().demos.pricesSitesTitle }}</h4>
-      <div class="overflow-x-auto mb-8 rounded-xl border border-[#E5E7EB] dark:border-[#1E293B]">
+      <div class="overflow-x-auto mb-3 rounded-xl border border-[#E5E7EB] dark:border-[#1E293B]">
         <table class="w-full text-sm">
           <thead class="bg-gray-50 dark:bg-[#0A0A0B] text-left">
             <tr>
               <th class="px-4 py-3 font-semibold text-gray-900 dark:text-white">{{ i18n.t().demos.pricesColPlan }}</th>
               <th class="px-4 py-3 font-semibold text-gray-900 dark:text-white">{{ i18n.t().demos.pricesColIncludes }}</th>
+              <th class="px-4 py-3 font-semibold text-gray-900 dark:text-white">{{ i18n.t().demos.pricesColExcludes }}</th>
+              <th class="px-4 py-3 font-semibold text-gray-900 dark:text-white whitespace-nowrap">{{ i18n.t().demos.pricesColTimeline }}</th>
               <th class="px-4 py-3 font-semibold text-gray-900 dark:text-white whitespace-nowrap">{{ i18n.t().demos.pricesColFrom }}</th>
             </tr>
           </thead>
           <tbody>
             <tr *ngFor="let plan of i18n.t().demos.pricesPlans" class="border-t border-[#E5E7EB] dark:border-[#1E293B] bg-white dark:bg-[#0A0A0B]">
-              <th class="px-4 py-3 font-semibold text-gray-900 dark:text-white text-left align-top whitespace-nowrap">{{ plan.name }}</th>
+              <th class="px-4 py-3 font-semibold text-gray-900 dark:text-white text-left align-top min-w-[16rem]">
+                {{ plan.name }}
+                <p class="mt-2 font-normal text-sm text-[#94A3B8] whitespace-normal">{{ plan.plain }}</p>
+              </th>
               <td class="px-4 py-3 text-[#94A3B8] align-top">{{ plan.includes }}</td>
+              <td class="px-4 py-3 text-[#94A3B8] align-top">{{ plan.excludes }}</td>
+              <td class="px-4 py-3 text-[#94A3B8] align-top">{{ plan.timeline }}</td>
               <td class="px-4 py-3 font-semibold text-[#3B82F6] align-top whitespace-nowrap">{{ plan.price }}</td>
             </tr>
           </tbody>
         </table>
       </div>
+      <p class="text-sm text-[#94A3B8] mb-8">{{ i18n.t().demos.pricesSitesNote }}</p>
 
       <h4 class="text-sm font-semibold text-gray-900 dark:text-white mb-2">{{ i18n.t().demos.pricesHostTitle }}</h4>
       <p class="text-sm text-[#94A3B8] mb-4">{{ i18n.t().demos.pricesHostLead }}</p>

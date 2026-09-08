@@ -8,7 +8,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,560;9..144,650&family=Outfit:wght@400;600;650;700&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="hub.css?v=hub12">
+  <link rel="stylesheet" href="hub.css?v=hub14">
 </head>
 <body>
 
@@ -223,41 +223,59 @@
     <div class="prices-inner">
       <p class="badge">Precios</p>
       <h2>Planes de referencia</h2>
-      <p class="prices-lead">Valores <strong>desde</strong>. El alcance se cotiza según su rubro. El precio es <strong>conversable</strong> y se puede pagar <strong>en cuotas</strong> (la cantidad se acuerda). La facturación ARCA y los pagos reales se cotizan aparte. Las demos de esta página son ejemplos, no el producto cerrado.</p>
+      <p class="prices-lead">Valores <strong>desde</strong>. El alcance se cotiza según su rubro. El precio es <strong>conversable</strong> y se puede pagar <strong>en cuotas</strong> (la cantidad se acuerda). Los plazos son <strong>estimados</strong> y conversables. La facturación ARCA y los pagos reales se cotizan aparte. Las demos de esta página son ejemplos, no el producto cerrado.</p>
 
       <h3>Sitios y paneles</h3>
       <div class="price-table-wrap">
-        <table class="price-table">
+        <table class="price-table price-table-plans">
           <caption class="visually-hidden">Planes de sitios y paneles</caption>
           <thead>
             <tr>
               <th scope="col">Plan</th>
-              <th scope="col">Qué incluye</th>
+              <th scope="col">Qué entra</th>
+              <th scope="col">Qué no entra</th>
+              <th scope="col">Plazo (estimado)</th>
               <th scope="col">Desde</th>
             </tr>
           </thead>
           <tbody>
             <tr>
-              <th scope="row">Presencia</th>
-              <td data-label="Qué incluye">Vitrina, ubicación, WhatsApp, formulario. Sin panel.</td>
-              <td data-label="Desde">USD 350</td>
+              <th scope="row">
+                <span class="price-plan-name">Presencia</span>
+                <p class="price-plain">Una página para que lo encuentren y le escriban. Muestra qué hace, dónde está y el WhatsApp. Usted no carga stock ni turnos en un panel: si cambia un precio, se lo pide a quien armó el sitio.</p>
+              </th>
+              <td data-label="Qué entra">Pocas páginas de vitrina (inicio, ubicación, contacto). WhatsApp y formulario. Sin panel. Las demos del catálogo sirven de referencia.</td>
+              <td data-label="Qué no entra">ARCA en producción, pasarela de pago real, contenido fotográfico ilimitado.</td>
+              <td data-label="Plazo (estimado)">1–2 semanas · conversable</td>
+              <td class="price-amt" data-label="Desde">USD 350</td>
             </tr>
             <tr>
-              <th scope="row">Negocio</th>
-              <td data-label="Qué incluye">Vitrina + panel (stock, turnos, reservas o comprobantes).</td>
-              <td data-label="Desde">USD 700</td>
+              <th scope="row">
+                <span class="price-plan-name">Negocio</span>
+                <p class="price-plain">El sitio que ve el cliente y una pantalla para usted (el panel): carga productos, turnos o reservas, como en las demos. No hace falta saber programar.</p>
+              </th>
+              <td data-label="Qué entra">Vitrina + panel (stock, turnos, reservas o comprobantes). WhatsApp y formulario. Las demos del catálogo sirven de referencia.</td>
+              <td data-label="Qué no entra">ARCA en producción, pasarela de pago real, contenido fotográfico ilimitado.</td>
+              <td data-label="Plazo (estimado)">3–5 semanas · conversable</td>
+              <td class="price-amt" data-label="Desde">USD 700</td>
             </tr>
             <tr>
-              <th scope="row">Negocio + app</th>
-              <td data-label="Qué incluye">Lo anterior + app Android nativa (catálogo, turnos o avisos).</td>
-              <td data-label="Desde">USD 1.400</td>
+              <th scope="row">
+                <span class="price-plan-name">Negocio + app</span>
+                <p class="price-plain">Lo mismo, más una aplicación en el celular (Android) para que el cliente vea el catálogo o pida un turno sin abrir el navegador.</p>
+              </th>
+              <td data-label="Qué entra">Vitrina, panel y aplicación Android (catálogo, turnos o avisos). WhatsApp y formulario. Las demos del catálogo sirven de referencia.</td>
+              <td data-label="Qué no entra">ARCA en producción, pasarela de pago real, contenido fotográfico ilimitado.</td>
+              <td data-label="Plazo (estimado)">6–10 semanas · conversable</td>
+              <td class="price-amt" data-label="Desde">USD 1.400</td>
             </tr>
           </tbody>
         </table>
       </div>
+      <p class="prices-host-note">Los plazos son orientativos. El servidor de cada plan está en la tabla siguiente.</p>
 
       <h3>Servidor / hosting</h3>
-      <p class="prices-sublead">Valores <strong>desde</strong>, orientativos y <strong>conversables</strong>. No es un abono SaaS obligatorio. El proveedor se elige con el trabajo; no hay un único hosting.</p>
+      <p class="prices-sublead">El servidor es donde vive el sitio en internet: como el <strong>alquiler del local</strong>, pero digital. Valores <strong>desde</strong>, orientativos y <strong>conversables</strong>, alineados a Presencia / Negocio / Negocio + app. No es un pago mensual obligatorio de un producto cerrado; el proveedor se elige con el trabajo.</p>
       <div class="price-table-wrap">
         <table class="price-table price-table-host">
           <caption class="visually-hidden">Servidor y hosting según el plan</caption>
@@ -271,18 +289,18 @@
           <tbody>
             <tr>
               <th scope="row">Presencia (vitrina)</th>
-              <td data-label="Servidor típico">Hosting estático (p. ej. GitHub Pages) + dominio</td>
-              <td data-label="Desde (orientativo)">USD 0–5 / mes + dominio</td>
+              <td data-label="Servidor típico">Páginas fijas en internet (por ejemplo GitHub Pages) y el nombre del sitio</td>
+              <td class="price-amt" data-label="Desde (orientativo)">USD 0–5 / mes + dominio</td>
             </tr>
             <tr>
               <th scope="row">Negocio (vitrina + panel)</th>
-              <td data-label="Servidor típico">VPS chico o hosting con base de datos</td>
-              <td data-label="Desde (orientativo)">USD 8–15 / mes</td>
+              <td data-label="Servidor típico">Un equipo alquilado en internet, con espacio para guardar productos o turnos</td>
+              <td class="price-amt" data-label="Desde (orientativo)">USD 8–15 / mes</td>
             </tr>
             <tr>
               <th scope="row">Negocio + app</th>
-              <td data-label="Servidor típico">VPS / backend para API y avisos</td>
-              <td data-label="Desde (orientativo)">USD 15–25 / mes</td>
+              <td data-label="Servidor típico">Un equipo alquilado en internet, para el sitio, el panel y la aplicación del celular</td>
+              <td class="price-amt" data-label="Desde (orientativo)">USD 15–25 / mes</td>
             </tr>
           </tbody>
         </table>
@@ -294,27 +312,22 @@
       <div class="price-extras">
         <article class="price-extra">
           <h4>Rubro turismo / reservas</h4>
-          <p>Fechas, cupos, cabañas o excursiones (como las demos de Ventana).</p>
+          <p>Fechas, cupos, cabañas o excursiones (como las demos de Sierra de la Ventana). Se suma al plan elegido.</p>
           <p class="price-extra-from">Desde USD 250 extra</p>
         </article>
         <article class="price-extra">
           <h4>Facturación ARCA</h4>
-          <p>Comprobantes de ejemplo + circuito a definir con contador.</p>
+          <p>Comprobantes de ejemplo en las demos. El circuito de producción se define con su contador.</p>
           <p class="price-extra-from">A cotizar</p>
         </article>
         <article class="price-extra">
           <h4>Catálogo grande / fotos</h4>
-          <p>Muchas fichas, filtros, galería.</p>
+          <p>Muchas fichas, filtros y galería. No incluye contenido fotográfico ilimitado.</p>
           <p class="price-extra-from">Desde USD 150 extra</p>
         </article>
         <article class="price-extra">
-          <h4>Capacitación</h4>
-          <p>Una sesión para cargar el panel.</p>
-          <p class="price-extra-from">Desde USD 80</p>
-        </article>
-        <article class="price-extra">
           <h4>Mantenimiento</h4>
-          <p>Cambios menores / mes (conversable).</p>
+          <p>Cambios menores al mes (textos, fotos, ajustes). Conversable.</p>
           <p class="price-extra-from">Desde USD 40 / mes</p>
         </article>
       </div>

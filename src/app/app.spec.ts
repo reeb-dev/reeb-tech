@@ -33,6 +33,11 @@ describe('App', () => {
     expect(compiled.querySelector('#demos #precios')?.textContent).toMatch(/Presencia|Presence/);
     expect(compiled.querySelector('#demos #precios')?.textContent).toMatch(/USD 350/);
     expect(compiled.querySelector('#demos #precios')?.textContent).toMatch(/conversable|negotiable/i);
+    expect(compiled.querySelector('#demos #precios')?.textContent).toMatch(/1–2 semanas|1–2 weeks/);
+    expect(compiled.querySelector('#demos #precios')?.textContent).toMatch(/ARCA en producción|Production ARCA/);
+    expect(compiled.querySelector('#demos #precios')?.textContent).toMatch(/no carga stock|do not load stock/i);
+    expect(compiled.querySelector('#demos #precios')?.textContent).toMatch(/alquiler del local|renting a shop/i);
+    expect(compiled.querySelector('#demos #precios')?.textContent).not.toMatch(/Capacitación|Training/);
     expect(compiled.querySelector('#demos #precios')?.textContent).toMatch(/GitHub Pages/);
     expect(compiled.querySelector('#demos #precios')?.textContent).toMatch(/USD 8–15/);
     expect(compiled.querySelector('#demos #precios a[href^="https://wa.me/5492915757934"]')).toBeTruthy();
