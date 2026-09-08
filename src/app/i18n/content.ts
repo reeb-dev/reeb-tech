@@ -189,14 +189,14 @@ export const translations: Record<Lang, Dictionary> = {
           role: 'Software Engineer',
           years: 'Ene 2026 – actualidad',
           description:
-            'Apps a medida para clientes: Android nativo, Angular y backend Java. En Fiserv: mantenimiento de código legacy y pruebas SMTP por terminal en entornos de desarrollo y producción, sobre un sistema con muchos usuarios. Code review y entregas incrementales.',
+            'Apps a medida para clientes: Android nativo, Angular y backend Java. En Fiserv: mantenimiento de código legacy y pruebas SMTP por terminal en entornos de desarrollo y producción. Code review y entregas incrementales.',
         },
         {
           ...companiesMeta.indra,
           role: 'Ingeniero de software',
           years: 'Ene 2022 – oct 2025',
           description:
-            'Evolución de sistemas en producción (web y móvil). Android nativo (Java/Kotlin, MVVM/MVP), Angular/TypeScript y backend Java/Spring Boot, con pruebas y pases a entornos.',
+            'Evolución de sistemas en producción (web y móvil) para Banco Santander, Telefónica, UGG y GCBA. Android nativo (Java/Kotlin, MVVM/MVP), Angular/TypeScript y backend Java/Spring Boot, con pruebas y pases a entornos.',
         },
         {
           ...companiesMeta.siskit,
@@ -221,7 +221,7 @@ export const translations: Record<Lang, Dictionary> = {
           role: 'Software Engineer',
           environment: 'Consultora · clientes',
           challenge:
-            'Bajar a código flujos de negocio (carga de horas, roles, reportes) y alinear el trabajo con revisiones, Git y pases de entorno.',
+            'Cambios de alcance controlado sobre sistemas existentes, alineados con code review, Git y pases de entorno.',
           solution:
             'Features en Android, Angular y Spring Boot. Code review y entregas incrementales, con el mismo criterio que el resto del equipo.',
           metrics: 'Ene 2026 – actualidad',
@@ -230,7 +230,7 @@ export const translations: Record<Lang, Dictionary> = {
         {
           title: 'Sistemas en producción — Indra',
           context:
-            'Web y móvil ya en producción. El trabajo era tocar código existente sin romper lo que ya andaba.',
+            'Web y móvil ya en producción, para Banco Santander, Telefónica, UGG y GCBA. El trabajo era evolucionar código existente sin degradar lo que ya funcionaba.',
           role: 'Ingeniero de software',
           environment: 'Enterprise',
           challenge:
@@ -344,14 +344,14 @@ export const translations: Record<Lang, Dictionary> = {
     },
     about: {
       title: 'Sobre',
-      p1Before: 'Ingeniero de software desde 2017. Consultoría y producto desde 2018: ',
-      p1Highlight: 'más de 8 años en Android nativo, Angular y Java/Spring Boot',
-      p2: 'En Siskit armé sistemas web y móviles de punta a punta. En Indra (2022–2025) evolucioné aplicaciones en producción — web y móvil — con foco en cambios seguros, pruebas y pases a entornos. Desde enero 2026 estoy en BP4 (Fiserv): apps a medida, mantenimiento de código legacy, backend Java, code review y entregas incrementales.',
-      p3: 'es mi marca personal: el mismo criterio, para un trabajo freelance acotado o una consulta.',
+      p1Before: 'Desarrollo y mantengo software en producción. Trabajo sobre ',
+      p1Highlight: 'Android nativo, Angular y Java/Spring Boot',
+      p2: 'En Siskit desarrollé sistemas web y móviles para clientes, de análisis a soporte. En Indra (2022–2025) evolucioné aplicaciones web y móviles ya desplegadas, para Banco Santander, Telefónica, UGG y GCBA, con pruebas y pases a entornos. Desde enero de 2026 estoy en BP4, asignado a Fiserv: mantenimiento de código legacy, backend Java, pruebas SMTP y entregas con code review.',
+      p3: 'mantiene el mismo criterio fuera de la consultora: un freelance a la vez, alcance cerrado y plan escrito.',
       focusLabel: 'Enfoque actual',
       focusValue: 'Android (Kotlin/Java) · Angular · Java/Spring Boot',
       todayLabel: 'Hoy',
-      todayValue: 'Software Engineer en BP4. Abierto a freelance de alcance cerrado, con plan escrito.',
+      todayValue: 'Software Engineer en BP4. Fuera de la consultora, un freelance a la vez, con alcance cerrado y plan escrito.',
     },
     services: {
       title: 'En qué puedo ayudarte',
@@ -489,14 +489,14 @@ export const translations: Record<Lang, Dictionary> = {
           role: 'Software Engineer',
           years: 'Jan 2026 – present',
           description:
-            'Custom client apps: native Android, Angular, and Java backends. At Fiserv: legacy code maintenance and SMTP tests from the terminal in development and production environments, on a system with a high volume of users. Code review and incremental delivery.',
+            'Custom client apps: native Android, Angular, and Java backends. At Fiserv: legacy code maintenance and SMTP tests from the terminal in development and production. Code review and incremental delivery.',
         },
         {
           ...companiesMeta.indra,
           role: 'Software Engineer',
           years: 'Jan 2022 – Oct 2025',
           description:
-            'Evolved production systems (web and mobile). Native Android (Java/Kotlin, MVVM/MVP), Angular/TypeScript, and Java/Spring Boot backends, with tests and environment promotions.',
+            'Evolved production systems (web and mobile) for Banco Santander, Telefónica, UGG, and GCBA. Native Android (Java/Kotlin, MVVM/MVP), Angular/TypeScript, and Java/Spring Boot backends, with tests and environment promotions.',
         },
         {
           ...companiesMeta.siskit,
@@ -521,7 +521,7 @@ export const translations: Record<Lang, Dictionary> = {
           role: 'Software Engineer',
           environment: 'Consultancy · clients',
           challenge:
-            'Turn business flows (time tracking, roles, reports) into code, aligned with reviews, Git, and environment promotions.',
+            'Scoped changes on existing systems, aligned with code review, Git, and environment promotions.',
           solution:
             'Features in Android, Angular, and Spring Boot. Code review and incremental delivery, matching the rest of the team.',
           metrics: 'Jan 2026 – present',
@@ -529,7 +529,8 @@ export const translations: Record<Lang, Dictionary> = {
         },
         {
           title: 'Production systems — Indra',
-          context: 'Web and mobile already in production. The job was changing existing code without breaking what worked.',
+          context:
+            'Web and mobile already in production, for Banco Santander, Telefónica, UGG, and GCBA. The job was evolving existing code without degrading what already worked.',
           role: 'Software Engineer',
           environment: 'Enterprise',
           challenge:
@@ -641,14 +642,14 @@ export const translations: Record<Lang, Dictionary> = {
     },
     about: {
       title: 'About',
-      p1Before: 'Software engineer since 2017. Consulting and product work since 2018: ',
-      p1Highlight: '8+ years on native Android, Angular, and Java/Spring Boot',
-      p2: 'At Siskit I built web and mobile systems end to end. At Indra (2022–2025) I evolved production apps — web and mobile — with a focus on safe changes, tests, and environment promotions. Since January 2026 I have been at BP4 (Fiserv): custom apps, legacy maintenance, Java backends, code review, and incremental delivery.',
-      p3: 'is my personal brand: the same standard, for a scoped freelance slice or a conversation.',
+      p1Before: 'I build and maintain production software. I work on ',
+      p1Highlight: 'native Android, Angular, and Java/Spring Boot',
+      p2: 'At Siskit I built web and mobile systems for clients, from analysis through support. At Indra (2022–2025) I evolved live web and mobile apps for Banco Santander, Telefónica, UGG, and GCBA, with tests and environment promotions. Since January 2026 I have been at BP4, assigned to Fiserv: legacy maintenance, Java backends, SMTP tests, and delivery with code review.',
+      p3: 'keeps the same standard outside consulting: one freelance engagement at a time, closed scope, written plan.',
       focusLabel: 'Focus',
       focusValue: 'Android (Kotlin/Java) · Angular · Java/Spring Boot',
       todayLabel: 'Now',
-      todayValue: 'Software Engineer at BP4. Open to closed-scope freelance, with a written plan first.',
+      todayValue: 'Software Engineer at BP4. Outside consulting, one freelance engagement at a time, closed scope, written plan.',
     },
     services: {
       title: 'How I can help',
