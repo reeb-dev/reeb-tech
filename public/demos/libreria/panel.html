@@ -3,14 +3,14 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Panel · Librería</title>
+  <title>Panel · Librería Rivadavia</title>
   <link rel="stylesheet" href="styles.css">
 </head>
 <body>
   <div class="app">
     <header class="top">
       <div class="top-inner">
-        <a class="logo" href="index.html">LIBRERÍA<small>Libros y útiles · demo</small></a>
+        <a class="logo" href="index.html">LIBRERÍA RIVADAVIA<small>Libros · demo</small></a>
         <nav>
           <a href="index.html">Inicio</a>
           <button class="btn" id="open-create" type="button">Nuevo producto</button>
@@ -20,8 +20,13 @@
     <div class="toolbar">
       <div>
         <p class="eyebrow">Datos de ejemplo</p>
-        <h1>Catálogo y ventas</h1>
+        <h1>Catálogo, encargos y ventas</h1>
       </div>
+    </div>
+    <div class="tabs" id="tabs">
+      <button type="button" data-tab="inventario" class="on">Inventario</button>
+      <button type="button" data-tab="pedidos">Pedidos especiales</button>
+      <button type="button" data-tab="ventas">Ventas</button>
     </div>
     <div class="stats" id="stats"></div>
     <form class="create" id="create">
@@ -42,7 +47,7 @@
       <input name="proveedor" placeholder="Proveedor">
       <button class="btn-panel" type="submit">Agregar</button>
     </form>
-    <div class="workspace">
+    <div class="workspace" id="view-inventario">
       <section class="list">
         <table>
           <thead>
@@ -58,13 +63,17 @@
           </thead>
           <tbody id="rows"></tbody>
         </table>
-        <section class="ventas-panel">
-          <h3>Ventas recientes</h3>
-          <div id="ventas"></div>
-        </section>
       </section>
       <aside class="detail" id="detail"></aside>
     </div>
+    <section class="panel-section" id="view-pedidos" hidden>
+      <p class="note">Encargos del catálogo (título, autor, contacto). Quedan en este navegador.</p>
+      <div id="pedidos"></div>
+    </section>
+    <section class="panel-section" id="view-ventas" hidden>
+      <p class="note">Ventas del mostrador y de ARCA. Miniatura de cada título.</p>
+      <div id="ventas"></div>
+    </section>
   </div>
   <script src="../contacto.js" data-phone="5491140001234" data-text="Hola, quiero consultar por un libro del catálogo" data-subject="Consulta demo — Librería" data-title="Consultar un título" data-place="panel"></script>
   <script src="data.js"></script>

@@ -3,16 +3,17 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Librería — Catálogo de venta de libros</title>
+  <title>Librería Rivadavia — Caballito</title>
   <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-  <header class="top" style="background: var(--verde, #27ae60);">
+  <header class="top">
     <div class="top-inner">
-      <a class="logo" href="index.html">LIBRERÍA<small>Libros, útiles y papelería</small></a>
+      <a class="logo" href="index.html">LIBRERÍA RIVADAVIA<small>Caballito · libros de mostrador</small></a>
       <nav>
+        <a href="#destacados">Destacados</a>
         <a href="#catalogo">Catálogo</a>
-        <a href="#pedidos">Pedidos</a>
+        <a href="#pedidos">Encargos</a>
         <div class="cart-wrap">
           <button class="cart-btn" id="cartBtn" type="button" aria-label="Carrito">🛒 <span class="cart-badge" id="cartBadge">0</span></button>
           <div class="cart-dropdown" id="cartDropdown" hidden></div>
@@ -25,10 +26,18 @@
   <main class="wrap">
     <section class="hero">
       <div>
-        <p class="kicker">Catálogo de venta</p>
-        <h1>Libros con tapa, descripción y precio en pesos.</h1>
-        <p class="lead">Veintiséis títulos de ficción, clásicos e historieta latinoamericana. Cada uno con tapa, autor, editorial y stock. ¿No está lo que buscás? Te lo encargamos.</p>
-        <a class="btn" href="#catalogo" style="background:var(--verde,#27ae60);color:white;">Ver catálogo</a>
+        <p class="kicker">Librería de barrio · Caballito</p>
+        <h1>Tapas en la vidriera, pedidos a editorial si no está en góndola.</h1>
+        <p class="lead">Veintiséis títulos de ficción, ensayo, infantil, historieta y clásicos. Cada ficha trae tapa, autor, editorial, precio y stock. El carrito descuenta unidades en esta demo.</p>
+        <form class="hero-search" id="heroSearchForm" role="search">
+          <label class="sr-only" for="searchHero">Buscar por título o autor</label>
+          <input id="searchHero" type="search" placeholder="Buscar por título o autor…" autocomplete="off">
+          <button class="btn" type="submit">Buscar</button>
+        </form>
+        <div class="hero-actions">
+          <a class="btn" href="#catalogo">Ver catálogo</a>
+          <a class="btn btn-line" href="#pedidos">Encargar un título</a>
+        </div>
       </div>
       <aside class="hero-covers" aria-hidden="true">
         <img src="img/el-aleph.jpg" alt="">
@@ -37,26 +46,63 @@
       </aside>
     </section>
 
+    <section class="section shelf" id="destacados">
+      <div class="shelf-head">
+        <p class="kicker">Vitrina</p>
+        <h2>Destacados</h2>
+      </div>
+      <div class="shelf-row" id="destacadosGrid"></div>
+    </section>
+
+    <section class="section shelf" id="novedades">
+      <div class="shelf-head">
+        <p class="kicker">Llegaron esta semana</p>
+        <h2>Novedades</h2>
+      </div>
+      <div class="shelf-row" id="novedadesGrid"></div>
+    </section>
+
     <section class="section" id="catalogo">
       <div class="catalog-header">
-        <h2>Catálogo de venta</h2>
-        <div class="filters" id="filters"></div>
+        <div>
+          <p class="kicker">Góndola</p>
+          <h2>Catálogo de venta</h2>
+        </div>
+        <div class="catalog-tools">
+          <label class="search-field">
+            <span class="sr-only">Buscar en el catálogo</span>
+            <input id="searchLibros" type="search" placeholder="Título o autor…" autocomplete="off">
+          </label>
+          <div class="filters" id="filters"></div>
+        </div>
       </div>
+      <p class="catalog-count" id="catalogCount"></p>
       <div class="book-grid" id="catalog"></div>
+    </section>
 
-      <div class="pedido-box" id="pedidos">
-        <h3>Pedidos especiales</h3>
-        <p>¿Necesitás un título que no tenemos en góndola? Te lo encargamos a la editorial. Dejá una seña y te avisamos cuando llegue.</p>
-        <p style="margin-top:12px;font-weight:600;">011-4555-1234</p>
-      </div>
-
-      <div class="admin-link">
-        <p>¿Sos el dueño de la librería?</p>
-        <a class="btn" href="panel.html" style="background:var(--verde,#27ae60);color:white;">Acceder al panel de gestión</a>
+    <section class="section" id="pedidos">
+      <div class="pedido-box">
+        <div>
+          <p class="kicker light">Encargos</p>
+          <h2>Pedidos especiales</h2>
+          <p>Si no está en góndola, lo encargamos a la editorial. Dejá título, autor y un teléfono o mail. El pedido queda en el panel; no sale a un servidor.</p>
+        </div>
+        <form id="pedidoForm" class="pedido-form">
+          <label>Título
+            <input name="titulo" required maxlength="160" placeholder="Ej. Rayuela">
+          </label>
+          <label>Autor
+            <input name="autor" required maxlength="120" placeholder="Ej. Julio Cortázar">
+          </label>
+          <label>Contacto
+            <input name="contacto" required maxlength="120" placeholder="Teléfono o mail">
+          </label>
+          <button class="btn" type="submit">Encargar título</button>
+        </form>
       </div>
     </section>
 
-    <section class="section">
+    <section class="section" id="info">
       <h2>Información</h2>
       <div class="modules" style="grid-template-columns: repeat(3, 1fr);">
         <article>
@@ -99,7 +145,8 @@
     </div>
   </div>
 
-  <footer class="wrap">Librería · demo de producto · no es una librería en actividad.</footer>
+  <div id="contacto"></div>
+  <footer class="wrap">Librería Rivadavia · demo de producto · no es una librería en actividad.</footer>
 
   <script src="../contacto.js" data-phone="5491140001234" data-text="Hola, quiero consultar por un libro del catálogo" data-subject="Consulta demo — Librería" data-title="Consultar un título"></script>
   <script src="data.js"></script>
@@ -110,14 +157,14 @@
       { id: "ensayo", label: "Ensayo" },
       { id: "infantil", label: "Infantil" },
       { id: "historieta", label: "Historieta" },
-      { id: "clasico", label: "Clásico" },
-      { id: "utiles", label: "Útiles" }
+      { id: "clasico", label: "Clásico" }
     ];
 
     let currentFilter = "all";
+    let searchTerm = "";
 
     function products() {
-      return load().filter((p) => p.status !== "pedido");
+      return load().filter((p) => p.status !== "pedido" && isBook(p));
     }
 
     function coverHtml(item, extraClass) {
@@ -127,6 +174,20 @@
       return `<div class="cover-fallback">${esc((item.nombre || "?").slice(0, 1))}</div>`;
     }
 
+    function matchesSearch(p) {
+      const term = searchTerm.trim().toLowerCase();
+      if (!term) return true;
+      const hay = `${p.nombre} ${p.autor || ""} ${p.editorial || ""}`.toLowerCase();
+      return hay.includes(term);
+    }
+
+    function filteredList() {
+      return products().filter((p) => {
+        if (currentFilter !== "all" && p.categoria !== currentFilter) return false;
+        return matchesSearch(p);
+      });
+    }
+
     function renderFilters() {
       document.getElementById("filters").innerHTML = FILTERS.map((f) =>
         `<button type="button" data-filter="${f.id}" class="${currentFilter === f.id ? "active" : ""}">${esc(f.label)}</button>`
@@ -134,38 +195,68 @@
       document.querySelectorAll("#filters button").forEach((btn) => {
         btn.addEventListener("click", () => {
           currentFilter = btn.dataset.filter;
-          render();
+          renderFilters();
+          renderCatalog();
         });
       });
     }
 
-    function renderCatalog() {
-      const list = currentFilter === "all"
-        ? products()
-        : products().filter((p) => p.categoria === currentFilter);
-
-      document.getElementById("catalog").innerHTML = list.map((p) => {
-        const status = stockStatus(p);
-        const agotado = status === "agotado";
-        return `
-          <article class="book-tile" data-open="${esc(p.id)}" tabindex="0" role="button" aria-label="Ver ficha de ${esc(p.nombre)}">
-            <div class="cover">${coverHtml(p)}</div>
-            <div class="body">
-              <p class="cat">${esc(catLabel(p.categoria))}</p>
-              <h3>${esc(p.nombre)}</h3>
-              <p class="autor">${p.autor ? `${esc(p.autor)} · ${esc(p.editorial || "")}` : esc(p.editorial || catLabel(p.categoria))}</p>
-              ${p.descripcion ? `<p class="desc">${esc(p.descripcion)}</p>` : ""}
-              <p class="price">${money(p.precio)}</p>
-              <p class="stock ${esc(status)}">${
-                agotado ? "Agotado" : status === "bajo" ? `Últimas ${p.stock} unidades` : `En stock (${p.stock})`
-              }</p>
-              <div class="tile-actions">
-                <button type="button" class="ghost" data-add="${esc(p.id)}" ${agotado ? "disabled" : ""}>Agregar</button>
-                <button type="button" class="btn-panel" data-buy="${esc(p.id)}" ${agotado ? "disabled" : ""}>Comprar</button>
-              </div>
+    function tileHtml(p) {
+      const status = stockStatus(p);
+      const agotado = status === "agotado";
+      return `
+        <article class="book-tile" data-open="${esc(p.id)}" tabindex="0" role="button" aria-label="Ver ficha de ${esc(p.nombre)}">
+          <div class="cover">${coverHtml(p)}</div>
+          <div class="body">
+            <p class="cat">${esc(catLabel(p.categoria))}</p>
+            <h3>${esc(p.nombre)}</h3>
+            <p class="autor">${p.autor ? `${esc(p.autor)} · ${esc(p.editorial || "")}` : esc(p.editorial || catLabel(p.categoria))}</p>
+            ${p.descripcion ? `<p class="desc">${esc(p.descripcion)}</p>` : ""}
+            <p class="price">${money(p.precio)}</p>
+            <p class="stock ${esc(status)}">${stockLine(p)}</p>
+            <div class="tile-actions">
+              <button type="button" class="ghost" data-add="${esc(p.id)}" ${agotado ? "disabled" : ""}>Agregar</button>
+              <button type="button" class="btn-panel" data-buy="${esc(p.id)}" ${agotado ? "disabled" : ""}>Comprar</button>
             </div>
-          </article>`;
-      }).join("") || `<p class="note">No hay títulos en esta categoría.</p>`;
+          </div>
+        </article>`;
+    }
+
+    function shelfCardHtml(p) {
+      return `
+        <article class="shelf-card" data-open="${esc(p.id)}" tabindex="0" role="button" aria-label="Ver ficha de ${esc(p.nombre)}">
+          <div class="cover">${coverHtml(p)}</div>
+          <h3>${esc(p.nombre)}</h3>
+          <p class="autor">${esc(p.autor || "")}</p>
+          <p class="price">${money(p.precio)}</p>
+        </article>`;
+    }
+
+    function renderCatalog() {
+      const list = filteredList();
+      const term = searchTerm.trim();
+      const countEl = document.getElementById("catalogCount");
+      if (!list.length) {
+        countEl.textContent = term ? `Ningún título coincide con “${term}”.` : "No hay títulos en esta categoría.";
+        document.getElementById("catalog").innerHTML = `<p class="note">Probá otro filtro o encargalo abajo.</p>`;
+        return;
+      }
+      countEl.textContent = term
+        ? `${list.length} título${list.length === 1 ? "" : "s"} para “${term}”`
+        : `${list.length} título${list.length === 1 ? "" : "s"} en góndola`;
+      document.getElementById("catalog").innerHTML = list.map(tileHtml).join("");
+    }
+
+    function renderShelves() {
+      const searching = searchTerm.trim().length > 0 || currentFilter !== "all";
+      const dest = document.getElementById("destacados");
+      const nov = document.getElementById("novedades");
+      dest.hidden = searching;
+      nov.hidden = searching;
+      if (searching) return;
+      const books = products();
+      document.getElementById("destacadosGrid").innerHTML = books.filter((p) => p.destacado).map(shelfCardHtml).join("");
+      document.getElementById("novedadesGrid").innerHTML = books.filter((p) => p.novedad).map(shelfCardHtml).join("");
     }
 
     function stockLine(item) {
@@ -185,7 +276,9 @@
         <div class="ficha-info">
           <p class="cat">${esc(catLabel(item.categoria))}</p>
           <h2 id="fichaTitle">${esc(item.nombre)}</h2>
-          <p class="autor">${item.autor ? `${esc(item.autor)} · ${esc(item.editorial || "")}` : esc(item.editorial || "")}</p>
+          <p class="autor">${esc(item.autor || "Autor no cargado")}</p>
+          <p class="editorial">${esc(item.editorial || "Editorial no cargada")}</p>
+          ${item.isbn ? `<p class="isbn">ISBN ${esc(item.isbn)}</p>` : ""}
           <p class="ficha-desc">${esc(item.descripcion || "Sin descripción cargada.")}</p>
           <p class="price">${money(item.precio)}</p>
           <p class="stock ${esc(status)}">${stockLine(item)}</p>
@@ -204,7 +297,7 @@
       document.body.classList.remove("ficha-open");
     }
 
-    document.getElementById("catalog").addEventListener("click", (event) => {
+    function onCatalogClick(event) {
       const addBtn = event.target.closest("[data-add]");
       const buyBtn = event.target.closest("[data-buy]");
       const tile = event.target.closest("[data-open]");
@@ -229,16 +322,24 @@
         return;
       }
       if (tile) openFicha(tile.dataset.open);
-    });
+    }
 
-    document.getElementById("catalog").addEventListener("keydown", (event) => {
+    document.getElementById("catalog").addEventListener("click", onCatalogClick);
+    document.getElementById("destacadosGrid").addEventListener("click", onCatalogClick);
+    document.getElementById("novedadesGrid").addEventListener("click", onCatalogClick);
+
+    function onCatalogKey(event) {
       if (event.key !== "Enter" && event.key !== " ") return;
       if (event.target.closest("button")) return;
       const tile = event.target.closest("[data-open]");
       if (!tile) return;
       event.preventDefault();
       openFicha(tile.dataset.open);
-    });
+    }
+
+    document.getElementById("catalog").addEventListener("keydown", onCatalogKey);
+    document.getElementById("destacadosGrid").addEventListener("keydown", onCatalogKey);
+    document.getElementById("novedadesGrid").addEventListener("keydown", onCatalogKey);
 
     document.getElementById("fichaBody").addEventListener("click", (event) => {
       const addBtn = event.target.closest("[data-add]");
@@ -289,7 +390,12 @@
               ${c.imagen ? `<img src="${esc(c.imagen)}" alt="">` : `<div class="cover-fallback mini">${esc((c.nombre || "?").slice(0, 1))}</div>`}
               <div class="info">
                 <p class="title">${esc(c.nombre)}</p>
-                <p class="price">${c.cantidad || 1} × ${money(c.precio)}</p>
+                <p class="price">${money(c.precio * (c.cantidad || 1))}</p>
+                <div class="qty-ctrl">
+                  <button type="button" data-qty-minus="${esc(c.id)}" aria-label="Quitar uno">−</button>
+                  <span>${c.cantidad || 1}</span>
+                  <button type="button" data-qty-plus="${esc(c.id)}" aria-label="Agregar uno">+</button>
+                </div>
               </div>
               <button type="button" class="remove" data-remove="${esc(c.id)}" aria-label="Quitar">×</button>
             </div>`).join("")}
@@ -301,7 +407,22 @@
       el.querySelectorAll("[data-remove]").forEach((btn) => {
         btn.addEventListener("click", () => {
           removeFromCart(btn.dataset.remove);
-          render();
+          renderCart();
+        });
+      });
+      el.querySelectorAll("[data-qty-plus]").forEach((btn) => {
+        btn.addEventListener("click", () => {
+          const line = loadCart().find((c) => c.id === btn.dataset.qtyPlus);
+          const result = setCartQty(btn.dataset.qtyPlus, (line?.cantidad || 1) + 1);
+          if (!result.ok) showToast("Sin stock suficiente");
+          renderCart();
+        });
+      });
+      el.querySelectorAll("[data-qty-minus]").forEach((btn) => {
+        btn.addEventListener("click", () => {
+          const line = loadCart().find((c) => c.id === btn.dataset.qtyMinus);
+          setCartQty(btn.dataset.qtyMinus, (line?.cantidad || 1) - 1);
+          renderCart();
         });
       });
       el.querySelector("#openCheckout")?.addEventListener("click", openCheckout);
@@ -356,6 +477,43 @@
       render();
     });
 
+    function syncSearch(value, sourceId) {
+      searchTerm = value;
+      ["searchHero", "searchLibros"].forEach((id) => {
+        const el = document.getElementById(id);
+        if (el && el.id !== sourceId && el.value !== value) el.value = value;
+      });
+      renderCatalog();
+      renderShelves();
+    }
+
+    document.getElementById("searchHero").addEventListener("input", (event) => {
+      syncSearch(event.target.value, "searchHero");
+    });
+    document.getElementById("searchLibros").addEventListener("input", (event) => {
+      syncSearch(event.target.value, "searchLibros");
+    });
+    document.getElementById("heroSearchForm").addEventListener("submit", (event) => {
+      event.preventDefault();
+      document.getElementById("catalogo").scrollIntoView({ behavior: "smooth", block: "start" });
+    });
+
+    document.getElementById("pedidoForm").addEventListener("submit", (event) => {
+      event.preventDefault();
+      const data = new FormData(event.target);
+      const result = addPedidoEspecial({
+        titulo: data.get("titulo"),
+        autor: data.get("autor"),
+        contacto: data.get("contacto")
+      });
+      if (!result.ok) {
+        showToast("Completá título, autor y contacto");
+        return;
+      }
+      event.target.reset();
+      showToast("Pedido guardado. Lo ves en el panel.");
+    });
+
     function showToast(message) {
       const existing = document.querySelector(".toast");
       if (existing) existing.remove();
@@ -370,6 +528,7 @@
     function render() {
       renderFilters();
       renderCatalog();
+      renderShelves();
       renderCart();
     }
 

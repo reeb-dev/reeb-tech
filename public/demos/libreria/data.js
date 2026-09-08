@@ -1,6 +1,31 @@
 const STORAGE_ITEMS = "libreria-demo-v2";
 const STORAGE_CART = "libreria-cart-v1";
 const STORAGE_VENTAS = "libreria-ventas-v1";
+const STORAGE_PEDIDOS = "libreria-pedidos-v1";
+
+const BOOK_CATS = ["ficcion", "ensayo", "infantil", "historieta", "clasico"];
+
+const VITRINA = {
+  "lib-aleph": { destacado: true },
+  "lib-rayuela": { destacado: true },
+  "lib-fierro": { destacado: true },
+  "lib-eternauta": { destacado: true },
+  "lib-cien": { destacado: true },
+  "lib-mafalda": { destacado: true },
+  "lib-bestiario": { novedad: true },
+  "lib-morel": { novedad: true },
+  "lib-masacre": { novedad: true },
+  "lib-detectives": { novedad: true },
+  "lib-venas": { novedad: true },
+  "lib-cronica": { novedad: true }
+};
+
+const PEDIDO_ESTADOS = [
+  { id: "pendiente", label: "Pendiente" },
+  { id: "encargado", label: "Encargado" },
+  { id: "listo", label: "Listo para retirar" },
+  { id: "cancelado", label: "Cancelado" }
+];
 
 const STATUSES = [
   { id: "stock", label: "En stock" },
@@ -533,8 +558,18 @@ function seed() {
   ];
 }
 
+function applyVitrina(items) {
+  items.forEach((item) => {
+    const extra = VITRINA[item.id];
+    if (!extra) return;
+    if (item.destacado == null) item.destacado = !!extra.destacado;
+    if (item.novedad == null) item.novedad = !!extra.novedad;
+  });
+  return items;
+}
+
 function load() {
-  const seedItems = seed();
+  const seedItems = applyVitrina(seed());
   const raw = localStorage.getItem(STORAGE_ITEMS);
   if (!raw) {
     localStorage.setItem(STORAGE_ITEMS, JSON.stringify(seedItems));
@@ -545,11 +580,13 @@ function load() {
   const known = new Set(items.map((item) => item.id));
   items.forEach((item) => {
     const seeded = seedById[item.id];
-    if (!seeded) return;
-    if (!item.imagen && seeded.imagen) item.imagen = seeded.imagen;
-    if (!item.descripcion && seeded.descripcion) item.descripcion = seeded.descripcion;
-    if (!item.editorial && seeded.editorial) item.editorial = seeded.editorial;
+    if (seeded) {
+      if (!item.imagen && seeded.imagen) item.imagen = seeded.imagen;
+      if (!item.descripcion && seeded.descripcion) item.descripcion = seeded.descripcion;
+      if (!item.editorial && seeded.editorial) item.editorial = seeded.editorial;
+    }
   });
+  applyVitrina(items);
   const missing = seedItems.filter((item) => !known.has(item.id));
   if (missing.length) items.push(...missing);
   localStorage.setItem(STORAGE_ITEMS, JSON.stringify(items));
@@ -576,6 +613,54 @@ function loadVentas() {
 
 function saveVentas(ventas) {
   localStorage.setItem(STORAGE_VENTAS, JSON.stringify(ventas));
+}
+
+function loadPedidos() {
+  const raw = localStorage.getItem(STORAGE_PEDIDOS);
+  return raw ? JSON.parse(raw) : [];
+}
+
+function savePedidos(pedidos) {
+  localStorage.setItem(STORAGE_PEDIDOS, JSON.stringify(pedidos));
+}
+
+function addPedidoEspecial(input) {
+  const titulo = String(input.titulo || "").trim();
+  const autor = String(input.autor || "").trim();
+  const contacto = String(input.contacto || "").trim();
+  if (!titulo || !autor || !contacto) {
+    return { ok: false, reason: "incompleto" };
+  }
+  const pedido = {
+    id: crypto.randomUUID(),
+    titulo,
+    autor,
+    contacto,
+    fecha: new Date().toISOString(),
+    estado: "pendiente"
+  };
+  const pedidos = [pedido, ...loadPedidos()];
+  savePedidos(pedidos);
+  return { ok: true, pedido };
+}
+
+function setPedidoEstado(id, estado) {
+  const pedidos = loadPedidos();
+  const pedido = pedidos.find((p) => p.id === id);
+  if (!pedido) return { ok: false, reason: "no-encontrado" };
+  const known = PEDIDO_ESTADOS.some((s) => s.id === estado);
+  if (!known) return { ok: false, reason: "estado" };
+  pedido.estado = estado;
+  savePedidos(pedidos);
+  return { ok: true, pedido };
+}
+
+function pedidoLabel(estado) {
+  return PEDIDO_ESTADOS.find((s) => s.id === estado)?.label || estado;
+}
+
+function isBook(item) {
+  return BOOK_CATS.includes(item?.categoria);
 }
 
 function cartCount(cart) {
@@ -613,6 +698,36 @@ function removeFromCart(productId) {
   const cart = loadCart().filter((c) => c.id !== productId);
   saveCart(cart);
   return cart;
+}
+
+function setCartQty(productId, cantidad) {
+  const qty = Number(cantidad);
+  if (!Number.isFinite(qty) || qty < 1) {
+    removeFromCart(productId);
+    return { ok: true, cart: loadCart() };
+  }
+  const items = load();
+  const product = items.find((p) => p.id === productId);
+  if (!product || product.status === "pedido" || product.stock < 1) {
+    return { ok: false, reason: "sin-stock" };
+  }
+  if (qty > product.stock) return { ok: false, reason: "sin-stock", stock: product.stock };
+  const cart = loadCart();
+  const line = cart.find((c) => c.id === productId);
+  if (!line) {
+    cart.push({
+      id: product.id,
+      nombre: product.nombre,
+      autor: product.autor || "",
+      precio: product.precio,
+      imagen: product.imagen || "",
+      cantidad: qty
+    });
+  } else {
+    line.cantidad = qty;
+  }
+  saveCart(cart);
+  return { ok: true, cart };
 }
 
 function checkoutCart(cliente) {

@@ -2,6 +2,7 @@ let items = load();
 let selected = items[0]?.id || "";
 let filter = "todos";
 let searchTerm = "";
+let currentTab = "inventario";
 
 document.getElementById("open-create").addEventListener("click", () => {
   document.getElementById("create").classList.toggle("open");
@@ -33,7 +34,15 @@ document.getElementById("create").addEventListener("submit", (event) => {
   save(items);
   event.target.reset();
   event.target.classList.remove("open");
+  currentTab = "inventario";
   showToast("Producto agregado");
+  render();
+});
+
+document.getElementById("tabs").addEventListener("click", (event) => {
+  const btn = event.target.closest("[data-tab]");
+  if (!btn) return;
+  currentTab = btn.dataset.tab;
   render();
 });
 
@@ -57,6 +66,16 @@ function thumbHtml(item) {
   return `<div class="thumb fallback">${esc((item.nombre || "?").slice(0, 1))}</div>`;
 }
 
+function setTabVisibility() {
+  document.querySelectorAll("#tabs [data-tab]").forEach((btn) => {
+    btn.classList.toggle("on", btn.dataset.tab === currentTab);
+  });
+  document.getElementById("view-inventario").hidden = currentTab !== "inventario";
+  document.getElementById("view-pedidos").hidden = currentTab !== "pedidos";
+  document.getElementById("view-ventas").hidden = currentTab !== "ventas";
+  document.getElementById("create").style.display = currentTab === "inventario" ? "" : "none";
+}
+
 function renderVentas() {
   const ventas = loadVentas();
   const box = document.getElementById("ventas");
@@ -64,21 +83,51 @@ function renderVentas() {
     box.innerHTML = `<p class="note">Todavía no hay ventas. Se registran desde el catálogo o con ARCA.</p>`;
     return;
   }
-  box.innerHTML = ventas.slice(0, 12).map((venta) => `
+  box.innerHTML = ventas.slice(0, 20).map((venta) => `
     <article class="venta-card">
       <div class="venta-meta">
         <strong>${esc(formatFecha(venta.fecha))}</strong>
         <span>${esc(venta.cliente || "Cliente")} · ${esc(compLabel(venta.comprobante))}</span>
         <span class="amount">${esc(money(venta.total))}</span>
+        ${venta.cae ? `<span>CAE ${esc(venta.cae)}</span>` : ""}
       </div>
       <div class="venta-items">
         ${(venta.items || []).map((line) => `
           <div class="venta-line">
             ${line.imagen ? `<img class="thumb" src="${esc(line.imagen)}" alt="">` : `<div class="thumb fallback">${esc((line.nombre || "?").slice(0, 1))}</div>`}
-            <span>${esc(line.nombre)} × ${line.cantidad || 1}</span>
+            <span>${esc(line.nombre)}${line.autor ? ` · ${esc(line.autor)}` : ""} × ${line.cantidad || 1}</span>
           </div>`).join("")}
       </div>
     </article>`).join("");
+}
+
+function renderPedidos() {
+  const pedidos = loadPedidos();
+  const box = document.getElementById("pedidos");
+  if (!pedidos.length) {
+    box.innerHTML = `<p class="note">Todavía no hay encargos. Llegan desde el formulario de la vidriera.</p>`;
+    return;
+  }
+  box.innerHTML = pedidos.map((pedido) => `
+    <article class="pedido-card">
+      <p class="eyebrow">${esc(formatFecha(pedido.fecha))}</p>
+      <h3>${esc(pedido.titulo)}</h3>
+      <p class="meta-line">${esc(pedido.autor)} · ${esc(pedido.contacto)}</p>
+      <span class="tag ${esc(pedido.estado)}">${esc(pedidoLabel(pedido.estado))}</span>
+      <div class="actions">
+        ${PEDIDO_ESTADOS.map((estado) =>
+          `<button class="ghost" type="button" data-pedido="${esc(pedido.id)}" data-estado="${esc(estado.id)}" ${pedido.estado === estado.id ? "disabled" : ""}>${esc(estado.label)}</button>`
+        ).join("")}
+      </div>
+    </article>`).join("");
+
+  box.querySelectorAll("[data-pedido]").forEach((btn) => {
+    btn.addEventListener("click", () => {
+      setPedidoEstado(btn.dataset.pedido, btn.dataset.estado);
+      showToast("Estado actualizado");
+      render();
+    });
+  });
 }
 
 function render() {
@@ -90,12 +139,15 @@ function render() {
     pedido: items.filter((i) => i.status === "pedido").length
   };
   const ventas = loadVentas();
+  const encargos = loadPedidos();
+  const pendientes = encargos.filter((p) => p.estado === "pendiente").length;
 
   document.getElementById("stats").innerHTML = `
     <button type="button" data-filter="todos" class="${filter === "todos" ? "on" : ""}"><strong>${items.length}</strong>productos</button>
     <button type="button" data-filter="stock" class="${filter === "stock" ? "on" : ""}"><strong>${counts.stock}</strong>en stock</button>
     <button type="button" data-filter="bajo" class="${filter === "bajo" ? "on" : ""}"><strong>${counts.bajo}</strong>stock bajo</button>
-    <button type="button" data-filter="pedido" class="${filter === "pedido" ? "on" : ""}"><strong>${counts.pedido}</strong>ped. especial</button>
+    <button type="button" data-filter="pedido" class="${filter === "pedido" ? "on" : ""}"><strong>${counts.pedido}</strong>ped. góndola</button>
+    <div><strong>${pendientes}</strong>encargos pendientes</div>
     <div><strong>${ventas.length}</strong>ventas</div>
     <input type="text" id="search" placeholder="Buscar..." value="${esc(searchTerm)}" style="margin-left:auto;padding:8px 12px;border:1px solid var(--line);border-radius:4px;width:180px;">
   `;
@@ -106,8 +158,14 @@ function render() {
   });
 
   document.querySelectorAll("[data-filter]").forEach((btn) => {
-    btn.addEventListener("click", () => { filter = btn.dataset.filter; render(); });
+    btn.addEventListener("click", () => {
+      filter = btn.dataset.filter;
+      currentTab = "inventario";
+      render();
+    });
   });
+
+  setTabVisibility();
 
   const rows = visible();
   document.getElementById("rows").innerHTML = rows.map((item) => `
@@ -126,6 +184,7 @@ function render() {
   });
 
   renderVentas();
+  renderPedidos();
 
   const item = items.find((i) => i.id === selected);
   const detail = document.getElementById("detail");
@@ -134,10 +193,11 @@ function render() {
   const isPedido = item.status === "pedido";
 
   detail.innerHTML = `
-    ${item.imagen ? `<img class="detail-cover" src="${esc(item.imagen)}" alt="Tapa de ${esc(item.nombre)}">` : ""}
+    ${item.imagen ? `<img class="detail-cover" src="${esc(item.imagen)}" alt="Tapa de ${esc(item.nombre)}">` : `<div class="detail-cover cover-fallback">${esc((item.nombre || "?").slice(0, 1))}</div>`}
     <p class="eyebrow">${esc(item.codigo)} · ${esc(catLabel(item.categoria))}</p>
     <h2>${esc(item.nombre)}</h2>
     ${item.autor ? `<p style="color:var(--muted);font-size:14px;">${esc(item.autor)} · ${esc(item.editorial || "")}</p>` : ""}
+    ${item.isbn ? `<p style="color:var(--muted);font-size:13px;">ISBN ${esc(item.isbn)}</p>` : ""}
     ${item.descripcion ? `<p class="detail-desc">${esc(item.descripcion)}</p>` : ""}
     <div class="meta">
       <div><span>Precio</span>${esc(money(item.precio))}</div>
