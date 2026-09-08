@@ -157,6 +157,7 @@ export interface Dictionary {
     messagePlaceholder: string;
     send: string;
     orDirect: string;
+    viewDemos: string;
     mailSubject: string;
     mailName: string;
     mailInterest: string;
@@ -727,6 +728,7 @@ export const translations: Record<Lang, Dictionary> = {
       messagePlaceholder: 'Describe brevemente tu situación o necesidad técnica...',
       send: 'Enviar mail',
       orDirect: 'O contactá directo:',
+      viewDemos: 'Ver demos',
       mailSubject: 'Consulta freelance desde REEB',
       mailName: 'Nombre',
       mailInterest: 'Interés',
@@ -1279,6 +1281,7 @@ export const translations: Record<Lang, Dictionary> = {
       messagePlaceholder: 'Short note on the situation or the technical need...',
       send: 'Send email',
       orDirect: 'Or reach me directly:',
+      viewDemos: 'See demos',
       mailSubject: 'Freelance inquiry from REEB',
       mailName: 'Name',
       mailInterest: 'Interest',
