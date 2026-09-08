@@ -1,0 +1,106 @@
+/* Contacto demo: WhatsApp flotante + formulario. Número y correo de ejemplo. */
+.wa-float {
+  position: fixed;
+  right: 20px;
+  bottom: 20px;
+  z-index: 40;
+  width: 56px;
+  height: 56px;
+  border-radius: 50%;
+  background: #25D366;
+  color: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 8px 24px rgba(37, 211, 102, 0.35);
+  text-decoration: none;
+}
+.wa-float:hover { background: #1da851; color: #fff; }
+.wa-float svg { width: 30px; height: 30px; display: block; }
+
+.demo-contacto {
+  margin: 36px auto 8px;
+  max-width: 720px;
+  padding: 0 20px;
+  text-align: left;
+}
+.demo-contacto h2 {
+  margin: 0 0 6px;
+  font-size: 22px;
+}
+.demo-contacto .demo-contacto-lead {
+  margin: 0 0 16px;
+  color: var(--muted, #64748b);
+  font-size: 14px;
+}
+.demo-contacto form {
+  display: grid;
+  gap: 10px;
+  background: var(--card, #fff);
+  border: 1px solid var(--line, #e2e8f0);
+  border-radius: 12px;
+  padding: 18px;
+}
+.demo-contacto label {
+  display: grid;
+  gap: 4px;
+  font-size: 13px;
+  font-weight: 600;
+}
+.demo-contacto input,
+.demo-contacto textarea {
+  font: inherit;
+  width: 100%;
+  padding: 10px 12px;
+  border: 1px solid var(--line, #d0d5dd);
+  border-radius: 8px;
+  background: #fff;
+  color: inherit;
+}
+.demo-contacto textarea { min-height: 110px; resize: vertical; }
+.demo-contacto .demo-contacto-error {
+  color: #b42318;
+  font-size: 13px;
+  min-height: 1.2em;
+}
+.demo-contacto button[type="submit"] {
+  justify-self: start;
+  background: #128C7E;
+  color: #fff;
+  border: 0;
+  border-radius: 8px;
+  padding: 11px 16px;
+  font: inherit;
+  font-weight: 650;
+  cursor: pointer;
+}
+.demo-contacto button[type="submit"]:hover { background: #0e6f64; }
+.demo-contacto .demo-wa-inline {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  margin-top: 12px;
+  color: #128C7E;
+  font-weight: 650;
+  text-decoration: none;
+}
+.demo-contacto .demo-wa-inline:hover { text-decoration: underline; }
+
+.demo-toast {
+  position: fixed;
+  left: 50%;
+  bottom: 88px;
+  transform: translateX(-50%);
+  z-index: 50;
+  background: #1c2433;
+  color: #fff;
+  padding: 12px 16px;
+  border-radius: 8px;
+  font-size: 14px;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2);
+}
+
+@media (max-width: 640px) {
+  .wa-float { right: 14px; bottom: 16px; }
+  .demo-contacto { margin-left: 0; margin-right: 0; }
+}
