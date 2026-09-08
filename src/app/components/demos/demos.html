@@ -20,6 +20,76 @@
       </div>
     </div>
 
+    <div id="precios" class="max-w-4xl mx-auto mb-16 text-left scroll-mt-24">
+      <h3 class="text-xl font-semibold text-gray-900 dark:text-white mb-2">{{ i18n.t().demos.pricesTitle }}</h3>
+      <p class="text-sm text-[#94A3B8] mb-6">{{ i18n.t().demos.pricesLead }}</p>
+
+      <h4 class="text-sm font-semibold text-gray-900 dark:text-white mb-3">{{ i18n.t().demos.pricesSitesTitle }}</h4>
+      <div class="overflow-x-auto mb-8 rounded-xl border border-[#E5E7EB] dark:border-[#1E293B]">
+        <table class="w-full text-sm">
+          <thead class="bg-gray-50 dark:bg-[#0A0A0B] text-left">
+            <tr>
+              <th class="px-4 py-3 font-semibold text-gray-900 dark:text-white">{{ i18n.t().demos.pricesColPlan }}</th>
+              <th class="px-4 py-3 font-semibold text-gray-900 dark:text-white">{{ i18n.t().demos.pricesColIncludes }}</th>
+              <th class="px-4 py-3 font-semibold text-gray-900 dark:text-white whitespace-nowrap">{{ i18n.t().demos.pricesColFrom }}</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let plan of i18n.t().demos.pricesPlans" class="border-t border-[#E5E7EB] dark:border-[#1E293B] bg-white dark:bg-[#0A0A0B]">
+              <th class="px-4 py-3 font-semibold text-gray-900 dark:text-white text-left align-top whitespace-nowrap">{{ plan.name }}</th>
+              <td class="px-4 py-3 text-[#94A3B8] align-top">{{ plan.includes }}</td>
+              <td class="px-4 py-3 font-semibold text-[#3B82F6] align-top whitespace-nowrap">{{ plan.price }}</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <h4 class="text-sm font-semibold text-gray-900 dark:text-white mb-2">{{ i18n.t().demos.pricesHostTitle }}</h4>
+      <p class="text-sm text-[#94A3B8] mb-4">{{ i18n.t().demos.pricesHostLead }}</p>
+      <div class="overflow-x-auto mb-4 rounded-xl border border-[#E5E7EB] dark:border-[#1E293B]">
+        <table class="w-full text-sm">
+          <thead class="bg-gray-50 dark:bg-[#0A0A0B] text-left">
+            <tr>
+              <th class="px-4 py-3 font-semibold text-gray-900 dark:text-white">{{ i18n.t().demos.pricesColWork }}</th>
+              <th class="px-4 py-3 font-semibold text-gray-900 dark:text-white">{{ i18n.t().demos.pricesColServer }}</th>
+              <th class="px-4 py-3 font-semibold text-gray-900 dark:text-white">{{ i18n.t().demos.pricesColHostFrom }}</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let row of i18n.t().demos.pricesHost" class="border-t border-[#E5E7EB] dark:border-[#1E293B] bg-white dark:bg-[#0A0A0B]">
+              <th class="px-4 py-3 font-semibold text-gray-900 dark:text-white text-left align-top">{{ row.work }}</th>
+              <td class="px-4 py-3 text-[#94A3B8] align-top">{{ row.server }}</td>
+              <td class="px-4 py-3 font-semibold text-[#3B82F6] align-top">{{ row.price }}</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      <p class="text-sm text-[#94A3B8] mb-8">{{ i18n.t().demos.pricesHostNote }}</p>
+
+      <h4 class="text-sm font-semibold text-gray-900 dark:text-white mb-2">{{ i18n.t().demos.pricesExtrasTitle }}</h4>
+      <p class="text-sm text-[#94A3B8] mb-4">{{ i18n.t().demos.pricesExtrasLead }}</p>
+      <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-6">
+        <article
+          *ngFor="let extra of i18n.t().demos.pricesExtras"
+          class="p-4 rounded-xl border border-[#E5E7EB] dark:border-[#1E293B] bg-white dark:bg-[#0A0A0B]"
+        >
+          <h5 class="text-sm font-semibold text-gray-900 dark:text-white mb-1">{{ extra.name }}</h5>
+          <p class="text-sm text-[#94A3B8] mb-2">{{ extra.what }}</p>
+          <p class="text-sm font-semibold text-[#3B82F6]">{{ extra.price }}</p>
+        </article>
+      </div>
+      <p class="text-sm text-[#94A3B8] mb-4">{{ i18n.t().demos.pricesFoot }}</p>
+      <div class="flex flex-wrap gap-4">
+        <a
+          [href]="i18n.t().demos.pricesWhatsAppHref"
+          target="_blank"
+          rel="noopener noreferrer"
+          class="text-sm font-medium text-[#3B82F6] hover:underline"
+        >{{ i18n.t().demos.pricesCtaWhatsApp }}</a>
+        <a href="mailto:manuelreeb@icloud.com" class="text-sm font-medium text-[#3B82F6] hover:underline">{{ i18n.t().demos.pricesCtaMail }}</a>
+      </div>
+    </div>
+
     <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5 mb-12">
       <article
         *ngFor="let demo of i18n.t().demos.items"

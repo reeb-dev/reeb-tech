@@ -132,6 +132,29 @@ export interface Dictionary {
     hubUrl: string;
     port: string;
     withArca: string;
+    pricesTitle: string;
+    pricesLead: string;
+    pricesSitesTitle: string;
+    pricesColPlan: string;
+    pricesColIncludes: string;
+    pricesColFrom: string;
+    pricesPlans: { name: string; includes: string; price: string }[];
+    pricesHostTitle: string;
+    pricesHostLead: string;
+    pricesColWork: string;
+    pricesColServer: string;
+    pricesColHostFrom: string;
+    pricesHost: { work: string; server: string; price: string }[];
+    pricesHostNote: string;
+    pricesExtrasTitle: string;
+    pricesExtrasLead: string;
+    pricesColExtra: string;
+    pricesColWhat: string;
+    pricesExtras: { name: string; what: string; price: string }[];
+    pricesFoot: string;
+    pricesCtaWhatsApp: string;
+    pricesCtaMail: string;
+    pricesWhatsAppHref: string;
     items: DemoCopy[];
   };
   services: {
@@ -411,6 +434,43 @@ export const translations: Record<Lang, Dictionary> = {
       hubUrl: 'demos/',
       port: 'Puerto',
       withArca: 'ARCA de ejemplo',
+      pricesTitle: 'Planes de referencia',
+      pricesLead: 'Valores desde. El alcance se cotiza según su rubro. El precio es conversable y se puede pagar en cuotas (la cantidad se acuerda). La facturación ARCA y los pagos reales se cotizan aparte. Las demos son ejemplos, no el producto cerrado.',
+      pricesSitesTitle: 'Sitios y paneles',
+      pricesColPlan: 'Plan',
+      pricesColIncludes: 'Qué incluye',
+      pricesColFrom: 'Desde',
+      pricesPlans: [
+        { name: 'Presencia', includes: 'Vitrina, ubicación, WhatsApp, formulario. Sin panel.', price: 'USD 350' },
+        { name: 'Negocio', includes: 'Vitrina + panel (stock, turnos, reservas o comprobantes).', price: 'USD 700' },
+        { name: 'Negocio + app', includes: 'Lo anterior + app Android nativa (catálogo, turnos o avisos).', price: 'USD 1.400' },
+      ],
+      pricesHostTitle: 'Servidor / hosting',
+      pricesHostLead: 'Valores desde, orientativos y conversables. No es un abono SaaS obligatorio. El proveedor se elige con el trabajo; no hay un único hosting.',
+      pricesColWork: 'Trabajo',
+      pricesColServer: 'Servidor típico',
+      pricesColHostFrom: 'Desde (orientativo)',
+      pricesHost: [
+        { work: 'Presencia (vitrina)', server: 'Hosting estático (p. ej. GitHub Pages) + dominio', price: 'USD 0–5 / mes + dominio' },
+        { work: 'Negocio (vitrina + panel)', server: 'VPS chico o hosting con base de datos', price: 'USD 8–15 / mes' },
+        { work: 'Negocio + app', server: 'VPS / backend para API y avisos', price: 'USD 15–25 / mes' },
+      ],
+      pricesHostNote: 'El dominio (.com / .com.ar) se cotiza aparte (renovación anual). Si el sitio queda estático como las demos, el hosting puede ser mínimo; si hay panel real y ARCA en producción, el servidor se dimensiona con el rubro.',
+      pricesExtrasTitle: 'Alcances extra',
+      pricesExtrasLead: 'Ideas cotizables, también «desde». El precio final se arma con el rubro; nada es un abono SaaS obligatorio.',
+      pricesColExtra: 'Extra',
+      pricesColWhat: 'Qué es',
+      pricesExtras: [
+        { name: 'Rubro turismo / reservas', what: 'Fechas, cupos, cabañas o excursiones (como las demos de Ventana).', price: 'USD 250 extra' },
+        { name: 'Facturación ARCA', what: 'Comprobantes de ejemplo + circuito a definir con contador.', price: 'A cotizar' },
+        { name: 'Catálogo grande / fotos', what: 'Muchas fichas, filtros, galería.', price: 'USD 150 extra' },
+        { name: 'Capacitación', what: 'Una sesión para cargar el panel.', price: 'USD 80' },
+        { name: 'Mantenimiento', what: 'Cambios menores / mes (conversable).', price: 'USD 40 / mes' },
+      ],
+      pricesFoot: 'Cuotas y conversación por WhatsApp o correo. El trabajo es un desarrollo a medida, no un producto de suscripción.',
+      pricesCtaWhatsApp: 'Consultar por WhatsApp',
+      pricesCtaMail: 'manuelreeb@icloud.com',
+      pricesWhatsAppHref: 'https://wa.me/5492915757934?text=Hola%2C%20vi%20los%20planes%20de%20referencia%20del%20portfolio%20y%20quiero%20consultar%20un%20sistema%20a%20medida%20para%20mi%20rubro',
       items: [
         {
           id: 'estudio',
@@ -965,6 +1025,43 @@ export const translations: Record<Lang, Dictionary> = {
       hubUrl: 'demos/',
       port: 'Port',
       withArca: 'Sample ARCA billing',
+      pricesTitle: 'Reference plans',
+      pricesLead: 'Starting prices. Scope is quoted for your trade. The price is negotiable and can be paid in installments (the number is agreed). ARCA billing and live payments are quoted separately. The demos are examples, not a finished product.',
+      pricesSitesTitle: 'Sites and panels',
+      pricesColPlan: 'Plan',
+      pricesColIncludes: 'Includes',
+      pricesColFrom: 'From',
+      pricesPlans: [
+        { name: 'Presence', includes: 'Showcase, location, WhatsApp, form. No admin panel.', price: 'USD 350' },
+        { name: 'Business', includes: 'Showcase + panel (stock, appointments, bookings, or receipts).', price: 'USD 700' },
+        { name: 'Business + app', includes: 'The above + native Android app (catalog, appointments, or notices).', price: 'USD 1,400' },
+      ],
+      pricesHostTitle: 'Server / hosting',
+      pricesHostLead: 'Starting, indicative, and negotiable figures. Not a mandatory SaaS subscription. The provider is chosen with the work; there is no single hosting vendor.',
+      pricesColWork: 'Work',
+      pricesColServer: 'Typical server',
+      pricesColHostFrom: 'From (indicative)',
+      pricesHost: [
+        { work: 'Presence (showcase)', server: 'Static hosting (e.g. GitHub Pages) + domain', price: 'USD 0–5 / month + domain' },
+        { work: 'Business (showcase + panel)', server: 'Small VPS or hosting with a database', price: 'USD 8–15 / month' },
+        { work: 'Business + app', server: 'VPS / backend for API and notices', price: 'USD 15–25 / month' },
+      ],
+      pricesHostNote: 'The domain (.com / .com.ar) is quoted separately (annual renewal). If the site stays static like the demos, hosting can be minimal; if there is a live panel and ARCA in production, the server is sized with the trade.',
+      pricesExtrasTitle: 'Extra scopes',
+      pricesExtrasLead: 'Quotable ideas, also “from”. The final price is built around your trade; nothing is a mandatory SaaS subscription.',
+      pricesColExtra: 'Extra',
+      pricesColWhat: 'What it is',
+      pricesExtras: [
+        { name: 'Tourism / bookings', what: 'Dates, capacity, cabins, or tours (as in the Ventana demos).', price: 'USD 250 extra' },
+        { name: 'ARCA billing', what: 'Sample receipts + a flow to define with your accountant.', price: 'To be quoted' },
+        { name: 'Large catalog / photos', what: 'Many listings, filters, gallery.', price: 'USD 150 extra' },
+        { name: 'Training', what: 'One session to load the panel.', price: 'USD 80' },
+        { name: 'Maintenance', what: 'Minor changes / month (negotiable).', price: 'USD 40 / month' },
+      ],
+      pricesFoot: 'Installments and conversation via WhatsApp or email. This is custom development, not a subscription product.',
+      pricesCtaWhatsApp: 'Enquire on WhatsApp',
+      pricesCtaMail: 'manuelreeb@icloud.com',
+      pricesWhatsAppHref: 'https://wa.me/5492915757934?text=Hola%2C%20vi%20los%20planes%20de%20referencia%20del%20portfolio%20y%20quiero%20consultar%20un%20sistema%20a%20medida%20para%20mi%20rubro',
       items: [
         {
           id: 'estudio',

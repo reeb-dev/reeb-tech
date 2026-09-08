@@ -30,6 +30,13 @@ describe('App', () => {
     expect(compiled.querySelector('#demos')?.textContent).toMatch(/comercios|shops/i);
     expect(compiled.querySelector('#demos')?.textContent).toMatch(/conviene tener una web|website is worth it/i);
     expect(compiled.querySelector('#demos')?.textContent).toMatch(/aplicaciones móviles|Mobile apps as well/i);
+    expect(compiled.querySelector('#demos #precios')?.textContent).toMatch(/Presencia|Presence/);
+    expect(compiled.querySelector('#demos #precios')?.textContent).toMatch(/USD 350/);
+    expect(compiled.querySelector('#demos #precios')?.textContent).toMatch(/conversable|negotiable/i);
+    expect(compiled.querySelector('#demos #precios')?.textContent).toMatch(/GitHub Pages/);
+    expect(compiled.querySelector('#demos #precios')?.textContent).toMatch(/USD 8–15/);
+    expect(compiled.querySelector('#demos #precios a[href^="https://wa.me/5492915757934"]')).toBeTruthy();
+    expect(compiled.querySelector('#demos #precios a[href="mailto:manuelreeb@icloud.com"]')).toBeTruthy();
   });
 
   it('should link the demos catalog from contact', async () => {

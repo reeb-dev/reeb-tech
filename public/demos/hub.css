@@ -283,6 +283,7 @@ img { display: block; width: 100%; height: 100%; object-fit: cover; }
   .pick:last-child { border-bottom: 0; }
   .who-benefits-list,
   .who-benefits-list-4 { grid-template-columns: 1fr 1fr; }
+  .price-extras { grid-template-columns: 1fr 1fr; }
 }
 
 .pick-media {
@@ -505,8 +506,163 @@ img { display: block; width: 100%; height: 100%; object-fit: cover; }
 
 #destacados,
 #quien,
+#precios,
 #catalogo {
   scroll-margin-top: 200px;
+}
+
+.prices {
+  padding: 72px 36px;
+  background: var(--bg);
+  border-bottom: 1px solid var(--line);
+}
+
+.prices-inner {
+  max-width: 1120px;
+  margin: 0 auto;
+}
+
+.prices h2 {
+  font-family: Fraunces, Georgia, serif;
+  font-size: clamp(32px, 4.4vw, 48px);
+  font-weight: 560;
+  letter-spacing: -0.03em;
+  line-height: 1.08;
+  margin-bottom: 16px;
+}
+
+.prices h3 {
+  font-family: Fraunces, Georgia, serif;
+  font-size: clamp(22px, 3vw, 30px);
+  font-weight: 560;
+  letter-spacing: -0.02em;
+  margin: 36px 0 16px;
+}
+
+.prices-lead,
+.prices-sublead,
+.prices-foot {
+  color: var(--muted);
+  font-size: 16px;
+  max-width: 68ch;
+  line-height: 1.55;
+}
+
+.prices-lead { margin-bottom: 8px; }
+
+.prices-lead strong { color: var(--ink); font-weight: 650; }
+
+.prices-sublead { margin-bottom: 20px; }
+
+.prices-foot { margin-top: 32px; }
+
+.price-table-wrap {
+  overflow-x: auto;
+  border: 1px solid var(--line);
+  background: var(--bg-2);
+}
+
+.price-table {
+  width: 100%;
+  min-width: 520px;
+  border-collapse: collapse;
+  text-align: left;
+}
+
+.price-table th,
+.price-table td {
+  padding: 16px 18px;
+  vertical-align: top;
+  border-bottom: 1px solid var(--line);
+}
+
+.price-table thead th {
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--gold);
+  background: #1a1613;
+}
+
+.price-table tbody th {
+  font-size: 16px;
+  font-weight: 650;
+  color: var(--ink);
+  white-space: nowrap;
+}
+
+.price-table td {
+  color: var(--muted);
+  font-size: 15px;
+}
+
+.price-table td[data-label="Desde"],
+.price-table tbody td:last-child {
+  color: var(--gold);
+  font-weight: 650;
+  white-space: nowrap;
+}
+
+.price-table tbody tr:last-child th,
+.price-table tbody tr:last-child td {
+  border-bottom: 0;
+}
+
+.price-extras {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 14px;
+}
+
+.price-extra {
+  background: var(--bg-2);
+  border: 1px solid var(--line);
+  border-left: 3px solid var(--ember);
+  padding: 18px 18px 16px;
+}
+
+.price-extra h4 {
+  font-size: 15px;
+  font-weight: 650;
+  color: var(--ink);
+  margin-bottom: 8px;
+}
+
+.price-extra p {
+  color: var(--muted);
+  font-size: 14px;
+  line-height: 1.45;
+}
+
+.price-extra-from {
+  margin-top: 12px;
+  color: var(--gold) !important;
+  font-weight: 650;
+  font-size: 14px;
+}
+
+.prices-host-note {
+  color: var(--muted);
+  font-size: 14px;
+  max-width: 68ch;
+  line-height: 1.5;
+  margin-top: 14px;
+}
+
+.price-table-host tbody th {
+  white-space: normal;
+}
+
+.price-table-host tbody td:last-child {
+  white-space: normal;
+}
+
+.prices-ctas {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-top: 22px;
 }
 
 .feat {
@@ -683,7 +839,7 @@ img { display: block; width: 100%; height: 100%; object-fit: cover; }
 .demo-contacto .demo-mail-inline { color: var(--gold); margin-left: 18px; }
 
 @media (max-width: 860px) {
-  .nav, .hero, .bar, .band, .picks-head, .catalog-head, .who, .demo-contacto { padding-left: 20px; padding-right: 20px; }
+  .nav, .hero, .bar, .band, .picks-head, .catalog-head, .who, .prices, .demo-contacto { padding-left: 20px; padding-right: 20px; }
   .nav { gap: 10px; flex-direction: column; align-items: flex-start; }
   .nav-links { gap: 14px; }
   .hero { min-height: 86vh; padding-bottom: 48px; }
@@ -712,7 +868,60 @@ img { display: block; width: 100%; height: 100%; object-fit: cover; }
   .who-benefits-list-4 { grid-template-columns: 1fr; gap: 14px; }
   #destacados,
   #quien,
+  #precios,
   #catalogo {
     scroll-margin-top: 340px;
   }
+
+  .prices { padding-top: 48px; padding-bottom: 48px; }
+
+  .price-table { min-width: 0; }
+
+  .price-table thead { display: none; }
+
+  .price-table,
+  .price-table tbody,
+  .price-table tr,
+  .price-table th,
+  .price-table td {
+    display: block;
+    width: 100%;
+  }
+
+  .price-table tr {
+    padding: 16px 16px 14px;
+    border-bottom: 1px solid var(--line);
+  }
+
+  .price-table tbody tr:last-child { border-bottom: 0; }
+
+  .price-table th,
+  .price-table td {
+    padding: 0;
+    border-bottom: 0;
+    white-space: normal;
+  }
+
+  .price-table tbody th {
+    font-size: 18px;
+    margin-bottom: 10px;
+    color: var(--gold);
+  }
+
+  .price-table td {
+    padding-top: 8px;
+  }
+
+  .price-table td::before {
+    content: attr(data-label);
+    display: block;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--gold);
+    margin-bottom: 4px;
+  }
+
+  .price-extras { grid-template-columns: 1fr; }
 }
