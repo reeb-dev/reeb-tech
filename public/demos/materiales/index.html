@@ -1,0 +1,138 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Corralón El Árido — materiales de obra</title>
+  <script>
+    (function () {
+      var p = location.pathname;
+      if (p && p.charAt(p.length - 1) !== "/" && !/\.[a-zA-Z0-9]+$/.test(p)) {
+        location.replace(p + "/" + location.search + location.hash);
+      }
+    })();
+  </script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@500;600&family=Source+Sans+3:wght@400;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <header class="top">
+    <div class="top-inner">
+      <a class="logo" href="index.html">El Árido<small>Corralón · Villa Devoto</small></a>
+      <nav>
+        <a href="#productos">Catálogo</a>
+        <a href="#info">Horario</a>
+        <div class="cart-wrap">
+          <button class="cart-btn" id="cartBtn" type="button" aria-label="Carrito">Pedido <span class="cart-badge" id="cartBadge">0</span></button>
+          <div class="cart-dropdown" id="cartDropdown" hidden></div>
+        </div>
+        <a class="btn" href="panel.html">Panel</a>
+      </nav>
+    </div>
+  </header>
+
+  <main>
+    <section class="hero">
+      <img class="hero-photo" src="img/hero.jpg" alt="Depósito industrial de materiales">
+      <div class="hero-shade"></div>
+      <div class="wrap hero-inner">
+        <div>
+          <p class="kicker light">Corralón de obra · CABA</p>
+          <h1>Cemento, ladrillo, hierro y arena. Precio y stock en el catálogo.</h1>
+          <p class="lead light">Armá el pedido a obra desde el carrito. Datos de ejemplo en el navegador.</p>
+          <div class="hero-actions">
+            <a class="btn" href="#productos">Ver catálogo</a>
+            <a class="btn btn-ghost" href="#info">Horario y pagos</a>
+          </div>
+        </div>
+        <aside class="local-card">
+          <p class="local-name">El Árido</p>
+          <p>Av. San Martín 4520</p>
+          <p>Villa Devoto, CABA</p>
+          <p class="local-hours">Lun a vie 7 a 17 · Sáb 7 a 13</p>
+          <p class="local-tel">011-4555-4520</p>
+        </aside>
+      </div>
+    </section>
+
+    <div class="wrap">
+      <section class="section">
+        <p class="kicker">Depósito</p>
+        <h2>Qué hay hoy</h2>
+        <div class="cat-grid" id="catGrid"></div>
+      </section>
+
+      <section class="section" id="productos">
+        <div class="catalog-header">
+          <div>
+            <p class="kicker">Catálogo</p>
+            <h2>Materiales de obra</h2>
+          </div>
+          <div class="catalog-tools">
+            <label class="search-field">
+              <span class="sr-only">Buscar material</span>
+              <input id="searchProd" type="search" placeholder="Buscar…" autocomplete="off">
+            </label>
+            <div class="filters" id="filters"></div>
+          </div>
+        </div>
+        <p class="catalog-count" id="catalogCount"></p>
+        <div class="products-grid" id="catalog"></div>
+      </section>
+
+      <section class="section" id="info">
+        <h2>El corralón</h2>
+        <div class="info-grid">
+          <article>
+            <h3>Horario</h3>
+            <p>Lunes a viernes: 7 a 17</p>
+            <p>Sábados: 7 a 13</p>
+          </article>
+          <article>
+            <h3>Dirección</h3>
+            <p>Av. San Martín 4520</p>
+            <p>Villa Devoto, CABA</p>
+          </article>
+          <article>
+            <h3>Pagos</h3>
+            <p>Efectivo, transferencia</p>
+            <p>Factura A, B o C (demo ARCA)</p>
+          </article>
+        </div>
+      </section>
+    </div>
+  </main>
+
+  <div class="ficha-overlay" id="fichaOverlay" hidden>
+    <div class="ficha-modal" role="dialog" aria-modal="true" aria-labelledby="fichaTitle">
+      <button class="ficha-close" id="fichaClose" type="button" aria-label="Cerrar">×</button>
+      <div id="fichaBody"></div>
+    </div>
+  </div>
+
+  <div class="checkout-overlay" id="checkoutOverlay" hidden>
+    <div class="checkout-modal" role="dialog" aria-labelledby="checkoutTitle">
+      <h2 id="checkoutTitle">Pedido a obra</h2>
+      <div id="checkoutSummary"></div>
+      <label>Nombre / empresa
+        <input id="checkoutNombre" type="text" placeholder="Constructora o encargado">
+      </label>
+      <label>Obra / dirección
+        <input id="checkoutObra" type="text" placeholder="Dirección de la obra">
+      </label>
+      <div class="checkout-actions">
+        <button class="ghost" type="button" id="checkoutCancel">Seguir armando</button>
+        <button class="btn-panel" type="button" id="checkoutConfirm">Confirmar pedido</button>
+      </div>
+    </div>
+  </div>
+
+  <div id="contacto"></div>
+  <footer class="wrap">Corralón El Árido · demo de producto · no es un comercio en actividad.</footer>
+
+  <script src="data.js"></script>
+  <script src="app.js"></script>
+  <script src="../contacto.js" data-phone="5492915757934" data-text="Hola, quiero consultar materiales en El Árido" data-subject="Consulta demo — Corralón El Árido" data-title="Consultar un pedido"></script>
+</body>
+</html>

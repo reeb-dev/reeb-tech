@@ -4,30 +4,41 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Sistemas para oficios y comercios — Demos de ejemplo</title>
-  <meta name="description" content="Catálogo de demos de sistemas de gestión para oficios y comercios argentinos. Landing y panel de administración, con datos de ejemplo.">
+  <meta name="description" content="Catálogo de demos de sistemas de gestión para oficios y comercios argentinos. Landing y panel de administración, con datos de ejemplo. Construido por Manuel Reeb, Senior Software Engineer.">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,560;9..144,650&family=Outfit:wght@400;600;650;700&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="hub.css?v=editorial">
+  <link rel="stylesheet" href="hub.css?v=hub4">
 </head>
 <body>
 
   <header class="nav">
-    <a class="nav-brand" href="../">REEB<em>.</em> demos</a>
-    <a class="nav-link" href="../">Portfolio</a>
+    <a class="nav-brand" href="/reeb-tech/">REEB<em>.</em> demos</a>
+    <nav class="nav-links" aria-label="Enlaces del portfolio">
+      <a class="nav-link" href="/reeb-tech/">Portfolio</a>
+      <a class="nav-link" href="https://www.linkedin.com/in/manuel-jesus-reeb" target="_blank" rel="noopener noreferrer">LinkedIn</a>
+    </nav>
   </header>
 
   <section class="hero">
     <div class="hero-inner">
       <p class="hero-kicker">Catálogo de demos</p>
       <h1>Sistemas para oficios y comercios argentinos</h1>
-      <p class="hero-lead">Landing para el cliente y panel de administración. Datos ficticios en el navegador: son demos de ejemplo, no productos en producción.</p>
+      <p class="hero-lead">Landing para el cliente y panel de administración. Datos ficticios en el navegador: son demos de ejemplo para comercios y oficios, no productos en producción.</p>
       <p class="hero-note">Sin métricas inventadas · persistencia local</p>
+      <div class="hero-ctas">
+        <a class="btn btn-primary" href="#destacados">Ver destacados</a>
+        <a class="btn btn-ghost" href="#quien">Quién lo construye</a>
+      </div>
     </div>
   </section>
 
   <div class="bar">
-    <p>Elegí un rubro</p>
+    <p>Buscá o filtrá un rubro</p>
+    <label class="search">
+      <span class="visually-hidden">Buscar demos por nombre o rubro</span>
+      <input type="search" id="hub-search" placeholder="Nombre o rubro: parrilla, corralón, cabañas…" autocomplete="off">
+    </label>
     <div class="filters" role="toolbar" aria-label="Filtrar por rubro">
       <button type="button" class="filter is-on" data-filter="all">Todos</button>
       <button type="button" class="filter" data-filter="comercio">Comercio</button>
@@ -37,52 +48,66 @@
       <button type="button" class="filter" data-filter="inmuebles">Inmuebles</button>
       <button type="button" class="filter" data-filter="automotriz">Auto</button>
       <button type="button" class="filter" data-filter="turismo">Turismo</button>
+      <button type="button" class="filter" data-filter="construccion">Construcción</button>
       <button type="button" class="filter" data-filter="cultura">Cultura</button>
     </div>
   </div>
 
-  <article class="feat" data-cat="gastronomia">
-    <div class="feat-media">
-      <img src="hub-img/restaurante.jpg" alt="Mesa de parrilla servida">
+  <section class="picks-wrap" id="destacados">
+    <div class="picks-head">
+      <p class="badge">Destacados</p>
+      <h2>Tres demos para abrir ahora</h2>
+      <p>Gastronomía, inmuebles y legal. Cada una tiene vitrina para el cliente y panel de administración.</p>
     </div>
-    <div class="feat-copy">
-      <span class="badge">Gastronomía · destacado</span>
-      <h2>Parrilla Don Ernesto</h2>
-      <p>Mesas, comandas, vista de cocina y cierre de cuenta con factura.</p>
-      <div class="ctas">
-        <a class="btn btn-primary" href="restaurante/">Ver demo</a>
-        <a class="btn btn-ghost" href="restaurante/panel.html">Panel</a>
-      </div>
+    <div class="picks">
+      <article class="pick" data-cat="gastronomia" data-search="parrilla don ernesto restaurante gastronomia mesas comandas cocina factura">
+        <div class="pick-media"><img src="hub-img/restaurante.jpg" alt="Mesa de parrilla servida"></div>
+        <div class="pick-copy">
+          <span class="badge">Gastronomía</span>
+          <h3>Parrilla Don Ernesto</h3>
+          <p>Mesas, comandas, vista de cocina y cierre de cuenta con factura.</p>
+          <div class="ctas">
+            <a class="btn btn-primary" href="restaurante/">Ver demo</a>
+            <a class="btn btn-ghost" href="restaurante/panel.html">Panel</a>
+          </div>
+        </div>
+      </article>
+      <article class="pick" data-cat="inmuebles" data-search="inmobiliaria reeb inmuebles venta alquiler propiedades visitas">
+        <div class="pick-media"><img src="hub-img/inmobiliaria.jpg" alt="Interior de un departamento listo para mostrar"></div>
+        <div class="pick-copy">
+          <span class="badge">Inmuebles</span>
+          <h3>Inmobiliaria Reeb</h3>
+          <p>Venta y alquiler con fichas de propiedad, visitas y clientes interesados.</p>
+          <div class="ctas">
+            <a class="btn btn-primary" href="inmobiliaria/">Ver demo</a>
+            <a class="btn btn-ghost" href="inmobiliaria/panel.html">Panel</a>
+          </div>
+        </div>
+      </article>
+      <article class="pick" data-cat="legal" data-search="estudio norte legal abogado expedientes plazos escritos mesa de entradas">
+        <div class="pick-media"><img src="hub-img/estudio.jpg" alt="Mesa de un estudio jurídico"></div>
+        <div class="pick-copy">
+          <span class="badge">Legal</span>
+          <h3>Estudio Norte</h3>
+          <p>Mesa de entradas: expedientes, plazos y escritos en la misma ficha.</p>
+          <div class="ctas">
+            <a class="btn btn-primary" href="estudio/">Ver demo</a>
+            <a class="btn btn-ghost" href="estudio/panel.html">Panel</a>
+          </div>
+        </div>
+      </article>
     </div>
-  </article>
+  </section>
 
-  <article class="row" data-cat="inmuebles">
-    <div class="row-media"><img src="hub-img/inmobiliaria.jpg" alt="Interior de un departamento listo para mostrar"></div>
-    <div class="row-copy">
-      <span class="badge">Inmuebles</span>
-      <h3>Inmobiliaria Reeb</h3>
-      <p>Venta y alquiler con fichas de propiedad, visitas y clientes interesados.</p>
-      <div class="ctas">
-        <a class="btn btn-primary" href="inmobiliaria/">Ver demo</a>
-        <a class="btn btn-ghost" href="inmobiliaria/panel.html">Panel</a>
-      </div>
-    </div>
-  </article>
+  <p class="empty" id="hub-empty" hidden>Ninguna demo coincide con esa búsqueda. Probá otro nombre o rubro.</p>
 
-  <article class="row is-flip" data-cat="legal">
-    <div class="row-media"><img src="hub-img/estudio.jpg" alt="Mesa de un estudio jurídico"></div>
-    <div class="row-copy">
-      <span class="badge">Legal</span>
-      <h3>Estudio Norte</h3>
-      <p>Mesa de entradas: expedientes, plazos y escritos en la misma ficha.</p>
-      <div class="ctas">
-        <a class="btn btn-primary" href="estudio/">Ver demo</a>
-        <a class="btn btn-ghost" href="estudio/panel.html">Panel</a>
-      </div>
-    </div>
-  </article>
+  <div class="catalog-head" id="catalogo">
+    <p class="badge">Catálogo</p>
+    <h2>Landing y panel por rubro</h2>
+    <p>Cada demo tiene vitrina para el cliente y panel de administración. Datos de ejemplo en el navegador.</p>
+  </div>
 
-  <article class="row" data-cat="comercio">
+  <article class="row" data-cat="comercio" data-search="almacen del barrio comercio pedidos proveedores gondola caja">
     <div class="row-media"><img src="hub-img/comercio.jpg" alt="Góndola de almacén"></div>
     <div class="row-copy">
       <span class="badge">Comercio</span>
@@ -95,7 +120,7 @@
     </div>
   </article>
 
-  <article class="row is-flip" data-cat="comercio">
+  <article class="row is-flip" data-cat="comercio" data-search="kiosco lo de pedro comercio stock gondola fiado reposicion">
     <div class="row-media"><img src="hub-img/kiosco.jpg" alt="Fachada de kiosco de barrio"></div>
     <div class="row-copy">
       <span class="badge">Comercio</span>
@@ -108,7 +133,7 @@
     </div>
   </article>
 
-  <article class="row" data-cat="automotriz">
+  <article class="row" data-cat="automotriz" data-search="taller mecanico automotriz ordenes diagnostico presupuesto repuestos">
     <div class="row-media"><img src="hub-img/taller.jpg" alt="Trabajo en un taller mecánico"></div>
     <div class="row-copy">
       <span class="badge">Automotriz</span>
@@ -121,7 +146,7 @@
     </div>
   </article>
 
-  <article class="row is-flip" data-cat="servicios">
+  <article class="row is-flip" data-cat="servicios" data-search="salon camelia peluqueria servicios turnos agenda profesionales cobro">
     <div class="row-media"><img src="hub-img/peluqueria.jpg" alt="Interior de un salón de peluquería"></div>
     <div class="row-copy">
       <span class="badge">Servicios</span>
@@ -134,7 +159,7 @@
     </div>
   </article>
 
-  <article class="row" data-cat="servicios">
+  <article class="row" data-cat="servicios" data-search="el quebracho carpinteria servicios muebles presupuesto sena entrega">
     <div class="row-media"><img src="hub-img/carpinteria.jpg" alt="Taller de carpintería"></div>
     <div class="row-copy">
       <span class="badge">Servicios</span>
@@ -147,7 +172,7 @@
     </div>
   </article>
 
-  <article class="row is-flip" data-cat="comercio">
+  <article class="row is-flip" data-cat="comercio" data-search="libro facturacion comercio comprobantes factura notas credito cobro">
     <div class="row-media"><img src="hub-img/facturacion.jpg" alt="Comprobantes y calculadora"></div>
     <div class="row-copy">
       <span class="badge">Comercio</span>
@@ -160,7 +185,7 @@
     </div>
   </article>
 
-  <article class="row" data-cat="comercio">
+  <article class="row" data-cat="comercio" data-search="stock facturacion comercio inventario movimientos arca electronica">
     <div class="row-media"><img src="hub-img/stockfacturacion.jpg" alt="Depósito con mercadería"></div>
     <div class="row-copy">
       <span class="badge">Comercio</span>
@@ -173,7 +198,7 @@
     </div>
   </article>
 
-  <article class="row is-flip" data-cat="comercio">
+  <article class="row is-flip" data-cat="comercio" data-search="libreria rivadavia comercio catalogo pedidos sena stock">
     <div class="row-media"><img src="hub-img/libreria.jpg" alt="Estantería de librería"></div>
     <div class="row-copy">
       <span class="badge">Comercio</span>
@@ -186,7 +211,7 @@
     </div>
   </article>
 
-  <article class="row" data-cat="cultura">
+  <article class="row" data-cat="cultura" data-search="biblioteca publica almagro cultura prestamos socios devoluciones multas">
     <div class="row-media"><img src="hub-img/biblioteca.jpg" alt="Sala de una biblioteca pública"></div>
     <div class="row-copy">
       <span class="badge">Cultura</span>
@@ -199,7 +224,7 @@
     </div>
   </article>
 
-  <article class="row is-flip" data-cat="gastronomia">
+  <article class="row is-flip" data-cat="gastronomia" data-search="rotiseria gastronomia produccion mostrador delivery pedidos">
     <div class="row-media"><img src="hub-img/rotiseria.jpg" alt="Pollo asado de rotisería"></div>
     <div class="row-copy">
       <span class="badge">Gastronomía</span>
@@ -212,7 +237,7 @@
     </div>
   </article>
 
-  <article class="row" data-cat="comercio">
+  <article class="row" data-cat="comercio" data-search="feria marketplace comercio publicaciones ventas preguntas envios">
     <div class="row-media"><img src="hub-img/marketplace.jpg" alt="Pago en mostrador"></div>
     <div class="row-copy">
       <span class="badge">Comercio</span>
@@ -225,7 +250,7 @@
     </div>
   </article>
 
-  <article class="row is-flip" data-cat="automotriz">
+  <article class="row is-flip" data-cat="automotriz" data-search="automotores reeb automotriz 0km usados financiacion permuta">
     <div class="row-media"><img src="hub-img/automotores.jpg" alt="Toyota Corolla en concesionaria"></div>
     <div class="row-copy">
       <span class="badge">Automotriz</span>
@@ -243,7 +268,7 @@
     <p>Tres demos de ejemplo en Sierra de la Ventana (Buenos Aires).</p>
   </div>
 
-  <article class="row" data-cat="turismo">
+  <article class="row" data-cat="turismo" data-search="hospedaje cabanas del sauce villa ventana turismo reservas calendario factura sierra de la ventana">
     <div class="row-media"><img src="hub-img/hospedaje.jpg" alt="Villa Ventana y las sierras de Ventania"></div>
     <div class="row-copy">
       <span class="badge">Turismo</span>
@@ -256,7 +281,7 @@
     </div>
   </article>
 
-  <article class="row is-flip" data-cat="turismo">
+  <article class="row is-flip" data-cat="turismo" data-search="excursiones senderos tornquist turismo cupos guias salidas cerro ventana garganta cueva sierra de la ventana">
     <div class="row-media"><img src="hub-img/excursiones.jpg" alt="Cerro Ventana en el Parque Tornquist"></div>
     <div class="row-copy">
       <span class="badge">Turismo</span>
@@ -269,7 +294,7 @@
     </div>
   </article>
 
-  <article class="row" data-cat="turismo">
+  <article class="row" data-cat="turismo" data-search="complejo el palomar turismo habitaciones spa actividades paquetes predio sierra de la ventana">
     <div class="row-media"><img src="hub-img/complejo.jpg" alt="Campo de golf con sierras al fondo"></div>
     <div class="row-copy">
       <span class="badge">Turismo</span>
@@ -282,9 +307,70 @@
     </div>
   </article>
 
+  <div class="band" data-band="construccion">
+    <h2>Construcción</h2>
+    <p>Arquitectura, corralón de materiales y vivienda steel frame.</p>
+  </div>
+
+  <article class="row is-flip" data-cat="construccion" data-search="estudio loma arquitectura construccion casa reforma ph planos obra renders palermo">
+    <div class="row-media"><img src="hub-img/arquitectura.jpg" alt="Arquitecto trabajando sobre un plano"></div>
+    <div class="row-copy">
+      <span class="badge">Construcción</span>
+      <h3>Estudio Loma</h3>
+      <p>Casa, reforma o PH: proyectos, dirección de obra y consulta de presupuesto.</p>
+      <div class="ctas">
+        <a class="btn btn-primary" href="arquitectura/">Ver demo</a>
+        <a class="btn btn-ghost" href="arquitectura/panel.html">Panel</a>
+      </div>
+    </div>
+  </article>
+
+  <article class="row" data-cat="construccion" data-search="corralon el arido materiales construccion cemento ladrillo hierro arena stock pedido obra">
+    <div class="row-media"><img src="hub-img/materiales.jpg" alt="Depósito de materiales de obra"></div>
+    <div class="row-copy">
+      <span class="badge">Construcción</span>
+      <h3>Corralón El Árido</h3>
+      <p>Cemento, ladrillo, hierro y arena: catálogo con stock y pedido a obra.</p>
+      <div class="ctas">
+        <a class="btn btn-primary" href="materiales/">Ver demo</a>
+        <a class="btn btn-ghost" href="materiales/panel.html">Panel</a>
+      </div>
+    </div>
+  </article>
+
+  <article class="row is-flip" data-cat="construccion" data-search="framehaus steelframe steel frame construccion vivienda modelos duplex ph ampliacion fabricacion montaje">
+    <div class="row-media"><img src="hub-img/steelframe.jpg" alt="Casas contemporáneas de steel frame"></div>
+    <div class="row-copy">
+      <span class="badge">Construcción</span>
+      <h3>Framehaus</h3>
+      <p>Modelos de vivienda steel frame: casa, dúplex, PH y ampliación, con obras en taller.</p>
+      <div class="ctas">
+        <a class="btn btn-primary" href="steelframe/">Ver demo</a>
+        <a class="btn btn-ghost" href="steelframe/panel.html">Panel</a>
+      </div>
+    </div>
+  </article>
+
+  <section class="who" id="quien">
+    <p class="badge">Quién lo construye</p>
+    <h2>Manuel Reeb · Senior Software Engineer</h2>
+    <p>Programa desde 2017. Consultora desde 2018: Siskit (2018–2022), Indra (2022–2025) y BP4 desde enero de 2026, asignado a Fiserv — mantenimiento de código legado, backend Java y pruebas SMTP desde terminal en desarrollo y producción.</p>
+    <p>En Indra evolucionó sistemas ya en producción para Banco Santander, Telefónica, UGG y GCBA. El hilo es el mismo: Android nativo, Angular y Java/Spring.</p>
+    <p>El código de cliente no está en este perfil. Lo que ves acá son demos de ejemplo para comercios y oficios, con datos ficticios en el navegador.</p>
+    <div class="ctas">
+      <a class="btn btn-primary" href="https://www.linkedin.com/in/manuel-jesus-reeb" target="_blank" rel="noopener noreferrer">LinkedIn</a>
+      <a class="btn btn-ghost" href="/reeb-tech/">Portfolio</a>
+    </div>
+  </section>
+
   <footer class="footer">
     <p>Demos de ejemplo con fines ilustrativos. No son sistemas en producción ni representan clientes reales.</p>
-    <p style="margin-top: 10px;">Portfolio de <a href="https://reeb-dev.github.io/reeb-tech/">Manuel Reeb</a></p>
+    <p class="footer-links">
+      <a href="/reeb-tech/">Portfolio de Manuel Reeb</a>
+      <a href="https://www.linkedin.com/in/manuel-jesus-reeb" target="_blank" rel="noopener noreferrer">LinkedIn</a>
+      <a href="https://wa.me/5492915757934?text=Hola%2C%20vi%20las%20demos%20del%20portfolio%20y%20quiero%20consultar">WhatsApp · +54 9 291 575-7934</a>
+      <a href="mailto:manuelreeb@icloud.com">manuelreeb@icloud.com</a>
+    </p>
   </footer>
 
   <script src="contacto.js" data-phone="5492915757934" data-text="Hola, vi las demos del portfolio y quiero consultar" data-subject="Consulta por las demos" data-title="Contacto" data-place="hub"></script>
@@ -292,17 +378,69 @@
     (function () {
       var buttons = document.querySelectorAll(".filter");
       var items = document.querySelectorAll("[data-cat]");
-      var band = document.querySelector("[data-band='turismo']");
+      var bands = document.querySelectorAll("[data-band]");
+      var picksHead = document.querySelector(".picks-head");
+      var picksWrap = document.querySelector(".picks-wrap");
+      var catalogHead = document.querySelector(".catalog-head");
+      var emptyEl = document.getElementById("hub-empty");
+      var searchEl = document.getElementById("hub-search");
+      var activeFilter = "all";
+
+      function fold(s) {
+        return String(s || "")
+          .toLowerCase()
+          .normalize("NFD")
+          .replace(/[\u0300-\u036f]/g, "");
+      }
+
+      function query() {
+        return fold((searchEl && searchEl.value) || "").trim();
+      }
+
+      function apply() {
+        var filter = activeFilter;
+        var q = query();
+        var visible = 0;
+        var visiblePicks = 0;
+        var visibleRows = 0;
+
+        items.forEach(function (el) {
+          var cat = el.getAttribute("data-cat");
+          var catOk = filter === "all" || cat === filter;
+          var hay = fold((el.getAttribute("data-search") || "") + " " + (el.textContent || ""));
+          var searchOk = !q || hay.indexOf(q) !== -1;
+          var show = catOk && searchOk;
+          el.hidden = !show;
+          if (show) {
+            visible += 1;
+            if (el.classList.contains("pick")) visiblePicks += 1;
+            if (el.classList.contains("row")) visibleRows += 1;
+          }
+        });
+
+        if (picksHead) picksHead.hidden = visiblePicks === 0;
+        if (picksWrap) picksWrap.hidden = visiblePicks === 0;
+        if (catalogHead) catalogHead.hidden = visibleRows === 0;
+        bands.forEach(function (band) {
+          var key = band.getAttribute("data-band");
+          var n = 0;
+          items.forEach(function (el) {
+            if (!el.hidden && el.getAttribute("data-cat") === key) n += 1;
+          });
+          band.hidden = n === 0;
+        });
+        if (emptyEl) emptyEl.hidden = visible !== 0;
+      }
+
       buttons.forEach(function (btn) {
         btn.addEventListener("click", function () {
-          var filter = btn.getAttribute("data-filter");
+          activeFilter = btn.getAttribute("data-filter") || "all";
           buttons.forEach(function (b) { b.classList.toggle("is-on", b === btn); });
-          items.forEach(function (el) {
-            el.hidden = !(filter === "all" || el.getAttribute("data-cat") === filter);
-          });
-          if (band) band.hidden = !(filter === "all" || filter === "turismo");
+          apply();
         });
       });
+
+      if (searchEl) searchEl.addEventListener("input", apply);
     })();
   </script>
 </body>

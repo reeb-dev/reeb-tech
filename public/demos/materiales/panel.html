@@ -1,0 +1,129 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Panel · Corralón El Árido</title>
+  <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@500;600&family=Source+Sans+3:wght@400;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <div class="app">
+    <header class="top">
+      <div class="top-inner">
+        <a class="logo" href="index.html">El Árido<small>Stock y obra · panel</small></a>
+        <nav>
+          <a href="index.html">Inicio</a>
+          <div class="panel-tabs">
+            <button type="button" id="tab-stock" class="on">Stock</button>
+            <button type="button" id="tab-pedidos">Pedidos a obra</button>
+            <button type="button" id="tab-arca">ARCA</button>
+          </div>
+          <button class="btn" id="open-create" type="button">Nuevo</button>
+        </nav>
+      </div>
+    </header>
+
+    <div id="view-stock">
+      <div class="toolbar">
+        <div>
+          <p class="eyebrow">Datos de ejemplo</p>
+          <h1>Stock del corralón</h1>
+        </div>
+      </div>
+      <div class="stats" id="stats"></div>
+      <form class="create" id="create">
+        <input name="codigo" placeholder="Código" required>
+        <input name="nombre" placeholder="Nombre" required>
+        <select name="categoria">
+          <option value="cemento">Cemento y cal</option>
+          <option value="mamposteria">Ladrillos</option>
+          <option value="hierro">Hierros</option>
+          <option value="aridos">Áridos</option>
+          <option value="pinturas">Pinturas</option>
+          <option value="terminaciones">Terminaciones</option>
+        </select>
+        <input name="unidad" placeholder="Unidad (bolsa, m³…)" value="unidad">
+        <input name="precio" type="number" placeholder="Precio" required>
+        <input name="stock" type="number" placeholder="Stock">
+        <input name="minimo" type="number" placeholder="Mínimo">
+        <button class="btn-panel" type="submit">Agregar material</button>
+      </form>
+      <div class="workspace">
+        <section class="list">
+          <table>
+            <thead>
+              <tr>
+                <th></th>
+                <th>Código</th>
+                <th>Material</th>
+                <th class="amount">Precio</th>
+                <th class="amount">Stock</th>
+                <th>Estado</th>
+              </tr>
+            </thead>
+            <tbody id="rows"></tbody>
+          </table>
+        </section>
+        <aside class="detail" id="detail"></aside>
+      </div>
+    </div>
+
+    <div id="view-pedidos" class="panel-hidden">
+      <div class="toolbar">
+        <div>
+          <p class="eyebrow">Despacho</p>
+          <h1>Pedidos a obra</h1>
+        </div>
+      </div>
+      <div class="stats" id="pedido-stats"></div>
+      <div class="workspace">
+        <section class="list">
+          <table>
+            <thead>
+              <tr>
+                <th>Pedido</th>
+                <th>Cliente / obra</th>
+                <th class="amount">Total</th>
+                <th>Estado</th>
+              </tr>
+            </thead>
+            <tbody id="pedido-rows"></tbody>
+          </table>
+        </section>
+        <aside class="detail" id="pedido-detail"></aside>
+      </div>
+    </div>
+
+    <div id="view-arca" class="panel-hidden">
+      <div class="toolbar">
+        <div>
+          <p class="eyebrow">Comprobantes simulados</p>
+          <h1>Facturación ARCA</h1>
+        </div>
+      </div>
+      <div class="stats" id="arca-stats"></div>
+      <div class="workspace">
+        <section class="list">
+          <table>
+            <thead>
+              <tr>
+                <th>Pedido</th>
+                <th>Cliente</th>
+                <th class="amount">Total</th>
+                <th>Factura</th>
+              </tr>
+            </thead>
+            <tbody id="arca-rows"></tbody>
+          </table>
+        </section>
+        <aside class="detail" id="arca-detail"></aside>
+      </div>
+    </div>
+  </div>
+
+  <script src="data.js"></script>
+  <script src="panel.js"></script>
+  <script src="../contacto.js" data-phone="5492915757934" data-text="Hola, quiero consultar materiales en El Árido" data-subject="Consulta demo — Corralón El Árido" data-title="Consultar un pedido" data-place="panel"></script>
+</body>
+</html>

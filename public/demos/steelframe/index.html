@@ -1,0 +1,157 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Framehaus — vivienda steel frame</title>
+  <script>
+    (function () {
+      var p = location.pathname;
+      if (p && p.charAt(p.length - 1) !== "/" && !/\.[a-zA-Z0-9]+$/.test(p)) {
+        location.replace(p + "/" + location.search + location.hash);
+      }
+    })();
+  </script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <header class="top">
+    <div class="top-inner">
+      <a class="logo" href="index.html">Framehaus<small>Steel frame · Villa Urquiza</small></a>
+      <nav>
+        <a href="#modelos">Modelos</a>
+        <a href="#sistema">Sistema</a>
+        <a href="#consulta">Consulta</a>
+        <a class="btn" href="panel.html">Panel</a>
+      </nav>
+    </div>
+  </header>
+
+  <main>
+    <section class="hero">
+      <img class="hero-photo" src="img/hero.jpg" alt="Casas contemporáneas de líneas limpias">
+      <div class="hero-shade"></div>
+      <div class="wrap hero-inner">
+        <div>
+          <p class="kicker light">Vivienda en steel frame · CABA</p>
+          <h1>Modelos de casa, dúplex, PH y ampliación. Paneles en taller, montaje en el lote.</h1>
+          <p class="lead light">Catálogo de ejemplo con m², plazo y precio. La consulta queda en este navegador.</p>
+          <div class="hero-actions">
+            <a class="btn" href="#modelos">Ver modelos</a>
+            <a class="btn btn-ghost" href="#consulta">Pedir presupuesto</a>
+          </div>
+        </div>
+        <aside class="local-card">
+          <p class="local-name">Framehaus</p>
+          <p>Av. Triunvirato 3800</p>
+          <p>Villa Urquiza, CABA</p>
+          <p class="local-hours">Lun a vie 9 a 18 · Sáb 9 a 13</p>
+          <p class="local-tel">011-4555-3800</p>
+        </aside>
+      </div>
+    </section>
+
+    <div class="wrap">
+      <section class="section" id="modelos">
+        <p class="kicker">Catálogo</p>
+        <h2>Modelos de vivienda</h2>
+        <p class="section-lead">Casas contemporáneas y módulos de ampliación. Tocá una tarjeta para la ficha. No son obras vendidas: son demos de ejemplo.</p>
+        <div class="portfolio-grid" id="catalog"></div>
+      </section>
+
+      <section class="section" id="sistema">
+        <p class="kicker">Sistema</p>
+        <h2>De taller a lote</h2>
+        <div class="service-grid">
+          <article class="service-card">
+            <img src="img/planos.jpg" alt="Planos de la vivienda">
+            <div>
+              <h3>Modelo y plano</h3>
+              <p>Elegís un modelo. Ajustamos m² y aberturas al lote antes de fabricar.</p>
+            </div>
+          </article>
+          <article class="service-card">
+            <img src="img/estructura.jpg" alt="Estructura en obra">
+            <div>
+              <h3>Fabricación</h3>
+              <p>Perfiles y paneles en taller. La obra en el lote espera el montaje, no el corte.</p>
+            </div>
+          </article>
+          <article class="service-card">
+            <img src="img/ampliacion.jpg" alt="Vivienda contemporánea terminada">
+            <div>
+              <h3>Montaje</h3>
+              <p>Armado en el lote, cerramientos y terminaciones. Fecha de entrega en la ficha de obra.</p>
+            </div>
+          </article>
+        </div>
+      </section>
+
+      <section class="section" id="consulta">
+        <div class="presup-card">
+          <div>
+            <p class="kicker light">Presupuesto</p>
+            <h2>Consultá un modelo</h2>
+            <p>Modelo, lote y un teléfono o mail. Queda en este navegador para el panel. No sale a un servidor.</p>
+          </div>
+          <form id="consultaForm" class="presup-form">
+            <label>Modelo
+              <select name="tipo" required></select>
+            </label>
+            <label>Lote / barrio
+              <input name="lote" maxlength="120" placeholder="Barrio o dirección del lote">
+            </label>
+            <label>Nombre
+              <input name="nombre" required maxlength="80" placeholder="Nombre y apellido">
+            </label>
+            <label>Contacto
+              <input name="contacto" required maxlength="120" placeholder="Teléfono o mail">
+            </label>
+            <label class="full">Detalle
+              <textarea name="detalle" maxlength="400" placeholder="Ampliación, dúplex, visita al lote…"></textarea>
+            </label>
+            <button class="btn" type="submit">Enviar consulta</button>
+          </form>
+        </div>
+      </section>
+
+      <section class="section" id="info">
+        <h2>El taller</h2>
+        <div class="info-grid">
+          <article>
+            <h3>Horarios</h3>
+            <p>Lunes a viernes: 9 a 18</p>
+            <p>Sábados: 9 a 13</p>
+          </article>
+          <article>
+            <h3>Dirección</h3>
+            <p>Av. Triunvirato 3800</p>
+            <p>Villa Urquiza, CABA</p>
+          </article>
+          <article>
+            <h3>Facturación</h3>
+            <p>Honorarios y vivienda</p>
+            <p>Factura A, B o C (demo ARCA)</p>
+          </article>
+        </div>
+      </section>
+    </div>
+  </main>
+
+  <div class="ficha-overlay" id="fichaOverlay" hidden>
+    <div class="ficha-modal" role="dialog" aria-modal="true" aria-labelledby="fichaTitle">
+      <button class="ficha-close" id="fichaClose" type="button" aria-label="Cerrar">×</button>
+      <div id="fichaBody"></div>
+    </div>
+  </div>
+
+  <div id="contacto"></div>
+  <footer class="wrap">Framehaus · demo de producto · no es una empresa en actividad.</footer>
+
+  <script src="data.js"></script>
+  <script src="app.js"></script>
+  <script src="../contacto.js" data-phone="5492915757934" data-text="Hola, quiero consultar un modelo steel frame en Framehaus" data-subject="Consulta demo — Framehaus" data-title="Consultar un modelo"></script>
+</body>
+</html>

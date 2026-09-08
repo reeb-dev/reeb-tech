@@ -1,0 +1,138 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Estudio Loma — arquitectura en CABA</title>
+  <script>
+    (function () {
+      var p = location.pathname;
+      if (p && p.charAt(p.length - 1) !== "/" && !/\.[a-zA-Z0-9]+$/.test(p)) {
+        location.replace(p + "/" + location.search + location.hash);
+      }
+    })();
+  </script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;600;700&family=Outfit:wght@400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <header class="top">
+    <div class="top-inner">
+      <a class="logo" href="index.html">Estudio Loma<small>Arquitectura · Palermo</small></a>
+      <nav>
+        <a href="#proyectos">Proyectos</a>
+        <a href="#servicios">Servicios</a>
+        <a href="#consulta">Consulta</a>
+        <a class="btn" href="panel.html">Panel</a>
+      </nav>
+    </div>
+  </header>
+
+  <main>
+    <section class="hero">
+      <img class="hero-photo" src="img/hero.jpg" alt="Arquitecto trabajando sobre un plano">
+      <div class="hero-shade"></div>
+      <div class="wrap hero-inner">
+        <div>
+          <p class="kicker light">Estudio de arquitectura · CABA</p>
+          <h1>Casa, reforma o PH. El plano y la obra en la misma ficha.</h1>
+          <p class="lead light">Proyecto, dirección de obra y renders. Datos de ejemplo en el navegador: no es un estudio en actividad.</p>
+          <div class="hero-actions">
+            <a class="btn" href="#proyectos">Ver proyectos</a>
+            <a class="btn btn-ghost" href="#consulta">Pedir presupuesto</a>
+          </div>
+        </div>
+        <aside class="local-card">
+          <p class="local-name">Estudio Loma</p>
+          <p>Humboldt 2140</p>
+          <p>Palermo, CABA</p>
+          <p class="local-hours">Lun a vie 9 a 18 · sáb con cita</p>
+          <p class="local-tel">011-4555-2140</p>
+        </aside>
+      </div>
+    </section>
+
+    <div class="wrap">
+      <section class="section" id="proyectos">
+        <p class="kicker">Portfolio</p>
+        <h2>Proyectos de ejemplo</h2>
+        <p class="section-lead">Casas nuevas y reformas. Tocá una tarjeta para ver la ficha. No son clientes reales.</p>
+        <div class="portfolio-grid" id="catalog"></div>
+      </section>
+
+      <section class="section" id="servicios">
+        <p class="kicker">Servicios</p>
+        <h2>Qué hacemos</h2>
+        <div class="service-grid" id="serviciosGrid"></div>
+      </section>
+
+      <section class="section" id="consulta">
+        <div class="presup-card">
+          <div>
+            <p class="kicker light">Presupuesto</p>
+            <h2>Contanos el encargo</h2>
+            <p>Tipo, barrio y un teléfono o mail. Queda guardado en este navegador para el panel. No sale a un servidor.</p>
+          </div>
+          <form id="consultaForm" class="presup-form">
+            <label>Tipo
+              <select name="tipo" required></select>
+            </label>
+            <label>Superficie aproximada
+              <input name="superficie" maxlength="40" placeholder="Ej. 120 m²">
+            </label>
+            <label>Nombre
+              <input name="nombre" required maxlength="80" placeholder="Nombre y apellido">
+            </label>
+            <label>Contacto
+              <input name="contacto" required maxlength="120" placeholder="Teléfono o mail">
+            </label>
+            <label class="full">Lugar
+              <input name="lugar" maxlength="120" placeholder="Barrio o dirección">
+            </label>
+            <label class="full">Detalle
+              <textarea name="detalle" maxlength="400" placeholder="Casa nueva, reforma, PH…"></textarea>
+            </label>
+            <button class="btn" type="submit">Enviar consulta</button>
+          </form>
+        </div>
+      </section>
+
+      <section class="section" id="info">
+        <h2>El estudio</h2>
+        <div class="info-grid">
+          <article>
+            <h3>Horarios</h3>
+            <p>Lunes a viernes: 9 a 18</p>
+            <p>Sábados: con cita</p>
+          </article>
+          <article>
+            <h3>Dirección</h3>
+            <p>Humboldt 2140</p>
+            <p>Palermo, CABA</p>
+          </article>
+          <article>
+            <h3>Honorarios</h3>
+            <p>Según etapa y superficie</p>
+            <p>Factura A, B o C (demo ARCA)</p>
+          </article>
+        </div>
+      </section>
+    </div>
+  </main>
+
+  <div class="ficha-overlay" id="fichaOverlay" hidden>
+    <div class="ficha-modal" role="dialog" aria-modal="true" aria-labelledby="fichaTitle">
+      <button class="ficha-close" id="fichaClose" type="button" aria-label="Cerrar">×</button>
+      <div id="fichaBody"></div>
+    </div>
+  </div>
+
+  <div id="contacto"></div>
+  <footer class="wrap">Estudio Loma · demo de producto · no es un estudio en actividad.</footer>
+
+  <script src="data.js"></script>
+  <script src="app.js"></script>
+  <script src="../contacto.js" data-phone="5492915757934" data-text="Hola, quiero consultar un proyecto en Estudio Loma" data-subject="Consulta demo — Estudio Loma" data-title="Consultar un proyecto"></script>
+</body>
+</html>
