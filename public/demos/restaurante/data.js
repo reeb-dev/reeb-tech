@@ -141,10 +141,20 @@ let mesas = null;
 let pedidos = null;
 
 function loadMenu() {
-  if (menu) return menu;
+  if (menu && menu.length) return menu;
   const raw = localStorage.getItem(MENU_KEY);
-  if (!raw) { menu = seedMenu(); localStorage.setItem(MENU_KEY, JSON.stringify(menu)); return menu; }
-  return menu = JSON.parse(raw);
+  if (raw) {
+    try {
+      const parsed = JSON.parse(raw);
+      if (Array.isArray(parsed) && parsed.length) {
+        menu = parsed;
+        return menu;
+      }
+    } catch (_) { /* carta guardada inválida: se vuelve a sembrar */ }
+  }
+  menu = seedMenu();
+  localStorage.setItem(MENU_KEY, JSON.stringify(menu));
+  return menu;
 }
 
 function loadMesas() {

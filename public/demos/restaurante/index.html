@@ -146,7 +146,7 @@
   <script src="data.js"></script>
   <script>
     const local = seedLocal();
-    const menu = seedMenu();
+    const carta = seedMenu();
     let currentFilter = "all";
 
     function pintarMapa(s) {
@@ -164,8 +164,8 @@
 
     function renderMenu() {
       const filtered = currentFilter === "all"
-        ? menu
-        : menu.filter((p) => p.categoria === currentFilter);
+        ? carta
+        : carta.filter((p) => p.categoria === currentFilter);
 
       const order = ["entrada", "principal", "guarnicion", "postre", "bebida"];
       const grouped = {};
@@ -204,7 +204,7 @@
     }
 
     function openPlato(id) {
-      const item = menu.find((p) => p.id === id);
+      const item = carta.find((p) => p.id === id);
       if (!item) return;
       document.getElementById("plato-modal-img").src = fotoPlato(item);
       document.getElementById("plato-modal-img").alt = item.nombre;
@@ -263,8 +263,8 @@
       setTimeout(() => { toast.classList.remove("show"); setTimeout(() => toast.remove(), 300); }, 3200);
     }
 
-    pintarMapa(local);
     renderMenu();
+    try { pintarMapa(local); } catch (err) { /* el mapa no debe dejar la carta vacía */ }
   </script>
   <script src="../contacto.js" data-phone="5491140001234" data-text="Hola, quiero consultar por una reserva o la carta de Parrilla Don Ernesto" data-subject="Consulta demo — Restaurante" data-title="Escribinos"></script>
 </body>
