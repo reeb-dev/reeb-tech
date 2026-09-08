@@ -10,6 +10,45 @@ const COMPROBANTES = [
   { id: "FC", label: "Factura C" }
 ];
 
+const CATEGORIAS_PROD = [
+  { id: "almacen", label: "Almacén" },
+  { id: "verduleria", label: "Verdulería" },
+  { id: "panaderia", label: "Panadería" },
+  { id: "limpieza", label: "Limpieza" },
+  { id: "bebidas", label: "Bebidas" }
+];
+
+function seedProductos() {
+  return [
+    // Almacén
+    { id: "p1", nombre: "Arroz largo fino", categoria: "almacen", precio: 1890, stock: 25, imagen: "https://images.unsplash.com/photo-1586201375761-83865001e31c?w=180&h=120&fit=crop", unidad: "kg" },
+    { id: "p2", nombre: "Fideos tirabuzón", categoria: "almacen", precio: 1250, stock: 40, imagen: "https://images.unsplash.com/photo-1551462147-ff29053bfc14?w=180&h=120&fit=crop", unidad: "500g" },
+    { id: "p3", nombre: "Aceite girasol", categoria: "almacen", precio: 2890, stock: 18, imagen: "https://images.unsplash.com/photo-1474979266404-7eaacbcd87c5?w=180&h=120&fit=crop", unidad: "1.5L" },
+    { id: "p4", nombre: "Azúcar", categoria: "almacen", precio: 1450, stock: 30, imagen: "https://images.unsplash.com/photo-1558642452-9d2a7deb7f62?w=180&h=120&fit=crop", unidad: "kg" },
+    { id: "p5", nombre: "Yerba mate", categoria: "almacen", precio: 4200, stock: 22, imagen: "https://images.unsplash.com/photo-1515696955266-4f67e13219e8?w=180&h=120&fit=crop", unidad: "kg" },
+    { id: "p6", nombre: "Harina 000", categoria: "almacen", precio: 980, stock: 35, imagen: "https://images.unsplash.com/photo-1574323347407-f5e1ad6d020b?w=180&h=120&fit=crop", unidad: "kg" },
+    // Verdulería
+    { id: "p7", nombre: "Tomate redondo", categoria: "verduleria", precio: 1800, stock: 15, imagen: "https://images.unsplash.com/photo-1546470427-0d4db154ceb8?w=180&h=120&fit=crop", unidad: "kg" },
+    { id: "p8", nombre: "Papa", categoria: "verduleria", precio: 950, stock: 50, imagen: "https://images.unsplash.com/photo-1518977676601-b53f82ber7da?w=180&h=120&fit=crop", unidad: "kg" },
+    { id: "p9", nombre: "Cebolla", categoria: "verduleria", precio: 890, stock: 40, imagen: "https://images.unsplash.com/photo-1618512496248-a07fe83aa8cb?w=180&h=120&fit=crop", unidad: "kg" },
+    { id: "p10", nombre: "Lechuga", categoria: "verduleria", precio: 650, stock: 12, imagen: "https://images.unsplash.com/photo-1622206151226-18ca2c9ab4a1?w=180&h=120&fit=crop", unidad: "unidad" },
+    // Panadería
+    { id: "p11", nombre: "Pan francés", categoria: "panaderia", precio: 1200, stock: 30, imagen: "https://images.unsplash.com/photo-1549931319-a545dcf3bc73?w=180&h=120&fit=crop", unidad: "kg" },
+    { id: "p12", nombre: "Facturas surtidas", categoria: "panaderia", precio: 350, stock: 48, imagen: "https://images.unsplash.com/photo-1509440159596-0249088772ff?w=180&h=120&fit=crop", unidad: "unidad" },
+    // Limpieza
+    { id: "p13", nombre: "Lavandina", categoria: "limpieza", precio: 890, stock: 20, imagen: "https://images.unsplash.com/photo-1585421514284-efb74c2b69ba?w=180&h=120&fit=crop", unidad: "1L" },
+    { id: "p14", nombre: "Detergente", categoria: "limpieza", precio: 1100, stock: 25, imagen: "https://images.unsplash.com/photo-1622560480654-f296c7f36f25?w=180&h=120&fit=crop", unidad: "750ml" },
+    // Bebidas
+    { id: "p15", nombre: "Gaseosa cola", categoria: "bebidas", precio: 2500, stock: 36, imagen: "https://images.unsplash.com/photo-1622483767028-3f66f32aef97?w=180&h=120&fit=crop", unidad: "2.25L" },
+    { id: "p16", nombre: "Agua mineral", categoria: "bebidas", precio: 980, stock: 48, imagen: "https://images.unsplash.com/photo-1548839140-29a749e1cf4d?w=180&h=120&fit=crop", unidad: "2L" },
+    { id: "p17", nombre: "Jugo en caja", categoria: "bebidas", precio: 1350, stock: 24, imagen: "https://images.unsplash.com/photo-1600271886742-f049cd451bba?w=180&h=120&fit=crop", unidad: "1L" }
+  ];
+}
+
+function catLabelProd(cat) {
+  return CATEGORIAS_PROD.find((c) => c.id === cat)?.label || cat;
+}
+
 function compLabel(comp) {
   return COMPROBANTES.find((c) => c.id === comp)?.label || comp;
 }

@@ -31,6 +31,40 @@
     .filters-bar button.active { background: var(--azul); color: white; border-color: var(--azul); }
     .section-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px; }
     .results-count { color: var(--muted); font-size: 14px; }
+    /* Modal */
+    .modal-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.6); display: none; justify-content: center; align-items: center; z-index: 1000; padding: 20px; }
+    .modal-overlay.show { display: flex; }
+    .modal { background: white; border-radius: 12px; max-width: 800px; width: 100%; max-height: 90vh; overflow-y: auto; position: relative; }
+    .modal-close { position: absolute; top: 12px; right: 12px; background: #f1f1f1; border: none; width: 36px; height: 36px; border-radius: 50%; cursor: pointer; font-size: 20px; z-index: 1; }
+    .modal-close:hover { background: #ddd; }
+    .modal-content { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; padding: 24px; }
+    @media (max-width: 600px) { .modal-content { grid-template-columns: 1fr; } }
+    .modal-img { width: 100%; aspect-ratio: 1; object-fit: cover; border-radius: 8px; }
+    .modal-info h2 { margin: 0 0 8px; font-size: 20px; }
+    .modal-info .price { font-size: 28px; font-weight: 700; color: #333; margin: 8px 0; }
+    .modal-info .cuotas { color: var(--verde); font-size: 14px; margin-bottom: 12px; }
+    .modal-info .location { font-size: 13px; color: var(--muted); margin-bottom: 16px; }
+    .modal-info .add-cart { background: var(--azul); color: white; border: none; padding: 14px 24px; border-radius: 6px; cursor: pointer; font-weight: 600; font-size: 16px; width: 100%; margin-top: 12px; }
+    .modal-info .add-cart:hover { background: #2968c8; }
+    .modal-info .add-cart:disabled { background: #ccc; cursor: not-allowed; }
+    /* Cart dropdown */
+    .cart-btn { position: relative; background: none; border: none; cursor: pointer; font-size: 18px; padding: 8px 12px; }
+    .cart-badge { position: absolute; top: 0; right: 0; background: #e53935; color: white; font-size: 11px; font-weight: 700; min-width: 18px; height: 18px; border-radius: 9px; display: flex; align-items: center; justify-content: center; }
+    .cart-dropdown { position: absolute; top: 100%; right: 0; background: white; border-radius: 8px; box-shadow: 0 4px 20px rgba(0,0,0,0.15); width: 320px; display: none; z-index: 100; }
+    .cart-dropdown.show { display: block; }
+    .cart-dropdown h4 { margin: 0; padding: 16px; border-bottom: 1px solid #eee; }
+    .cart-items { max-height: 300px; overflow-y: auto; }
+    .cart-item { display: flex; gap: 12px; padding: 12px 16px; border-bottom: 1px solid #f5f5f5; }
+    .cart-item img { width: 50px; height: 50px; object-fit: cover; border-radius: 4px; }
+    .cart-item .info { flex: 1; }
+    .cart-item .info .title { font-size: 13px; margin: 0; }
+    .cart-item .info .price { font-size: 14px; font-weight: 600; }
+    .cart-item .remove { background: none; border: none; color: #999; cursor: pointer; font-size: 18px; }
+    .cart-item .remove:hover { color: #e53935; }
+    .cart-footer { padding: 16px; border-top: 1px solid #eee; }
+    .cart-footer .total { display: flex; justify-content: space-between; font-weight: 700; margin-bottom: 12px; }
+    .cart-footer .checkout { background: var(--verde); color: white; border: none; padding: 12px; border-radius: 6px; width: 100%; cursor: pointer; font-weight: 600; }
+    .cart-empty { padding: 32px; text-align: center; color: var(--muted); }
   </style>
 </head>
 <body>
@@ -46,7 +80,14 @@
         <a href="#productos">Productos</a>
         <a href="#">Mis compras</a>
         <a href="panel.html">Vender</a>
-        <button class="cart-btn">🛒 <span class="cart-badge">0</span></button>
+        <div style="position:relative;">
+          <button class="cart-btn" id="cartBtn">🛒 <span class="cart-badge" id="cartBadge">0</span></button>
+          <div class="cart-dropdown" id="cartDropdown">
+            <h4>🛒 Mi carrito</h4>
+            <div class="cart-items" id="cartItems"></div>
+            <div class="cart-footer" id="cartFooter"></div>
+          </div>
+        </div>
       </nav>
     </div>
   </header>
@@ -137,6 +178,14 @@
     </section>
   </main>
 
+  <!-- Modal de detalle -->
+  <div class="modal-overlay" id="modalOverlay">
+    <div class="modal">
+      <button class="modal-close" id="modalClose">×</button>
+      <div class="modal-content" id="modalContent"></div>
+    </div>
+  </div>
+
   <footer>
     <div class="wrap">
       <p>MercadoDemo — Demo educativa de marketplace. Datos ficticios con fines ilustrativos.</p>
@@ -149,6 +198,134 @@
     let currentFilter = "all";
     let searchTerm = "";
     const productos = seedProductos();
+
+    // Carrito
+    let cart = JSON.parse(localStorage.getItem("marketplace-cart") || "[]");
+
+    function saveCart() {
+      localStorage.setItem("marketplace-cart", JSON.stringify(cart));
+      renderCartBadge();
+    }
+
+    function renderCartBadge() {
+      document.getElementById("cartBadge").textContent = cart.length;
+    }
+
+    function addToCart(productId) {
+      const product = productos.find(p => p.id === productId);
+      if (!product) return;
+      if (cart.find(c => c.id === productId)) {
+        showToast("Este producto ya está en el carrito");
+        return;
+      }
+      cart.push({ id: product.id, titulo: product.titulo, precio: product.precio, imagen: product.imagen });
+      saveCart();
+      showToast("Producto agregado al carrito");
+      closeModal();
+    }
+
+    function removeFromCart(productId) {
+      cart = cart.filter(c => c.id !== productId);
+      saveCart();
+      renderCartDropdown();
+    }
+
+    function renderCartDropdown() {
+      const itemsEl = document.getElementById("cartItems");
+      const footerEl = document.getElementById("cartFooter");
+      
+      if (cart.length === 0) {
+        itemsEl.innerHTML = '<div class="cart-empty">Tu carrito está vacío</div>';
+        footerEl.innerHTML = '';
+        return;
+      }
+
+      itemsEl.innerHTML = cart.map(c => `
+        <div class="cart-item">
+          <img src="${esc(c.imagen)}" alt="${esc(c.titulo)}">
+          <div class="info">
+            <p class="title">${esc(c.titulo)}</p>
+            <p class="price">${money(c.precio)}</p>
+          </div>
+          <button class="remove" onclick="removeFromCart('${c.id}')">×</button>
+        </div>
+      `).join("");
+
+      const total = cart.reduce((sum, c) => sum + c.precio, 0);
+      footerEl.innerHTML = `
+        <div class="total">
+          <span>Total</span>
+          <span>${money(total)}</span>
+        </div>
+        <button class="checkout" onclick="alert('Demo: Checkout simulado. Total: ${money(total)}')">Comprar ahora</button>
+      `;
+    }
+
+    // Cart dropdown toggle
+    document.getElementById("cartBtn").addEventListener("click", (e) => {
+      e.stopPropagation();
+      const dropdown = document.getElementById("cartDropdown");
+      dropdown.classList.toggle("show");
+      if (dropdown.classList.contains("show")) {
+        renderCartDropdown();
+      }
+    });
+
+    document.addEventListener("click", (e) => {
+      if (!e.target.closest("#cartDropdown") && !e.target.closest("#cartBtn")) {
+        document.getElementById("cartDropdown").classList.remove("show");
+      }
+    });
+
+    // Modal
+    function openModal(productId) {
+      const product = productos.find(p => p.id === productId);
+      if (!product) return;
+      
+      const inCart = cart.find(c => c.id === productId);
+      
+      document.getElementById("modalContent").innerHTML = `
+        <img class="modal-img" src="${esc(product.imagen)}" alt="${esc(product.titulo)}">
+        <div class="modal-info">
+          <div class="vendidos" style="font-size:12px;color:var(--muted);margin-bottom:4px;">${product.vendidos}+ vendidos</div>
+          <h2>${esc(product.titulo)}</h2>
+          <div class="price">${money(product.precio)}</div>
+          <div class="cuotas">${esc(product.cuotas)}</div>
+          <div class="location">📍 ${esc(product.ubicacion)}</div>
+          ${product.envioGratis ? '<div style="color:var(--verde);font-weight:500;margin-top:8px;">🚚 Envío gratis</div>' : ''}
+          <div style="margin-top:16px;font-size:13px;color:#666;">
+            <p><strong>Stock disponible:</strong> ${product.stock} unidades</p>
+          </div>
+          <button class="add-cart" onclick="addToCart('${product.id}')" ${inCart ? 'disabled' : ''}>
+            ${inCart ? '✓ En el carrito' : '🛒 Agregar al carrito'}
+          </button>
+        </div>
+      `;
+      document.getElementById("modalOverlay").classList.add("show");
+      document.body.style.overflow = "hidden";
+    }
+
+    function closeModal() {
+      document.getElementById("modalOverlay").classList.remove("show");
+      document.body.style.overflow = "";
+    }
+
+    document.getElementById("modalClose").addEventListener("click", closeModal);
+    document.getElementById("modalOverlay").addEventListener("click", (e) => {
+      if (e.target === e.currentTarget) closeModal();
+    });
+
+    // Toast
+    function showToast(message) {
+      const existing = document.querySelector(".toast");
+      if (existing) existing.remove();
+      const toast = document.createElement("div");
+      toast.className = "toast";
+      toast.style.cssText = "position:fixed;bottom:24px;right:24px;background:#333;color:white;padding:12px 24px;border-radius:8px;z-index:2000;animation:fadeIn 0.3s;";
+      toast.textContent = message;
+      document.body.appendChild(toast);
+      setTimeout(() => { toast.style.opacity = "0"; setTimeout(() => toast.remove(), 300); }, 2500);
+    }
 
     function renderCatalog() {
       let filtered = productos.filter(p => p.status === "activo");
@@ -173,7 +350,7 @@
       }
 
       document.getElementById("catalog").innerHTML = filtered.map(p => `
-        <article class="catalog-card">
+        <article class="catalog-card" onclick="openModal('${p.id}')" style="cursor:pointer;">
           <div class="img"><img src="${esc(p.imagen)}" alt="${esc(p.titulo)}"></div>
           <div class="body">
             <div class="price">${money(p.precio)}</div>
@@ -217,6 +394,7 @@
     });
 
     renderCatalog();
+    renderCartBadge();
   </script>
 </body>
 </html>

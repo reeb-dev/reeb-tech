@@ -28,6 +28,10 @@
     .contact-box h3 { margin: 0 0 8px; }
     .contact-box .tel { font-size: 28px; font-weight: 700; }
     .admin-link { text-align: center; margin-top: 32px; padding: 24px; background: var(--card); border-radius: 12px; }
+    .filters { display: flex; gap: 8px; flex-wrap: wrap; }
+    .filters button { background: var(--card, #fff); border: 1px solid #ddd; padding: 8px 16px; border-radius: 20px; cursor: pointer; font-size: 13px; transition: all 0.2s; }
+    .filters button:hover { border-color: var(--verde); }
+    .filters button.active { background: var(--verde); color: white; border-color: var(--verde); }
   </style>
 </head>
 <body>
@@ -67,101 +71,12 @@
       <p>Llevando 3 o más del mismo producto, 10% de descuento</p>
     </div>
 
-    <section class="products-section" id="almacen">
-      <h2>🥫 Almacén</h2>
-      <div class="products-grid">
-        <div class="product-card">
-          <img src="https://images.unsplash.com/photo-1586201375761-83865001e31c?w=180&h=120&fit=crop" alt="Arroz" style="width:100%;height:80px;object-fit:cover;border-radius:8px;margin-bottom:8px;">
-          <h3>Arroz largo fino</h3>
-          <div class="price">$1.890</div>
-          <div class="unit">x kg</div>
-        </div>
-        <div class="product-card">
-          <img src="https://images.unsplash.com/photo-1551462147-ff29053bfc14?w=180&h=120&fit=crop" alt="Fideos" style="width:100%;height:80px;object-fit:cover;border-radius:8px;margin-bottom:8px;">
-          <h3>Fideos tirabuzón</h3>
-          <div class="price">$1.250</div>
-          <div class="unit">x 500g</div>
-        </div>
-        <div class="product-card">
-          <img src="https://images.unsplash.com/photo-1474979266404-7eaacbcd87c5?w=180&h=120&fit=crop" alt="Aceite" style="width:100%;height:80px;object-fit:cover;border-radius:8px;margin-bottom:8px;">
-          <h3>Aceite girasol</h3>
-          <div class="price">$2.890</div>
-          <div class="unit">x 1.5L</div>
-        </div>
-        <div class="product-card">
-          <img src="https://images.unsplash.com/photo-1558642452-9d2a7deb7f62?w=180&h=120&fit=crop" alt="Azúcar" style="width:100%;height:80px;object-fit:cover;border-radius:8px;margin-bottom:8px;">
-          <h3>Azúcar</h3>
-          <div class="price">$1.450</div>
-          <div class="unit">x kg</div>
-        </div>
-        <div class="product-card">
-          <img src="https://images.unsplash.com/photo-1515696955266-4f67e13219e8?w=180&h=120&fit=crop" alt="Yerba mate" style="width:100%;height:80px;object-fit:cover;border-radius:8px;margin-bottom:8px;">
-          <h3>Yerba mate</h3>
-          <div class="price">$4.200</div>
-          <div class="unit">x kg</div>
-        </div>
-        <div class="product-card">
-          <img src="https://images.unsplash.com/photo-1574323347407-f5e1ad6d020b?w=180&h=120&fit=crop" alt="Harina" style="width:100%;height:80px;object-fit:cover;border-radius:8px;margin-bottom:8px;">
-          <h3>Harina 000</h3>
-          <div class="price">$980</div>
-          <div class="unit">x kg</div>
-        </div>
-      </div>
-    </section>
+    <div class="catalog-header" style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:16px;margin-bottom:24px;">
+      <h2 style="margin:0;">Nuestros productos</h2>
+      <div class="filters" id="filters"></div>
+    </div>
 
-    <section class="products-section" id="verduleria">
-      <h2>🥬 Verdulería</h2>
-      <div class="products-grid">
-        <div class="product-card">
-          <img src="https://images.unsplash.com/photo-1546470427-0d4db154ceb8?w=180&h=120&fit=crop" alt="Tomates" style="width:100%;height:80px;object-fit:cover;border-radius:8px;margin-bottom:8px;">
-          <h3>Tomate redondo</h3>
-          <div class="price">$1.800</div>
-          <div class="unit">x kg</div>
-        </div>
-        <div class="product-card">
-          <img src="https://images.unsplash.com/photo-1518977676601-b53f82ber7da?w=180&h=120&fit=crop" alt="Papas" style="width:100%;height:80px;object-fit:cover;border-radius:8px;margin-bottom:8px;">
-          <h3>Papa</h3>
-          <div class="price">$950</div>
-          <div class="unit">x kg</div>
-        </div>
-        <div class="product-card">
-          <img src="https://images.unsplash.com/photo-1618512496248-a07fe83aa8cb?w=180&h=120&fit=crop" alt="Cebollas" style="width:100%;height:80px;object-fit:cover;border-radius:8px;margin-bottom:8px;">
-          <h3>Cebolla</h3>
-          <div class="price">$890</div>
-          <div class="unit">x kg</div>
-        </div>
-        <div class="product-card">
-          <img src="https://images.unsplash.com/photo-1622206151226-18ca2c9ab4a1?w=180&h=120&fit=crop" alt="Lechuga" style="width:100%;height:80px;object-fit:cover;border-radius:8px;margin-bottom:8px;">
-          <h3>Lechuga</h3>
-          <div class="price">$650</div>
-          <div class="unit">x unidad</div>
-        </div>
-      </div>
-    </section>
-
-    <section class="products-section" id="bebidas">
-      <h2>🥤 Bebidas</h2>
-      <div class="products-grid">
-        <div class="product-card">
-          <img src="https://images.unsplash.com/photo-1622483767028-3f66f32aef97?w=180&h=120&fit=crop" alt="Gaseosa" style="width:100%;height:80px;object-fit:cover;border-radius:8px;margin-bottom:8px;">
-          <h3>Gaseosa cola</h3>
-          <div class="price">$2.500</div>
-          <div class="unit">x 2.25L</div>
-        </div>
-        <div class="product-card">
-          <img src="https://images.unsplash.com/photo-1548839140-29a749e1cf4d?w=180&h=120&fit=crop" alt="Agua mineral" style="width:100%;height:80px;object-fit:cover;border-radius:8px;margin-bottom:8px;">
-          <h3>Agua mineral</h3>
-          <div class="price">$980</div>
-          <div class="unit">x 2L</div>
-        </div>
-        <div class="product-card">
-          <img src="https://images.unsplash.com/photo-1600271886742-f049cd451bba?w=180&h=120&fit=crop" alt="Jugo" style="width:100%;height:80px;object-fit:cover;border-radius:8px;margin-bottom:8px;">
-          <h3>Jugo en caja</h3>
-          <div class="price">$1.350</div>
-          <div class="unit">x 1L</div>
-        </div>
-      </div>
-    </section>
+    <div class="products-grid" id="catalog"></div>
 
     <section class="products-section" id="contacto">
       <div class="contact-box">
@@ -199,5 +114,50 @@
   </main>
 
   <footer class="wrap">Almacén · demo de producto · no es un comercio en actividad.</footer>
+
+  <script src="data.js"></script>
+  <script>
+    const EMOJIS = {
+      almacen: "🥫",
+      verduleria: "🥬",
+      panaderia: "🥖",
+      limpieza: "🧹",
+      bebidas: "🥤"
+    };
+
+    let currentFilter = "all";
+    const productos = seedProductos();
+
+    function renderFilters() {
+      const cats = [...new Set(productos.map(p => p.categoria))];
+      document.getElementById("filters").innerHTML = `
+        <button class="${currentFilter === 'all' ? 'active' : ''}" data-filter="all">Todos</button>
+        ${cats.map(c => `<button class="${currentFilter === c ? 'active' : ''}" data-filter="${c}">${EMOJIS[c] || '📦'} ${catLabelProd(c)}</button>`).join('')}
+      `;
+      document.querySelectorAll("#filters button").forEach(btn => {
+        btn.addEventListener("click", () => {
+          currentFilter = btn.dataset.filter;
+          renderCatalog();
+        });
+      });
+    }
+
+    function renderCatalog() {
+      renderFilters();
+      const filtered = currentFilter === "all" ? productos : productos.filter(p => p.categoria === currentFilter);
+
+      document.getElementById("catalog").innerHTML = filtered.map(p => `
+        <div class="product-card">
+          <img src="${esc(p.imagen)}" alt="${esc(p.nombre)}" style="width:100%;height:80px;object-fit:cover;border-radius:8px;margin-bottom:8px;">
+          <h3>${esc(p.nombre)}</h3>
+          <div class="price">${money(p.precio)}</div>
+          <div class="unit">x ${esc(p.unidad)}</div>
+          ${p.stock < 5 ? '<div style="font-size:11px;color:#e67e22;margin-top:4px;">⚠️ Últimas unidades</div>' : ''}
+        </div>
+      `).join("");
+    }
+
+    renderCatalog();
+  </script>
 </body>
 </html>
