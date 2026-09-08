@@ -20,17 +20,18 @@ function textoEstado(libro) {
 }
 
 function visible() {
-  const term = searchTerm.trim().toLowerCase();
+  const term = foldText(searchTerm);
   return catalogo.filter((l) => {
     if (currentFilter !== "all" && l.categoria !== currentFilter) return false;
     if (!term) return true;
-    return l.titulo.toLowerCase().includes(term) || l.autor.toLowerCase().includes(term);
+    return foldText(l.titulo).includes(term) || foldText(l.autor).includes(term);
   });
 }
 
 function renderCatalog() {
   const list = visible();
   const host = document.getElementById("catalog");
+  host.classList.toggle("is-empty", !list.length);
   if (!list.length) {
     host.innerHTML = `<p class="empty-catalog">No hay títulos que coincidan con la búsqueda.</p>`;
     return;
@@ -84,10 +85,12 @@ function openFicha(id) {
   document.getElementById("ficha-ejem").textContent = `${libro.disponibles} de ${libro.ejemplares} en sala`;
   document.getElementById("ficha-reservar").dataset.id = libro.id;
   document.getElementById("ficha").hidden = false;
+  document.body.classList.add("ficha-open");
 }
 
 function closeFicha() {
   document.getElementById("ficha").hidden = true;
+  document.body.classList.remove("ficha-open");
 }
 
 document.getElementById("filters").addEventListener("click", (event) => {

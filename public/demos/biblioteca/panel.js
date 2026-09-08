@@ -46,9 +46,9 @@ function render() {
 }
 
 function matchesSearch(values) {
-  const term = searchTerm.trim().toLowerCase();
+  const term = foldText(searchTerm);
   if (!term) return true;
-  return values.some((v) => String(v || "").toLowerCase().includes(term));
+  return values.some((v) => foldText(v).includes(term));
 }
 
 function bindSearch() {
@@ -91,13 +91,13 @@ function renderLibros() {
   document.getElementById("thead").innerHTML = `<tr><th></th><th>Código</th><th>Título</th><th>Autor</th><th>Estante</th><th>Disp.</th><th>Estado</th></tr>`;
   document.getElementById("rows").innerHTML = rows.map((l) => `
     <tr class="row ${l.id === selectedLib ? "on" : ""}" data-id="${esc(l.id)}">
-      <td>${l.tapa ? `<img class="thumb" src="${esc(l.tapa)}" alt="">` : ""}</td>
-      <td>${esc(l.codigo)}</td>
-      <td>${esc(l.titulo)}</td>
-      <td>${esc(l.autor)}</td>
-      <td>${esc(l.ubicacion)}</td>
-      <td>${l.disponibles}/${l.ejemplares}</td>
-      <td><span class="tag ${esc(l.status)}">${esc(labelLibro(l.status))}</span></td>
+      <td class="thumb-cell">${l.tapa ? `<img class="thumb" src="${esc(l.tapa)}" alt="">` : ""}</td>
+      <td data-label="Código">${esc(l.codigo)}</td>
+      <td data-label="Título">${esc(l.titulo)}</td>
+      <td data-label="Autor">${esc(l.autor)}</td>
+      <td data-label="Estante">${esc(l.ubicacion)}</td>
+      <td data-label="Disp.">${l.disponibles}/${l.ejemplares}</td>
+      <td data-label="Estado"><span class="tag ${esc(l.status)}">${esc(labelLibro(l.status))}</span></td>
     </tr>
   `).join("");
 
@@ -119,10 +119,14 @@ function renderLibros() {
   const pendientes = resv.filter((r) => r.libro === libro.id && r.status === "pendiente");
 
   detail.innerHTML = `
-    ${libro.tapa ? `<img class="cover-lg" src="${esc(libro.tapa)}" alt="">` : ""}
-    <p class="eyebrow">${esc(libro.codigo)} · ${esc(catLabel(libro.categoria))}</p>
-    <h2>${esc(libro.titulo)}</h2>
-    <p style="color:var(--muted);font-size:14px;">${esc(libro.autor)} · ${esc(libro.editorial)} (${libro.año})</p>
+    <div class="detail-head">
+      ${libro.tapa ? `<img class="cover-lg" src="${esc(libro.tapa)}" alt="">` : `<div class="cover-lg cover-fallback" aria-hidden="true">${esc((libro.titulo || "?").charAt(0))}</div>`}
+      <div>
+        <p class="eyebrow">${esc(libro.codigo)} · ${esc(catLabel(libro.categoria))}</p>
+        <h2>${esc(libro.titulo)}</h2>
+        <p class="lead-sm">${esc(libro.autor)} · ${esc(libro.editorial)} (${libro.año})</p>
+      </div>
+    </div>
     <form id="edit-libro">
       <label>Ubicación de estante<input name="ubicacion" value="${esc(libro.ubicacion)}"></label>
       <label>Ejemplares totales<input name="ejemplares" type="number" min="${libro.ejemplares - libro.disponibles}" value="${libro.ejemplares}"></label>
@@ -266,12 +270,12 @@ function renderSocios() {
   document.getElementById("thead").innerHTML = `<tr><th>Número</th><th>Nombre</th><th>DNI</th><th>Alta</th><th>Multa</th><th>Estado</th></tr>`;
   document.getElementById("rows").innerHTML = rows.map((s) => `
     <tr class="row ${s.id === selectedSoc ? "on" : ""}" data-id="${esc(s.id)}">
-      <td>${esc(s.numero)}</td>
-      <td>${esc(s.nombre)}</td>
-      <td>${esc(s.dni)}</td>
-      <td>${esc(formatFecha(s.fechaAlta))}</td>
-      <td class="amount">${s.multas > 0 ? esc(money(s.multas)) : "—"}</td>
-      <td><span class="tag ${s.activo ? "disponible" : "vencido"}">${s.activo ? "Activo" : "Inactivo"}</span></td>
+      <td data-label="Número">${esc(s.numero)}</td>
+      <td data-label="Nombre">${esc(s.nombre)}</td>
+      <td data-label="DNI">${esc(s.dni)}</td>
+      <td data-label="Alta">${esc(formatFecha(s.fechaAlta))}</td>
+      <td class="amount" data-label="Multa">${s.multas > 0 ? esc(money(s.multas)) : "—"}</td>
+      <td data-label="Estado"><span class="tag ${s.activo ? "disponible" : "vencido"}">${s.activo ? "Activo" : "Inactivo"}</span></td>
     </tr>
   `).join("");
 
@@ -436,12 +440,12 @@ function renderPrestamos() {
     const atraso = p.status === "devuelto" ? 0 : diasAtraso(p.fechaDevolucion);
     return `
       <tr class="row ${p.id === selectedPres ? "on" : ""}" data-id="${esc(p.id)}">
-        <td>${esc(libro?.titulo || "—")}</td>
-        <td>${esc(socio?.nombre || "—")}</td>
-        <td>${esc(formatFecha(p.fechaPrestamo))}</td>
-        <td>${esc(formatFecha(p.fechaDevolucion))}</td>
-        <td class="amount">${atraso ? esc(money(multaDe(atraso))) : "—"}</td>
-        <td><span class="tag ${esc(p.status)}">${esc(labelPrestamo(p.status))}</span></td>
+        <td data-label="Libro">${esc(libro?.titulo || "—")}</td>
+        <td data-label="Socio">${esc(socio?.nombre || "—")}</td>
+        <td data-label="Retiro">${esc(formatFecha(p.fechaPrestamo))}</td>
+        <td data-label="Vencimiento">${esc(formatFecha(p.fechaDevolucion))}</td>
+        <td class="amount" data-label="Multa">${atraso ? esc(money(multaDe(atraso))) : "—"}</td>
+        <td data-label="Estado"><span class="tag ${esc(p.status)}">${esc(labelPrestamo(p.status))}</span></td>
       </tr>
     `;
   }).join("");
