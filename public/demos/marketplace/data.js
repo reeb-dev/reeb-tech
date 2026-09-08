@@ -14,6 +14,380 @@ const STATUSES = [
   { id: "agotado", label: "Sin stock" }
 ];
 
+const ENVIO_ESTADOS = [
+  { id: "pendiente", label: "Pendiente", color: "#cce5ff" },
+  { id: "preparando", label: "Preparando", color: "#fff3cd" },
+  { id: "despachado", label: "Despachado", color: "#d1ecf1" },
+  { id: "en_camino", label: "En camino", color: "#e2d5f1" },
+  { id: "entregado", label: "Entregado", color: "#d4edda" }
+];
+
+const COMPROBANTES = [
+  { id: "FA", label: "Factura A" },
+  { id: "FB", label: "Factura B" },
+  { id: "FC", label: "Factura C" }
+];
+
+function resetCaches() {
+  productos = null;
+  ventas = null;
+  preguntas = null;
+  mpData = null;
+  notificaciones = null;
+}
+
+function formatFecha(iso) {
+  if (!iso) return "";
+  const d = new Date(iso);
+  if (Number.isNaN(d.getTime())) return String(iso);
+  return d.toLocaleString("es-AR", { day: "2-digit", month: "short", hour: "2-digit", minute: "2-digit" });
+}
+
+function generarTracking() {
+  return "MD-" + Date.now().toString(36).toUpperCase();
+}
+
+function normalizeProducto(p) {
+  return {
+    ...p,
+    mla: p.mla || `MLA-${String(p.id).replace(/\W/g, "").slice(-10).toUpperCase()}`,
+    visitas: p.visitas || 0,
+    preguntas: p.preguntas ?? 0,
+    vendidos: p.vendidos || 0,
+    rating: p.rating ?? null,
+    opiniones: p.opiniones || 0,
+    history: p.history || [],
+    cuotas: p.cuotas || "Sin cuotas",
+    envioGratis: Boolean(p.envioGratis),
+    stock: Number(p.stock || 0)
+  };
+}
+
+// ========== VENTAS ==========
+let ventas = null;
+
+function loadVentas() {
+  if (ventas) return ventas;
+  const raw = localStorage.getItem("marketplace-ventas-v1");
+  if (!raw) {
+    ventas = [];
+    return ventas;
+  }
+  return ventas = JSON.parse(raw);
+}
+
+function saveVentas() {
+  localStorage.setItem("marketplace-ventas-v1", JSON.stringify(ventas));
+}
+
+function crearVenta(cartItems, compradorNombre, compradorEmail, direccion) {
+  loadVentas();
+  loadProductos();
+
+  for (const item of cartItems) {
+    const producto = productos.find((p) => p.id === item.id);
+    const qty = Number(item.cantidad || 1);
+    if (!producto || producto.status !== "activo" || producto.stock < qty) {
+      return null;
+    }
+  }
+
+  const venta = {
+    id: crypto.randomUUID(),
+    fecha: new Date().toISOString(),
+    comprador: { nombre: compradorNombre, email: compradorEmail },
+    direccion: direccion || "",
+    items: cartItems.map((item) => ({
+      productoId: item.id,
+      titulo: item.titulo,
+      precio: item.precio,
+      cantidad: Number(item.cantidad || 1),
+      imagen: item.imagen
+    })),
+    total: cartItems.reduce((sum, i) => sum + i.precio * Number(i.cantidad || 1), 0),
+    envio: {
+      estado: "pendiente",
+      tracking: null,
+      historial: [{ fecha: new Date().toISOString(), estado: "pendiente", nota: "Venta confirmada" }]
+    },
+    calificacion: null,
+    factura: null,
+    pagado: true
+  };
+
+  cartItems.forEach((item) => {
+    const qty = Number(item.cantidad || 1);
+    const producto = productos.find((p) => p.id === item.id);
+    if (!producto) return;
+    producto.stock = Math.max(0, producto.stock - qty);
+    producto.vendidos = (producto.vendidos || 0) + qty;
+    if (producto.stock === 0) {
+      producto.status = "agotado";
+    }
+  });
+
+  ventas.unshift(venta);
+  saveVentas();
+  saveProductos();
+  acreditarVenta(venta.total, venta.id);
+  guardarNotificacion("venta", `Nueva venta: ${venta.items.map((i) => i.titulo).join(", ")}`, venta.id);
+  return venta;
+}
+
+function actualizarEnvio(ventaId, nuevoEstado, tracking = null) {
+  loadVentas();
+  const venta = ventas.find((v) => v.id === ventaId);
+  if (!venta) return null;
+
+  venta.envio.estado = nuevoEstado;
+  if (tracking) venta.envio.tracking = tracking;
+  if ((nuevoEstado === "despachado" || nuevoEstado === "en_camino") && !venta.envio.tracking) {
+    venta.envio.tracking = generarTracking();
+  }
+  venta.envio.historial.push({
+    fecha: new Date().toISOString(),
+    estado: nuevoEstado,
+    nota: ENVIO_ESTADOS.find((e) => e.id === nuevoEstado)?.label || nuevoEstado
+  });
+
+  saveVentas();
+  if (nuevoEstado === "entregado") {
+    guardarNotificacion("envio", `Pedido entregado a ${venta.comprador.nombre}`, venta.id);
+  }
+  return venta;
+}
+
+function emitirFacturaVenta(ventaId, tipo, cuit) {
+  loadVentas();
+  const venta = ventas.find((v) => v.id === ventaId);
+  if (!venta || venta.factura) return null;
+
+  const numero = `0001-${String(Math.floor(Math.random() * 99999) + 1).padStart(8, "0")}`;
+  const cae = String(Math.floor(Math.random() * 1e14)).padStart(14, "0");
+  const vtoDate = new Date();
+  vtoDate.setDate(vtoDate.getDate() + 10);
+
+  venta.factura = {
+    tipo,
+    numero,
+    cae,
+    vto: vtoDate.toLocaleDateString("es-AR", { day: "numeric", month: "short", year: "numeric" }),
+    total: venta.total,
+    cuit: cuit || ""
+  };
+
+  saveVentas();
+  guardarNotificacion("factura", `Factura ${numero} emitida`, venta.id);
+  return venta;
+}
+
+// ========== PREGUNTAS ==========
+let preguntas = null;
+
+function loadPreguntas() {
+  if (preguntas) return preguntas;
+  const raw = localStorage.getItem("marketplace-preguntas-v1");
+  if (!raw) {
+    preguntas = [];
+    return preguntas;
+  }
+  return preguntas = JSON.parse(raw);
+}
+
+function savePreguntas() {
+  localStorage.setItem("marketplace-preguntas-v1", JSON.stringify(preguntas));
+}
+
+function crearPregunta(productoId, texto, nombreUsuario) {
+  loadPreguntas();
+  loadProductos();
+
+  const producto = productos.find((p) => p.id === productoId);
+  if (!producto) return null;
+
+  const pregunta = {
+    id: crypto.randomUUID(),
+    productoId,
+    productoTitulo: producto.titulo,
+    texto,
+    nombreUsuario,
+    fecha: new Date().toISOString(),
+    respuesta: null,
+    fechaRespuesta: null
+  };
+
+  preguntas.unshift(pregunta);
+  producto.preguntas = (producto.preguntas || 0) + 1;
+
+  savePreguntas();
+  saveProductos();
+  guardarNotificacion("pregunta", `Nueva pregunta en "${producto.titulo}"`, pregunta.id);
+  return pregunta;
+}
+
+function responderPregunta(preguntaId, respuesta) {
+  loadPreguntas();
+  const pregunta = preguntas.find((p) => p.id === preguntaId);
+  if (!pregunta) return null;
+
+  pregunta.respuesta = respuesta;
+  pregunta.fechaRespuesta = new Date().toISOString();
+
+  savePreguntas();
+  return pregunta;
+}
+
+function preguntasDeProducto(productoId) {
+  return loadPreguntas().filter((p) => p.productoId === productoId);
+}
+
+// ========== CALIFICACIONES ==========
+function calificarVenta(ventaId, rating, comentario) {
+  loadVentas();
+  loadProductos();
+
+  const venta = ventas.find((v) => v.id === ventaId);
+  if (!venta || venta.calificacion) return null;
+
+  venta.calificacion = {
+    rating: Number(rating),
+    comentario,
+    fecha: new Date().toISOString()
+  };
+
+  venta.items.forEach((item) => {
+    const producto = productos.find((p) => p.id === item.productoId);
+    if (producto) {
+      const ventasProducto = ventas.filter((v) =>
+        v.calificacion && v.items.some((i) => i.productoId === producto.id)
+      );
+      const totalRatings = ventasProducto.reduce((sum, v) => sum + v.calificacion.rating, 0);
+      producto.rating = (totalRatings / ventasProducto.length).toFixed(1);
+      producto.opiniones = ventasProducto.length;
+    }
+  });
+
+  saveVentas();
+  saveProductos();
+  guardarNotificacion("calificacion", `${venta.comprador.nombre} calificó con ${rating} estrellas`, venta.id);
+  return venta;
+}
+
+// ========== MERCADO PAGO SIMULADO ==========
+let mpData = null;
+
+function loadMercadoPago() {
+  if (mpData) return mpData;
+  const raw = localStorage.getItem("marketplace-mp-v1");
+  if (!raw) {
+    mpData = {
+      saldoDisponible: 0,
+      saldoPendiente: 0,
+      movimientos: [],
+      retiros: []
+    };
+    return mpData;
+  }
+  return mpData = JSON.parse(raw);
+}
+
+function saveMercadoPago() {
+  localStorage.setItem("marketplace-mp-v1", JSON.stringify(mpData));
+}
+
+function acreditarVenta(monto, ventaId) {
+  loadMercadoPago();
+  const comision = monto * 0.05;
+  const neto = monto - comision;
+
+  mpData.saldoDisponible += neto;
+  mpData.movimientos.unshift({
+    id: crypto.randomUUID(),
+    tipo: "venta",
+    monto: neto,
+    comision,
+    fecha: new Date().toISOString(),
+    descripcion: `Venta #${ventaId.slice(0, 8)}`,
+    ventaId
+  });
+
+  saveMercadoPago();
+  return mpData;
+}
+
+function retirarDinero(monto, cbu) {
+  loadMercadoPago();
+  if (monto <= 0 || monto > mpData.saldoDisponible) return null;
+
+  mpData.saldoDisponible -= monto;
+  mpData.retiros.unshift({
+    id: crypto.randomUUID(),
+    monto,
+    cbu,
+    fecha: new Date().toISOString(),
+    estado: "procesando"
+  });
+  mpData.movimientos.unshift({
+    id: crypto.randomUUID(),
+    tipo: "retiro",
+    monto: -monto,
+    fecha: new Date().toISOString(),
+    descripcion: `Retiro a CBU ***${String(cbu).slice(-4)}`
+  });
+
+  saveMercadoPago();
+  return mpData;
+}
+
+// ========== NOTIFICACIONES ==========
+let notificaciones = null;
+
+function loadNotificaciones() {
+  if (notificaciones) return notificaciones;
+  const raw = localStorage.getItem("marketplace-notif-v1");
+  if (!raw) {
+    notificaciones = [];
+    return notificaciones;
+  }
+  return notificaciones = JSON.parse(raw);
+}
+
+function saveNotificaciones() {
+  localStorage.setItem("marketplace-notif-v1", JSON.stringify(notificaciones));
+}
+
+function guardarNotificacion(tipo, mensaje, refId) {
+  loadNotificaciones();
+  notificaciones.unshift({
+    id: crypto.randomUUID(),
+    tipo,
+    mensaje,
+    refId,
+    fecha: new Date().toISOString(),
+    leida: false
+  });
+  if (notificaciones.length > 50) notificaciones = notificaciones.slice(0, 50);
+  saveNotificaciones();
+}
+
+function marcarNotificacionLeida(notifId) {
+  loadNotificaciones();
+  const notif = notificaciones.find((n) => n.id === notifId);
+  if (notif) notif.leida = true;
+  saveNotificaciones();
+}
+
+function marcarTodasLeidas() {
+  loadNotificaciones();
+  notificaciones.forEach((n) => { n.leida = true; });
+  saveNotificaciones();
+}
+
+function contarNotificacionesNoLeidas() {
+  loadNotificaciones();
+  return notificaciones.filter((n) => !n.leida).length;
+}
+
 function seedProductos() {
   return [
     {
@@ -181,15 +555,17 @@ function loadProductos() {
   if (productos) return productos;
   const raw = localStorage.getItem("marketplace-productos-v1");
   if (!raw) {
-    productos = seedProductos();
+    productos = seedProductos().map(normalizeProducto);
     localStorage.setItem("marketplace-productos-v1", JSON.stringify(productos));
     return productos;
   }
-  return productos = JSON.parse(raw);
+  productos = JSON.parse(raw).map(normalizeProducto);
+  return productos;
 }
 
-function saveProductos() {
-  localStorage.setItem("marketplace-productos-v1", JSON.stringify(productos));
+function saveProductos(list) {
+  if (Array.isArray(list)) productos = list;
+  localStorage.setItem("marketplace-productos-v1", JSON.stringify(productos || []));
 }
 
 function catLabel(cat) {
@@ -200,8 +576,16 @@ function label(status) {
   return STATUSES.find((s) => s.id === status)?.label || status;
 }
 
+function envioLabel(estado) {
+  return ENVIO_ESTADOS.find((e) => e.id === estado)?.label || estado;
+}
+
 function money(amount) {
   return "$ " + Number(amount || 0).toLocaleString("es-AR");
+}
+
+function compLabel(comp) {
+  return COMPROBANTES.find((c) => c.id === comp)?.label || comp;
 }
 
 function esc(value) {

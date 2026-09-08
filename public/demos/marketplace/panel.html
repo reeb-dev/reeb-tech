@@ -11,26 +11,30 @@
 </head>
 <body class="app">
 
-  <!-- Panel Header -->
   <header class="panel-header">
     <div class="inner">
       <a href="index.html" class="logo">MercadoDemo <small>Panel Vendedor</small></a>
       <nav>
-        <a href="#">Ventas</a>
-        <a href="#">Publicaciones</a>
-        <a href="#">Mensajes</a>
-        <a href="#">Métricas</a>
-        <a href="#">Facturación</a>
-        <a href="#">Cuenta</a>
+        <button type="button" data-nav-tab="ventas">Ventas</button>
+        <button type="button" data-nav-tab="publicaciones">Publicaciones</button>
+        <button type="button" data-nav-tab="preguntas">Mensajes</button>
+        <button type="button" data-nav-tab="mercadopago">Mercado Pago</button>
+        <button type="button" data-nav-tab="facturacion">Facturación</button>
+        <div class="notif-wrap">
+          <button type="button" class="notif-btn" id="notif-btn" aria-label="Notificaciones">
+            🔔
+            <span class="notif-badge" id="notif-badge" hidden>0</span>
+          </button>
+          <div class="notif-dropdown" id="notif-dropdown" hidden></div>
+        </div>
       </nav>
     </div>
   </header>
 
-  <!-- Toolbar -->
   <div class="toolbar">
     <div>
       <span class="eyebrow">Panel de Vendedor</span>
-      <h1>Mis Publicaciones</h1>
+      <h1 id="toolbar-title">Mis Publicaciones</h1>
     </div>
     <div style="display:flex; gap:8px;">
       <button class="ghost" id="open-create">+ Nueva publicación</button>
@@ -38,21 +42,18 @@
     </div>
   </div>
 
-  <!-- Tabs -->
   <div class="tabs">
-    <button class="on">Publicaciones</button>
-    <button>Ventas</button>
-    <button>Preguntas</button>
-    <button>Envíos</button>
-    <button>Calificaciones</button>
-    <button>Mercado Pago</button>
-    <button>Facturación</button>
+    <button type="button" data-tab="publicaciones" class="on">Publicaciones</button>
+    <button type="button" data-tab="ventas">Ventas</button>
+    <button type="button" data-tab="preguntas">Preguntas</button>
+    <button type="button" data-tab="envios">Envíos</button>
+    <button type="button" data-tab="calificaciones">Calificaciones</button>
+    <button type="button" data-tab="mercadopago">Mercado Pago</button>
+    <button type="button" data-tab="facturacion">Facturación ARCA</button>
   </div>
 
-  <!-- Stats -->
   <div class="stats" id="stats"></div>
 
-  <!-- Create form -->
   <form class="create" id="create">
     <h3>Nueva Publicación</h3>
     <div class="create-grid">
@@ -103,39 +104,13 @@
     <button type="submit" class="btn-panel" style="margin-top: 12px;">Publicar producto</button>
   </form>
 
-  <!-- Workspace -->
-  <div class="workspace">
-    <!-- List -->
+  <div class="workspace" id="workspace">
     <div class="list" id="publist"></div>
-
-    <!-- Detail -->
     <div class="detail" id="detail">
       <p>Elegí una publicación del listado.</p>
     </div>
   </div>
 
-  <style>
-    .toast {
-      position: fixed;
-      bottom: 24px;
-      left: 50%;
-      transform: translateX(-50%) translateY(100px);
-      background: #333;
-      color: white;
-      padding: 14px 28px;
-      border-radius: 8px;
-      font-size: 14px;
-      font-weight: 500;
-      z-index: 9999;
-      opacity: 0;
-      transition: transform 0.3s ease, opacity 0.3s ease;
-      box-shadow: 0 4px 20px rgba(0,0,0,0.3);
-    }
-    .toast.show {
-      transform: translateX(-50%) translateY(0);
-      opacity: 1;
-    }
-  </style>
   <script src="data.js"></script>
   <script src="panel.js"></script>
 </body>

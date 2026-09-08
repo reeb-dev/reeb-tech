@@ -65,6 +65,15 @@
     .cart-footer .total { display: flex; justify-content: space-between; font-weight: 700; margin-bottom: 12px; }
     .cart-footer .checkout { background: var(--verde); color: white; border: none; padding: 12px; border-radius: 6px; width: 100%; cursor: pointer; font-weight: 600; }
     .cart-empty { padding: 32px; text-align: center; color: var(--muted); }
+    .qa-section { grid-column: 1 / -1; border-top: 1px solid #eee; padding-top: 16px; }
+    .qa-section h3 { margin: 0 0 12px; font-size: 16px; }
+    .qa-item { background: #f8f8f8; border-radius: 8px; padding: 12px; margin-bottom: 8px; font-size: 14px; }
+    .qa-item .a { margin-top: 8px; padding-left: 12px; border-left: 2px solid var(--azul); color: #444; }
+    .qa-item .meta { font-size: 11px; color: var(--muted); margin-top: 6px; }
+    .qa-form textarea, .qa-form input { width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 6px; margin-bottom: 8px; font: inherit; }
+    .qa-form button { background: var(--azul); color: white; border: none; padding: 10px 16px; border-radius: 6px; cursor: pointer; font-weight: 600; }
+    .compra-card { background: #f8f8f8; border-radius: 8px; padding: 14px; margin-bottom: 10px; text-align: left; }
+    .stars-pick button { background: none; border: none; font-size: 22px; cursor: pointer; }
   </style>
 </head>
 <body>
@@ -78,7 +87,7 @@
       </a>
       <nav>
         <a href="#productos">Productos</a>
-        <a href="#">Mis compras</a>
+        <a href="#" id="misComprasLink">Mis compras</a>
         <a href="panel.html">Vender</a>
         <div style="position:relative;">
           <button class="cart-btn" id="cartBtn">🛒 <span class="cart-badge" id="cartBadge">0</span></button>
@@ -186,6 +195,65 @@
     </div>
   </div>
 
+  <!-- Modal de checkout -->
+  <div class="modal-overlay" id="checkoutOverlay">
+    <div class="modal" style="max-width: 500px;">
+      <button class="modal-close" onclick="cerrarCheckout()">×</button>
+      <div style="padding: 24px;">
+        <h2 style="margin: 0 0 20px;">🛒 Finalizar compra</h2>
+        <div id="checkoutResumen"></div>
+        <form id="checkoutForm" onsubmit="procesarCompra(event)">
+          <div style="margin-top: 16px;">
+            <label style="display:block;margin-bottom:4px;font-size:13px;color:#666;">Nombre completo</label>
+            <input type="text" id="checkNombre" required placeholder="Juan Pérez" style="width:100%;padding:12px;border:1px solid #ddd;border-radius:6px;">
+          </div>
+          <div style="margin-top: 12px;">
+            <label style="display:block;margin-bottom:4px;font-size:13px;color:#666;">Email</label>
+            <input type="email" id="checkEmail" required placeholder="juan@email.com" style="width:100%;padding:12px;border:1px solid #ddd;border-radius:6px;">
+          </div>
+          <div style="margin-top: 12px;">
+            <label style="display:block;margin-bottom:4px;font-size:13px;color:#666;">Dirección de envío</label>
+            <input type="text" id="checkDireccion" required placeholder="Av. Corrientes 1234, CABA" style="width:100%;padding:12px;border:1px solid #ddd;border-radius:6px;">
+          </div>
+          <div style="background:#f0f7ff;border:1px solid #a6d4fa;border-radius:8px;padding:16px;margin-top:20px;">
+            <div style="display:flex;align-items:center;gap:8px;margin-bottom:8px;">
+              <span style="font-size:20px;">💳</span>
+              <strong>Mercado Pago</strong>
+            </div>
+            <p style="margin:0;font-size:13px;color:#666;">Demo: El pago se simula automáticamente.</p>
+          </div>
+          <button type="submit" style="width:100%;margin-top:20px;background:var(--verde);color:white;border:none;padding:16px;border-radius:8px;font-size:16px;font-weight:600;cursor:pointer;">
+            Pagar y confirmar
+          </button>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal de compra exitosa -->
+  <div class="modal-overlay" id="successOverlay">
+    <div class="modal" style="max-width: 450px; text-align: center;">
+      <div style="padding: 40px;">
+        <div style="font-size: 64px; margin-bottom: 16px;">✅</div>
+        <h2 style="margin: 0 0 12px; color: var(--verde);">¡Compra exitosa!</h2>
+        <p style="color: #666; margin-bottom: 24px;">Tu pedido fue confirmado. El vendedor ya ve la venta y el stock se descontó.</p>
+        <div id="successDetails" style="background:#f8f8f8;border-radius:8px;padding:16px;text-align:left;margin-bottom:20px;"></div>
+        <button onclick="cerrarSuccess()" style="background:var(--azul);color:white;border:none;padding:14px 32px;border-radius:8px;font-size:15px;cursor:pointer;font-weight:500;">Seguir comprando</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal mis compras -->
+  <div class="modal-overlay" id="comprasOverlay">
+    <div class="modal" style="max-width: 560px;">
+      <button class="modal-close" onclick="cerrarCompras()">×</button>
+      <div style="padding: 24px;">
+        <h2 style="margin: 0 0 16px;">Mis compras</h2>
+        <div id="comprasList"></div>
+      </div>
+    </div>
+  </div>
+
   <footer>
     <div class="wrap">
       <p>MercadoDemo — Demo educativa de marketplace. Datos ficticios con fines ilustrativos.</p>
@@ -197,10 +265,12 @@
   <script>
     let currentFilter = "all";
     let searchTerm = "";
-    const productos = seedProductos();
-
-    // Carrito
     let cart = JSON.parse(localStorage.getItem("marketplace-cart") || "[]");
+
+    function getCatalog() {
+      resetCaches();
+      return loadProductos();
+    }
 
     function saveCart() {
       localStorage.setItem("marketplace-cart", JSON.stringify(cart));
@@ -208,67 +278,81 @@
     }
 
     function renderCartBadge() {
-      document.getElementById("cartBadge").textContent = cart.length;
+      document.getElementById("cartBadge").textContent = cart.reduce((sum, c) => sum + (c.cantidad || 1), 0);
     }
 
     function addToCart(productId) {
-      const product = productos.find(p => p.id === productId);
-      if (!product) return;
-      if (cart.find(c => c.id === productId)) {
-        showToast("Este producto ya está en el carrito");
+      const product = getCatalog().find((p) => p.id === productId);
+      if (!product || product.stock < 1 || product.status !== "activo") {
+        showToast("Este producto no tiene stock");
         return;
       }
-      cart.push({ id: product.id, titulo: product.titulo, precio: product.precio, imagen: product.imagen });
+      const existing = cart.find((c) => c.id === productId);
+      if (existing) {
+        if (existing.cantidad >= product.stock) {
+          showToast("No hay más stock disponible");
+          return;
+        }
+        existing.cantidad += 1;
+      } else {
+        cart.push({
+          id: product.id,
+          titulo: product.titulo,
+          precio: product.precio,
+          imagen: product.imagen,
+          cantidad: 1
+        });
+      }
       saveCart();
       showToast("Producto agregado al carrito");
       closeModal();
     }
 
     function removeFromCart(productId) {
-      cart = cart.filter(c => c.id !== productId);
+      cart = cart.filter((c) => c.id !== productId);
       saveCart();
       renderCartDropdown();
+    }
+
+    function cartTotal() {
+      return cart.reduce((sum, c) => sum + c.precio * (c.cantidad || 1), 0);
     }
 
     function renderCartDropdown() {
       const itemsEl = document.getElementById("cartItems");
       const footerEl = document.getElementById("cartFooter");
-      
+
       if (cart.length === 0) {
         itemsEl.innerHTML = '<div class="cart-empty">Tu carrito está vacío</div>';
-        footerEl.innerHTML = '';
+        footerEl.innerHTML = "";
         return;
       }
 
-      itemsEl.innerHTML = cart.map(c => `
+      itemsEl.innerHTML = cart.map((c) => `
         <div class="cart-item">
           <img src="${esc(c.imagen)}" alt="${esc(c.titulo)}">
           <div class="info">
             <p class="title">${esc(c.titulo)}</p>
-            <p class="price">${money(c.precio)}</p>
+            <p class="price">${c.cantidad || 1} × ${money(c.precio)}</p>
           </div>
           <button class="remove" onclick="removeFromCart('${c.id}')">×</button>
         </div>
       `).join("");
 
-      const total = cart.reduce((sum, c) => sum + c.precio, 0);
       footerEl.innerHTML = `
         <div class="total">
           <span>Total</span>
-          <span>${money(total)}</span>
+          <span>${money(cartTotal())}</span>
         </div>
-        <button class="checkout" onclick="alert('Demo: Checkout simulado. Total: ${money(total)}')">Comprar ahora</button>
+        <button class="checkout" onclick="mostrarCheckout()">Comprar ahora</button>
       `;
     }
 
-    // Cart dropdown toggle
     document.getElementById("cartBtn").addEventListener("click", (e) => {
       e.stopPropagation();
       const dropdown = document.getElementById("cartDropdown");
       dropdown.classList.toggle("show");
-      if (dropdown.classList.contains("show")) {
-        renderCartDropdown();
-      }
+      if (dropdown.classList.contains("show")) renderCartDropdown();
     });
 
     document.addEventListener("click", (e) => {
@@ -277,32 +361,69 @@
       }
     });
 
-    // Modal
+    function renderPreguntasModal(productoId) {
+      const qs = preguntasDeProducto(productoId);
+      if (!qs.length) return `<p style="font-size:13px;color:var(--muted);">Nadie preguntó todavía. Sé el primero.</p>`;
+      return qs.map((q) => `
+        <div class="qa-item">
+          <div><strong>${esc(q.nombreUsuario)}</strong> preguntó: ${esc(q.texto)}</div>
+          ${q.respuesta ? `<div class="a"><strong>Vendedor:</strong> ${esc(q.respuesta)}</div>` : `<div class="meta">El vendedor todavía no respondió</div>`}
+          <div class="meta">${esc(formatFecha(q.fecha))}</div>
+        </div>
+      `).join("");
+    }
+
     function openModal(productId) {
-      const product = productos.find(p => p.id === productId);
+      const product = getCatalog().find((p) => p.id === productId);
       if (!product) return;
-      
-      const inCart = cart.find(c => c.id === productId);
-      
+
+      product.visitas = (product.visitas || 0) + 1;
+      saveProductos();
+
+      const inCart = cart.find((c) => c.id === productId);
+      const sinStock = product.stock < 1 || product.status !== "activo";
+
       document.getElementById("modalContent").innerHTML = `
         <img class="modal-img" src="${esc(product.imagen)}" alt="${esc(product.titulo)}">
         <div class="modal-info">
-          <div class="vendidos" style="font-size:12px;color:var(--muted);margin-bottom:4px;">${product.vendidos}+ vendidos</div>
+          <div class="vendidos" style="font-size:12px;color:var(--muted);margin-bottom:4px;">${product.vendidos || 0}+ vendidos${product.rating ? ` · ⭐ ${product.rating}` : ""}</div>
           <h2>${esc(product.titulo)}</h2>
           <div class="price">${money(product.precio)}</div>
           <div class="cuotas">${esc(product.cuotas)}</div>
           <div class="location">📍 ${esc(product.ubicacion)}</div>
-          ${product.envioGratis ? '<div style="color:var(--verde);font-weight:500;margin-top:8px;">🚚 Envío gratis</div>' : ''}
+          ${product.envioGratis ? '<div style="color:var(--verde);font-weight:500;margin-top:8px;">🚚 Envío gratis</div>' : ""}
           <div style="margin-top:16px;font-size:13px;color:#666;">
             <p><strong>Stock disponible:</strong> ${product.stock} unidades</p>
           </div>
-          <button class="add-cart" onclick="addToCart('${product.id}')" ${inCart ? 'disabled' : ''}>
-            ${inCart ? '✓ En el carrito' : '🛒 Agregar al carrito'}
+          <button class="add-cart" onclick="addToCart('${product.id}')" ${sinStock ? "disabled" : ""}>
+            ${sinStock ? "Sin stock" : inCart ? "🛒 Agregar otra unidad" : "🛒 Agregar al carrito"}
           </button>
+        </div>
+        <div class="qa-section">
+          <h3>Preguntas y respuestas</h3>
+          <div id="qaList">${renderPreguntasModal(product.id)}</div>
+          <form class="qa-form" onsubmit="enviarPregunta(event, '${product.id}')">
+            <input name="nombre" required placeholder="Tu nombre" maxlength="40">
+            <textarea name="texto" required placeholder="Preguntale al vendedor..." rows="2" maxlength="280"></textarea>
+            <button type="submit">Preguntar</button>
+          </form>
         </div>
       `;
       document.getElementById("modalOverlay").classList.add("show");
       document.body.style.overflow = "hidden";
+    }
+
+    function enviarPregunta(event, productId) {
+      event.preventDefault();
+      const data = new FormData(event.target);
+      const ok = crearPregunta(productId, String(data.get("texto") || "").trim(), String(data.get("nombre") || "").trim());
+      if (!ok) {
+        showToast("No se pudo enviar la pregunta");
+        return;
+      }
+      showToast("Pregunta enviada al vendedor");
+      event.target.reset();
+      openModal(productId);
     }
 
     function closeModal() {
@@ -315,50 +436,160 @@
       if (e.target === e.currentTarget) closeModal();
     });
 
-    // Toast
+    function mostrarCheckout() {
+      if (!cart.length) return;
+      document.getElementById("cartDropdown").classList.remove("show");
+      document.getElementById("checkoutResumen").innerHTML = `
+        ${cart.map((c) => `<div style="display:flex;justify-content:space-between;font-size:14px;margin-bottom:6px;"><span>${esc(c.titulo)} × ${c.cantidad || 1}</span><strong>${money(c.precio * (c.cantidad || 1))}</strong></div>`).join("")}
+        <div style="display:flex;justify-content:space-between;margin-top:12px;font-weight:700;"><span>Total</span><span>${money(cartTotal())}</span></div>
+      `;
+      document.getElementById("checkoutOverlay").classList.add("show");
+      document.body.style.overflow = "hidden";
+    }
+
+    function cerrarCheckout() {
+      document.getElementById("checkoutOverlay").classList.remove("show");
+      document.body.style.overflow = "";
+    }
+
+    function procesarCompra(event) {
+      event.preventDefault();
+      if (!cart.length) return;
+      const nombre = document.getElementById("checkNombre").value.trim();
+      const email = document.getElementById("checkEmail").value.trim();
+      const direccion = document.getElementById("checkDireccion").value.trim();
+      getCatalog();
+      const venta = crearVenta(cart, nombre, email, direccion);
+      if (!venta) {
+        showToast("No se pudo completar: revisá el stock");
+        renderCatalog();
+        return;
+      }
+      const copia = cart.slice();
+      cart = [];
+      saveCart();
+      cerrarCheckout();
+      document.getElementById("successDetails").innerHTML = `
+        <p style="margin:0 0 8px;"><strong>Pedido:</strong> ${esc(venta.id.slice(0, 8))}</p>
+        ${copia.map((c) => `<p style="margin:0 0 4px;font-size:13px;">${esc(c.titulo)} × ${c.cantidad || 1}</p>`).join("")}
+        <p style="margin:8px 0 0;"><strong>Total:</strong> ${money(venta.total)}</p>
+        <p style="margin:4px 0 0;font-size:12px;color:#666;">Pagado con Mercado Pago (simulado)</p>
+      `;
+      document.getElementById("successOverlay").classList.add("show");
+      document.body.style.overflow = "hidden";
+      renderCatalog();
+      renderCartBadge();
+    }
+
+    function cerrarSuccess() {
+      document.getElementById("successOverlay").classList.remove("show");
+      document.body.style.overflow = "";
+    }
+
+    function cerrarCompras() {
+      document.getElementById("comprasOverlay").classList.remove("show");
+      document.body.style.overflow = "";
+    }
+
+    function mostrarCompras() {
+      resetCaches();
+      const list = loadVentas();
+      const el = document.getElementById("comprasList");
+      if (!list.length) {
+        el.innerHTML = '<p style="color:var(--muted);">Todavía no hiciste compras en esta demo.</p>';
+      } else {
+        el.innerHTML = list.map((v) => `
+          <div class="compra-card">
+            <div style="display:flex;justify-content:space-between;gap:12px;">
+              <strong>${esc(formatFecha(v.fecha))}</strong>
+              <span class="tag ${esc(v.envio.estado)}">${esc(envioLabel(v.envio.estado))}</span>
+            </div>
+            <p style="margin:8px 0;font-size:13px;">${v.items.map((i) => esc(i.titulo)).join(", ")}</p>
+            <p style="margin:0;font-weight:700;">${money(v.total)}</p>
+            ${v.envio.tracking ? `<p style="margin:6px 0 0;font-size:12px;">Tracking: ${esc(v.envio.tracking)}</p>` : ""}
+            ${v.calificacion ? `<p style="margin:8px 0 0;">⭐ ${v.calificacion.rating} · ${esc(v.calificacion.comentario || "")}</p>` : ""}
+            ${v.envio.estado === "entregado" && !v.calificacion ? `
+              <form class="qa-form" onsubmit="enviarCalificacion(event, '${v.id}')" style="margin-top:12px;">
+                <label style="font-size:13px;">Calificá tu compra</label>
+                <select name="rating" required>
+                  <option value="5">5 estrellas</option>
+                  <option value="4">4 estrellas</option>
+                  <option value="3">3 estrellas</option>
+                  <option value="2">2 estrellas</option>
+                  <option value="1">1 estrella</option>
+                </select>
+                <textarea name="comentario" placeholder="Comentario (opcional)" rows="2"></textarea>
+                <button type="submit">Enviar calificación</button>
+              </form>
+            ` : ""}
+          </div>
+        `).join("");
+      }
+      document.getElementById("comprasOverlay").classList.add("show");
+      document.body.style.overflow = "hidden";
+    }
+
+    function enviarCalificacion(event, ventaId) {
+      event.preventDefault();
+      const data = new FormData(event.target);
+      const ok = calificarVenta(ventaId, Number(data.get("rating")), String(data.get("comentario") || "").trim());
+      if (!ok) {
+        showToast("No se pudo calificar");
+        return;
+      }
+      showToast("¡Gracias por tu calificación!");
+      mostrarCompras();
+    }
+
+    document.getElementById("misComprasLink").addEventListener("click", (e) => {
+      e.preventDefault();
+      mostrarCompras();
+    });
+
     function showToast(message) {
       const existing = document.querySelector(".toast");
       if (existing) existing.remove();
       const toast = document.createElement("div");
       toast.className = "toast";
-      toast.style.cssText = "position:fixed;bottom:24px;right:24px;background:#333;color:white;padding:12px 24px;border-radius:8px;z-index:2000;animation:fadeIn 0.3s;";
+      toast.style.cssText = "position:fixed;bottom:24px;right:24px;background:#333;color:white;padding:12px 24px;border-radius:8px;z-index:2000;";
       toast.textContent = message;
       document.body.appendChild(toast);
       setTimeout(() => { toast.style.opacity = "0"; setTimeout(() => toast.remove(), 300); }, 2500);
     }
 
     function renderCatalog() {
-      let filtered = productos.filter(p => p.status === "activo");
-      
+      const catalogo = getCatalog();
+      let filtered = catalogo.filter((p) => p.status === "activo");
+
       if (currentFilter !== "all") {
-        filtered = filtered.filter(p => p.categoria === currentFilter);
+        filtered = filtered.filter((p) => p.categoria === currentFilter);
       }
-      
+
       if (searchTerm) {
         const term = searchTerm.toLowerCase();
-        filtered = filtered.filter(p => 
-          p.titulo.toLowerCase().includes(term) || 
+        filtered = filtered.filter((p) =>
+          p.titulo.toLowerCase().includes(term) ||
           catLabel(p.categoria).toLowerCase().includes(term)
         );
       }
 
-      document.getElementById("resultsCount").textContent = `${filtered.length} resultado${filtered.length !== 1 ? 's' : ''}`;
+      document.getElementById("resultsCount").textContent = `${filtered.length} resultado${filtered.length !== 1 ? "s" : ""}`;
 
       if (filtered.length === 0) {
         document.getElementById("catalog").innerHTML = '<div style="grid-column: 1/-1; text-align: center; padding: 48px; color: var(--muted);">No se encontraron productos con estos filtros.</div>';
         return;
       }
 
-      document.getElementById("catalog").innerHTML = filtered.map(p => `
+      document.getElementById("catalog").innerHTML = filtered.map((p) => `
         <article class="catalog-card" onclick="openModal('${p.id}')" style="cursor:pointer;">
           <div class="img"><img src="${esc(p.imagen)}" alt="${esc(p.titulo)}"></div>
           <div class="body">
             <div class="price">${money(p.precio)}</div>
             <div class="cuotas">${esc(p.cuotas)}</div>
             <div class="title">${esc(p.titulo)}</div>
-            ${p.envioGratis ? '<div class="envio">Envío gratis</div>' : ''}
+            ${p.envioGratis ? '<div class="envio">Envío gratis</div>' : ""}
             <div class="location">📍 ${esc(p.ubicacion)}</div>
-            <div class="vendidos">${p.vendidos}+ vendidos</div>
+            <div class="vendidos">${p.vendidos || 0}+ vendidos</div>
           </div>
         </article>
       `).join("");
@@ -373,24 +604,28 @@
       if (e.key === "Enter") searchProducts();
     });
 
-    document.querySelectorAll(".filters-bar button").forEach(btn => {
+    document.querySelectorAll(".filters-bar button").forEach((btn) => {
       btn.addEventListener("click", () => {
-        document.querySelectorAll(".filters-bar button").forEach(b => b.classList.remove("active"));
+        document.querySelectorAll(".filters-bar button").forEach((b) => b.classList.remove("active"));
         btn.classList.add("active");
         currentFilter = btn.dataset.filter;
         renderCatalog();
       });
     });
 
-    document.querySelectorAll(".categories-bar a[data-cat]").forEach(link => {
+    document.querySelectorAll(".categories-bar a[data-cat]").forEach((link) => {
       link.addEventListener("click", (e) => {
         e.preventDefault();
         currentFilter = link.dataset.cat;
-        document.querySelectorAll(".filters-bar button").forEach(b => b.classList.remove("active"));
+        document.querySelectorAll(".filters-bar button").forEach((b) => b.classList.remove("active"));
         document.querySelector(`.filters-bar button[data-filter="${currentFilter}"]`)?.classList.add("active");
         renderCatalog();
         document.getElementById("productos").scrollIntoView({ behavior: "smooth" });
       });
+    });
+
+    window.addEventListener("storage", (e) => {
+      if (String(e.key || "").startsWith("marketplace-")) renderCatalog();
     });
 
     renderCatalog();
