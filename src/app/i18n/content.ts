@@ -438,7 +438,7 @@ export const translations: Record<Lang, Dictionary> = {
       port: 'Puerto',
       withArca: 'ARCA de ejemplo',
       pricesTitle: 'Planes de referencia',
-      pricesLead: 'Valores desde. El alcance se cotiza según su rubro. El precio es conversable y se puede pagar en cuotas (la cantidad se acuerda). Los plazos son estimados y conversables. La facturación ARCA y los pagos reales se cotizan aparte. Las demos son ejemplos, no el producto cerrado.',
+      pricesLead: 'Valores desde. El alcance se cotiza según su rubro. El precio es conversable y se puede pagar en cuotas (la cantidad se acuerda). Los plazos son estimados y conversables. ARCA (facturación electrónica) depende de su situación y se cotiza. Los cobros en línea (pasarela) también. Las demos son ejemplos, no el producto cerrado.',
       pricesSitesTitle: 'Sitios y paneles',
       pricesColPlan: 'Plan',
       pricesColIncludes: 'Qué entra',
@@ -456,7 +456,7 @@ export const translations: Record<Lang, Dictionary> = {
         },
         {
           name: 'Negocio',
-          plain: 'El sitio que ve el cliente y una pantalla para usted (el panel): carga productos, turnos o reservas, como en las demos. No hace falta saber programar.',
+          plain: 'El sitio que ve el cliente y una pantalla para usted (el panel): carga productos, turnos o reservas, como en las demos. No hace falta saber programar. El panel puede sumar cobros en línea; no está incluido en el piso de USD 700.',
           includes: 'Vitrina + panel (stock, turnos, reservas o comprobantes). WhatsApp y formulario. Las demos del catálogo sirven de referencia.',
           excludes: 'ARCA en producción, pasarela de pago real, contenido fotográfico ilimitado.',
           timeline: '3–5 semanas · conversable',
@@ -464,7 +464,7 @@ export const translations: Record<Lang, Dictionary> = {
         },
         {
           name: 'Negocio + app',
-          plain: 'Lo mismo, más una aplicación en el celular (Android) para que el cliente vea el catálogo o pida un turno sin abrir el navegador.',
+          plain: 'Lo mismo, más una aplicación en el celular (Android) para que el cliente vea el catálogo o pida un turno sin abrir el navegador. El panel puede sumar cobros en línea; no está incluido en el piso de USD 1.400.',
           includes: 'Vitrina, panel y aplicación Android (catálogo, turnos o avisos). WhatsApp y formulario. Las demos del catálogo sirven de referencia.',
           excludes: 'ARCA en producción, pasarela de pago real, contenido fotográfico ilimitado.',
           timeline: '6–10 semanas · conversable',
@@ -489,7 +489,8 @@ export const translations: Record<Lang, Dictionary> = {
       pricesColWhat: 'Qué es',
       pricesExtras: [
         { name: 'Rubro turismo / reservas', what: 'Fechas, cupos, cabañas o excursiones (como las demos de Sierra de la Ventana). Se suma al plan elegido.', price: 'USD 250 extra' },
-        { name: 'Facturación ARCA', what: 'Comprobantes de ejemplo en las demos. El circuito de producción se define con su contador.', price: 'A cotizar' },
+        { name: 'Cobros en línea', what: 'Una pasarela es que le paguen con tarjeta o Mercado Pago, sin pasar solo por transferencia manual. Mercado Pago u otra pasarela: el cliente paga desde el sitio y usted ve el aviso de cobro. En las demos el pago es de ejemplo; el cobro real se cotiza. Conversable.', price: 'Desde USD 200 extra' },
+        { name: 'ARCA (facturación electrónica)', what: 'No entra igual en todos los rubros. Un kiosco, un estudio o un hotel no necesitan el mismo comprobante. Monotributo o responsable inscripto, factura A, B o C, o solo presupuesto: se arma con su contador. En las demos hay un circuito de ejemplo; en un trabajo real se cotiza según el caso.', price: 'A cotizar' },
         { name: 'Catálogo grande / fotos', what: 'Muchas fichas, filtros y galería. No incluye contenido fotográfico ilimitado.', price: 'USD 150 extra' },
         { name: 'Mantenimiento', what: 'Cambios menores al mes (textos, fotos, ajustes). Conversable.', price: 'USD 40 / mes' },
       ],
@@ -1052,7 +1053,7 @@ export const translations: Record<Lang, Dictionary> = {
       port: 'Port',
       withArca: 'Sample ARCA billing',
       pricesTitle: 'Reference plans',
-      pricesLead: 'Starting prices. Scope is quoted for your trade. The price is negotiable and can be paid in installments (the number is agreed). Timelines are estimates and negotiable. ARCA billing and live payments are quoted separately. The demos are examples, not a finished product.',
+      pricesLead: 'Starting prices. Scope is quoted for your trade. The price is negotiable and can be paid in installments (the number is agreed). Timelines are estimates and negotiable. ARCA electronic invoicing depends on your situation and is quoted. Online collections (a payment gateway) are quoted separately too. The demos are examples, not a finished product.',
       pricesSitesTitle: 'Sites and panels',
       pricesColPlan: 'Plan',
       pricesColIncludes: 'Included',
@@ -1070,7 +1071,7 @@ export const translations: Record<Lang, Dictionary> = {
         },
         {
           name: 'Business',
-          plain: 'The site the customer sees and a screen for you (the panel): you load products, appointments, or bookings, as in the demos. You do not need to know how to program.',
+          plain: 'The site the customer sees and a screen for you (the panel): you load products, appointments, or bookings, as in the demos. You do not need to know how to program. The panel can add online collections; that is not included in the USD 700 floor.',
           includes: 'Showcase + panel (stock, appointments, bookings, or receipts). WhatsApp and form. Catalog demos are visual reference.',
           excludes: 'Production ARCA, a live payment gateway, unlimited photographic content.',
           timeline: '3–5 weeks · negotiable',
@@ -1078,7 +1079,7 @@ export const translations: Record<Lang, Dictionary> = {
         },
         {
           name: 'Business + app',
-          plain: 'The same, plus an app on the phone (Android) so the customer can see the catalog or request an appointment without opening the browser.',
+          plain: 'The same, plus an app on the phone (Android) so the customer can see the catalog or request an appointment without opening the browser. The panel can add online collections; that is not included in the USD 1,400 floor.',
           includes: 'Showcase, panel, and Android app (catalog, appointments, or notices). WhatsApp and form. Catalog demos are visual reference.',
           excludes: 'Production ARCA, a live payment gateway, unlimited photographic content.',
           timeline: '6–10 weeks · negotiable',
@@ -1103,7 +1104,8 @@ export const translations: Record<Lang, Dictionary> = {
       pricesColWhat: 'What it is',
       pricesExtras: [
         { name: 'Tourism / bookings', what: 'Dates, capacity, cabins, or tours (as in the Sierra de la Ventana demos). Added to the chosen plan.', price: 'USD 250 extra' },
-        { name: 'ARCA billing', what: 'Sample receipts in the demos. The production flow is defined with your accountant.', price: 'To be quoted' },
+        { name: 'Online collections', what: 'A payment gateway means customers can pay by card or Mercado Pago, without going only through a manual bank transfer. Mercado Pago or another gateway: the customer pays on the site and you see the collection notice. Demos use sample payments; live charging is quoted. Negotiable.', price: 'From USD 200 extra' },
+        { name: 'ARCA (electronic invoicing)', what: 'It does not apply the same way in every trade. A kiosk, a law firm, or a hotel do not need the same receipt. Simplified taxpayer or registered VAT payer, invoice A, B, or C, or just a quote: it is built with your accountant. The demos show a sample flow; real work is quoted for the case.', price: 'To be quoted' },
         { name: 'Large catalog / photos', what: 'Many listings, filters, and gallery. Unlimited photographic content is not included.', price: 'USD 150 extra' },
         { name: 'Maintenance', what: 'Minor changes per month (copy, photos, tweaks). Negotiable.', price: 'USD 40 / month' },
       ],

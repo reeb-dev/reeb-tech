@@ -40,6 +40,13 @@ describe('App', () => {
     expect(compiled.querySelector('#demos #precios')?.textContent).not.toMatch(/Capacitación|Training/);
     expect(compiled.querySelector('#demos #precios')?.textContent).toMatch(/GitHub Pages/);
     expect(compiled.querySelector('#demos #precios')?.textContent).toMatch(/USD 8–15/);
+    expect(compiled.querySelector('#demos #precios')?.textContent).toMatch(/Cobros en línea|Online collections/);
+    expect(compiled.querySelector('#demos #precios')?.textContent).toMatch(/USD 200/);
+    expect(compiled.querySelector('#demos #precios')?.textContent).toMatch(/Mercado Pago/);
+    expect(compiled.querySelector('#demos #precios')?.textContent).toMatch(/pasarela|payment gateway/i);
+    expect(compiled.querySelector('#demos #precios')?.textContent).toMatch(/A cotizar|To be quoted/);
+    expect(compiled.querySelector('#demos #precios')?.textContent).toMatch(/según el caso|quoted for the case/);
+    expect(compiled.querySelector('#demos #precios')?.textContent).toMatch(/no está incluido en el piso|not included in the USD 700 floor/);
     expect(compiled.querySelector('#demos #precios a[href^="https://wa.me/5492915757934"]')).toBeTruthy();
     expect(compiled.querySelector('#demos #precios a[href="mailto:manuelreeb@icloud.com"]')).toBeTruthy();
   });
