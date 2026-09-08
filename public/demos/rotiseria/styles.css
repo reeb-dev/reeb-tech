@@ -122,6 +122,46 @@ input, select, textarea { width: 100%; font: inherit; padding: 8px; border: 1px 
 
 .amount { text-align: right; font-variant-numeric: tabular-nums; }
 
+.card-photo { height: 160px; overflow: hidden; background: #f4e8d8; }
+.card-photo img { width: 100%; height: 100%; object-fit: cover; display: block; transition: transform 0.4s ease; }
+.product-card { transition: transform 0.25s ease, box-shadow 0.25s ease; }
+.product-card:hover { transform: translateY(-4px); box-shadow: 0 8px 24px rgba(234, 88, 12, 0.16); }
+.product-card:hover .card-photo img { transform: scale(1.05); }
+
+.map-embed { margin-top: 20px; border-radius: 12px; overflow: hidden; height: 280px; box-shadow: 0 4px 20px rgba(234, 88, 12, 0.12); }
+.map-embed iframe { width: 100%; height: 100%; border: 0; }
+.map-caption { margin: 8px 0 0; font-size: 13px; }
+.map-caption a { color: var(--naranja); }
+
+.zona-line { margin: 8px 0 0; font-size: 15px; opacity: 0.95; }
+.place-line { font-size: 13px; color: var(--muted); margin: 8px 0 0; }
+
+.plato-modal { position: fixed; inset: 0; background: rgba(0,0,0,0.55); display: flex; align-items: center; justify-content: center; z-index: 80; padding: 20px; }
+.plato-modal[hidden] { display: none; }
+.plato-modal-card { background: white; border-radius: 14px; max-width: 480px; width: 100%; overflow: hidden; position: relative; box-shadow: 0 12px 40px rgba(0,0,0,0.25); }
+.plato-modal-card img { width: 100%; height: 220px; object-fit: cover; display: block; }
+.plato-modal-body { padding: 20px; }
+.plato-modal-body h2 { margin: 0 0 6px; font-size: 22px; }
+.plato-modal-body .price { font-size: 24px; font-weight: 700; color: var(--naranja); margin: 4px 0; }
+.plato-modal-close { position: absolute; top: 10px; right: 10px; width: 36px; height: 36px; border: 0; border-radius: 50%; background: rgba(255,255,255,0.92); cursor: pointer; font-size: 22px; line-height: 1; }
+
+.sucursal-bar { background: var(--crema); border: 1px solid #fcd34d; border-radius: 8px; padding: 10px 14px; font-size: 13px; max-width: 420px; }
+.sucursal-bar strong { display: block; color: var(--naranja); font-size: 12px; text-transform: uppercase; letter-spacing: 0.06em; }
+.sucursal-form { display: grid; gap: 8px; margin-top: 10px; }
+.sucursal-form .actions { margin-top: 4px; }
+
+.prod-card { overflow: hidden; padding: 0; text-align: left; }
+.prod-card .card-photo { height: 110px; }
+.prod-card .prod-card-body { padding: 12px; text-align: center; }
+.prod-card:hover .card-photo img { transform: scale(1.05); }
+
+.zona-box { background: #fce7f3; border: 1px solid #f9a8d4; border-radius: 6px; padding: 10px 12px; margin: 12px 0; font-size: 13px; }
+.zona-box strong { display: block; color: #be185d; margin-bottom: 4px; }
+
+.items-pedido li { align-items: center; gap: 8px; }
+.items-pedido img { width: 36px; height: 36px; object-fit: cover; border-radius: 4px; flex-shrink: 0; }
+.items-pedido .item-txt { flex: 1; }
+
 @media (max-width: 960px) {
   .hero, .modules, .workspace, .produccion-grid { grid-template-columns: 1fr; }
   .top-inner, .toolbar { flex-direction: column; align-items: start; }

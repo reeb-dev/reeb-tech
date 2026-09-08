@@ -1,6 +1,7 @@
 let prods = loadProductos();
 let peds = loadPedidos();
 let ings = loadIngredientes();
+let suc = loadSucursal();
 let tab = "pedidos";
 let selectedPed = peds[0]?.id || "";
 let filterPed = "todos";
@@ -37,9 +38,20 @@ document.getElementById("nuevo-pedido").addEventListener("click", () => {
 });
 
 function render() {
+  renderSucursalChip();
   if (tab === "pedidos") renderPedidos();
   else if (tab === "produccion") renderProduccion();
   else renderIngredientes();
+}
+
+function renderSucursalChip() {
+  const chip = document.getElementById("sucursal-chip");
+  if (!chip) return;
+  chip.innerHTML = `
+    <strong>Sucursal</strong>
+    ${esc(direccionCompleta(suc))}
+    <div style="color:var(--muted);margin-top:4px;">Delivery: radio ${esc(String(suc.radioCuadras))} cuadras · mínimo ${esc(money(suc.minimoDelivery))}</div>
+  `;
 }
 
 function renderPedidos() {
@@ -100,12 +112,24 @@ function renderPedidos() {
     </div>
     ${pedido.notas ? `<p style="font-size:13px;background:#fef3c7;padding:8px;border-radius:4px;">📝 ${esc(pedido.notas)}</p>` : ""}
 
+    ${pedido.tipo === "delivery" ? `
+      <div class="zona-box">
+        <strong>Zona de entrega</strong>
+        Radio ${esc(String(suc.radioCuadras))} cuadras desde ${esc(suc.direccion)}, ${esc(suc.barrio)}.
+        Envío gratis · mínimo ${esc(money(suc.minimoDelivery))}.
+        ${pedido.cliente.direccion ? `<div style="margin-top:6px;">Destino: ${esc(pedido.cliente.direccion)}</div>` : ""}
+      </div>
+    ` : `
+      <p class="place-line">Retiro en mostrador · ${esc(direccionCompleta(suc))}</p>
+    `}
+
     <label>Productos</label>
     ${pedido.items.length > 0 ? `
       <ul class="items-pedido">
         ${pedido.items.map((item) => {
           const prod = getProducto(item.producto);
-          return `<li><span>${esc(prod?.nombre || "—")} x${item.cantidad}</span><span>${esc(money(item.precio * item.cantidad))}</span></li>`;
+          const img = fotoProducto(prod);
+          return `<li>${img ? `<img src="${esc(img)}" alt="">` : ""}<span class="item-txt">${esc(prod?.nombre || "—")} x${item.cantidad}</span><span>${esc(money(item.precio * item.cantidad))}</span></li>`;
         }).join("")}
       </ul>
     ` : `<p style="color:#999;font-size:13px;">Sin productos</p>`}
@@ -212,10 +236,13 @@ function renderProduccion() {
       <div class="produccion-grid">
         ${items.map((p) => `
           <div class="prod-card">
-            <div class="nombre">${esc(p.nombre)}</div>
-            <div class="numeros">
-              <div><div class="num">${p.produccionDia || "—"}</div><small>producidos</small></div>
-              <div><div class="num ${p.stock < 3 ? "rojo" : "verde"}">${p.stock}</div><small>disponibles</small></div>
+            <div class="card-photo"><img src="${esc(fotoProducto(p))}" alt="${esc(p.nombre)}"></div>
+            <div class="prod-card-body">
+              <div class="nombre">${esc(p.nombre)}</div>
+              <div class="numeros">
+                <div><div class="num">${p.produccionDia || "—"}</div><small>producidos</small></div>
+                <div><div class="num ${p.stock < 3 ? "rojo" : "verde"}">${p.stock}</div><small>disponibles</small></div>
+              </div>
             </div>
           </div>
         `).join("")}
@@ -224,10 +251,51 @@ function renderProduccion() {
   `;
 
   document.getElementById("detail").innerHTML = `
-    <h2>Producción del día</h2>
-    <p style="color:var(--muted);">Control de lo producido y disponible para venta.</p>
-    <p style="margin-top:16px;font-size:13px;">Los números se actualizan automáticamente con cada venta.</p>
+    <h2>Sucursal y delivery</h2>
+    <p style="color:var(--muted);">Dirección del local y radio de entrega.</p>
+    <form class="sucursal-form" id="form-sucursal">
+      <label>Nombre
+        <input name="nombre" value="${esc(suc.nombre)}">
+      </label>
+      <label>Dirección
+        <input name="direccion" value="${esc(suc.direccion)}">
+      </label>
+      <label>Barrio
+        <input name="barrio" value="${esc(suc.barrio)}">
+      </label>
+      <label>Ciudad
+        <input name="ciudad" value="${esc(suc.ciudad)}">
+      </label>
+      <label>Teléfono
+        <input name="telefono" value="${esc(suc.telefono)}">
+      </label>
+      <label>Radio de entrega (cuadras)
+        <input name="radioCuadras" type="number" min="1" value="${esc(String(suc.radioCuadras))}">
+      </label>
+      <label>Mínimo delivery
+        <input name="minimoDelivery" type="number" min="0" value="${esc(String(suc.minimoDelivery))}">
+      </label>
+      <div class="actions">
+        <button class="btn-panel" type="submit">Guardar sucursal</button>
+      </div>
+    </form>
+    <p class="place-line">${esc(zonaEntregaTexto(suc))}</p>
   `;
+
+  document.getElementById("form-sucursal")?.addEventListener("submit", (ev) => {
+    ev.preventDefault();
+    const form = ev.target;
+    suc.nombre = form.nombre.value.trim() || suc.nombre;
+    suc.direccion = form.direccion.value.trim() || suc.direccion;
+    suc.barrio = form.barrio.value.trim() || suc.barrio;
+    suc.ciudad = form.ciudad.value.trim() || suc.ciudad;
+    suc.telefono = form.telefono.value.trim() || suc.telefono;
+    suc.radioCuadras = Number(form.radioCuadras.value) || suc.radioCuadras;
+    suc.minimoDelivery = Number(form.minimoDelivery.value) || 0;
+    saveSucursal();
+    showToast("Sucursal actualizada");
+    render();
+  });
 }
 
 function renderIngredientes() {
