@@ -47,27 +47,47 @@
   var section = document.createElement("section");
   section.id = "demo-contacto";
   section.className = "demo-contacto";
-  if (place === "hub") section.classList.add("wrap");
+  if (place === "hub") section.classList.add("wrap", "is-hub");
 
   var lead = place === "panel"
     ? "Canal de ejemplo para un mensaje del cliente. No sale a un servidor."
     : place === "hub"
-      ? "Si necesita un sistema parecido al de su rubro, escriba por este formulario, WhatsApp o correo."
+      ? "Si necesita un sistema parecido al de su rubro, escríbanos por WhatsApp, correo o este formulario. Respondemos a su consulta."
       : "Dejá un mensaje o escribí por WhatsApp.";
+
+  var fields = place === "hub"
+    ? '<label for="hub-nombre">Su nombre<input id="hub-nombre" name="nombre" autocomplete="name" placeholder="Nombre y apellido"></label>' +
+      '<label for="hub-email">Su correo<input id="hub-email" name="email" type="email" autocomplete="email" required placeholder="su-correo@ejemplo.com"></label>' +
+      '<label for="hub-tel">Su teléfono <span class="demo-contacto-opt">(opcional)</span><input id="hub-tel" name="telefono" type="tel" autocomplete="tel" inputmode="tel" placeholder="291 575-7934"></label>' +
+      '<label for="hub-msg">En qué podemos ayudarle<textarea id="hub-msg" name="mensaje" required rows="5" placeholder="Cuéntenos su rubro y qué necesita: kiosco, hotel, taller…"></textarea></label>'
+    : '<label>Nombre<input name="nombre" autocomplete="name" placeholder="Nombre"></label>' +
+      '<label>Email<input name="email" type="email" autocomplete="email" required placeholder="correo@ejemplo.com"></label>' +
+      '<label>Teléfono<input name="telefono" type="tel" autocomplete="tel" placeholder="11 4000-1234"></label>' +
+      '<label>Mensaje<textarea name="mensaje" required placeholder="Contanos qué necesitás"></textarea></label>';
+
+  var afterForm = place === "hub"
+    ? '<p class="demo-contacto-hint">Al enviar se abre su correo con el mensaje listo. No hay servidor: es el canal de consulta.</p>'
+    : '<a class="demo-wa-inline" href="' + waUrl + '" target="_blank" rel="noopener">WhatsApp · +54 9 291 575-7934</a>' +
+      '<a class="demo-mail-inline" href="mailto:' + mail + '">' + mail + "</a>";
+
+  var channels = place === "hub"
+    ? '<div class="demo-contacto-channels">' +
+        '<a class="btn btn-primary" href="' + waUrl + '" target="_blank" rel="noopener noreferrer">Escribir por WhatsApp</a>' +
+        '<a class="btn btn-ghost" href="mailto:' + mail + '">' + mail + "</a>" +
+        '<p class="demo-contacto-phone">WhatsApp · +54 9 2915 75-7934</p>' +
+      "</div>"
+    : "";
 
   section.innerHTML =
     "<h2>" + title + "</h2>" +
     '<p class="demo-contacto-lead">' + lead + "</p>" +
+    channels +
     '<form novalidate>' +
-      '<label>Nombre<input name="nombre" autocomplete="name" placeholder="Nombre"></label>' +
-      '<label>Email<input name="email" type="email" autocomplete="email" required placeholder="correo@ejemplo.com"></label>' +
-      '<label>Teléfono<input name="telefono" type="tel" autocomplete="tel" placeholder="11 4000-1234"></label>' +
-      '<label>Mensaje<textarea name="mensaje" required placeholder="Contanos qué necesitás"></textarea></label>' +
+      fields +
       '<p class="demo-contacto-error" role="alert"></p>' +
-      '<button type="submit">Enviar mensaje</button>' +
+      '<button type="submit">' + (place === "hub" ? "Enviar consulta" : "Enviar mensaje") + "</button>" +
     "</form>" +
-    '<a class="demo-wa-inline" href="' + waUrl + '" target="_blank" rel="noopener">WhatsApp · +54 9 291 575-7934</a>' +
-    '<a class="demo-mail-inline" href="mailto:' + mail + '">' + mail + "</a>";
+    afterForm;
 
   var host = document.getElementById("contacto");
   var info = document.getElementById("info");
@@ -87,11 +107,11 @@
     var nombre = String(data.get("nombre") || "").trim();
     var telefono = String(data.get("telefono") || "").trim();
     if (!email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
-      error.textContent = "Ingresá un email válido.";
+      error.textContent = place === "hub" ? "Ingrese un correo válido." : "Ingresá un email válido.";
       return;
     }
     if (!mensaje) {
-      error.textContent = "El mensaje no puede estar vacío.";
+      error.textContent = place === "hub" ? "El mensaje no puede quedar vacío." : "El mensaje no puede estar vacío.";
       return;
     }
     error.textContent = "";

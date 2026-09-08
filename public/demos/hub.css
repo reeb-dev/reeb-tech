@@ -614,7 +614,8 @@ img { display: block; width: 100%; height: 100%; object-fit: cover; }
 #precios,
 #cobros,
 #arca,
-#catalogo {
+#catalogo,
+#contacto {
   scroll-margin-top: 200px;
 }
 
@@ -1140,45 +1141,147 @@ img { display: block; width: 100%; height: 100%; object-fit: cover; }
   margin-top: 14px;
 }
 
-.demo-contacto {
-  color: var(--ink);
-  padding: 8px 36px 48px;
-  max-width: none;
+#contacto {
+  border-top: 1px solid var(--line);
+  background: var(--bg);
 }
 
-.demo-contacto h2 {
+.demo-contacto.is-hub {
+  color: var(--ink);
+  padding: 64px 36px 72px;
+  max-width: 720px;
+  margin: 0 auto;
+}
+
+.demo-contacto.is-hub h2 {
   font-family: Fraunces, Georgia, serif;
   color: var(--ink);
-  font-size: clamp(28px, 4vw, 36px);
+  font-size: clamp(28px, 4vw, 40px);
   font-weight: 560;
+  letter-spacing: -0.02em;
+  margin: 0 0 10px;
 }
 
-.demo-contacto .demo-contacto-lead { color: var(--muted); }
+.demo-contacto.is-hub .demo-contacto-lead {
+  color: var(--muted);
+  font-size: 16px;
+  max-width: 52ch;
+  margin: 0 0 22px;
+}
 
-.demo-contacto form {
+.demo-contacto.is-hub .demo-contacto-channels {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 12px 16px;
+  margin-bottom: 28px;
+}
+
+.demo-contacto.is-hub .demo-contacto-phone {
+  width: 100%;
+  margin: 0;
+  font-size: 14px;
+  font-weight: 650;
+  color: var(--gold);
+}
+
+.demo-contacto.is-hub form {
+  display: grid;
+  gap: 14px;
+  color-scheme: dark;
   background: var(--bg-2);
-  border-color: var(--line);
+  border: 1px solid var(--line);
+  border-left: 3px solid var(--gold);
+  border-radius: 0;
+  padding: 22px 20px 20px;
 }
 
-.demo-contacto input,
-.demo-contacto textarea {
-  background: #0b0a09;
+.demo-contacto.is-hub label {
+  display: grid;
+  gap: 6px;
+  font-size: 13px;
+  font-weight: 650;
+  letter-spacing: 0.04em;
+  color: var(--gold);
+}
+
+.demo-contacto.is-hub .demo-contacto-opt {
+  font-weight: 400;
+  letter-spacing: 0;
+  color: var(--muted);
+}
+
+.demo-contacto.is-hub input,
+.demo-contacto.is-hub textarea {
+  font: inherit;
+  width: 100%;
+  padding: 12px 14px;
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  background: #1c1612;
   color: var(--ink);
-  border-color: #3a342e;
+  color-scheme: dark;
+  caret-color: var(--ink);
 }
 
-.demo-contacto button[type="submit"] {
+.demo-contacto.is-hub input::placeholder,
+.demo-contacto.is-hub textarea::placeholder {
+  color: #8a8174;
+}
+
+.demo-contacto.is-hub input:-webkit-autofill,
+.demo-contacto.is-hub textarea:-webkit-autofill {
+  -webkit-text-fill-color: var(--ink);
+  caret-color: var(--ink);
+  box-shadow: 0 0 0 1000px #1c1612 inset;
+  transition: background-color 9999s ease-out;
+}
+
+.demo-contacto.is-hub input:focus,
+.demo-contacto.is-hub textarea:focus {
+  outline: 2px solid var(--gold);
+  outline-offset: 2px;
+  border-color: var(--gold);
+}
+
+.demo-contacto.is-hub textarea { min-height: 120px; resize: vertical; }
+
+.demo-contacto.is-hub .demo-contacto-error {
+  color: #f0a090;
+  font-size: 13px;
+  min-height: 1.2em;
+}
+
+.demo-contacto.is-hub button[type="submit"] {
+  justify-self: start;
+  min-height: 46px;
+  padding: 0 20px;
   background: var(--ember);
+  color: #fff;
+  border: 0;
+  border-radius: 10px;
+  font: inherit;
+  font-weight: 650;
+  letter-spacing: 0.02em;
+  cursor: pointer;
 }
 
-.demo-contacto button[type="submit"]:hover { background: var(--ember-hover); }
+.demo-contacto.is-hub button[type="submit"]:hover { background: var(--ember-hover); }
 
-.demo-contacto .demo-wa-inline { color: #6fde9a; }
+.demo-contacto.is-hub button[type="submit"]:focus-visible {
+  outline: 2px solid var(--gold);
+  outline-offset: 3px;
+}
 
-.demo-contacto .demo-mail-inline { color: var(--gold); margin-left: 18px; }
+.demo-contacto.is-hub .demo-contacto-hint {
+  margin: 14px 0 0;
+  font-size: 13px;
+  color: var(--muted);
+  max-width: 52ch;
+}
 
 @media (max-width: 860px) {
-  .nav, .hero, .bar, .band, .picks-head, .catalog-head, .who, .sistemas, .prices, .demo-contacto { padding-left: 20px; padding-right: 20px; }
+  .nav, .hero, .bar, .band, .picks-head, .catalog-head, .who, .sistemas, .prices, .demo-contacto.is-hub { padding-left: 20px; padding-right: 20px; }
   .nav { gap: 10px; flex-direction: column; align-items: flex-start; }
   .nav-links { gap: 14px; }
   .hero { min-height: 86vh; padding-bottom: 48px; }
@@ -1212,7 +1315,8 @@ img { display: block; width: 100%; height: 100%; object-fit: cover; }
   #precios,
   #cobros,
   #arca,
-  #catalogo {
+  #catalogo,
+  #contacto {
     scroll-margin-top: 340px;
   }
 
