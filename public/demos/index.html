@@ -8,7 +8,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,560;9..144,650&family=Outfit:wght@400;600;650;700&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="hub.css?v=hub24">
+  <link rel="stylesheet" href="hub.css?v=hub25">
 </head>
 <body>
 
@@ -112,35 +112,10 @@
   <div class="catalog-head" id="catalogo">
     <p class="badge">Catálogo</p>
     <h2>Landing y panel por rubro</h2>
-    <p>Cada demo tiene vitrina para el cliente y panel de administración. Datos de ejemplo en el navegador.</p>
+    <p>Las tres destacadas están arriba. Acá está el resto: cada una tiene vitrina y panel. Datos de ejemplo en el navegador.</p>
   </div>
 
-  <article class="row" data-cat="inmuebles" data-search="inmobiliaria inmuebles venta alquiler propiedades visitas">
-    <div class="row-media"><img src="hub-img/inmobiliaria.jpg" alt="Interior de un departamento listo para mostrar"></div>
-    <div class="row-copy">
-      <span class="badge">Inmuebles</span>
-      <h3>Inmobiliaria</h3>
-      <p>Venta y alquiler con fichas de propiedad, visitas y clientes interesados.</p>
-      <div class="ctas">
-        <a class="btn btn-primary" href="inmobiliaria/">Ver demo</a>
-        <a class="btn btn-ghost" href="inmobiliaria/panel.html">Panel</a>
-      </div>
-    </div>
-  </article>
-
-  <article class="row is-flip" data-cat="legal" data-search="estudio norte legal abogado expedientes plazos escritos mesa de entradas">
-    <div class="row-media"><img src="hub-img/estudio.jpg" alt="Mesa de un estudio jurídico"></div>
-    <div class="row-copy">
-      <span class="badge">Legal</span>
-      <h3>Estudio Norte</h3>
-      <p>Mesa de entradas: expedientes, plazos y escritos en la misma ficha.</p>
-      <div class="ctas">
-        <a class="btn btn-primary" href="estudio/">Ver demo</a>
-        <a class="btn btn-ghost" href="estudio/panel.html">Panel</a>
-      </div>
-    </div>
-  </article>
-
+  <div class="catalog">
   <article class="row" data-cat="comercio" data-search="almacen del barrio comercio pedidos proveedores gondola caja">
     <div class="row-media"><img src="hub-img/comercio.jpg" alt="Góndola de almacén"></div>
     <div class="row-copy">
@@ -258,20 +233,7 @@
     </div>
   </article>
 
-  <article class="row" data-cat="gastronomia" data-search="parrilla don ernesto restaurante gastronomia mesas comandas cocina factura">
-    <div class="row-media"><img src="hub-img/restaurante.jpg" alt="Mesa de parrilla servida"></div>
-    <div class="row-copy">
-      <span class="badge">Gastronomía</span>
-      <h3>Parrilla Don Ernesto</h3>
-      <p>Mesas, comandas, vista de cocina y cierre de cuenta con factura.</p>
-      <div class="ctas">
-        <a class="btn btn-primary" href="restaurante/">Ver demo</a>
-        <a class="btn btn-ghost" href="restaurante/panel.html">Panel</a>
-      </div>
-    </div>
-  </article>
-
-  <article class="row is-flip" data-cat="gastronomia" data-search="rotiseria gastronomia produccion mostrador delivery pedidos">
+  <article class="row" data-cat="gastronomia" data-search="rotiseria gastronomia produccion mostrador delivery pedidos">
     <div class="row-media"><img src="hub-img/rotiseria.jpg" alt="Pollo asado de rotisería"></div>
     <div class="row-copy">
       <span class="badge">Gastronomía</span>
@@ -397,6 +359,7 @@
       </div>
     </div>
   </article>
+  </div>
 
   <p class="empty" id="hub-empty" hidden>Ninguna demo coincide con esa búsqueda. Probá otro nombre o rubro.</p>
 
@@ -649,7 +612,8 @@
       </div>
       <p class="sistemas-note">Cobros en línea y ARCA se cotizan aparte; no están en el piso de Presencia ni de Negocio. En las demos, un kiosco muestra precios en pesos; un 0km o una propiedad pueden ir en dólares, como en el mercado local.</p>
 
-      <h3 id="funciones">Funciones posibles por sitio</h3>
+      <details class="sistemas-more" id="funciones">
+      <summary>Funciones posibles por sitio</summary>
       <p class="sistemas-sublead">Qué suele pedirse en cada demo. No es un paquete cerrado ni “todo incluido”: se arma con su rubro. Cobrar con tarjeta o Mercado Pago y la facturación electrónica se cotizan aparte; no vienen en el piso de los planes (ver <a href="#precios">Precios</a>).</p>
       <div class="sistemas-fns">
         <article class="sistema-fn">
@@ -898,6 +862,7 @@
           </ul>
         </article>
       </div>
+      </details>
     </div>
   </section>
 
@@ -1179,12 +1144,19 @@
             b.classList.toggle("is-on", (b.getAttribute("data-filter") || "") === "all");
           });
           apply();
+          if (a.getAttribute("href") === "#funciones") openFunciones();
         });
       });
+
+      function openFunciones() {
+        var box = document.getElementById("funciones");
+        if (box && box.tagName === "DETAILS") box.open = true;
+      }
 
       function alignHash() {
         var id = (location.hash || "").replace("#", "");
         if (!id) return;
+        if (id === "funciones") openFunciones();
         var el = document.getElementById(id);
         var bar = document.querySelector(".bar");
         if (!el) return;
