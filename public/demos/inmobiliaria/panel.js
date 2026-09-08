@@ -10,18 +10,37 @@ document.getElementById("open-create").addEventListener("click", () => {
 document.getElementById("create").addEventListener("submit", (event) => {
   event.preventDefault();
   const data = new FormData(event.target);
+  const tipo = String(data.get("tipo") || "departamento");
+  const superficie = Number(data.get("superficie") || 0);
   const item = {
     id: crypto.randomUUID(),
     codigo: String(data.get("codigo") || ""),
     titulo: String(data.get("titulo") || ""),
-    tipo: String(data.get("tipo") || "departamento"),
+    tipo,
     operacion: String(data.get("operacion") || "alquiler"),
     direccion: String(data.get("direccion") || ""),
     barrio: String(data.get("barrio") || ""),
+    zona: "CABA",
     ambientes: Number(data.get("ambientes") || 0),
-    superficie: Number(data.get("superficie") || 0),
+    dormitorios: 0,
+    banos: 1,
+    superficie,
+    cubierta: superficie,
     precio: Number(data.get("precio") || 0),
     expensas: Number(data.get("expensas") || 0),
+    antiguedad: null,
+    orientacion: "",
+    piso: "",
+    cochera: false,
+    amenities: [],
+    descripcion: "",
+    imagenes: [fotoPorTipo(tipo)],
+    destacado: false,
+    nuevo: true,
+    vistas: 0,
+    consultas: 0,
+    diasPublicada: 0,
+    precioM2Zona: 0,
     status: "disponible",
     cliente: null,
     visitas: [],
@@ -77,15 +96,19 @@ function render() {
   });
 
   const rows = visible();
-  document.getElementById("rows").innerHTML = rows.map((item) => `
+  document.getElementById("rows").innerHTML = rows.map((item) => {
+    const foto = (item.imagenes && item.imagenes[0]) || fotoPorTipo(item.tipo);
+    return `
     <tr class="row ${item.id === selected ? "on" : ""}" data-id="${esc(item.id)}">
+      <td><img class="thumb" src="${esc(foto)}" alt=""></td>
       <td>${esc(item.codigo)}</td>
-      <td>${esc(item.titulo)}<br><small style="color:#666">${esc(tipoLabel(item.tipo))}</small></td>
+      <td>${esc(item.titulo)}<br><small style="color:#666">${esc(tipoLabel(item.tipo))} · ${item.superficie || "—"} m² · ${item.ambientes || "—"} amb.</small></td>
       <td>${esc(opLabel(item.operacion))}</td>
       <td>${esc(item.barrio)}</td>
       <td class="amount">${item.operacion === "venta" ? esc(money(item.precio, true)) : esc(money(item.precio))}</td>
       <td><span class="tag ${esc(item.status)}">${esc(label(item.status))}</span></td>
-    </tr>`).join("") || `<tr><td colspan="6">No hay propiedades en este estado.</td></tr>`;
+    </tr>`;
+  }).join("") || `<tr><td colspan="7">No hay propiedades en este estado.</td></tr>`;
 
   document.querySelectorAll(".row").forEach((row) => {
     row.addEventListener("click", () => {
@@ -103,10 +126,12 @@ function render() {
 
   const precioStr = item.operacion === "venta" ? money(item.precio, true) : money(item.precio) + " /mes";
 
+  const foto = (item.imagenes && item.imagenes[0]) || fotoPorTipo(item.tipo);
   detail.innerHTML = `
     <p class="eyebrow">${esc(opLabel(item.operacion))} · ${esc(tipoLabel(item.tipo))}</p>
     <h2>${esc(item.titulo)}</h2>
     <p>${esc(item.direccion)}</p>
+    <img class="detail-photo" src="${esc(foto)}" alt="${esc(item.titulo)}">
     <div class="meta">
       <div><span>Barrio</span>${esc(item.barrio)}</div>
       <div><span>Precio</span>${esc(precioStr)}</div>
@@ -178,7 +203,7 @@ function render() {
         <button class="ghost" type="button" id="remove">Eliminar</button>
       </div>
     </form>
-    ${item.visitas.length > 0 ? `
+    ${(item.visitas || []).length > 0 ? `
       <div class="visitas">
         <h3>Visitas registradas</h3>
         ${item.visitas.map((v) => `

@@ -40,6 +40,46 @@ const AMENITIES = [
   { id: "apto_profesional", label: "Apto profesional", icon: "💼" }
 ];
 
+const FOTOS = {
+  deptoLiving: "https://images.unsplash.com/photo-1502672260266-1c1ef2d93688?w=1200&h=800&fit=crop",
+  deptoCocina: "https://images.unsplash.com/photo-1484154218962-a197022b5858?w=1200&h=800&fit=crop",
+  deptoDormi: "https://images.unsplash.com/photo-1560448204-e02f11c3d0e2?w=1200&h=800&fit=crop",
+  deptoStudio: "https://images.unsplash.com/photo-1522708323590-d24dbb6b0267?w=1200&h=800&fit=crop",
+  deptoStudio2: "https://images.unsplash.com/photo-1502672023488-70e25813eb80?w=1200&h=800&fit=crop",
+  deptoLujo: "https://images.unsplash.com/photo-1600607687920-4e2a09cf159d?w=1200&h=800&fit=crop",
+  deptoLujo2: "https://images.unsplash.com/photo-1600607687644-c7171b42498f?w=1200&h=800&fit=crop",
+  deptoLujo3: "https://images.unsplash.com/photo-1600566753376-12c8ab7fb75b?w=1200&h=800&fit=crop",
+  deptoTorre: "https://images.unsplash.com/photo-1545324418-cc1a3fa10c00?w=1200&h=800&fit=crop",
+  deptoLiving2: "https://images.unsplash.com/photo-1560184897-ae75f418493e?w=1200&h=800&fit=crop",
+  deptoLiving3: "https://images.unsplash.com/photo-1560185127-6ed189bf02f4?w=1200&h=800&fit=crop",
+  loft: "https://images.unsplash.com/photo-1493809842364-78817add7ffb?w=1200&h=800&fit=crop",
+  loft2: "https://images.unsplash.com/photo-1501183638710-841dd1904471?w=1200&h=800&fit=crop",
+  loft3: "https://images.unsplash.com/photo-1600566752355-35792bedcfea?w=1200&h=800&fit=crop",
+  phInterior: "https://images.unsplash.com/photo-1600573472550-8090b5e0745e?w=1200&h=800&fit=crop",
+  phInterior2: "https://images.unsplash.com/photo-1600566753190-17f0baa2a6c3?w=1200&h=800&fit=crop",
+  phTerraza: "https://images.unsplash.com/photo-1600566753086-00f18fb6b3ea?w=1200&h=800&fit=crop",
+  casaPileta: "https://images.unsplash.com/photo-1564013799919-ab600027ffc6?w=1200&h=800&fit=crop",
+  casaFachada: "https://images.unsplash.com/photo-1600585154340-be6161a56a0c?w=1200&h=800&fit=crop",
+  casaInterior: "https://images.unsplash.com/photo-1600210492486-724fe5c67fb0?w=1200&h=800&fit=crop",
+  casaClasica: "https://images.unsplash.com/photo-1605276374104-dee2a0ed3cd6?w=1200&h=800&fit=crop",
+  casaJardin: "https://images.unsplash.com/photo-1570129477492-45c003edd2be?w=1200&h=800&fit=crop",
+  casaNoche: "https://images.unsplash.com/photo-1512917774080-9991f1c4c750?w=1200&h=800&fit=crop",
+  casaCocina: "https://images.unsplash.com/photo-1600585154526-990dced4db0d?w=1200&h=800&fit=crop",
+  local: "https://images.unsplash.com/photo-1441986300917-64674bd600d8?w=1200&h=800&fit=crop",
+  local2: "https://images.unsplash.com/photo-1604328698692-f76ea9498e76?w=1200&h=800&fit=crop",
+  oficina: "https://images.unsplash.com/photo-1497366216548-37526070297c?w=1200&h=800&fit=crop",
+  oficina2: "https://images.unsplash.com/photo-1497366811353-6870744d04b2?w=1200&h=800&fit=crop"
+};
+
+function fotoPorTipo(tipo) {
+  if (tipo === "casa") return FOTOS.casaFachada;
+  if (tipo === "ph") return FOTOS.phInterior;
+  if (tipo === "local") return FOTOS.local;
+  if (tipo === "oficina") return FOTOS.oficina;
+  if (tipo === "terreno") return FOTOS.casaJardin;
+  return FOTOS.deptoLiving;
+}
+
 function compLabel(comp) {
   return COMPROBANTES.find((c) => c.id === comp)?.label || comp;
 }
@@ -75,12 +115,8 @@ function seed() {
       piso: "5°",
       cochera: false,
       amenities: ["balcon", "laundry"],
-      descripcion: "Hermoso departamento de 2 ambientes ubicado en pleno Almagro. Living-comedor con balcón al frente, dormitorio con placard, cocina separada, baño completo. Muy luminoso, excelente estado. A 2 cuadras del subte B.",
-      imagenes: [
-        "https://images.unsplash.com/photo-1502672260266-1c1ef2d93688?w=800&h=500&fit=crop",
-        "https://images.unsplash.com/photo-1560448204-e02f11c3d0e2?w=800&h=500&fit=crop",
-        "https://images.unsplash.com/photo-1484154218962-a197022b5858?w=800&h=500&fit=crop"
-      ],
+      descripcion: "Departamento de 2 ambientes en Almagro. Living-comedor con balcón al frente, dormitorio con placard, cocina separada y baño completo. Muy luminoso. A 2 cuadras del subte B (Medrano).",
+      imagenes: [FOTOS.deptoLiving, FOTOS.deptoCocina, FOTOS.deptoDormi],
       status: "disponible",
       destacado: true,
       nuevo: false,
@@ -103,43 +139,38 @@ function seed() {
       titulo: "Casa 4 amb. con jardín y pileta",
       tipo: "casa",
       operacion: "venta",
-      direccion: "Los Aromos 450, Ituzaingó",
-      barrio: "Ituzaingó Norte",
-      zona: "GBA Oeste",
+      direccion: "Concepción Arenal 2140, CABA",
+      barrio: "Colegiales",
+      zona: "CABA",
       ambientes: 4,
       dormitorios: 3,
       banos: 2,
       superficie: 180,
       cubierta: 140,
-      precio: 185000,
+      precio: 340000,
       expensas: 0,
       antiguedad: 8,
       orientacion: "Noreste",
       piso: null,
       cochera: true,
       amenities: ["pileta", "parrilla", "jardin", "cochera"],
-      descripcion: "Espectacular casa en barrio residencial. Living-comedor amplio, cocina-comedor diaria, 3 dormitorios (suite con vestidor), 2 baños completos. Jardín con pileta y quincho con parrilla. Cochera para 2 autos. Ideal familia.",
-      imagenes: [
-        "https://images.unsplash.com/photo-1564013799919-ab600027ffc6?w=800&h=500&fit=crop",
-        "https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?w=800&h=500&fit=crop",
-        "https://images.unsplash.com/photo-1600585154340-be6161a56a0c?w=800&h=500&fit=crop",
-        "https://images.unsplash.com/photo-1600607687939-ce8a6c25118c?w=800&h=500&fit=crop"
-      ],
-      status: "reservada",
+      descripcion: "Casa en lote propio en Colegiales. Living-comedor, cocina-comedor diaria, 3 dormitorios (suite con vestidor) y 2 baños. Jardín con pileta y quincho. Cochera para 2 autos. Ideal familia.",
+      imagenes: [FOTOS.casaPileta, FOTOS.casaFachada, FOTOS.casaInterior, FOTOS.casaCocina],
+      status: "disponible",
       destacado: true,
       nuevo: false,
       vistas: 567,
       consultas: 28,
-      diasPublicada: 45,
-      precioM2Zona: 1200,
-      cliente: { nombre: "Carlos Méndez", tel: "11-5555-1234", desde: "3 sep" },
+      diasPublicada: 22,
+      precioM2Zona: 2100,
+      cliente: null,
       visitas: [
-        { fecha: "3 sep", cliente: "Carlos Méndez", nota: "Hizo seña. Esperando escribano." },
+        { fecha: "3 sep", cliente: "Carlos Méndez", nota: "Pidió segunda visita el fin de semana." },
         { fecha: "28 ago", cliente: "Laura Ríos", nota: "Le pareció grande." }
       ],
       history: [
-        { when: "3 sep", text: "Seña recibida. Reservada." },
-        { when: "28 ago", text: "Segunda visita." }
+        { when: "28 ago", text: "Segunda visita." },
+        { when: "12 ago", text: "Publicada en cartera." }
       ]
     },
     {
@@ -163,11 +194,8 @@ function seed() {
       piso: "3°",
       cochera: false,
       amenities: ["laundry", "seguridad"],
-      descripcion: "Monoambiente a estrenar en edificio con amenities. Ambiente principal con kitchenette integrada, baño completo. Ideal para inversión o primera vivienda. Excelente ubicación cerca de Plaza Dorrego.",
-      imagenes: [
-        "https://images.unsplash.com/photo-1522708323590-d24dbb6b0267?w=800&h=500&fit=crop",
-        "https://images.unsplash.com/photo-1502672023488-70e25813eb80?w=800&h=500&fit=crop"
-      ],
+      descripcion: "Monoambiente a estrenar en edificio con laundry y seguridad. Ambiente principal con kitchenette, baño completo. Cerca de Plaza Dorrego y de la estación Independencia.",
+      imagenes: [FOTOS.deptoStudio, FOTOS.deptoStudio2],
       status: "alquilada",
       destacado: false,
       nuevo: true,
@@ -196,19 +224,15 @@ function seed() {
       banos: 1,
       superficie: 95,
       cubierta: 75,
-      precio: 165000,
+      precio: 175000,
       expensas: 0,
       antiguedad: 60,
       orientacion: "Oeste",
       piso: "PB",
       cochera: false,
       amenities: ["terraza", "parrilla"],
-      descripcion: "Increíble PH totalmente reciclado con terraza propia de 20m². Living-comedor con doble altura, 2 dormitorios, baño completo, cocina equipada. Terraza con parrilla y vista despejada. Sin expensas. Barrio de moda.",
-      imagenes: [
-        "https://images.unsplash.com/photo-1600585154340-be6161a56a0c?w=800&h=500&fit=crop",
-        "https://images.unsplash.com/photo-1600573472550-8090b5e0745e?w=800&h=500&fit=crop",
-        "https://images.unsplash.com/photo-1600566753086-00f18fb6b3ea?w=800&h=500&fit=crop"
-      ],
+      descripcion: "PH reciclado con terraza propia de 20 m². Living-comedor con doble altura, 2 dormitorios, baño completo y cocina equipada. Terraza con parrilla. Sin expensas. A pasos de Serrano y del subte B.",
+      imagenes: [FOTOS.phInterior, FOTOS.phInterior2, FOTOS.phTerraza],
       status: "disponible",
       destacado: true,
       nuevo: false,
@@ -246,11 +270,8 @@ function seed() {
       piso: "PB",
       cochera: false,
       amenities: ["apto_profesional"],
-      descripcion: "Excelente local comercial sobre avenida principal. Gran vidriera, salón principal amplio, depósito y baño. Ideal para comercio, oficina o consultorio. Alto tránsito peatonal y vehicular. Apto todo rubro.",
-      imagenes: [
-        "https://images.unsplash.com/photo-1441986300917-64674bd600d8?w=800&h=500&fit=crop",
-        "https://images.unsplash.com/photo-1604328698692-f76ea9498e76?w=800&h=500&fit=crop"
-      ],
+      descripcion: "Local sobre avenida, con vidriera, salón, depósito y baño. Alto tránsito peatonal y vehicular, a metros del subte A (Primera Junta). Apto comercio, oficina o consultorio.",
+      imagenes: [FOTOS.local, FOTOS.local2],
       status: "disponible",
       destacado: false,
       nuevo: false,
@@ -266,49 +287,8 @@ function seed() {
     },
     {
       id: "p6",
-      codigo: "VTA-030",
-      titulo: "Terreno esquina 300m² en Pilar",
-      tipo: "terreno",
-      operacion: "venta",
-      direccion: "Ruta 8 km 42, Pilar",
-      barrio: "Pilar Centro",
-      zona: "GBA Norte",
-      ambientes: 0,
-      dormitorios: 0,
-      banos: 0,
-      superficie: 300,
-      cubierta: 0,
-      precio: 95000,
-      expensas: 0,
-      antiguedad: null,
-      orientacion: "Esquina NE",
-      piso: null,
-      cochera: false,
-      amenities: [],
-      descripcion: "Terreno en esquina con excelente ubicación comercial. Sobre ruta con alto tránsito. Ideal para desarrollo comercial o residencial. Todos los servicios. Escritura inmediata.",
-      imagenes: [
-        "https://images.unsplash.com/photo-1500382017468-9049fed747ef?w=800&h=500&fit=crop"
-      ],
-      status: "disponible",
-      destacado: false,
-      nuevo: false,
-      vistas: 89,
-      consultas: 4,
-      diasPublicada: 90,
-      precioM2Zona: 350,
-      cliente: null,
-      visitas: [
-        { fecha: "5 sep", cliente: "Inmobiliaria del Norte", nota: "Consulta por subdivisión." }
-      ],
-      history: [
-        { when: "5 sep", text: "Consulta de otra inmobiliaria." },
-        { when: "1 ago", text: "Publicado." }
-      ]
-    },
-    {
-      id: "p7",
       codigo: "ALQ-022",
-      titulo: "Oficina premium en torre de Belgrano",
+      titulo: "Oficina en torre de Belgrano",
       tipo: "oficina",
       operacion: "alquiler",
       direccion: "Av. del Libertador 6200, CABA",
@@ -326,11 +306,8 @@ function seed() {
       piso: "12°",
       cochera: true,
       amenities: ["seguridad", "cochera"],
-      descripcion: "Oficina de categoría en torre AAA. Recepción, 2 despachos privados, sala de reuniones, office y 2 baños. Vista panorámica al río. Cochera incluida. Edificio con seguridad 24hs y generador.",
-      imagenes: [
-        "https://images.unsplash.com/photo-1497366216548-37526070297c?w=800&h=500&fit=crop",
-        "https://images.unsplash.com/photo-1497366811353-6870744d04b2?w=800&h=500&fit=crop"
-      ],
+      descripcion: "Oficina en torre AAA. Recepción, 2 despachos, sala de reuniones, office y 2 baños. Vista al río. Cochera incluida. Seguridad 24 hs y grupo electrógeno.",
+      imagenes: [FOTOS.oficina, FOTOS.oficina2],
       status: "reservada",
       destacado: false,
       nuevo: false,
@@ -347,55 +324,13 @@ function seed() {
       ]
     },
     {
-      id: "p8",
-      codigo: "VTA-018",
-      titulo: "Dúplex 3 amb. con cochera en Vicente López",
-      tipo: "departamento",
-      operacion: "venta",
-      direccion: "Mendoza 2400, Vicente López",
-      barrio: "Vicente López",
-      zona: "GBA Norte",
-      ambientes: 3,
-      dormitorios: 2,
-      banos: 2,
-      superficie: 110,
-      cubierta: 95,
-      precio: 245000,
-      expensas: 95000,
-      antiguedad: 3,
-      orientacion: "Noroeste",
-      piso: "1° y 2°",
-      cochera: true,
-      amenities: ["pileta", "gimnasio", "cochera", "sum", "seguridad"],
-      descripcion: "Espectacular dúplex en complejo con amenities. Planta baja: living-comedor, cocina, toilette y patio. Planta alta: 2 dormitorios en suite, balcón terraza. Cochera cubierta. Pileta, gimnasio, SUM.",
-      imagenes: [
-        "https://images.unsplash.com/photo-1600607687939-ce8a6c25118c?w=800&h=500&fit=crop",
-        "https://images.unsplash.com/photo-1600566753190-17f0baa2a6c3?w=800&h=500&fit=crop",
-        "https://images.unsplash.com/photo-1600585154526-990dced4db0d?w=800&h=500&fit=crop"
-      ],
-      status: "vendida",
-      destacado: false,
-      nuevo: false,
-      vistas: 678,
-      consultas: 34,
-      diasPublicada: 75,
-      precioM2Zona: 2400,
-      cliente: { nombre: "Familia Domínguez", tel: "11-2222-7777", desde: "15 ago" },
-      visitas: [],
-      history: [
-        { when: "1 sep", text: "Escritura firmada." },
-        { when: "20 ago", text: "Boleto de compraventa." },
-        { when: "15 ago", text: "Seña recibida." }
-      ]
-    },
-    {
-      id: "p9",
+      id: "p7",
       codigo: "VTA-035",
       titulo: "Penthouse 4 amb. con terraza en Palermo",
       tipo: "departamento",
       operacion: "venta",
       direccion: "Honduras 5800, CABA",
-      barrio: "Palermo Hollywood",
+      barrio: "Palermo",
       zona: "CABA",
       ambientes: 4,
       dormitorios: 3,
@@ -409,13 +344,8 @@ function seed() {
       piso: "10°",
       cochera: true,
       amenities: ["terraza", "pileta", "gimnasio", "parrilla", "cochera", "seguridad", "sum"],
-      descripcion: "Espectacular penthouse en el corazón de Palermo Hollywood. Living-comedor de 40m², cocina con isla, 3 suites, family room. Terraza propia de 40m² con parrilla y jacuzzi. 2 cocheras. Edificio full amenities.",
-      imagenes: [
-        "https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?w=800&h=500&fit=crop",
-        "https://images.unsplash.com/photo-1600585154340-be6161a56a0c?w=800&h=500&fit=crop",
-        "https://images.unsplash.com/photo-1600607687644-c7171b42498f?w=800&h=500&fit=crop",
-        "https://images.unsplash.com/photo-1600566753086-00f18fb6b3ea?w=800&h=500&fit=crop"
-      ],
+      descripcion: "Penthouse en Palermo Hollywood. Living-comedor de 40 m², cocina con isla, 3 suites y family. Terraza propia de 40 m² con parrilla. 2 cocheras. Edificio con pileta, gym y SUM.",
+      imagenes: [FOTOS.deptoLujo, FOTOS.deptoLujo2, FOTOS.deptoLujo3],
       status: "disponible",
       destacado: true,
       nuevo: true,
@@ -430,9 +360,9 @@ function seed() {
       ]
     },
     {
-      id: "p10",
+      id: "p8",
       codigo: "ALQ-028",
-      titulo: "Depto 3 amb. vista al río en Puerto Madero",
+      titulo: "Depto 3 amb. con vista al río en Puerto Madero",
       tipo: "departamento",
       operacion: "alquiler",
       direccion: "Olga Cossettini 1500, CABA",
@@ -450,12 +380,8 @@ function seed() {
       piso: "18°",
       cochera: true,
       amenities: ["pileta", "gimnasio", "seguridad", "cochera", "sum", "laundry"],
-      descripcion: "Departamento de lujo con vista directa al río y reserva ecológica. Living-comedor con ventanales de piso a techo, cocina equipada, 2 dormitorios en suite. Amenities completos: pileta, gym, spa. Cochera incluida.",
-      imagenes: [
-        "https://images.unsplash.com/photo-1545324418-cc1a3fa10c00?w=800&h=500&fit=crop",
-        "https://images.unsplash.com/photo-1600607687920-4e2a09cf159d?w=800&h=500&fit=crop",
-        "https://images.unsplash.com/photo-1600566753376-12c8ab7fb75b?w=800&h=500&fit=crop"
-      ],
+      descripcion: "Departamento en torre de Puerto Madero, vista a la reserva y al río. Living con ventanales, cocina equipada y 2 dormitorios en suite. Pileta, gym y spa. Cochera incluida.",
+      imagenes: [FOTOS.deptoTorre, FOTOS.deptoLiving2, FOTOS.deptoLujo3],
       status: "disponible",
       destacado: true,
       nuevo: false,
@@ -470,9 +396,9 @@ function seed() {
       ]
     },
     {
-      id: "p11",
+      id: "p9",
       codigo: "VTA-040",
-      titulo: "Casa estilo inglés en Recoleta",
+      titulo: "Casa de estilo clásico en Recoleta",
       tipo: "casa",
       operacion: "venta",
       direccion: "Arenales 2100, CABA",
@@ -483,19 +409,15 @@ function seed() {
       banos: 4,
       superficie: 350,
       cubierta: 280,
-      precio: 980000,
+      precio: 890000,
       expensas: 0,
       antiguedad: 90,
       orientacion: "Norte",
       piso: null,
       cochera: true,
       amenities: ["jardin", "cochera", "terraza"],
-      descripcion: "Exclusiva casa de estilo inglés en el corazón de Recoleta. Hall de entrada, living con hogar, comedor formal, escritorio, 4 dormitorios (principal en suite), dependencia de servicio. Jardín interno, terraza y cochera para 2 autos.",
-      imagenes: [
-        "https://images.unsplash.com/photo-1600585154340-be6161a56a0c?w=800&h=500&fit=crop",
-        "https://images.unsplash.com/photo-1600210492486-724fe5c67fb0?w=800&h=500&fit=crop",
-        "https://images.unsplash.com/photo-1600585154526-990dced4db0d?w=800&h=500&fit=crop"
-      ],
+      descripcion: "Casa de estilo clásico en Recoleta. Hall, living con hogar, comedor, escritorio, 4 dormitorios (principal en suite) y dependencia. Jardín interno, terraza y cochera para 2 autos.",
+      imagenes: [FOTOS.casaInterior, FOTOS.casaClasica, FOTOS.casaJardin],
       status: "disponible",
       destacado: true,
       nuevo: false,
@@ -510,13 +432,13 @@ function seed() {
       ]
     },
     {
-      id: "p12",
+      id: "p10",
       codigo: "ALQ-030",
-      titulo: "Loft industrial en Palermo Soho",
+      titulo: "PH 2 amb. luminoso en Palermo Soho",
       tipo: "ph",
       operacion: "alquiler",
       direccion: "Armenia 1700, CABA",
-      barrio: "Palermo Soho",
+      barrio: "Palermo",
       zona: "CABA",
       ambientes: 2,
       dormitorios: 1,
@@ -530,11 +452,8 @@ function seed() {
       piso: "PB",
       cochera: false,
       amenities: ["apto_profesional"],
-      descripcion: "Espectacular loft estilo industrial con techos de 5 metros, vigas de madera a la vista y grandes ventanales. Ambiente integrado con entrepiso para dormitorio. Ideal para profesionales creativos. A pasos de Plaza Armenia.",
-      imagenes: [
-        "https://images.unsplash.com/photo-1600607687939-ce8a6c25118c?w=800&h=500&fit=crop",
-        "https://images.unsplash.com/photo-1600566752355-35792bedcfea?w=800&h=500&fit=crop"
-      ],
+      descripcion: "PH en planta baja cerca de Plaza Armenia. Living luminoso, dormitorio separado y baño completo. Apto profesional. Sin amenities de torre: es un PH de barrio.",
+      imagenes: [FOTOS.loft, FOTOS.loft2, FOTOS.loft3],
       status: "disponible",
       destacado: false,
       nuevo: true,
@@ -547,22 +466,96 @@ function seed() {
       history: [
         { when: "5 sep", text: "Nueva publicación." }
       ]
+    },
+    {
+      id: "p11",
+      codigo: "VTA-041",
+      titulo: "Departamento 3 amb. con cochera en Núñez",
+      tipo: "departamento",
+      operacion: "venta",
+      direccion: "Av. Cabildo 3700, CABA",
+      barrio: "Núñez",
+      zona: "CABA",
+      ambientes: 3,
+      dormitorios: 2,
+      banos: 2,
+      superficie: 78,
+      cubierta: 72,
+      precio: 198000,
+      expensas: 72000,
+      antiguedad: 6,
+      orientacion: "Noreste",
+      piso: "7°",
+      cochera: true,
+      amenities: ["cochera", "baulera", "laundry", "seguridad"],
+      descripcion: "3 ambientes en Núñez, frente a Cabildo. Living-comedor, 2 dormitorios (uno en suite), cocina independiente y baulera. Cochera cubierta. Cerca del subte D (Congreso de Tucumán).",
+      imagenes: [FOTOS.deptoLiving3, FOTOS.deptoCocina, FOTOS.deptoDormi],
+      status: "disponible",
+      destacado: false,
+      nuevo: false,
+      vistas: 198,
+      consultas: 9,
+      diasPublicada: 18,
+      precioM2Zona: 2400,
+      cliente: null,
+      visitas: [],
+      history: [
+        { when: "21 ago", text: "Publicado." }
+      ]
+    },
+    {
+      id: "p12",
+      codigo: "VTA-042",
+      titulo: "Casa 5 amb. con jardín en Villa Devoto",
+      tipo: "casa",
+      operacion: "venta",
+      direccion: "Av. San Martín 6400, CABA",
+      barrio: "Villa Devoto",
+      zona: "CABA",
+      ambientes: 5,
+      dormitorios: 3,
+      banos: 3,
+      superficie: 220,
+      cubierta: 170,
+      precio: 265000,
+      expensas: 0,
+      antiguedad: 12,
+      orientacion: "Norte",
+      piso: null,
+      cochera: true,
+      amenities: ["jardin", "parrilla", "cochera"],
+      descripcion: "Casa en Villa Devoto, lote propio. Living, comedor, cocina, 3 dormitorios y 3 baños. Jardín posterior con parrilla. Cochera. Zona de casas bajas, cerca de Plaza Arenales.",
+      imagenes: [FOTOS.casaNoche, FOTOS.casaJardin, FOTOS.casaCocina],
+      status: "disponible",
+      destacado: false,
+      nuevo: true,
+      vistas: 276,
+      consultas: 14,
+      diasPublicada: 9,
+      precioM2Zona: 1300,
+      cliente: null,
+      visitas: [],
+      history: [
+        { when: "30 ago", text: "Captada y publicada." }
+      ]
     }
   ];
 }
 
+const STORAGE_KEY = "inmobiliaria-demo-v2";
+
 function load() {
-  const raw = localStorage.getItem("inmobiliaria-demo-v1");
+  const raw = localStorage.getItem(STORAGE_KEY);
   if (!raw) {
     const data = seed();
-    localStorage.setItem("inmobiliaria-demo-v1", JSON.stringify(data));
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
     return data;
   }
   return JSON.parse(raw);
 }
 
 function save(items) {
-  localStorage.setItem("inmobiliaria-demo-v1", JSON.stringify(items));
+  localStorage.setItem(STORAGE_KEY, JSON.stringify(items));
 }
 
 function label(status) {
