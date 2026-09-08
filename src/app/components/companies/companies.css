@@ -3,7 +3,7 @@
 }
 
 .logo-well[data-well='neutral'] {
-  @apply bg-white dark:bg-[#0B1220] px-4 ring-1 ring-inset ring-gray-200/90 dark:ring-white/10;
+  @apply bg-surface dark:bg-surface-dark px-4 ring-1 ring-inset ring-line/90 dark:ring-white/10;
 }
 
 .logo-well[data-well='indra'] {
@@ -12,5 +12,5 @@
 }
 
 .logo-well[data-well='siskit'] {
-  @apply bg-[#F8FAFC] px-8 py-4 ring-1 ring-inset ring-black/10 shadow-sm;
+  @apply bg-sand px-8 py-4 ring-1 ring-inset ring-black/10 shadow-sm;
 }

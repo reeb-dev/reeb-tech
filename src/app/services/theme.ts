@@ -11,11 +11,16 @@ export class ThemeService {
   }
 
   private getInitialTheme(): boolean {
-    if (typeof window !== 'undefined') {
+    if (typeof window === 'undefined') {
+      return false;
+    }
+    if (typeof localStorage !== 'undefined') {
       const saved = localStorage.getItem('theme-mode');
       if (saved !== null) {
         return saved === 'dark';
       }
+    }
+    if (typeof window.matchMedia === 'function') {
       return window.matchMedia('(prefers-color-scheme: dark)').matches;
     }
     return false;

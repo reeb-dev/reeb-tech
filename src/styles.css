@@ -12,18 +12,22 @@ html {
 }
 
 body {
-  @apply bg-white dark:bg-dark text-gray-900 dark:text-[#E5E7EB] transition-colors duration-300;
+  @apply bg-cream dark:bg-dark text-ink dark:text-ink-dark transition-colors duration-300;
   font-family: 'Inter', system-ui, sans-serif;
 }
 
 /* Custom utility classes */
 @layer components {
   .btn-primary {
-    @apply px-6 py-2 bg-[#0891B2] dark:bg-[#22D3EE] hover:bg-[#0E7490] dark:hover:bg-[#06B6D4] text-white rounded-lg font-medium transition-all duration-200 shadow-md hover:shadow-lg hover:scale-105;
+    @apply px-6 py-2 bg-brand hover:bg-brand-hover text-white rounded-lg font-medium transition-all duration-200 shadow-md hover:shadow-lg hover:scale-105;
   }
 
   .btn-secondary {
-    @apply px-6 py-2 border-2 border-[#E2E8F0] dark:border-[#1E293B] text-[#020617] dark:text-[#E5E7EB] rounded-lg font-medium hover:bg-[#F8FAFC] dark:hover:bg-[#020617] hover:border-[#0891B2] dark:hover:border-[#22D3EE] transition-all duration-200;
+    @apply px-6 py-2 border-2 border-line dark:border-line-dark text-ink dark:text-ink-dark rounded-lg font-medium hover:bg-sand dark:hover:bg-dark-alt hover:border-brand dark:hover:border-brand-dark transition-all duration-200;
+  }
+
+  .btn-accent {
+    @apply bg-brand hover:bg-brand-hover text-white font-semibold rounded-lg transition-all duration-200 shadow-md hover:shadow-lg;
   }
 
   .section-padding {
@@ -47,6 +51,14 @@ body {
   }
 
   .text-muted {
-    @apply text-gray-600 dark:text-gray-400;
+    @apply text-subtle dark:text-subtle-dark;
+  }
+
+  .link-accent {
+    @apply text-brand dark:text-brand-dark font-medium hover:underline;
+  }
+
+  .chip-accent {
+    @apply text-xs font-mono text-brand dark:text-brand-dark bg-brand/10 px-2 py-1 rounded;
   }
 }

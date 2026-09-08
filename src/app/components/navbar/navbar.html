@@ -1,28 +1,28 @@
-<nav class="fixed w-full top-0 z-50 bg-white dark:bg-dark border-b border-[#E2E8F0] dark:border-[#1E293B] backdrop-blur-md bg-opacity-95 dark:bg-opacity-95 transition-colors duration-300">
+<nav class="fixed w-full top-0 z-50 bg-cream/95 dark:bg-dark border-b border-line dark:border-line-dark backdrop-blur-md bg-opacity-95 dark:bg-opacity-95 transition-colors duration-300">
   <div class="container-custom py-4 flex items-center gap-4">
     <a href="#hero" class="flex items-center gap-4 group shrink-0">
       <div class="font-brand font-semibold text-4xl tracking-wider transition-colors duration-300" style="letter-spacing: 0.04em;">
-        <span class="text-[#020617] dark:text-white">REEB</span><span class="text-[#3B82F6]">.</span>
+        <span class="text-ink dark:text-white">REEB</span><span class="text-brand dark:text-brand-dark">.</span>
       </div>
     </a>
 
     <div class="hidden md:flex items-center gap-5 lg:gap-7 mr-auto">
-      <a href="#experiencia" class="text-sm font-medium text-[#475569] dark:text-[#94A3B8] hover:text-[#3B82F6] dark:hover:text-[#3B82F6] transition-colors">
+      <a href="#experiencia" class="text-sm font-medium text-subtle dark:text-subtle-dark hover:text-brand dark:hover:text-brand-dark transition-colors">
         {{ i18n.t().nav.experience }}
       </a>
-      <a href="#stack" class="text-sm font-medium text-[#475569] dark:text-[#94A3B8] hover:text-[#3B82F6] dark:hover:text-[#3B82F6] transition-colors">
+      <a href="#stack" class="text-sm font-medium text-subtle dark:text-subtle-dark hover:text-brand dark:hover:text-brand-dark transition-colors">
         {{ i18n.t().nav.stack }}
       </a>
-      <a href="#certificados" class="text-sm font-medium text-[#475569] dark:text-[#94A3B8] hover:text-[#3B82F6] dark:hover:text-[#3B82F6] transition-colors">
+      <a href="#certificados" class="text-sm font-medium text-subtle dark:text-subtle-dark hover:text-brand dark:hover:text-brand-dark transition-colors">
         {{ i18n.t().nav.certificates }}
       </a>
-      <a href="#about" class="text-sm font-medium text-[#475569] dark:text-[#94A3B8] hover:text-[#3B82F6] dark:hover:text-[#3B82F6] transition-colors">
+      <a href="#about" class="text-sm font-medium text-subtle dark:text-subtle-dark hover:text-brand dark:hover:text-brand-dark transition-colors">
         {{ i18n.t().nav.about }}
       </a>
-      <a href="#services" class="text-sm font-medium text-[#475569] dark:text-[#94A3B8] hover:text-[#3B82F6] dark:hover:text-[#3B82F6] transition-colors">
+      <a href="#services" class="text-sm font-medium text-subtle dark:text-subtle-dark hover:text-brand dark:hover:text-brand-dark transition-colors">
         {{ i18n.t().nav.services }}
       </a>
-      <a href="demos/" class="text-sm font-medium text-[#475569] dark:text-[#94A3B8] hover:text-[#3B82F6] dark:hover:text-[#3B82F6] transition-colors">
+      <a href="demos/" class="text-sm font-medium text-subtle dark:text-subtle-dark hover:text-brand dark:hover:text-brand-dark transition-colors">
         {{ i18n.t().nav.demos }}
       </a>
     </div>
@@ -30,7 +30,7 @@
     <div class="hidden md:flex items-center gap-1.5">
       <a
         href="mailto:manuelreeb@icloud.com"
-        class="p-2 rounded-lg text-[#475569] dark:text-[#94A3B8] hover:text-[#3B82F6] dark:hover:text-[#3B82F6] hover:bg-[#F8FAFC] dark:hover:bg-[#1E293B] transition-colors"
+        class="p-2 rounded-lg text-subtle dark:text-subtle-dark hover:text-brand dark:hover:text-brand-dark hover:bg-sand dark:hover:bg-line-dark transition-colors"
         aria-label="Email"
       >
         <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
@@ -41,7 +41,7 @@
         href="https://github.com/reeb-dev"
         target="_blank"
         rel="noopener"
-        class="p-2 rounded-lg text-[#475569] dark:text-[#94A3B8] hover:text-[#3B82F6] dark:hover:text-[#3B82F6] hover:bg-[#F8FAFC] dark:hover:bg-[#1E293B] transition-colors"
+        class="p-2 rounded-lg text-subtle dark:text-subtle-dark hover:text-brand dark:hover:text-brand-dark hover:bg-sand dark:hover:bg-line-dark transition-colors"
         aria-label="GitHub"
       >
         <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true">
@@ -52,7 +52,7 @@
         href="https://www.linkedin.com/in/manuel-jesus-reeb/"
         target="_blank"
         rel="noopener"
-        class="p-2 rounded-lg text-[#475569] dark:text-[#94A3B8] hover:text-[#3B82F6] dark:hover:text-[#3B82F6] hover:bg-[#F8FAFC] dark:hover:bg-[#1E293B] transition-colors"
+        class="p-2 rounded-lg text-subtle dark:text-subtle-dark hover:text-brand dark:hover:text-brand-dark hover:bg-sand dark:hover:bg-line-dark transition-colors"
         aria-label="LinkedIn"
       >
         <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true">
@@ -60,31 +60,31 @@
         </svg>
       </a>
 
-      <div class="w-px h-6 mx-1 bg-[#E2E8F0] dark:bg-[#1E293B]"></div>
+      <div class="w-px h-6 mx-1 bg-sand dark:bg-line-dark"></div>
 
       <div class="flex items-center text-xs font-semibold tracking-wide">
         <button
           type="button"
           (click)="setLang('es')"
           class="px-1.5 py-1 rounded transition-colors"
-          [class.text-[#3B82F6]]="i18n.lang() === 'es'"
-          [class.text-[#94A3B8]]="i18n.lang() !== 'es'"
+          [class.text-brand]="i18n.lang() === 'es'"
+          [class.text-subtle]="i18n.lang() !== 'es'"
           [attr.aria-pressed]="i18n.lang() === 'es'"
         >ES</button>
-        <span class="text-[#CBD5E1]">/</span>
+        <span class="text-subtle">/</span>
         <button
           type="button"
           (click)="setLang('en')"
           class="px-1.5 py-1 rounded transition-colors"
-          [class.text-[#3B82F6]]="i18n.lang() === 'en'"
-          [class.text-[#94A3B8]]="i18n.lang() !== 'en'"
+          [class.text-brand]="i18n.lang() === 'en'"
+          [class.text-subtle]="i18n.lang() !== 'en'"
           [attr.aria-pressed]="i18n.lang() === 'en'"
         >EN</button>
       </div>
 
       <button
         (click)="toggleTheme()"
-        class="p-2 rounded-lg bg-[#F8FAFC] dark:bg-[#020617] hover:bg-[#E2E8F0] dark:hover:bg-[#1E293B] border border-[#E2E8F0] dark:border-[#1E293B] transition-colors"
+        class="p-2 rounded-lg bg-sand dark:bg-dark-alt hover:bg-line dark:hover:bg-line-dark border border-line dark:border-line-dark transition-colors"
         [attr.aria-label]="themeService.isDarkMode() ? i18n.t().nav.themeLight : i18n.t().nav.themeDark"
       >
         <span *ngIf="!themeService.isDarkMode()" class="text-xl">🌙</span>
@@ -98,28 +98,28 @@
           type="button"
           (click)="setLang('es')"
           class="px-1 py-1"
-          [class.text-[#3B82F6]]="i18n.lang() === 'es'"
-          [class.text-[#94A3B8]]="i18n.lang() !== 'es'"
+          [class.text-brand]="i18n.lang() === 'es'"
+          [class.text-subtle]="i18n.lang() !== 'es'"
         >ES</button>
-        <span class="text-[#CBD5E1]">/</span>
+        <span class="text-subtle">/</span>
         <button
           type="button"
           (click)="setLang('en')"
           class="px-1 py-1"
-          [class.text-[#3B82F6]]="i18n.lang() === 'en'"
-          [class.text-[#94A3B8]]="i18n.lang() !== 'en'"
+          [class.text-brand]="i18n.lang() === 'en'"
+          [class.text-subtle]="i18n.lang() !== 'en'"
         >EN</button>
       </div>
       <button
         (click)="toggleTheme()"
-        class="p-2 rounded-lg bg-[#F8FAFC] dark:bg-[#020617] hover:bg-[#E2E8F0] dark:hover:bg-[#1E293B] border border-[#E2E8F0] dark:border-[#1E293B] transition-colors"
+        class="p-2 rounded-lg bg-sand dark:bg-dark-alt hover:bg-line dark:hover:bg-line-dark border border-line dark:border-line-dark transition-colors"
       >
         <span *ngIf="!themeService.isDarkMode()" class="text-xl">🌙</span>
         <span *ngIf="themeService.isDarkMode()" class="text-xl">☀️</span>
       </button>
       <button
         (click)="toggleMobileMenu()"
-        class="p-2 rounded-lg bg-[#F8FAFC] dark:bg-[#020617] hover:bg-[#E2E8F0] dark:hover:bg-[#1E293B] border border-[#E2E8F0] dark:border-[#1E293B] transition-colors"
+        class="p-2 rounded-lg bg-sand dark:bg-dark-alt hover:bg-line dark:hover:bg-line-dark border border-line dark:border-line-dark transition-colors"
       >
         <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
           <path *ngIf="!isMobileMenuOpen" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
@@ -129,35 +129,35 @@
     </div>
   </div>
 
-  <div *ngIf="isMobileMenuOpen" class="md:hidden border-t border-[#E2E8F0] dark:border-[#1E293B] bg-white dark:bg-[#020617]">
+  <div *ngIf="isMobileMenuOpen" class="md:hidden border-t border-line dark:border-line-dark bg-surface dark:bg-surface-dark">
     <div class="container-custom py-4 space-y-4">
-      <a href="#experiencia" (click)="isMobileMenuOpen = false" class="block text-sm font-medium text-[#475569] dark:text-[#94A3B8] hover:text-[#3B82F6] dark:hover:text-[#3B82F6] transition-colors">
+      <a href="#experiencia" (click)="isMobileMenuOpen = false" class="block text-sm font-medium text-subtle dark:text-subtle-dark hover:text-brand dark:hover:text-brand-dark transition-colors">
         {{ i18n.t().nav.experience }}
       </a>
-      <a href="#stack" (click)="isMobileMenuOpen = false" class="block text-sm font-medium text-[#475569] dark:text-[#94A3B8] hover:text-[#3B82F6] dark:hover:text-[#3B82F6] transition-colors">
+      <a href="#stack" (click)="isMobileMenuOpen = false" class="block text-sm font-medium text-subtle dark:text-subtle-dark hover:text-brand dark:hover:text-brand-dark transition-colors">
         {{ i18n.t().nav.stack }}
       </a>
-      <a href="#certificados" (click)="isMobileMenuOpen = false" class="block text-sm font-medium text-[#475569] dark:text-[#94A3B8] hover:text-[#3B82F6] dark:hover:text-[#3B82F6] transition-colors">
+      <a href="#certificados" (click)="isMobileMenuOpen = false" class="block text-sm font-medium text-subtle dark:text-subtle-dark hover:text-brand dark:hover:text-brand-dark transition-colors">
         {{ i18n.t().nav.certificates }}
       </a>
-      <a href="#about" (click)="isMobileMenuOpen = false" class="block text-sm font-medium text-[#475569] dark:text-[#94A3B8] hover:text-[#3B82F6] dark:hover:text-[#3B82F6] transition-colors">
+      <a href="#about" (click)="isMobileMenuOpen = false" class="block text-sm font-medium text-subtle dark:text-subtle-dark hover:text-brand dark:hover:text-brand-dark transition-colors">
         {{ i18n.t().nav.about }}
       </a>
-      <a href="#services" (click)="isMobileMenuOpen = false" class="block text-sm font-medium text-[#475569] dark:text-[#94A3B8] hover:text-[#3B82F6] dark:hover:text-[#3B82F6] transition-colors">
+      <a href="#services" (click)="isMobileMenuOpen = false" class="block text-sm font-medium text-subtle dark:text-subtle-dark hover:text-brand dark:hover:text-brand-dark transition-colors">
         {{ i18n.t().nav.services }}
       </a>
-      <a href="demos/" (click)="isMobileMenuOpen = false" class="block text-sm font-medium text-[#475569] dark:text-[#94A3B8] hover:text-[#3B82F6] dark:hover:text-[#3B82F6] transition-colors">
+      <a href="demos/" (click)="isMobileMenuOpen = false" class="block text-sm font-medium text-subtle dark:text-subtle-dark hover:text-brand dark:hover:text-brand-dark transition-colors">
         {{ i18n.t().nav.demos }}
       </a>
 
-      <div class="pt-4 border-t border-[#E2E8F0] dark:border-[#1E293B] space-y-4">
-        <a href="mailto:manuelreeb@icloud.com" class="block text-sm font-medium text-[#475569] dark:text-[#94A3B8] hover:text-[#3B82F6] dark:hover:text-[#3B82F6] transition-colors">
+      <div class="pt-4 border-t border-line dark:border-line-dark space-y-4">
+        <a href="mailto:manuelreeb@icloud.com" class="block text-sm font-medium text-subtle dark:text-subtle-dark hover:text-brand dark:hover:text-brand-dark transition-colors">
           Email
         </a>
-        <a href="https://github.com/reeb-dev" target="_blank" class="block text-sm font-medium text-[#475569] dark:text-[#94A3B8] hover:text-[#3B82F6] dark:hover:text-[#3B82F6] transition-colors">
+        <a href="https://github.com/reeb-dev" target="_blank" class="block text-sm font-medium text-subtle dark:text-subtle-dark hover:text-brand dark:hover:text-brand-dark transition-colors">
           GitHub
         </a>
-        <a href="https://www.linkedin.com/in/manuel-jesus-reeb/" target="_blank" class="block text-sm font-medium text-[#475569] dark:text-[#94A3B8] hover:text-[#3B82F6] dark:hover:text-[#3B82F6] transition-colors">
+        <a href="https://www.linkedin.com/in/manuel-jesus-reeb/" target="_blank" class="block text-sm font-medium text-subtle dark:text-subtle-dark hover:text-brand dark:hover:text-brand-dark transition-colors">
           LinkedIn
         </a>
       </div>

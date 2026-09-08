@@ -6,55 +6,76 @@ module.exports = {
   theme: {
     extend: {
       colors: {
-        // 🌑 Modo Dark - Cian Técnico
-        'dark': '#020617',            // BG principal
-        'dark-secondary': '#020617',  // Superficies y cards
-        'dark-tertiary': '#1E293B',   // Bordes y divisores
-        
-        // ☀️ Modo Light - Limpio y profesional
-        'light': '#FFFFFF',           // BG principal
-        'light-secondary': '#F8FAFC', // Superficies y cards
-        'light-tertiary': '#E2E8F0',  // Bordes
-        
-        // Sistema de textos
-        'text-primary-dark': '#E5E7EB',    // Texto principal en dark
-        'text-secondary-dark': '#94A3B8',  // Texto muted en dark
-        'text-primary-light': '#020617',   // Texto principal en light
-        'text-secondary-light': '#475569', // Texto muted en light
-        
-        // Acento Cian Técnico - La personalidad controlada
-        'accent': {
-          DEFAULT: '#22D3EE',  // Dark mode accent
-          'light': '#0891B2',  // Light mode accent
-          'hover': '#06B6D4',  // Hover state
+        dark: '#1A1714',
+        'dark-alt': '#141210',
+        'dark-secondary': '#221E1B',
+        'dark-tertiary': '#3F3832',
+
+        light: '#F7F3EE',
+        'light-secondary': '#FFFCF8',
+        'light-tertiary': '#E4D9CC',
+
+        cream: '#F7F3EE',
+        sand: '#EFE8DF',
+        surface: {
+          DEFAULT: '#FFFCF8',
+          dark: '#221E1B',
         },
-        
-        // Paleta bronze actualizada con cian
-        'bronze': {
-          50: '#F8FAFC',
-          100: '#F1F5F9',
-          200: '#E2E8F0',
-          300: '#CBD5E1',
-          400: '#94A3B8',
-          500: '#22D3EE',
-          600: '#0891B2',
-          700: '#0E7490',
-          800: '#155E75',
-          900: '#164E63',
+        ink: {
+          DEFAULT: '#1C1917',
+          dark: '#F5F0EA',
         },
-        
-        // Gold reemplazado por tonos cian
-        'gold': {
-          50: '#ECFEFF',
-          100: '#CFFAFE',
-          200: '#A5F3FC',
-          300: '#67E8F9',
-          400: '#22D3EE',
-          500: '#06B6D4',
-          600: '#0891B2',
-          700: '#0E7490',
-          800: '#155E75',
-          900: '#164E63',
+        subtle: {
+          DEFAULT: '#57534E',
+          dark: '#C4B8AD',
+        },
+        line: {
+          DEFAULT: '#E4D9CC',
+          dark: '#3F3832',
+        },
+        brand: {
+          DEFAULT: '#0F6B63',
+          hover: '#0B4F4A',
+          dark: '#5EC8BC',
+          'dark-hover': '#7DD8CE',
+          soft: '#D7EDEB',
+        },
+
+        'text-primary-dark': '#F5F0EA',
+        'text-secondary-dark': '#C4B8AD',
+        'text-primary-light': '#1C1917',
+        'text-secondary-light': '#57534E',
+
+        accent: {
+          DEFAULT: '#5EC8BC',
+          light: '#0F6B63',
+          hover: '#0B4F4A',
+        },
+
+        bronze: {
+          50: '#F7F3EE',
+          100: '#EFE8DF',
+          200: '#E4D9CC',
+          300: '#D2C4B4',
+          400: '#A89888',
+          500: '#0F6B63',
+          600: '#0F6B63',
+          700: '#0B4F4A',
+          800: '#0A3F3B',
+          900: '#1A1714',
+        },
+
+        gold: {
+          50: '#F7F3EE',
+          100: '#EFE8DF',
+          200: '#E4D9CC',
+          300: '#C4B8AD',
+          400: '#5EC8BC',
+          500: '#2A9D8F',
+          600: '#0F6B63',
+          700: '#0B4F4A',
+          800: '#0A3F3B',
+          900: '#1A1714',
         },
       },
       fontFamily: {

@@ -26,7 +26,7 @@ export class I18nService {
   }
 
   private getInitialLang(): Lang {
-    if (typeof window === 'undefined') {
+    if (typeof window === 'undefined' || typeof localStorage === 'undefined') {
       return 'es';
     }
     const saved = localStorage.getItem(STORAGE_KEY);

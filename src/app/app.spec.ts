@@ -27,28 +27,32 @@ describe('App', () => {
     const compiled = fixture.nativeElement as HTMLElement;
     const catalog = compiled.querySelector('#demos a[href="demos/"]');
     expect(catalog).toBeTruthy();
+    expect(compiled.querySelector('nav a[href="demos/"]')?.textContent).toMatch(
+      /Ejemplos de sistemas|Business demos/
+    );
     expect(compiled.querySelector('#demos')?.textContent).toMatch(/comercios|shops/i);
     expect(compiled.querySelector('#demos')?.textContent).toMatch(/conviene tener una web|website is worth it/i);
     expect(compiled.querySelector('#demos')?.textContent).toMatch(/aplicaciones móviles|Mobile apps as well/i);
-    expect(compiled.querySelector('#demos #precios')?.textContent).toMatch(/Presencia|Presence/);
-    expect(compiled.querySelector('#demos #precios')?.textContent).toMatch(/USD 350/);
-    expect(compiled.querySelector('#demos #precios')?.textContent).toMatch(/conversable|negotiable/i);
-    expect(compiled.querySelector('#demos #precios')?.textContent).toMatch(/1–2 semanas|1–2 weeks/);
-    expect(compiled.querySelector('#demos #precios')?.textContent).toMatch(/ARCA en producción|Production ARCA/);
-    expect(compiled.querySelector('#demos #precios')?.textContent).toMatch(/no carga stock|do not load stock/i);
-    expect(compiled.querySelector('#demos #precios')?.textContent).toMatch(/alquiler del local|renting a shop/i);
-    expect(compiled.querySelector('#demos #precios')?.textContent).not.toMatch(/Capacitación|Training/);
-    expect(compiled.querySelector('#demos #precios')?.textContent).toMatch(/GitHub Pages/);
-    expect(compiled.querySelector('#demos #precios')?.textContent).toMatch(/USD 8–15/);
-    expect(compiled.querySelector('#demos #precios')?.textContent).toMatch(/Cobros en línea|Online collections/);
-    expect(compiled.querySelector('#demos #precios')?.textContent).toMatch(/USD 200/);
-    expect(compiled.querySelector('#demos #precios')?.textContent).toMatch(/Mercado Pago/);
-    expect(compiled.querySelector('#demos #precios')?.textContent).toMatch(/pasarela|payment gateway/i);
-    expect(compiled.querySelector('#demos #precios')?.textContent).toMatch(/A cotizar|To be quoted/);
-    expect(compiled.querySelector('#demos #precios')?.textContent).toMatch(/según el caso|quoted for the case/);
-    expect(compiled.querySelector('#demos #precios')?.textContent).toMatch(/no está incluido en el piso|not included in the USD 700 floor/);
-    expect(compiled.querySelector('#demos #precios a[href^="https://wa.me/5492915757934"]')).toBeTruthy();
-    expect(compiled.querySelector('#demos #precios a[href="mailto:manuelreeb@icloud.com"]')).toBeTruthy();
+    expect(compiled.querySelector('#demos #precios')).toBeNull();
+    expect(compiled.querySelector('#demos a[href="demos/#precios"]')).toBeTruthy();
+  });
+
+  it('should explain demo systems with an honest capability table', async () => {
+    const fixture = TestBed.createComponent(AppComponent);
+    await fixture.whenStable();
+    const compiled = fixture.nativeElement as HTMLElement;
+    const sistemas = compiled.querySelector('#demos #sistemas');
+    expect(sistemas).toBeTruthy();
+    expect(sistemas?.textContent).toMatch(/según su rubro|by trade/i);
+    expect(sistemas?.textContent).toMatch(/todo incluido|everything included/i);
+    expect(sistemas?.textContent).toMatch(/Kiosco \/ almacén|Kiosk \/ grocer/);
+    expect(sistemas?.textContent).toMatch(/No es lo habitual|Not the usual need/);
+    expect(sistemas?.textContent).toMatch(/expedientes no salen|Case files do not go/i);
+    expect(sistemas?.textContent).toMatch(/Visitas: las ve el panel|Viewings: the panel sees them/);
+    expect(sistemas?.textContent).toMatch(/precios en pesos|prices in Argentine pesos/);
+    expect(sistemas?.querySelector('a[href="demos/#sistemas"]')).toBeTruthy();
+    expect(sistemas?.querySelector('a[href="demos/#precios"]')).toBeTruthy();
+    expect(compiled.querySelector('#demos #precios')).toBeNull();
   });
 
   it('should link the demos catalog from contact', async () => {
@@ -59,6 +63,9 @@ describe('App', () => {
     expect(contact).toBeTruthy();
     const catalog = contact?.querySelector('a[href="demos/"]');
     expect(catalog).toBeTruthy();
-    expect(catalog?.textContent).toMatch(/Ver demos|See demos/);
+    expect(catalog?.textContent).toMatch(/Ver ejemplos de sistemas|See business demos/);
+    expect(contact?.querySelector('a[href="https://wa.me/5492915757934"]')).toBeTruthy();
+    expect(contact?.textContent).toMatch(/\+54 9 2915 75-7934/);
+    expect(contact?.querySelector('a[href="mailto:manuelreeb@icloud.com"]')).toBeTruthy();
   });
 });

@@ -1,16 +1,16 @@
-<section id="experiencia" class="section-padding bg-white dark:bg-dark-secondary border-b border-gray-200 dark:border-dark transition-colors duration-300">
+<section id="experiencia" class="section-padding bg-cream dark:bg-dark-secondary border-b border-line dark:border-line-dark transition-colors duration-300">
   <div class="container-custom">
     <div class="max-w-2xl mx-auto text-center mb-16">
       <h2 class="heading-lg mb-4 text-gray-900 dark:text-white">
         {{ i18n.t().companies.title }}
       </h2>
-      <p class="text-lg text-text-muted">
+      <p class="text-lg text-muted">
         {{ i18n.t().companies.subtitle }}
       </p>
     </div>
 
     <div class="flex flex-wrap justify-center gap-8">
-      <div *ngFor="let company of i18n.t().companies.items" class="group p-8 rounded-xl border border-gray-200 dark:border-gray-700 hover:border-[#3B82F6] dark:hover:border-[#3B82F6] hover:shadow-lg dark:hover:shadow-none transition-all duration-300 bg-gradient-to-br from-gray-50 to-white dark:from-dark dark:to-dark-secondary w-full md:w-80">
+      <div *ngFor="let company of i18n.t().companies.items" class="group p-8 rounded-xl border border-line dark:border-line-dark hover:border-brand dark:hover:border-brand-dark hover:shadow-lg dark:hover:shadow-none transition-all duration-300 bg-gradient-to-br from-sand to-surface dark:from-dark dark:to-dark-secondary w-full md:w-80">
         <div
           class="logo-well group-hover:scale-105 transition-transform duration-300"
           [attr.data-well]="logoWell(company)"
@@ -36,18 +36,18 @@
 
         <div class="space-y-3">
           <h3 class="text-xl font-bold text-gray-900 dark:text-white">{{ company.name }}</h3>
-          <p class="text-sm font-medium text-gray-600 dark:text-gray-400">{{ company.role }}</p>
-          <p class="text-sm font-semibold text-[#3B82F6]">
+          <p class="text-sm font-medium text-subtle dark:text-subtle-dark">{{ company.role }}</p>
+          <p class="text-sm font-semibold text-brand dark:text-brand-dark">
             {{ company.years }}
           </p>
-          <p class="text-sm text-gray-600 dark:text-gray-400 leading-relaxed">
+          <p class="text-sm text-subtle dark:text-subtle-dark leading-relaxed">
             {{ company.description }}
           </p>
         </div>
 
-        <div class="mt-6 pt-6 border-t border-gray-200 dark:border-gray-700">
+        <div class="mt-6 pt-6 border-t border-line dark:border-line-dark">
           <span
-            class="inline-block px-3 py-1 bg-accent-100 dark:bg-accent-900 dark:bg-opacity-30 text-accent-700 dark:text-[#22D3EE] text-xs font-semibold rounded-full"
+            class="inline-block px-3 py-1 bg-brand/10 text-brand dark:text-brand-dark text-xs font-semibold rounded-full"
           >
             {{ company.current ? i18n.t().companies.current : i18n.t().companies.past }}
           </span>

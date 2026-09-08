@@ -1,14 +1,14 @@
-<section id="stack" class="py-24 bg-white dark:bg-[#0A0A0B] transition-colors duration-300">
+<section id="stack" class="py-24 bg-surface dark:bg-surface-dark transition-colors duration-300">
   <div class="container-custom">
     <div class="max-w-2xl mx-auto text-center mb-16">
       <h2 class="heading-lg mb-4 text-gray-900 dark:text-white">{{ i18n.t().stack.title }}</h2>
-      <p class="text-lg text-[#94A3B8]">
+      <p class="text-lg text-subtle dark:text-subtle-dark">
         {{ i18n.t().stack.subtitle }}
       </p>
     </div>
 
     <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
-      <div *ngFor="let category of i18n.t().stack.categories" class="p-8 rounded-xl border border-[#E5E7EB] dark:border-[#1E293B] hover:border-[#3B82F6] dark:hover:border-[#3B82F6] transition-colors duration-200 bg-white dark:bg-[#020617]">
+      <div *ngFor="let category of i18n.t().stack.categories" class="p-8 rounded-xl border border-line dark:border-line-dark hover:border-brand dark:hover:border-brand-dark transition-colors duration-200 bg-surface dark:bg-surface-dark">
         <div class="flex items-center gap-3 mb-6">
           <img
             [src]="category.icon"
@@ -18,7 +18,7 @@
           <h3 class="text-xl font-semibold text-gray-900 dark:text-white">{{ category.name }}</h3>
         </div>
         <div class="flex flex-wrap gap-2">
-          <span *ngFor="let tech of category.technologies" class="inline-flex items-center gap-2 px-3 py-1.5 bg-gray-100 dark:bg-[#1E293B] text-[#475569] dark:text-[#94A3B8] text-sm rounded-full font-medium">
+          <span *ngFor="let tech of category.technologies" class="inline-flex items-center gap-2 px-3 py-1.5 bg-sand dark:bg-line-dark text-subtle dark:text-subtle-dark text-sm rounded-full font-medium">
             <img
               *ngIf="logoFor(tech)"
               [src]="logoFor(tech)"

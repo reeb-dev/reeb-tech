@@ -1,12 +1,12 @@
-<section id="about" class="py-24 bg-white dark:bg-[#0A0A0B]">
+<section id="about" class="py-24 bg-surface dark:bg-surface-dark">
   <div class="container-custom">
     <div class="max-w-3xl">
       <h2 class="text-3xl font-bold text-gray-900 dark:text-white mb-8 tracking-tight flex items-baseline gap-3">
         <span>{{ i18n.t().about.title }}</span>
-        <span class="font-brand font-semibold text-4xl tracking-wider" style="letter-spacing: 0.04em;"><span class="text-gray-900 dark:text-white">REEB</span><span class="text-[#3B82F6]">.</span></span>
+        <span class="font-brand font-semibold text-4xl tracking-wider" style="letter-spacing: 0.04em;"><span class="text-gray-900 dark:text-white">REEB</span><span class="text-brand dark:text-brand-dark">.</span></span>
       </h2>
 
-      <div class="space-y-6 text-[#94A3B8] text-lg leading-relaxed font-light">
+      <div class="space-y-6 text-subtle dark:text-subtle-dark text-lg leading-relaxed font-light">
         <p>
           {{ i18n.t().about.p1Before }}<span class="text-gray-900 dark:text-white font-medium">{{ i18n.t().about.p1Highlight }}</span>.
         </p>
@@ -14,19 +14,19 @@
         <p>{{ i18n.t().about.p2 }}</p>
 
         <p>
-          <span class="font-brand font-semibold tracking-wider"><span class="text-gray-900 dark:text-white">REEB</span><span class="text-[#3B82F6]">.</span></span>
+          <span class="font-brand font-semibold tracking-wider"><span class="text-gray-900 dark:text-white">REEB</span><span class="text-brand dark:text-brand-dark">.</span></span>
           {{ i18n.t().about.p3 }}
         </p>
       </div>
 
-      <div class="mt-12 grid grid-cols-1 sm:grid-cols-2 gap-8 border-t border-[#E5E7EB] dark:border-[#1E293B] pt-8">
+      <div class="mt-12 grid grid-cols-1 sm:grid-cols-2 gap-8 border-t border-line dark:border-line-dark pt-8">
         <div>
-          <span class="block text-xs font-mono text-[#3B82F6] uppercase tracking-widest mb-2">{{ i18n.t().about.focusLabel }}</span>
-          <p class="text-sm text-[#94A3B8]">{{ i18n.t().about.focusValue }}</p>
+          <span class="block text-xs font-mono text-brand dark:text-brand-dark uppercase tracking-widest mb-2">{{ i18n.t().about.focusLabel }}</span>
+          <p class="text-sm text-subtle dark:text-subtle-dark">{{ i18n.t().about.focusValue }}</p>
         </div>
         <div>
-          <span class="block text-xs font-mono text-[#3B82F6] uppercase tracking-widest mb-2">{{ i18n.t().about.todayLabel }}</span>
-          <p class="text-sm text-[#94A3B8]">{{ i18n.t().about.todayValue }}</p>
+          <span class="block text-xs font-mono text-brand dark:text-brand-dark uppercase tracking-widest mb-2">{{ i18n.t().about.todayLabel }}</span>
+          <p class="text-sm text-subtle dark:text-subtle-dark">{{ i18n.t().about.todayValue }}</p>
         </div>
       </div>
     </div>

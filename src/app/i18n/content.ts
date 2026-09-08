@@ -132,32 +132,21 @@ export interface Dictionary {
     hubUrl: string;
     port: string;
     withArca: string;
-    pricesTitle: string;
-    pricesLead: string;
-    pricesSitesTitle: string;
-    pricesColPlan: string;
-    pricesColIncludes: string;
-    pricesColExcludes: string;
-    pricesColTimeline: string;
-    pricesColFrom: string;
-    pricesPlans: { name: string; plain: string; includes: string; excludes: string; timeline: string; price: string }[];
-    pricesSitesNote: string;
-    pricesHostTitle: string;
-    pricesHostLead: string;
-    pricesColWork: string;
-    pricesColServer: string;
-    pricesColHostFrom: string;
-    pricesHost: { work: string; server: string; price: string }[];
-    pricesHostNote: string;
-    pricesExtrasTitle: string;
-    pricesExtrasLead: string;
-    pricesColExtra: string;
-    pricesColWhat: string;
-    pricesExtras: { name: string; what: string; price: string }[];
-    pricesFoot: string;
-    pricesCtaWhatsApp: string;
-    pricesCtaMail: string;
-    pricesWhatsAppHref: string;
+    pricesHubCta: string;
+    pricesHubHref: string;
+    sistemasTitle: string;
+    sistemasLead: string;
+    sistemasTableTitle: string;
+    sistemasTableLead: string;
+    sistemasColCap: string;
+    sistemasCols: string[];
+    sistemasRows: { cap: string; cells: string[] }[];
+    sistemasNote: string;
+    sistemasTradesTitle: string;
+    sistemasTradesLead: string;
+    sistemasTrades: { name: string; blurb: string }[];
+    sistemasHubCta: string;
+    sistemasHubHref: string;
     items: DemoCopy[];
   };
   services: {
@@ -179,11 +168,19 @@ export interface Dictionary {
     name: string;
     namePlaceholder: string;
     email: string;
+    emailPlaceholder: string;
+    emailCta: string;
+    whatsapp: string;
+    whatsappCta: string;
+    whatsappPhone: string;
     message: string;
     messagePlaceholder: string;
     send: string;
     orDirect: string;
     viewDemos: string;
+    requiredName: string;
+    invalidEmail: string;
+    requiredMessage: string;
     mailSubject: string;
     mailName: string;
     mailInterest: string;
@@ -229,7 +226,7 @@ export const translations: Record<Lang, Dictionary> = {
       stack: 'Stack',
       certificates: 'Certificados',
       about: 'Sobre mí',
-      demos: 'Demos',
+      demos: 'Ejemplos de sistemas',
       services: 'Servicios',
       themeLight: 'Cambiar a modo claro',
       themeDark: 'Cambiar a modo oscuro',
@@ -433,71 +430,138 @@ export const translations: Record<Lang, Dictionary> = {
       mobileBody: 'Android nativo (Kotlin/Java), el mismo frente que en LinkedIn. Una app del negocio — turnos, catálogo, avisos — como complemento del sitio, a medida. No es un producto de tienda ni un recuento de descargas.',
       viewDemo: 'Ver demo',
       openPanel: 'Panel',
-      viewCatalog: 'Ver el catálogo completo',
+      viewCatalog: 'Ver el catálogo de ejemplos',
       hubUrl: 'demos/',
       port: 'Puerto',
       withArca: 'ARCA de ejemplo',
-      pricesTitle: 'Planes de referencia',
-      pricesLead: 'Valores desde. El alcance se cotiza según su rubro. El precio es conversable y se puede pagar en cuotas (la cantidad se acuerda). Los plazos son estimados y conversables. ARCA (facturación electrónica) depende de su situación y se cotiza. Los cobros en línea (pasarela) también. Las demos son ejemplos, no el producto cerrado.',
-      pricesSitesTitle: 'Sitios y paneles',
-      pricesColPlan: 'Plan',
-      pricesColIncludes: 'Qué entra',
-      pricesColExcludes: 'Qué no entra',
-      pricesColTimeline: 'Plazo (estimado)',
-      pricesColFrom: 'Desde',
-      pricesPlans: [
+      pricesHubCta: 'Ver planes de referencia',
+      pricesHubHref: 'demos/#precios',
+      sistemasTitle: 'Qué puede hacer una web, según su rubro',
+      sistemasLead: 'Un kiosco de barrio, una inmobiliaria, un hospedaje en Sierra de la Ventana y un estudio jurídico no usan la misma web. Esta tabla no es una grilla de “todo incluido”: dice qué suele tener sentido en cada caso. Las demos son ejemplos. El trabajo es un desarrollo a medida, no un producto de suscripción.',
+      sistemasTableTitle: 'Por función',
+      sistemasTableLead: 'Cada fila es una capacidad real de un sitio o un panel. Las columnas son negocios distintos. “Si se cotiza” no significa que venga en el piso de los planes.',
+      sistemasColCap: 'Función',
+      sistemasCols: ['Kiosco / almacén', 'Inmobiliaria', 'Hospedaje', 'Estudio jurídico', 'Taller / salón'],
+      sistemasRows: [
         {
-          name: 'Presencia',
-          plain: 'Una página para que lo encuentren y le escriban. Muestra qué hace, dónde está y el WhatsApp. Usted no carga stock ni turnos en un panel: si cambia un precio, se lo pide a quien armó el sitio.',
-          includes: 'Pocas páginas de vitrina (inicio, ubicación, contacto). WhatsApp y formulario. Sin panel. Las demos del catálogo sirven de referencia.',
-          excludes: 'ARCA en producción, pasarela de pago real, contenido fotográfico ilimitado.',
-          timeline: '1–2 semanas · conversable',
-          price: 'USD 350',
+          cap: 'Vitrina',
+          cells: [
+            'Qué vende, horario y cómo llegar.',
+            'Propiedades en venta y alquiler.',
+            'Cabañas, el predio y la zona (Villa Ventana, Sierra de la Ventana).',
+            'El estudio y cómo consultarlo. Los expedientes no salen a la calle.',
+            'El taller o el salón y qué servicios presta.',
+          ],
         },
         {
-          name: 'Negocio',
-          plain: 'El sitio que ve el cliente y una pantalla para usted (el panel): carga productos, turnos o reservas, como en las demos. No hace falta saber programar. El panel puede sumar cobros en línea; no está incluido en el piso de USD 700.',
-          includes: 'Vitrina + panel (stock, turnos, reservas o comprobantes). WhatsApp y formulario. Las demos del catálogo sirven de referencia.',
-          excludes: 'ARCA en producción, pasarela de pago real, contenido fotográfico ilimitado.',
-          timeline: '3–5 semanas · conversable',
-          price: 'USD 700',
+          cap: 'WhatsApp y formulario',
+          cells: [
+            'Pedido o consulta al local.',
+            'Consulta por una ficha.',
+            'Consulta o pedido de fechas.',
+            'Consulta al estudio.',
+            'Pedir turno o presupuesto.',
+          ],
         },
         {
-          name: 'Negocio + app',
-          plain: 'Lo mismo, más una aplicación en el celular (Android) para que el cliente vea el catálogo o pida un turno sin abrir el navegador. El panel puede sumar cobros en línea; no está incluido en el piso de USD 1.400.',
-          includes: 'Vitrina, panel y aplicación Android (catálogo, turnos o avisos). WhatsApp y formulario. Las demos del catálogo sirven de referencia.',
-          excludes: 'ARCA en producción, pasarela de pago real, contenido fotográfico ilimitado.',
-          timeline: '6–10 semanas · conversable',
-          price: 'USD 1.400',
+          cap: 'Catálogo',
+          cells: [
+            'Góndola con fotos y precios en pesos.',
+            'Fichas con fotos y filtros. No es una góndola de kiosco.',
+            'Unidades con foto y tarifa por noche.',
+            'No corresponde: no vende mercadería.',
+            'Lista de servicios, no stock de alfajores.',
+          ],
+        },
+        {
+          cap: 'Turnos / reservas',
+          cells: [
+            'No es lo habitual.',
+            'Visitas: las ve el panel, no el público.',
+            'Reserva por fechas y cupos.',
+            'No es una agenda de peluquería.',
+            'Agenda de turnos u orden de trabajo.',
+          ],
+        },
+        {
+          cap: 'Stock',
+          cells: [
+            'Reposición de góndola y libreta de fiado.',
+            'No es mercadería: es el listado de inmuebles.',
+            'Disponibilidad de cabañas, no de góndola.',
+            'No.',
+            'Repuestos o productos del salón, si se usa.',
+          ],
+        },
+        {
+          cap: 'Panel',
+          cells: [
+            'Caja, stock y fiado. El cliente no entra.',
+            'Visitas e interesados. El público no los ve.',
+            'Reservas, huéspedes y check-in.',
+            'Expedientes y plazos, fuera de la web abierta.',
+            'Órdenes, agenda y cobro del día.',
+          ],
+        },
+        {
+          cap: 'Cobros en línea',
+          cells: [
+            'Mostrador. Pasarela (Mercado Pago u otra) solo si se cotiza.',
+            'No es un carrito. Seña o comisión se cotiza.',
+            'Seña de la estadía, si se cotiza.',
+            'Honorarios, no checkout de kiosco.',
+            'Al cerrar el trabajo o el turno. Pasarela si se cotiza.',
+          ],
+        },
+        {
+          cap: 'Facturación ARCA',
+          cells: [
+            'Según monotributo o responsable inscripto. A menudo ticket de mostrador.',
+            'Si factura comisión, según situación.',
+            'Factura de hospedaje, si corresponde.',
+            'Comprobante de honorarios, si corresponde.',
+            'Si factura el trabajo, según situación.',
+          ],
+        },
+        {
+          cap: 'App Android',
+          cells: [
+            'Poco habitual.',
+            'Si hace falta.',
+            'Si hace falta (fechas en el teléfono).',
+            'Poco habitual.',
+            'Si hace falta (turnos).',
+          ],
         },
       ],
-      pricesSitesNote: 'Los plazos son orientativos. El servidor de cada plan está en la tabla siguiente.',
-      pricesHostTitle: 'Servidor / hosting',
-      pricesHostLead: 'El servidor es donde vive el sitio en internet: como el alquiler del local, pero digital. Valores desde, orientativos y conversables, alineados a Presencia / Negocio / Negocio + app. No es un pago mensual obligatorio de un producto cerrado; el proveedor se elige con el trabajo.',
-      pricesColWork: 'Trabajo',
-      pricesColServer: 'Servidor típico',
-      pricesColHostFrom: 'Desde (orientativo)',
-      pricesHost: [
-        { work: 'Presencia (vitrina)', server: 'Páginas fijas en internet (por ejemplo GitHub Pages) y el nombre del sitio', price: 'USD 0–5 / mes + dominio' },
-        { work: 'Negocio (vitrina + panel)', server: 'Un equipo alquilado en internet, con espacio para guardar productos o turnos', price: 'USD 8–15 / mes' },
-        { work: 'Negocio + app', server: 'Un equipo alquilado en internet, para el sitio, el panel y la aplicación del celular', price: 'USD 15–25 / mes' },
+      sistemasNote: 'Cobros en línea y ARCA se cotizan aparte; no están en el piso de Presencia ni de Negocio. En las demos, un kiosco muestra precios en pesos; un 0km o una propiedad pueden ir en dólares, como en el mercado local.',
+      sistemasTradesTitle: 'Cada demo',
+      sistemasTradesLead: 'Una o dos frases por rubro. No es un manual del panel.',
+      sistemasTrades: [
+        { name: 'Kiosco Lo de Pedro', blurb: 'Muestra el kiosco. En el panel usted controla góndola y fiado; el vecino no ve la libreta. Precios de ejemplo en pesos.' },
+        { name: 'Almacén del Barrio', blurb: 'Pedidos a proveedores, góndola y cierre de caja. No es una inmobiliaria ni un hotel.' },
+        { name: 'Libro (facturación)', blurb: 'Comprobantes A, B y notas de crédito. Pensado para quien ya factura; no reemplaza al contador.' },
+        { name: 'Inmobiliaria Reeb', blurb: 'Vitrina de propiedades, filtros y consulta. Las visitas y los interesados viven en el panel.' },
+        { name: 'Taller mecánico', blurb: 'El cliente pide presupuesto. Usted sigue la orden: diagnóstico, repuestos y mano de obra.' },
+        { name: 'Salón Camelia', blurb: 'Agenda de turnos y servicios. No es un catálogo de kiosco.' },
+        { name: 'El Quebracho', blurb: 'Muebles a medida: presupuesto, seña y fecha de entrega.' },
+        { name: 'Librería Rivadavia', blurb: 'Catálogo de mostrador y pedidos especiales con seña, en pesos.' },
+        { name: 'Biblioteca Pública Almagro', blurb: 'Préstamos a socios. No vende ni factura como un comercio.' },
+        { name: 'Parrilla Don Ernesto', blurb: 'Carta, mesas y comandas. La cocina y el cierre de cuenta están en el panel.' },
+        { name: 'Rotisería', blurb: 'Producción del día, mostrador y delivery. No es una reserva de cabaña.' },
+        { name: 'Feria', blurb: 'Publicaciones de varios vendedores. En la demo los pagos son de ejemplo; un cobro real se cotiza.' },
+        { name: 'Stock y facturación', blurb: 'Inventario y facturación juntos. ARCA de ejemplo; en un trabajo real se cotiza según el caso.' },
+        { name: 'Automotores Reeb', blurb: '0km y usados: en Argentina el precio de lista suele ir en dólares. Consulta y permuta de ejemplo.' },
+        { name: 'Estudio Norte', blurb: 'El público ve el estudio. Expedientes y plazos no están en la web abierta.' },
+        { name: 'Cabañas del Sauce', blurb: 'Cabañas en Villa Ventana: fechas y cupos. No es un almacén.' },
+        { name: 'Senderos Tornquist', blurb: 'Excursiones con duración, dificultad y cupo por salida.' },
+        { name: 'Complejo El Palomar', blurb: 'Paquetes, spa y actividades del predio. No es una góndola.' },
+        { name: 'Estudio Loma', blurb: 'Obras y consulta de presupuesto. El panel guarda proyectos, no la caja del kiosco.' },
+        { name: 'Corralón El Árido', blurb: 'Cemento, ladrillo, hierro: catálogo con stock y pedido a obra, en pesos.' },
+        { name: 'Framehaus', blurb: 'Modelos de vivienda steel frame y consulta. Las obras en taller están en el panel.' },
       ],
-      pricesHostNote: 'El dominio (.com / .com.ar) se cotiza aparte (renovación anual). Si el sitio queda estático como las demos, el hosting puede ser mínimo; si hay panel real y ARCA en producción, el servidor se dimensiona con el rubro.',
-      pricesExtrasTitle: 'Alcances extra',
-      pricesExtrasLead: 'Ideas cotizables, también «desde». El precio final se arma con el rubro; nada es un abono SaaS obligatorio.',
-      pricesColExtra: 'Extra',
-      pricesColWhat: 'Qué es',
-      pricesExtras: [
-        { name: 'Rubro turismo / reservas', what: 'Fechas, cupos, cabañas o excursiones (como las demos de Sierra de la Ventana). Se suma al plan elegido.', price: 'USD 250 extra' },
-        { name: 'Cobros en línea', what: 'Una pasarela es que le paguen con tarjeta o Mercado Pago, sin pasar solo por transferencia manual. Mercado Pago u otra pasarela: el cliente paga desde el sitio y usted ve el aviso de cobro. En las demos el pago es de ejemplo; el cobro real se cotiza. Conversable.', price: 'Desde USD 200 extra' },
-        { name: 'ARCA (facturación electrónica)', what: 'No entra igual en todos los rubros. Un kiosco, un estudio o un hotel no necesitan el mismo comprobante. Monotributo o responsable inscripto, factura A, B o C, o solo presupuesto: se arma con su contador. En las demos hay un circuito de ejemplo; en un trabajo real se cotiza según el caso.', price: 'A cotizar' },
-        { name: 'Catálogo grande / fotos', what: 'Muchas fichas, filtros y galería. No incluye contenido fotográfico ilimitado.', price: 'USD 150 extra' },
-        { name: 'Mantenimiento', what: 'Cambios menores al mes (textos, fotos, ajustes). Conversable.', price: 'USD 40 / mes' },
-      ],
-      pricesFoot: 'Cuotas y conversación por WhatsApp o correo. El trabajo es un desarrollo a medida, no un producto de suscripción.',
-      pricesCtaWhatsApp: 'Consultar por WhatsApp',
-      pricesCtaMail: 'manuelreeb@icloud.com',
-      pricesWhatsAppHref: 'https://wa.me/5492915757934?text=Hola%2C%20vi%20los%20planes%20de%20referencia%20del%20portfolio%20y%20quiero%20consultar%20un%20sistema%20a%20medida%20para%20mi%20rubro',
+      sistemasHubCta: 'Ver la tabla en el catálogo',
+      sistemasHubHref: 'demos/#sistemas',
       items: [
         {
           id: 'estudio',
@@ -806,16 +870,24 @@ export const translations: Record<Lang, Dictionary> = {
     },
     contact: {
       title: 'Contacto',
-      subtitle: 'Un mail alcanza. Contame el frente (Android, Angular o Spring) y el alcance.',
+      subtitle: 'Un mail o un WhatsApp alcanzan. Contame el frente (Android, Angular o Spring) y el alcance.',
       whatNeed: '¿Qué necesitas?',
       name: 'Nombre',
       namePlaceholder: 'Tu nombre',
       email: 'Email',
+      emailPlaceholder: 'tu@email.com',
+      emailCta: 'Escribir un mail',
+      whatsapp: 'WhatsApp',
+      whatsappCta: 'Escribir por WhatsApp',
+      whatsappPhone: '+54 9 2915 75-7934',
       message: 'Mensaje',
       messagePlaceholder: 'Describe brevemente tu situación o necesidad técnica...',
       send: 'Enviar mail',
-      orDirect: 'O contactá directo:',
-      viewDemos: 'Ver demos',
+      orDirect: 'También por WhatsApp o correo',
+      viewDemos: 'Ver ejemplos de sistemas',
+      requiredName: 'El nombre es obligatorio.',
+      invalidEmail: 'Indicá un email válido.',
+      requiredMessage: 'El mensaje es obligatorio.',
       mailSubject: 'Consulta freelance desde REEB',
       mailName: 'Nombre',
       mailInterest: 'Interés',
@@ -846,7 +918,7 @@ export const translations: Record<Lang, Dictionary> = {
       stack: 'Stack',
       certificates: 'Certificates',
       about: 'About',
-      demos: 'Demos',
+      demos: 'Business demos',
       services: 'Services',
       themeLight: 'Switch to light mode',
       themeDark: 'Switch to dark mode',
@@ -1048,71 +1120,138 @@ export const translations: Record<Lang, Dictionary> = {
       mobileBody: 'Native Android (Kotlin/Java), the same track as on LinkedIn. A business app — appointments, catalog, notices — as a complement to the website, built to order. Not a store product and not a download count.',
       viewDemo: 'View demo',
       openPanel: 'Panel',
-      viewCatalog: 'View the full catalog',
+      viewCatalog: 'View the examples catalog',
       hubUrl: 'demos/',
       port: 'Port',
       withArca: 'Sample ARCA billing',
-      pricesTitle: 'Reference plans',
-      pricesLead: 'Starting prices. Scope is quoted for your trade. The price is negotiable and can be paid in installments (the number is agreed). Timelines are estimates and negotiable. ARCA electronic invoicing depends on your situation and is quoted. Online collections (a payment gateway) are quoted separately too. The demos are examples, not a finished product.',
-      pricesSitesTitle: 'Sites and panels',
-      pricesColPlan: 'Plan',
-      pricesColIncludes: 'Included',
-      pricesColExcludes: 'Not included',
-      pricesColTimeline: 'Timeline (estimate)',
-      pricesColFrom: 'From',
-      pricesPlans: [
+      pricesHubCta: 'See reference plans',
+      pricesHubHref: 'demos/#precios',
+      sistemasTitle: 'What a website can do, by trade',
+      sistemasLead: 'A neighborhood kiosk, a real-estate office, lodging in Sierra de la Ventana, and a law firm do not use the same website. This table is not an “everything included” grid: it states what usually makes sense in each case. The demos are examples. The work is custom development, not a subscription product.',
+      sistemasTableTitle: 'By capability',
+      sistemasTableLead: 'Each row is a real capability of a site or a panel. The columns are different kinds of business. “If quoted” does not mean it is in the floor price of the plans.',
+      sistemasColCap: 'Capability',
+      sistemasCols: ['Kiosk / grocer', 'Real estate', 'Lodging', 'Law firm', 'Workshop / salon'],
+      sistemasRows: [
         {
-          name: 'Presence',
-          plain: 'A page so people can find you and write to you. It shows what you do, where you are, and WhatsApp. You do not load stock or appointments in a panel: if a price changes, you ask whoever built the site.',
-          includes: 'A few showcase pages (home, location, contact). WhatsApp and form. No admin panel. Catalog demos are visual reference.',
-          excludes: 'Production ARCA, a live payment gateway, unlimited photographic content.',
-          timeline: '1–2 weeks · negotiable',
-          price: 'USD 350',
+          cap: 'Showcase',
+          cells: [
+            'What you sell, hours, and how to get there.',
+            'Properties for sale and rent.',
+            'Cabins, the grounds, and the area (Villa Ventana, Sierra de la Ventana).',
+            'The firm and how to enquire. Case files do not go on the public site.',
+            'The workshop or salon and the services you offer.',
+          ],
         },
         {
-          name: 'Business',
-          plain: 'The site the customer sees and a screen for you (the panel): you load products, appointments, or bookings, as in the demos. You do not need to know how to program. The panel can add online collections; that is not included in the USD 700 floor.',
-          includes: 'Showcase + panel (stock, appointments, bookings, or receipts). WhatsApp and form. Catalog demos are visual reference.',
-          excludes: 'Production ARCA, a live payment gateway, unlimited photographic content.',
-          timeline: '3–5 weeks · negotiable',
-          price: 'USD 700',
+          cap: 'WhatsApp and form',
+          cells: [
+            'An order or a question to the shop.',
+            'An enquiry about a listing.',
+            'An enquiry or a request for dates.',
+            'An enquiry to the firm.',
+            'Request an appointment or a quote.',
+          ],
         },
         {
-          name: 'Business + app',
-          plain: 'The same, plus an app on the phone (Android) so the customer can see the catalog or request an appointment without opening the browser. The panel can add online collections; that is not included in the USD 1,400 floor.',
-          includes: 'Showcase, panel, and Android app (catalog, appointments, or notices). WhatsApp and form. Catalog demos are visual reference.',
-          excludes: 'Production ARCA, a live payment gateway, unlimited photographic content.',
-          timeline: '6–10 weeks · negotiable',
-          price: 'USD 1,400',
+          cap: 'Catalog',
+          cells: [
+            'Shelf with photos and prices in Argentine pesos.',
+            'Listings with photos and filters. Not a kiosk shelf.',
+            'Units with a photo and a nightly rate.',
+            'Does not apply: the firm does not sell goods.',
+            'A list of services, not a shelf of candy.',
+          ],
+        },
+        {
+          cap: 'Appointments / bookings',
+          cells: [
+            'Not the usual need.',
+            'Viewings: the panel sees them; the public does not.',
+            'Booking by dates and capacity.',
+            'Not a salon appointment book.',
+            'Appointment book or a work order.',
+          ],
+        },
+        {
+          cap: 'Stock',
+          cells: [
+            'Shelf restock and the neighborhood credit book.',
+            'Not merchandise: it is the property list.',
+            'Cabin availability, not a grocery shelf.',
+            'No.',
+            'Parts or salon products, if you use them.',
+          ],
+        },
+        {
+          cap: 'Admin panel',
+          cells: [
+            'Cash, stock, and credit. The customer does not go in.',
+            'Viewings and interested clients. The public does not see them.',
+            'Bookings, guests, and check-in.',
+            'Case files and deadlines, off the public site.',
+            'Work orders, the schedule, and the day’s takings.',
+          ],
+        },
+        {
+          cap: 'Online collections',
+          cells: [
+            'Over the counter. A gateway (Mercado Pago or another) only if quoted.',
+            'Not a shopping cart. A deposit or commission is quoted.',
+            'A stay deposit, if quoted.',
+            'Fees, not a kiosk checkout.',
+            'When the job or the appointment closes. A gateway if quoted.',
+          ],
+        },
+        {
+          cap: 'ARCA invoicing',
+          cells: [
+            'Depends on simplified taxpayer or registered VAT payer status. Often a counter ticket.',
+            'If you invoice a commission, according to the situation.',
+            'A lodging invoice, if it applies.',
+            'A fee receipt, if it applies.',
+            'If you invoice the work, according to the situation.',
+          ],
+        },
+        {
+          cap: 'Android app',
+          cells: [
+            'Uncommon.',
+            'If needed.',
+            'If needed (dates on the phone).',
+            'Uncommon.',
+            'If needed (appointments).',
+          ],
         },
       ],
-      pricesSitesNote: 'Timelines are indicative. The server for each plan is in the table below.',
-      pricesHostTitle: 'Server / hosting',
-      pricesHostLead: 'The server is where the site lives on the internet: like renting a shop, but digital. Starting, indicative, and negotiable figures, aligned with Presence / Business / Business + app. Not a mandatory monthly fee for a closed product; the provider is chosen with the work.',
-      pricesColWork: 'Work',
-      pricesColServer: 'Typical server',
-      pricesColHostFrom: 'From (indicative)',
-      pricesHost: [
-        { work: 'Presence (showcase)', server: 'Fixed pages on the internet (for example GitHub Pages) and the site name', price: 'USD 0–5 / month + domain' },
-        { work: 'Business (showcase + panel)', server: 'A rented computer on the internet, with space to store products or appointments', price: 'USD 8–15 / month' },
-        { work: 'Business + app', server: 'A rented computer on the internet, for the site, the panel, and the phone app', price: 'USD 15–25 / month' },
+      sistemasNote: 'Online collections and ARCA are quoted separately; they are not in the Presence or Business floor price. In the demos, a kiosk shows prices in pesos; a new car or a property may be listed in dollars, as in the local market.',
+      sistemasTradesTitle: 'Each demo',
+      sistemasTradesLead: 'One or two sentences per trade. This is not a panel manual.',
+      sistemasTrades: [
+        { name: 'Kiosco Lo de Pedro', blurb: 'It shows the kiosk. In the panel you control the shelf and the credit book; the neighbor does not see that book. Sample prices in pesos.' },
+        { name: 'Almacén del Barrio', blurb: 'Supplier orders, the shelf, and end-of-day cash. It is not a real-estate office or a hotel.' },
+        { name: 'Libro (invoicing)', blurb: 'A and B invoices and credit notes. For someone who already invoices; it does not replace an accountant.' },
+        { name: 'Inmobiliaria Reeb', blurb: 'A property showcase, filters, and an enquiry. Viewings and interested clients live in the panel.' },
+        { name: 'Taller mecánico', blurb: 'The customer asks for a quote. You follow the work order: diagnosis, parts, and labor.' },
+        { name: 'Salón Camelia', blurb: 'An appointment book and services. Not a kiosk catalog.' },
+        { name: 'El Quebracho', blurb: 'Custom furniture: quote, deposit, and delivery date.' },
+        { name: 'Librería Rivadavia', blurb: 'A counter catalog and special orders with a deposit, in pesos.' },
+        { name: 'Biblioteca Pública Almagro', blurb: 'Loans to members. It does not sell or invoice like a shop.' },
+        { name: 'Parrilla Don Ernesto', blurb: 'Menu, tables, and kitchen tickets. The kitchen view and checkout live in the panel.' },
+        { name: 'Rotisería', blurb: 'The day’s production, the counter, and delivery. Not a cabin booking.' },
+        { name: 'Feria', blurb: 'Listings from several sellers. Payments in the demo are samples; live charging is quoted.' },
+        { name: 'Stock y facturación', blurb: 'Inventory and invoicing together. Sample ARCA; real work is quoted for the case.' },
+        { name: 'Automotores Reeb', blurb: 'New and used cars: in Argentina the list price is often in dollars. Sample enquiry and trade-in.' },
+        { name: 'Estudio Norte', blurb: 'The public sees the firm. Case files and deadlines are not on the open website.' },
+        { name: 'Cabañas del Sauce', blurb: 'Cabins in Villa Ventana: dates and capacity. Not a grocery store.' },
+        { name: 'Senderos Tornquist', blurb: 'Tours with duration, difficulty, and quota per departure.' },
+        { name: 'Complejo El Palomar', blurb: 'Packages, spa, and grounds activities. Not a shop shelf.' },
+        { name: 'Estudio Loma', blurb: 'Works and a quote enquiry. The panel holds projects, not a kiosk till.' },
+        { name: 'Corralón El Árido', blurb: 'Cement, brick, steel: a catalog with stock and a site order, in pesos.' },
+        { name: 'Framehaus', blurb: 'Steel-frame housing models and an enquiry. Workshop jobs live in the panel.' },
       ],
-      pricesHostNote: 'The domain (.com / .com.ar) is quoted separately (annual renewal). If the site stays static like the demos, hosting can be minimal; if there is a live panel and ARCA in production, the server is sized with the trade.',
-      pricesExtrasTitle: 'Extra scopes',
-      pricesExtrasLead: 'Quotable ideas, also “from”. The final price is built around your trade; nothing is a mandatory SaaS subscription.',
-      pricesColExtra: 'Extra',
-      pricesColWhat: 'What it is',
-      pricesExtras: [
-        { name: 'Tourism / bookings', what: 'Dates, capacity, cabins, or tours (as in the Sierra de la Ventana demos). Added to the chosen plan.', price: 'USD 250 extra' },
-        { name: 'Online collections', what: 'A payment gateway means customers can pay by card or Mercado Pago, without going only through a manual bank transfer. Mercado Pago or another gateway: the customer pays on the site and you see the collection notice. Demos use sample payments; live charging is quoted. Negotiable.', price: 'From USD 200 extra' },
-        { name: 'ARCA (electronic invoicing)', what: 'It does not apply the same way in every trade. A kiosk, a law firm, or a hotel do not need the same receipt. Simplified taxpayer or registered VAT payer, invoice A, B, or C, or just a quote: it is built with your accountant. The demos show a sample flow; real work is quoted for the case.', price: 'To be quoted' },
-        { name: 'Large catalog / photos', what: 'Many listings, filters, and gallery. Unlimited photographic content is not included.', price: 'USD 150 extra' },
-        { name: 'Maintenance', what: 'Minor changes per month (copy, photos, tweaks). Negotiable.', price: 'USD 40 / month' },
-      ],
-      pricesFoot: 'Installments and conversation via WhatsApp or email. This is custom development, not a subscription product.',
-      pricesCtaWhatsApp: 'Enquire on WhatsApp',
-      pricesCtaMail: 'manuelreeb@icloud.com',
-      pricesWhatsAppHref: 'https://wa.me/5492915757934?text=Hola%2C%20vi%20los%20planes%20de%20referencia%20del%20portfolio%20y%20quiero%20consultar%20un%20sistema%20a%20medida%20para%20mi%20rubro',
+      sistemasHubCta: 'See the table in the catalog',
+      sistemasHubHref: 'demos/#sistemas',
       items: [
         {
           id: 'estudio',
@@ -1420,16 +1559,24 @@ export const translations: Record<Lang, Dictionary> = {
     },
     contact: {
       title: 'Contact',
-      subtitle: 'An email is enough. Tell me the track (Android, Angular, or Spring) and the scope.',
+      subtitle: 'An email or a WhatsApp message is enough. Tell me the track (Android, Angular, or Spring) and the scope.',
       whatNeed: 'What do you need?',
       name: 'Name',
       namePlaceholder: 'Your name',
       email: 'Email',
+      emailPlaceholder: 'you@email.com',
+      emailCta: 'Write an email',
+      whatsapp: 'WhatsApp',
+      whatsappCta: 'Write on WhatsApp',
+      whatsappPhone: '+54 9 2915 75-7934',
       message: 'Message',
       messagePlaceholder: 'Short note on the situation or the technical need...',
       send: 'Send email',
-      orDirect: 'Or reach me directly:',
-      viewDemos: 'See demos',
+      orDirect: 'Also on WhatsApp or email',
+      viewDemos: 'See business demos',
+      requiredName: 'Name is required.',
+      invalidEmail: 'Enter a valid email.',
+      requiredMessage: 'Message is required.',
       mailSubject: 'Freelance inquiry from REEB',
       mailName: 'Name',
       mailInterest: 'Interest',

@@ -1,1 +1,53 @@
-/* Contact component styles */
+.contact-channel {
+  @apply flex flex-col items-start gap-1 rounded-xl border border-line dark:border-line-dark bg-surface dark:bg-surface-dark px-5 py-4 text-left transition-all duration-200;
+}
+
+.contact-channel:hover,
+.contact-channel:focus-visible {
+  @apply border-brand dark:border-brand-dark shadow-md outline-none;
+}
+
+.contact-channel__icon {
+  @apply mb-1 text-brand dark:text-brand-dark;
+}
+
+.contact-channel__label {
+  @apply text-xs font-medium uppercase tracking-wider text-subtle dark:text-subtle-dark;
+}
+
+.contact-channel__value {
+  @apply text-base font-semibold text-ink dark:text-white break-all;
+}
+
+.contact-channel__cta {
+  @apply mt-1 text-sm font-medium text-brand dark:text-brand-dark;
+}
+
+.contact-chip {
+  @apply flex items-center rounded-lg border border-line dark:border-line-dark bg-cream dark:bg-dark-alt px-4 py-3 text-sm text-subtle dark:text-subtle-dark cursor-pointer transition-colors duration-200;
+}
+
+.contact-chip:hover,
+.contact-chip:focus-within {
+  @apply border-brand/50 dark:border-brand-dark/50 text-ink dark:text-white;
+}
+
+.contact-chip--on {
+  @apply border-brand dark:border-brand-dark bg-brand/10 text-ink dark:text-white;
+}
+
+.contact-field {
+  @apply w-full px-4 py-3 rounded-lg border border-line dark:border-line-dark bg-cream dark:bg-dark-alt text-ink dark:text-white placeholder-subtle dark:placeholder-subtle-dark transition-colors;
+}
+
+.contact-field:focus {
+  @apply outline-none border-brand ring-2 ring-brand/30 dark:border-brand-dark dark:ring-brand-dark/30;
+}
+
+.contact-field--error {
+  @apply border-[#B45309] dark:border-[#FBBF24];
+}
+
+.contact-error {
+  @apply mt-2 text-sm text-[#B45309] dark:text-[#FBBF24];
+}
