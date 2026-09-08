@@ -3,17 +3,17 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Panel · Kiosco</title>
+  <title>Panel · Kiosco Lo de Pedro</title>
   <link rel="stylesheet" href="styles.css">
 </head>
 <body>
   <div class="app">
     <header class="top">
       <div class="top-inner">
-        <a class="logo" href="index.html">KIOSCO<small>Stock y ventas · demo</small></a>
+        <a class="logo" href="index.html">LO DE PEDRO<small>Stock, ventas y fiado · demo</small></a>
         <nav>
           <a href="index.html">Inicio</a>
-          <button class="btn" id="open-create" type="button">Nuevo producto</button>
+          <button class="btn" id="open-create" type="button">Nuevo</button>
         </nav>
       </div>
     </header>
@@ -21,8 +21,14 @@
     <div class="toolbar">
       <div>
         <p class="eyebrow">Datos de ejemplo</p>
-        <h1>Stock del kiosco</h1>
+        <h1 id="panelTitle">Stock del kiosco</h1>
       </div>
+    </div>
+
+    <div class="tabs" id="tabs">
+      <button type="button" data-tab="stock" class="on">Stock</button>
+      <button type="button" data-tab="ventas">Ventas del día</button>
+      <button type="button" data-tab="fiado">Fiado</button>
     </div>
 
     <div class="stats" id="stats"></div>
@@ -34,9 +40,7 @@
         <option value="golosinas">Golosinas</option>
         <option value="bebidas">Bebidas</option>
         <option value="cigarrillos">Cigarrillos</option>
-        <option value="almacen">Almacén</option>
-        <option value="limpieza">Limpieza</option>
-        <option value="varios">Varios</option>
+        <option value="snacks">Snacks</option>
       </select>
       <input name="precio" type="number" placeholder="Precio" required>
       <input name="stock" type="number" placeholder="Stock actual">
@@ -45,11 +49,19 @@
       <button class="btn-panel" type="submit">Agregar producto</button>
     </form>
 
-    <div class="workspace">
+    <form class="create" id="create-fiado">
+      <input name="cliente" placeholder="Cliente" required>
+      <input name="items" placeholder="Qué llevó">
+      <input name="monto" type="number" placeholder="Monto" required>
+      <button class="btn-panel" type="submit">Anotar fiado</button>
+    </form>
+
+    <div class="workspace" id="view-stock">
       <section class="list">
         <table>
           <thead>
             <tr>
+              <th></th>
               <th>Código</th>
               <th>Producto</th>
               <th>Categoría</th>
@@ -63,10 +75,20 @@
       </section>
       <aside class="detail" id="detail"></aside>
     </div>
+
+    <section class="panel-section" id="view-ventas" hidden>
+      <p class="note" id="ventasNote"></p>
+      <div id="ventas"></div>
+    </section>
+
+    <section class="panel-section" id="view-fiado" hidden>
+      <p class="note">Libreta del barrio. No se muestra en la vidriera pública.</p>
+      <div id="fiados"></div>
+    </section>
   </div>
 
   <script src="data.js"></script>
   <script src="panel.js"></script>
-  <script src="../contacto.js" data-phone="5491140001234" data-text="Hola, quiero consultar por productos del kiosco" data-subject="Consulta demo — Kiosco" data-title="Escribinos" data-place="panel"></script>
+  <script src="../contacto.js" data-phone="5491140001234" data-text="Hola, quiero consultar por productos del kiosco Lo de Pedro" data-subject="Consulta demo — Kiosco Lo de Pedro" data-title="Escribinos" data-place="panel"></script>
 </body>
 </html>
