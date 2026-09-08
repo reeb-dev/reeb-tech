@@ -22,7 +22,8 @@
       <a class="logo" href="index.html">Framehaus<small>Steel frame · Villa Urquiza</small></a>
       <nav>
         <a href="#modelos">Modelos</a>
-        <a href="#sistema">Sistema</a>
+        <a href="#sistema">Cómo funciona</a>
+        <a href="#comparativa">Comparativa</a>
         <a href="#consulta">Consulta</a>
         <a class="btn" href="panel.html">Panel</a>
       </nav>
@@ -36,8 +37,8 @@
       <div class="wrap hero-inner">
         <div>
           <p class="kicker light">Vivienda en steel frame · CABA</p>
-          <h1>Modelos de casa, dúplex, PH y ampliación. Paneles en taller, montaje en el lote.</h1>
-          <p class="lead light">Catálogo de ejemplo con m², plazo y precio. La consulta queda en este navegador.</p>
+          <h1>Casa, dúplex, PH o ampliación. Paneles en taller, montaje en el lote.</h1>
+          <p class="lead light">Diez modelos de ejemplo con m², ambientes, plazo, sistema y precio. La consulta queda en este navegador.</p>
           <div class="hero-actions">
             <a class="btn" href="#modelos">Ver modelos</a>
             <a class="btn btn-ghost" href="#consulta">Pedir presupuesto</a>
@@ -57,35 +58,49 @@
       <section class="section" id="modelos">
         <p class="kicker">Catálogo</p>
         <h2>Modelos de vivienda</h2>
-        <p class="section-lead">Casas contemporáneas y módulos de ampliación. Tocá una tarjeta para la ficha. No son obras vendidas: son demos de ejemplo.</p>
+        <p class="section-lead">Casas contemporáneas, dúplex, PH y módulos de ampliación. Tocá una tarjeta para la ficha. No son obras vendidas: son demos de ejemplo.</p>
+        <div class="filters" id="filters"></div>
         <div class="portfolio-grid" id="catalog"></div>
       </section>
 
       <section class="section" id="sistema">
         <p class="kicker">Sistema</p>
-        <h2>De taller a lote</h2>
-        <div class="service-grid">
-          <article class="service-card">
-            <img src="img/planos.jpg" alt="Planos de la vivienda">
-            <div>
-              <h3>Modelo y plano</h3>
-              <p>Elegís un modelo. Ajustamos m² y aberturas al lote antes de fabricar.</p>
-            </div>
-          </article>
-          <article class="service-card">
-            <img src="img/estructura.jpg" alt="Estructura en obra">
-            <div>
-              <h3>Fabricación</h3>
-              <p>Perfiles y paneles en taller. La obra en el lote espera el montaje, no el corte.</p>
-            </div>
-          </article>
-          <article class="service-card">
-            <img src="img/ampliacion.jpg" alt="Vivienda contemporánea terminada">
-            <div>
-              <h3>Montaje</h3>
-              <p>Armado en el lote, cerramientos y terminaciones. Fecha de entrega en la ficha de obra.</p>
-            </div>
-          </article>
+        <h2>Cómo funciona el steel frame</h2>
+        <p class="section-lead">Siete pasos: del lote al taller y de vuelta al lote. La estructura se fabrica adentro; en la obra se monta.</p>
+        <ol class="pasos" id="pasos"></ol>
+      </section>
+
+      <section class="section" id="comparativa">
+        <p class="kicker">Comparativa</p>
+        <h2>Modelos lado a lado</h2>
+        <p class="section-lead">Superficie, ambientes, plazo, sistema y precio de ejemplo. Elegí dos o más y pedí el que encaje en el lote.</p>
+        <div class="table-wrap">
+          <table class="comp-table" id="compModelos">
+            <thead>
+              <tr>
+                <th>Modelo</th>
+                <th>m²</th>
+                <th>Ambientes</th>
+                <th>Plazo</th>
+                <th>Sistema</th>
+                <th class="amount">Precio</th>
+              </tr>
+            </thead>
+            <tbody></tbody>
+          </table>
+        </div>
+        <h3 class="comp-sub">Steel frame frente a obra tradicional</h3>
+        <div class="table-wrap">
+          <table class="comp-table" id="compSistema">
+            <thead>
+              <tr>
+                <th>Criterio</th>
+                <th>Steel frame</th>
+                <th>Tradicional</th>
+              </tr>
+            </thead>
+            <tbody></tbody>
+          </table>
         </div>
       </section>
 

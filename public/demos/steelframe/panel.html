@@ -35,13 +35,7 @@
       <form class="create" id="create">
         <input name="cliente" placeholder="Nombre cliente" required>
         <input name="tel" placeholder="Teléfono">
-        <select name="tipo">
-          <option value="casa2">Casa 2 dormitorios</option>
-          <option value="casa3">Casa 3 dormitorios</option>
-          <option value="duplex">Dúplex</option>
-          <option value="ph">PH</option>
-          <option value="ampliacion">Ampliación</option>
-        </select>
+        <select name="tipo"></select>
         <input name="lote" placeholder="Lote / dirección">
         <button class="btn-panel" type="submit">Crear obra</button>
       </form>
@@ -70,7 +64,21 @@
           <p class="eyebrow">Catálogo de la landing</p>
           <h1>Modelos publicados</h1>
         </div>
+        <button class="btn" id="open-modelo" type="button">Nuevo modelo</button>
       </div>
+      <form class="create" id="create-modelo">
+        <input name="nombre" placeholder="Nombre" required>
+        <select name="tipo"></select>
+        <input name="m2" type="number" placeholder="m²" required>
+        <input name="precio" type="number" placeholder="Precio" required>
+        <input name="plazo" placeholder="Plazo, ej. 90 días de obra" required>
+        <input name="sistema" placeholder="Sistema, ej. Steel frame + siding">
+        <input name="ambientes" placeholder="Ambientes" class="full-span">
+        <textarea name="descripcion" placeholder="Descripción" class="full-span"></textarea>
+        <select name="imagen"></select>
+        <label class="check-inline"><input type="checkbox" name="publicado" checked> Publicado</label>
+        <button class="btn-panel" type="submit">Guardar modelo</button>
+      </form>
       <div class="modelos-grid" id="modelosGrid"></div>
     </div>
 

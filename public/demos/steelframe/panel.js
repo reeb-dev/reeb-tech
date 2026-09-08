@@ -4,6 +4,7 @@ let selected = items[0]?.id || "";
 let filter = "todos";
 let selectedArca = items.find((i) => i.factura)?.id || items[0]?.id || "";
 let filterArca = "todos";
+let editingModelo = "";
 
 const viewObras = document.getElementById("view-obras");
 const viewModelos = document.getElementById("view-modelos");
@@ -12,6 +13,18 @@ const tabObras = document.getElementById("tab-obras");
 const tabModelos = document.getElementById("tab-modelos");
 const tabArca = document.getElementById("tab-arca");
 const openCreate = document.getElementById("open-create");
+const createForm = document.getElementById("create");
+const modeloForm = document.getElementById("create-modelo");
+
+createForm.querySelector('[name="tipo"]').innerHTML = TIPOS.map((t) =>
+  `<option value="${esc(t.id)}">${esc(t.label)}</option>`
+).join("");
+modeloForm.querySelector('[name="tipo"]').innerHTML = TIPOS.map((t) =>
+  `<option value="${esc(t.id)}">${esc(t.label)}</option>`
+).join("");
+modeloForm.querySelector('[name="imagen"]').innerHTML = IMAGENES_CATALOGO.map((img) =>
+  `<option value="${esc(img.id)}">${esc(img.label)}</option>`
+).join("");
 
 tabObras.addEventListener("click", () => showView("obras"));
 tabModelos.addEventListener("click", () => showView("modelos"));
@@ -30,10 +43,17 @@ function showView(name) {
 }
 
 openCreate.addEventListener("click", () => {
-  document.getElementById("create").classList.toggle("open");
+  createForm.classList.toggle("open");
 });
 
-document.getElementById("create").addEventListener("submit", (event) => {
+document.getElementById("open-modelo").addEventListener("click", () => {
+  editingModelo = "";
+  modeloForm.reset();
+  modeloForm.publicado.checked = true;
+  modeloForm.classList.toggle("open");
+});
+
+createForm.addEventListener("submit", (event) => {
   event.preventDefault();
   const data = new FormData(event.target);
   const tipo = String(data.get("tipo") || "casa2");
@@ -48,8 +68,9 @@ document.getElementById("create").addEventListener("submit", (event) => {
     lote: String(data.get("lote") || ""),
     status: "consulta",
     precio: modelo.precio || 0,
-    imagen: imagenDeTipo(tipo),
+    imagen: modelo.imagen || imagenDeTipo(tipo),
     factura: null,
+    checklist: checklistForStatus("consulta"),
     history: [{ when: "hoy", text: "Obra creada como consulta." }]
   };
   items = [item, ...items];
@@ -59,6 +80,34 @@ document.getElementById("create").addEventListener("submit", (event) => {
   event.target.classList.remove("open");
   showToast("Obra creada");
   render();
+});
+
+modeloForm.addEventListener("submit", (event) => {
+  event.preventDefault();
+  const data = new FormData(event.target);
+  const payload = {
+    nombre: String(data.get("nombre") || "").trim(),
+    tipo: String(data.get("tipo") || "casa2"),
+    m2: Number(data.get("m2") || 0),
+    precio: Number(data.get("precio") || 0),
+    plazo: String(data.get("plazo") || "").trim(),
+    sistema: String(data.get("sistema") || "Steel frame").trim(),
+    ambientes: String(data.get("ambientes") || "").trim(),
+    descripcion: String(data.get("descripcion") || "").trim(),
+    imagen: String(data.get("imagen") || imagenDeTipo(String(data.get("tipo") || "casa2"))),
+    publicado: Boolean(data.get("publicado"))
+  };
+  if (editingModelo) {
+    modelos = modelos.map((m) => m.id === editingModelo ? { ...m, ...payload } : m);
+  } else {
+    modelos = [{ id: crypto.randomUUID(), ...payload }, ...modelos];
+  }
+  editingModelo = "";
+  saveModelos(modelos);
+  event.target.reset();
+  event.target.classList.remove("open");
+  showToast("Modelo guardado");
+  renderModelos();
 });
 
 function render() {
@@ -75,24 +124,27 @@ function render() {
     <button type="button" data-filter="montaje" class="${filter === "montaje" ? "on" : ""}"><strong>${counts.montaje}</strong>montaje</button>
     <button type="button" data-filter="entregada" class="${filter === "entregada" ? "on" : ""}"><strong>${counts.entregada}</strong>entregadas</button>
   `;
-  document.querySelectorAll("[data-filter]").forEach((btn) => {
+  document.querySelectorAll("#stats [data-filter]").forEach((btn) => {
     btn.addEventListener("click", () => { filter = btn.dataset.filter; render(); });
   });
 
   const rows = filter === "todos" ? items : items.filter((i) => i.status === filter);
-  document.getElementById("rows").innerHTML = rows.map((item) => `
+  document.getElementById("rows").innerHTML = rows.map((item) => {
+    const ck = checklistDone(item);
+    return `
     <tr class="row ${item.id === selected ? "on" : ""}" data-id="${esc(item.id)}">
       <td>
         <div class="row-main">
           <img class="thumb" src="${esc(item.imagen)}" alt="">
-          <span>${esc(item.codigo)}<br><small>${esc(item.titulo)}</small></span>
+          <span>${esc(item.codigo)}<br><small>${esc(item.titulo)} · checklist ${ck.done}/${ck.total}</small></span>
         </div>
       </td>
       <td>${esc(item.cliente.nombre)}</td>
       <td>${esc(tipoLabel(item.modelo))}</td>
       <td class="amount">${item.precio ? esc(money(item.precio)) : "—"}</td>
       <td><span class="tag ${esc(item.status)}">${esc(estadoLabel(item.status))}</span></td>
-    </tr>`).join("") || `<tr><td colspan="5">No hay obras en este estado.</td></tr>`;
+    </tr>`;
+  }).join("") || `<tr><td colspan="5">No hay obras en este estado.</td></tr>`;
 
   document.querySelectorAll("#rows .row").forEach((row) => {
     row.addEventListener("click", () => { selected = row.dataset.id; render(); });
@@ -102,6 +154,7 @@ function render() {
   const detail = document.getElementById("detail");
   if (!item) { detail.innerHTML = "<p>Elegí una obra.</p>"; return; }
 
+  const ck = checklistDone(item);
   detail.innerHTML = `
     <p class="eyebrow">${esc(item.codigo)}</p>
     <h2>${esc(item.titulo)}</h2>
@@ -112,6 +165,15 @@ function render() {
       <div><span>Estado</span>${esc(estadoLabel(item.status))}</div>
       <div><span>Lote</span>${esc(item.lote) || "—"}</div>
       <div><span>Precio</span>${esc(money(item.precio))}</div>
+    </div>
+    <div class="checklist">
+      <h4>Checklist de obra · ${ck.done}/${ck.total}</h4>
+      ${(item.checklist || []).map((c, idx) => `
+        <label class="check-row">
+          <input type="checkbox" data-ck="${idx}" ${c.done ? "checked" : ""}>
+          <span>${esc(c.label)}</span>
+        </label>
+      `).join("")}
     </div>
     ${item.factura ? `
       <div class="factura-box">
@@ -153,6 +215,16 @@ function render() {
       ${(item.history || []).map((h) => `<p><time>${esc(h.when)}</time>${esc(h.text)}</p>`).join("")}
     </div>
   `;
+
+  detail.querySelectorAll("[data-ck]").forEach((box) => {
+    box.addEventListener("change", () => {
+      const idx = Number(box.dataset.ck);
+      item.checklist[idx].done = box.checked;
+      item.history = [{ when: "hoy", text: (box.checked ? "Hecho: " : "Pendiente: ") + item.checklist[idx].label }, ...(item.history || [])];
+      saveObras(items);
+      render();
+    });
+  });
 
   document.getElementById("emitir-factura")?.addEventListener("click", () => {
     emitirFactura(item, document.getElementById("arca-tipo").value, document.getElementById("arca-cuit").value);
@@ -203,10 +275,50 @@ function renderModelos() {
       <div>
         <h3>${esc(m.nombre)}</h3>
         <p style="margin:0 0 8px;font-size:13px;color:var(--muted)">${m.m2} m² · ${esc(money(m.precio))}</p>
-        <p style="margin:0;font-size:12px;color:var(--muted)">${m.publicado === false ? "Oculto" : "Publicado"}</p>
+        <p style="margin:0 0 10px;font-size:12px;color:var(--muted)">${esc(m.sistema || "Steel frame")} · ${m.publicado === false ? "Oculto" : "Publicado"}</p>
+        <div class="actions">
+          <button class="btn-panel" type="button" data-edit="${esc(m.id)}">Editar</button>
+          <button class="ghost" type="button" data-toggle="${esc(m.id)}">${m.publicado === false ? "Publicar" : "Ocultar"}</button>
+          <button class="ghost" type="button" data-del="${esc(m.id)}">Quitar</button>
+        </div>
       </div>
     </article>
   `).join("");
+
+  document.querySelectorAll("[data-edit]").forEach((btn) => {
+    btn.addEventListener("click", () => {
+      const m = modelos.find((x) => x.id === btn.dataset.edit);
+      if (!m) return;
+      editingModelo = m.id;
+      modeloForm.classList.add("open");
+      modeloForm.nombre.value = m.nombre;
+      modeloForm.tipo.value = m.tipo;
+      modeloForm.m2.value = m.m2;
+      modeloForm.precio.value = m.precio;
+      modeloForm.plazo.value = m.plazo;
+      modeloForm.sistema.value = m.sistema || "";
+      modeloForm.ambientes.value = m.ambientes || "";
+      modeloForm.descripcion.value = m.descripcion || "";
+      modeloForm.imagen.value = m.imagen;
+      modeloForm.publicado.checked = m.publicado !== false;
+    });
+  });
+  document.querySelectorAll("[data-toggle]").forEach((btn) => {
+    btn.addEventListener("click", () => {
+      modelos = modelos.map((m) => m.id === btn.dataset.toggle ? { ...m, publicado: m.publicado === false } : m);
+      saveModelos(modelos);
+      renderModelos();
+    });
+  });
+  document.querySelectorAll("[data-del]").forEach((btn) => {
+    btn.addEventListener("click", () => {
+      if (!confirm("¿Quitar este modelo del catálogo?")) return;
+      modelos = modelos.filter((m) => m.id !== btn.dataset.del);
+      saveModelos(modelos);
+      showToast("Modelo quitado");
+      renderModelos();
+    });
+  });
 }
 
 function renderArca() {
@@ -247,6 +359,7 @@ function renderArca() {
     <div class="meta">
       <div><span>Modelo</span>${esc(tipoLabel(item.modelo))}</div>
       <div><span>Total</span>${esc(money(item.precio))}</div>
+      <div><span>Estado</span>${esc(estadoLabel(item.status))}</div>
     </div>
     ${item.factura ? `
       <div class="factura-box">
@@ -254,6 +367,7 @@ function renderArca() {
         <p><strong>${esc(compLabel(item.factura.tipo))}</strong> ${esc(item.factura.numero)}</p>
         <p>CAE: ${esc(item.factura.cae)}</p>
         <p>Vto CAE: ${esc(item.factura.vto)}</p>
+        <p>CUIT: ${esc(item.factura.cuit || "—")}</p>
       </div>
     ` : `
       <div class="arca-section">
