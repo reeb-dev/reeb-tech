@@ -47,6 +47,18 @@ export interface ServiceCopy {
   features: string[];
 }
 
+export interface DemoCopy {
+  id: string;
+  name: string;
+  description: string;
+  category: string;
+  icon: string;
+  color: string;
+  port: number;
+  features: string[];
+  hasArca?: boolean;
+}
+
 export interface Dictionary {
   meta: { title: string; description: string };
   nav: {
@@ -54,6 +66,7 @@ export interface Dictionary {
     stack: string;
     certificates: string;
     about: string;
+    demos: string;
     services: string;
     themeLight: string;
     themeDark: string;
@@ -103,6 +116,16 @@ export interface Dictionary {
     focusValue: string;
     todayLabel: string;
     todayValue: string;
+  };
+  demos: {
+    title: string;
+    subtitle: string;
+    viewDemo: string;
+    openPanel: string;
+    viewCatalog: string;
+    port: string;
+    withArca: string;
+    items: DemoCopy[];
   };
   services: {
     title: string;
@@ -172,6 +195,7 @@ export const translations: Record<Lang, Dictionary> = {
       stack: 'Stack',
       certificates: 'Certificados',
       about: 'Sobre mí',
+      demos: 'Demos',
       services: 'Servicios',
       themeLight: 'Cambiar a modo claro',
       themeDark: 'Cambiar a modo oscuro',
@@ -364,6 +388,215 @@ export const translations: Record<Lang, Dictionary> = {
       todayLabel: 'Hoy',
       todayValue: 'Software Engineer en BP4. Fuera de la consultora, un freelance a la vez, con alcance cerrado y plan escrito.',
     },
+    demos: {
+      title: 'Sistemas para oficios y comercios',
+      subtitle: 'Demos de ejemplo para comercios y oficios argentinos. El catálogo se busca y se filtra por rubro: landing para el cliente y panel de administración, con datos ficticios. No son sistemas en producción.',
+      viewDemo: 'Ver demo',
+      openPanel: 'Panel',
+      viewCatalog: 'Ver el catálogo',
+      port: 'Puerto',
+      withArca: 'Con facturación ARCA de ejemplo',
+      items: [
+        {
+          id: 'estudio',
+          name: 'Estudio Norte',
+          description: 'Mesa de entradas: expedientes, plazos y escritos en la misma ficha.',
+          category: 'Legal',
+          icon: '⚖️',
+          color: '#1b2a4a',
+          port: 4203,
+          features: ['Expedientes por fuero', 'Plazos y audiencias', 'Estados procesales', 'Historial de la mesa'],
+          hasArca: false
+        },
+        {
+          id: 'comercio',
+          name: 'Almacén del Barrio',
+          description: 'Pedidos a proveedores, control de góndola y cierre de caja del día.',
+          category: 'Comercio',
+          icon: '🏪',
+          color: '#0891b2',
+          port: 4204,
+          features: ['Pedidos a proveedores', 'Control de góndola', 'Arqueo de caja', 'Tickets de turno'],
+          hasArca: false
+        },
+        {
+          id: 'facturacion',
+          name: 'Libro',
+          description: 'Comprobantes A, B y notas de crédito, con vencimientos y cobro.',
+          category: 'Comercio',
+          icon: '📒',
+          color: '#4338ca',
+          port: 4205,
+          features: ['Facturas y notas de crédito', 'Estados de comprobante', 'Vencimientos', 'Totales por estado'],
+          hasArca: false
+        },
+        {
+          id: 'kiosco',
+          name: 'Kiosco Lo de Pedro',
+          description: 'Stock de góndola, alertas de reposición y libreta de fiado del barrio.',
+          category: 'Comercio',
+          icon: '🍬',
+          color: '#1d6f42',
+          port: 4206,
+          features: ['Stock por categoría', 'Alertas de reposición', 'Libreta de fiado', 'Historial de movimientos'],
+          hasArca: true
+        },
+        {
+          id: 'inmobiliaria',
+          name: 'Inmobiliaria Reeb',
+          description: 'Venta y alquiler con fichas de propiedad, visitas y clientes interesados.',
+          category: 'Inmuebles',
+          icon: '🏠',
+          color: '#1e3a5f',
+          port: 4207,
+          features: ['Propiedades con fotos', 'Clientes interesados', 'Registro de visitas', 'Estados de operación'],
+          hasArca: true
+        },
+        {
+          id: 'taller',
+          name: 'Taller Mecánico',
+          description: 'Órdenes de trabajo con diagnóstico, presupuesto, repuestos y mano de obra.',
+          category: 'Automotriz',
+          icon: '🔧',
+          color: '#c41e3a',
+          port: 4208,
+          features: ['Órdenes de trabajo', 'Presupuestos con repuestos', 'Estados de reparación', 'Historial de vehículos'],
+          hasArca: true
+        },
+        {
+          id: 'peluqueria',
+          name: 'Salón Camelia',
+          description: 'Agenda de turnos, servicios, profesionales y cobro en el salón.',
+          category: 'Servicios',
+          icon: '✂️',
+          color: '#be185d',
+          port: 4209,
+          features: ['Agenda de turnos', 'Catálogo de servicios', 'Asignación de profesional', 'Cobro con ticket'],
+          hasArca: true
+        },
+        {
+          id: 'carpinteria',
+          name: 'El Quebracho',
+          description: 'Muebles a medida: materiales, presupuesto, seña y fecha de entrega.',
+          category: 'Servicios',
+          icon: '🪵',
+          color: '#78350f',
+          port: 4210,
+          features: ['Pedidos de muebles', 'Presupuestos con materiales', 'Seña y saldo', 'Estados de producción'],
+          hasArca: true
+        },
+        {
+          id: 'stockfacturacion',
+          name: 'Stock y Facturación',
+          description: 'Inventario con movimientos y facturación electrónica de ejemplo (ARCA).',
+          category: 'Comercio',
+          icon: '📦',
+          color: '#0369a1',
+          port: 4211,
+          features: ['Inventario con movimientos', 'Alertas de stock', 'Facturas A/B/C', 'Notas de crédito'],
+          hasArca: true
+        },
+        {
+          id: 'libreria',
+          name: 'Librería Rivadavia',
+          description: 'Catálogo de mostrador, pedidos especiales con seña y control de stock.',
+          category: 'Comercio',
+          icon: '📚',
+          color: '#166534',
+          port: 4212,
+          features: ['Catálogo con ISBN', 'Pedidos especiales', 'Control de stock', 'Ventas con ticket'],
+          hasArca: true
+        },
+        {
+          id: 'biblioteca',
+          name: 'Biblioteca Pública Almagro',
+          description: 'Préstamos a socios, devoluciones, renovaciones y control de multas.',
+          category: 'Cultura',
+          icon: '🏛️',
+          color: '#1e3a8a',
+          port: 4213,
+          features: ['Catálogo con ubicación', 'Alta de socios', 'Préstamos y renovaciones', 'Control de multas'],
+          hasArca: false
+        },
+        {
+          id: 'restaurante',
+          name: 'Parrilla Don Ernesto',
+          description: 'Mesas, comandas, vista de cocina y cierre de cuenta con factura.',
+          category: 'Gastronomía',
+          icon: '🍽️',
+          color: '#991b1b',
+          port: 4214,
+          features: ['Estado de mesas', 'Comandas por mesa', 'Vista de cocina', 'Cierre con ticket'],
+          hasArca: true
+        },
+        {
+          id: 'rotiseria',
+          name: 'Rotisería',
+          description: 'Producción del día, pedidos de mostrador y delivery con seguimiento.',
+          category: 'Gastronomía',
+          icon: '🍗',
+          color: '#ea580c',
+          port: 4215,
+          features: ['Producción diaria', 'Pedidos mostrador/delivery', 'Stock de ingredientes', 'Ventas con ticket'],
+          hasArca: true
+        },
+        {
+          id: 'marketplace',
+          name: 'Feria',
+          description: 'Publicaciones, ventas, preguntas y envíos en un marketplace de ejemplo.',
+          category: 'Comercio',
+          icon: '🛒',
+          color: '#2563eb',
+          port: 4216,
+          features: ['Publicaciones', 'Ventas y preguntas', 'Envíos de ejemplo', 'Pagos simulados'],
+          hasArca: true
+        },
+        {
+          id: 'automotores',
+          name: 'Automotores Reeb',
+          description: 'Stock de 0km y usados, con financiación y permuta de ejemplo.',
+          category: 'Automotriz',
+          icon: '🚗',
+          color: '#0f172a',
+          port: 4217,
+          features: ['Catálogo 0km y usados', 'Financiación de ejemplo', 'Permuta', 'Ficha del vehículo'],
+          hasArca: true
+        },
+        {
+          id: 'hospedaje',
+          name: 'Cabañas del Sauce',
+          description: 'Hospedaje de ejemplo en Villa Ventana: cabañas, fechas y factura de hospedaje.',
+          category: 'Turismo',
+          icon: '🏔️',
+          color: '#1a4a3c',
+          port: 4218,
+          features: ['Cabañas con foto y precio', 'Reserva por fechas', 'Check-in y check-out', 'Factura de hospedaje ARCA'],
+          hasArca: true
+        },
+        {
+          id: 'excursiones',
+          name: 'Senderos Tornquist',
+          description: 'Excursiones en Sierra de la Ventana: Cerro Ventana, Garganta del Diablo y Cueva del Toro.',
+          category: 'Turismo',
+          icon: '🥾',
+          color: '#7a1f2b',
+          port: 4219,
+          features: ['Ficha con duración y cupo', 'Reserva de plaza', 'Salidas y guías', 'Cupos por salida'],
+          hasArca: false
+        },
+        {
+          id: 'complejo',
+          name: 'Complejo El Palomar',
+          description: 'Predio de ejemplo en Sierra de la Ventana: paquetes, spa, golf y actividades del día.',
+          category: 'Turismo',
+          icon: '⛳',
+          color: '#0e7490',
+          port: 4220,
+          features: ['Paquetes de estadía y spa', 'Actividades del día', 'Huéspedes', 'Turnos de spa'],
+          hasArca: true
+        }
+      ]
+    },
     services: {
       title: 'En qué puedo ayudarte',
       subtitle:
@@ -477,6 +710,7 @@ export const translations: Record<Lang, Dictionary> = {
       stack: 'Stack',
       certificates: 'Certificates',
       about: 'About',
+      demos: 'Demos',
       services: 'Services',
       themeLight: 'Switch to light mode',
       themeDark: 'Switch to dark mode',
@@ -666,6 +900,215 @@ export const translations: Record<Lang, Dictionary> = {
       focusValue: 'Android (Kotlin/Java) · Angular · Java/Spring Boot',
       todayLabel: 'Now',
       todayValue: 'Software Engineer at BP4. Outside consulting, one freelance engagement at a time, closed scope, written plan.',
+    },
+    demos: {
+      title: 'Systems for Argentine trades and shops',
+      subtitle: 'Sample demos for Argentine shops and trades. The catalog can be searched and filtered by vertical: client landing page and admin panel, with fictional data. These are not production systems.',
+      viewDemo: 'View demo',
+      openPanel: 'Panel',
+      viewCatalog: 'View the catalog',
+      port: 'Port',
+      withArca: 'With sample ARCA billing',
+      items: [
+        {
+          id: 'estudio',
+          name: 'Estudio Norte',
+          description: 'Law-firm intake desk: case files, deadlines, and briefs on the same record.',
+          category: 'Legal',
+          icon: '⚖️',
+          color: '#1b2a4a',
+          port: 4203,
+          features: ['Files by jurisdiction', 'Deadlines and hearings', 'Procedural statuses', 'Desk history'],
+          hasArca: false
+        },
+        {
+          id: 'comercio',
+          name: 'Almacén del Barrio',
+          description: 'Supplier orders, shelf control, and end-of-day cash closing.',
+          category: 'Retail',
+          icon: '🏪',
+          color: '#0891b2',
+          port: 4204,
+          features: ['Supplier orders', 'Shelf control', 'Cash reconciliation', 'Shift tickets'],
+          hasArca: false
+        },
+        {
+          id: 'facturacion',
+          name: 'Libro',
+          description: 'A, B, and credit-note receipts, with due dates and collections.',
+          category: 'Retail',
+          icon: '📒',
+          color: '#4338ca',
+          port: 4205,
+          features: ['Invoices and credit notes', 'Receipt statuses', 'Due dates', 'Totals by status'],
+          hasArca: false
+        },
+        {
+          id: 'kiosco',
+          name: 'Kiosco Lo de Pedro',
+          description: 'Shelf stock, restock alerts, and the neighborhood credit book.',
+          category: 'Retail',
+          icon: '🍬',
+          color: '#1d6f42',
+          port: 4206,
+          features: ['Stock by category', 'Restock alerts', 'Credit book', 'Movement history'],
+          hasArca: true
+        },
+        {
+          id: 'inmobiliaria',
+          name: 'Inmobiliaria Reeb',
+          description: 'Sales and rentals with property files, visits, and interested clients.',
+          category: 'Real estate',
+          icon: '🏠',
+          color: '#1e3a5f',
+          port: 4207,
+          features: ['Properties with photos', 'Interested clients', 'Visit records', 'Operation statuses'],
+          hasArca: true
+        },
+        {
+          id: 'taller',
+          name: 'Taller Mecánico',
+          description: 'Work orders with diagnosis, quote, parts, and labor.',
+          category: 'Automotive',
+          icon: '🔧',
+          color: '#c41e3a',
+          port: 4208,
+          features: ['Work orders', 'Quotes with parts', 'Repair statuses', 'Vehicle history'],
+          hasArca: true
+        },
+        {
+          id: 'peluqueria',
+          name: 'Salón Camelia',
+          description: 'Appointment book, services, staff, and salon checkout.',
+          category: 'Services',
+          icon: '✂️',
+          color: '#be185d',
+          port: 4209,
+          features: ['Appointment schedule', 'Service catalog', 'Professional assignment', 'Ticket checkout'],
+          hasArca: true
+        },
+        {
+          id: 'carpinteria',
+          name: 'El Quebracho',
+          description: 'Custom furniture: materials, quote, deposit, and delivery date.',
+          category: 'Services',
+          icon: '🪵',
+          color: '#78350f',
+          port: 4210,
+          features: ['Furniture orders', 'Quotes with materials', 'Deposit and balance', 'Production statuses'],
+          hasArca: true
+        },
+        {
+          id: 'stockfacturacion',
+          name: 'Stock y Facturación',
+          description: 'Inventory movements and sample electronic billing (ARCA).',
+          category: 'Retail',
+          icon: '📦',
+          color: '#0369a1',
+          port: 4211,
+          features: ['Inventory with movements', 'Stock alerts', 'Invoices A/B/C', 'Credit notes'],
+          hasArca: true
+        },
+        {
+          id: 'libreria',
+          name: 'Librería Rivadavia',
+          description: 'Counter catalog, special orders with a deposit, and stock control.',
+          category: 'Retail',
+          icon: '📚',
+          color: '#166534',
+          port: 4212,
+          features: ['Catalog with ISBN', 'Special orders', 'Stock control', 'Sales with ticket'],
+          hasArca: true
+        },
+        {
+          id: 'biblioteca',
+          name: 'Biblioteca Pública Almagro',
+          description: 'Member loans, returns, renewals, and fine tracking.',
+          category: 'Culture',
+          icon: '🏛️',
+          color: '#1e3a8a',
+          port: 4213,
+          features: ['Catalog with location', 'Member registration', 'Loans and renewals', 'Fine control'],
+          hasArca: false
+        },
+        {
+          id: 'restaurante',
+          name: 'Parrilla Don Ernesto',
+          description: 'Tables, orders, kitchen view, and checkout with an invoice.',
+          category: 'Food service',
+          icon: '🍽️',
+          color: '#991b1b',
+          port: 4214,
+          features: ['Table status', 'Orders by table', 'Kitchen view', 'Ticket checkout'],
+          hasArca: true
+        },
+        {
+          id: 'rotiseria',
+          name: 'Rotisería',
+          description: 'Daily production, counter orders, and delivery tracking.',
+          category: 'Food service',
+          icon: '🍗',
+          color: '#ea580c',
+          port: 4215,
+          features: ['Daily production', 'Counter/delivery orders', 'Ingredient stock', 'Sales with ticket'],
+          hasArca: true
+        },
+        {
+          id: 'marketplace',
+          name: 'Feria',
+          description: 'Listings, sales, questions, and shipping in a sample marketplace.',
+          category: 'Retail',
+          icon: '🛒',
+          color: '#2563eb',
+          port: 4216,
+          features: ['Listings', 'Sales and questions', 'Sample shipping', 'Simulated payments'],
+          hasArca: true
+        },
+        {
+          id: 'automotores',
+          name: 'Automotores Reeb',
+          description: 'New and used stock, with sample financing and trade-in.',
+          category: 'Automotive',
+          icon: '🚗',
+          color: '#0f172a',
+          port: 4217,
+          features: ['New and used catalog', 'Sample financing', 'Trade-in', 'Vehicle file'],
+          hasArca: true
+        },
+        {
+          id: 'hospedaje',
+          name: 'Cabañas del Sauce',
+          description: 'Sample lodging in Villa Ventana: cabins, dates, and a lodging invoice.',
+          category: 'Tourism',
+          icon: '🏔️',
+          color: '#1a4a3c',
+          port: 4218,
+          features: ['Cabins with photo and price', 'Date booking', 'Check-in and check-out', 'ARCA lodging invoice'],
+          hasArca: true
+        },
+        {
+          id: 'excursiones',
+          name: 'Senderos Tornquist',
+          description: 'Tours in Sierra de la Ventana: Cerro Ventana, Garganta del Diablo, and Cueva del Toro.',
+          category: 'Tourism',
+          icon: '🥾',
+          color: '#7a1f2b',
+          port: 4219,
+          features: ['Duration and quota on each tour', 'Seat booking', 'Departures and guides', 'Quota per departure'],
+          hasArca: false
+        },
+        {
+          id: 'complejo',
+          name: 'Complejo El Palomar',
+          description: 'Sample resort in Sierra de la Ventana: packages, spa, golf, and the day’s activities.',
+          category: 'Tourism',
+          icon: '⛳',
+          color: '#0e7490',
+          port: 4220,
+          features: ['Stay and spa packages', 'Day activities', 'Guests', 'Spa slots'],
+          hasArca: true
+        }
+      ]
     },
     services: {
       title: 'How I can help',

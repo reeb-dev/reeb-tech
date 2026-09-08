@@ -1,0 +1,166 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Cabañas del Sauce — Villa Ventana</title>
+  <script>
+    (function () {
+      var p = location.pathname;
+      if (p && p.charAt(p.length - 1) !== "/" && !/\.[a-zA-Z0-9]+$/.test(p)) {
+        location.replace(p + "/" + location.search + location.hash);
+      }
+    })();
+  </script>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <header class="top">
+    <div class="top-inner">
+      <a class="logo" href="index.html">DEL SAUCE<small>Cabañas · Villa Ventana</small></a>
+      <nav>
+        <a href="#alojamientos">Alojamientos</a>
+        <a href="#lugar">El lugar</a>
+        <a href="#reserva">Reservar</a>
+        <a class="btn" href="panel.html">Panel Admin</a>
+      </nav>
+    </div>
+  </header>
+
+  <main>
+    <section class="hero">
+      <img class="hero-photo" src="img/hero.jpg" alt="Sierras de Ventania y campo en Villa Ventana">
+      <div class="hero-shade"></div>
+      <div class="wrap hero-inner">
+        <div>
+          <p class="kicker light">Cabañas y alquiler temporario · Sierra de la Ventana</p>
+          <h1>Cabañas del Sauce</h1>
+          <p class="lead light">Seis unidades en Villa Ventana, partido de Tornquist. Arroyo, vista al cerro y pueblo. Reservá fechas desde la web; queda en este navegador para el panel.</p>
+          <div class="hero-actions">
+            <a class="btn" href="#reserva">Consultar fechas</a>
+            <a class="btn btn-ghost" href="#alojamientos">Ver cabañas</a>
+          </div>
+        </div>
+        <aside class="local-card">
+          <p class="local-name">Del Sauce</p>
+          <p>Calle Los Álamos s/n</p>
+          <p>Villa Ventana, Buenos Aires</p>
+          <p class="local-hours">Check-in 14 · Check-out 10</p>
+          <p class="local-tel">0291-491-2200</p>
+        </aside>
+      </div>
+    </section>
+
+    <div class="wrap">
+      <section class="section" id="alojamientos">
+        <p class="kicker">Alojamientos</p>
+        <h2>Cabañas, suite y departamentos</h2>
+        <p class="section-lead">Precio por noche de ejemplo. Tocá una tarjeta para amenities, cupo y pedir esas fechas.</p>
+        <div class="filters" id="filters">
+          <button class="active" data-filter="all" type="button">Todo</button>
+          <button data-filter="cabana" type="button">Cabañas</button>
+          <button data-filter="suite" type="button">Suite</button>
+          <button data-filter="depto" type="button">Departamentos</button>
+        </div>
+        <div class="catalog-grid" id="catalog"></div>
+      </section>
+
+      <section class="section" id="lugar">
+        <p class="kicker">Ubicación</p>
+        <h2>Villa Ventana, partido de Tornquist</h2>
+        <img class="place-banner" src="img/sierras.jpg" alt="Sierras de Ventania desde un mirador">
+        <div class="modules info-grid">
+          <article>
+            <h3>Cómo llegar</h3>
+            <p>Ruta 76 hasta Sierra de la Ventana y desvío a Villa Ventana. Autopista a Bahía Blanca y 100 km de sierras.</p>
+          </article>
+          <article>
+            <h3>Alrededor</h3>
+            <p>Parque Provincial Ernesto Tornquist, Cerro Ventana, Garganta del Diablo y Cueva del Toro.</p>
+          </article>
+          <article>
+            <h3>Temporada</h3>
+            <p>Abierto todo el año. Otoño y primavera son los más tranquilos. Estufa a leña en las cabañas.</p>
+          </article>
+        </div>
+      </section>
+
+      <section class="section" id="reserva">
+        <div class="reserva-card">
+          <div>
+            <p class="kicker light">Reserva</p>
+            <h2>Pedí tu estadía</h2>
+            <p>Nombre, unidad y fechas. Se guarda en este navegador para el panel. No sale a un servidor. También podés escribir por WhatsApp.</p>
+          </div>
+          <form id="reservaForm" class="reserva-form">
+            <label>Alojamiento
+              <select name="habitacion" required></select>
+            </label>
+            <label>Huéspedes
+              <input name="huespedes" type="number" min="1" max="8" value="2" required>
+            </label>
+            <label>Check-in
+              <input name="checkin" type="date" required>
+            </label>
+            <label>Check-out
+              <input name="checkout" type="date" required>
+            </label>
+            <label>Nombre
+              <input name="nombre" required maxlength="80" placeholder="Nombre y apellido" autocomplete="name">
+            </label>
+            <label>Teléfono
+              <input name="tel" required maxlength="40" placeholder="11 4000-1234" autocomplete="tel">
+            </label>
+            <label class="full">Notas
+              <textarea name="notas" maxlength="300" placeholder="Horario de llegada, cuna, dieta…"></textarea>
+            </label>
+            <p class="full reserva-total" id="reservaTotal"></p>
+            <div class="reserva-actions">
+              <button class="btn" type="submit">Enviar reserva</button>
+              <a class="btn btn-ghost btn-whatsapp" href="#">WhatsApp</a>
+            </div>
+          </form>
+        </div>
+      </section>
+
+      <section class="section" id="info">
+        <h2>La casa</h2>
+        <div class="modules info-grid">
+          <article>
+            <h3>Horarios</h3>
+            <p>Check-in: 14 hs</p>
+            <p>Check-out: 10 hs</p>
+            <p>Recepción: 9 a 21</p>
+          </article>
+          <article>
+            <h3>Dirección</h3>
+            <p>Calle Los Álamos s/n</p>
+            <p>Villa Ventana</p>
+            <p>Partido de Tornquist, Buenos Aires</p>
+          </article>
+          <article>
+            <h3>Pagos</h3>
+            <p>Transferencia y efectivo</p>
+            <p>Mercado Pago</p>
+            <p>Factura de hospedaje (ARCA) desde el panel</p>
+          </article>
+        </div>
+      </section>
+    </div>
+  </main>
+
+  <div class="ficha-overlay" id="fichaOverlay" hidden>
+    <div class="ficha-modal" role="dialog" aria-modal="true" aria-labelledby="fichaTitle">
+      <button class="ficha-close" id="fichaClose" type="button" aria-label="Cerrar">×</button>
+      <div id="fichaBody"></div>
+    </div>
+  </div>
+
+  <div id="contacto"></div>
+  <footer class="wrap">Cabañas del Sauce · Calle Los Álamos s/n, Villa Ventana · demo de producto · no es un hospedaje en actividad.</footer>
+
+  <script src="data.js"></script>
+  <script src="app.js"></script>
+  <script src="../contacto.js" data-phone="5492915757934" data-text="Hola, quiero consultar por una cabaña en Del Sauce, Villa Ventana" data-subject="Consulta demo — Cabañas del Sauce" data-title="Consultar estadía"></script>
+</body>
+</html>

@@ -1,0 +1,123 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Panel · Complejo El Palomar</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <div class="app">
+    <header class="top">
+      <div class="top-inner">
+        <a class="logo" href="index.html">EL PALOMAR<small>Complejo · panel</small></a>
+        <nav>
+          <a href="index.html">Inicio</a>
+          <div class="panel-tabs">
+            <button type="button" id="tab-huespedes" class="on">Huéspedes</button>
+            <button type="button" id="tab-paquetes">Paquetes</button>
+            <button type="button" id="tab-actividades">Actividades</button>
+          </div>
+          <button class="btn" id="open-create" type="button">Nueva reserva</button>
+        </nav>
+      </div>
+    </header>
+
+    <div id="view-huespedes">
+      <div class="toolbar">
+        <div>
+          <p class="eyebrow">Datos de ejemplo</p>
+          <h1>Huéspedes</h1>
+        </div>
+      </div>
+      <div class="stats" id="stats"></div>
+      <form class="create" id="create">
+        <select name="paquete" required></select>
+        <input name="checkin" type="date" required>
+        <input name="checkout" type="date">
+        <input name="cliente" placeholder="Huésped" required>
+        <input name="tel" placeholder="Teléfono">
+        <input name="huespedes" type="number" min="1" value="2">
+        <input name="notas" placeholder="Notas">
+        <button class="btn-panel" type="submit">Guardar</button>
+      </form>
+      <div class="workspace">
+        <section class="list">
+          <table>
+            <thead>
+              <tr>
+                <th>Estadía</th>
+                <th>Huésped</th>
+                <th>Paquete</th>
+                <th class="amount">Total</th>
+                <th>Estado</th>
+              </tr>
+            </thead>
+            <tbody id="rows"></tbody>
+          </table>
+        </section>
+        <aside class="detail" id="detail"></aside>
+      </div>
+    </div>
+
+    <div id="view-paquetes" class="panel-hidden">
+      <div class="toolbar">
+        <div>
+          <p class="eyebrow">Carta de la landing</p>
+          <h1>Paquetes</h1>
+        </div>
+        <button class="btn" id="open-pkg" type="button">Nuevo paquete</button>
+      </div>
+      <form class="create" id="create-pkg">
+        <input name="nombre" placeholder="Nombre" required>
+        <select name="tipo">
+          <option value="estadia">Con noche</option>
+          <option value="spa">Spa</option>
+        </select>
+        <input name="precio" type="number" placeholder="Precio" required>
+        <input name="noches" type="number" placeholder="Noches">
+        <input name="pax" type="number" placeholder="Huéspedes">
+        <select name="imagen">
+          <option value="img/hab.jpg">Habitación</option>
+          <option value="img/spa.jpg">Spa</option>
+          <option value="img/golf.jpg">Golf</option>
+          <option value="img/sierras.jpg">Sierras</option>
+        </select>
+        <textarea name="descripcion" placeholder="Descripción"></textarea>
+        <input name="incluye" placeholder="Incluye (coma)">
+        <button class="btn-panel" type="submit">Guardar paquete</button>
+      </form>
+      <div class="trabajos-grid" id="pkgGrid"></div>
+    </div>
+
+    <div id="view-actividades" class="panel-hidden">
+      <div class="toolbar">
+        <div>
+          <p class="eyebrow">Agenda del predio</p>
+          <h1>Actividades del día</h1>
+        </div>
+        <button class="btn" id="open-act" type="button">Nueva actividad</button>
+      </div>
+      <form class="create" id="create-act">
+        <input name="nombre" placeholder="Nombre" required>
+        <input name="hora" placeholder="Hora" required>
+        <input name="lugar" placeholder="Lugar">
+        <input name="cupo" type="number" placeholder="Cupo">
+        <input name="tomados" type="number" placeholder="Anotados">
+        <select name="imagen">
+          <option value="img/golf.jpg">Golf</option>
+          <option value="img/trekking.jpg">Trekking</option>
+          <option value="img/yoga.jpg">Yoga</option>
+          <option value="img/arroyo.jpg">Arroyo</option>
+        </select>
+        <button class="btn-panel" type="submit">Guardar</button>
+      </form>
+      <div class="trabajos-grid" id="actGrid"></div>
+    </div>
+  </div>
+
+  <script src="data.js"></script>
+  <script src="panel.js"></script>
+  <script src="../contacto.js" data-phone="5492915757934" data-text="Hola, quiero consultar por un paquete en El Palomar, Sierra de la Ventana" data-subject="Consulta demo — Complejo El Palomar" data-title="Consultar el predio" data-place="panel"></script>
+</body>
+</html>
