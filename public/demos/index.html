@@ -8,7 +8,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,560;9..144,650&family=Outfit:wght@400;600;650;700&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="hub.css?v=hub11">
+  <link rel="stylesheet" href="hub.css?v=hub12">
 </head>
 <body>
 
@@ -142,6 +142,7 @@
           <a class="btn btn-primary btn-lg" href="https://wa.me/5492915757934?text=Hola%2C%20vi%20las%20demos%20del%20portfolio%20y%20quiero%20consultar%20un%20sistema%20a%20medida%20para%20mi%20rubro" target="_blank" rel="noopener noreferrer">Consultar un sistema a medida</a>
           <a class="btn btn-ghost" href="#precios">Ver planes de referencia</a>
           <a class="btn btn-ghost" href="https://www.linkedin.com/in/manuel-jesus-reeb" target="_blank" rel="noopener noreferrer">Ver perfil en LinkedIn</a>
+          <a class="btn btn-ghost" href="/reeb-tech/">Portfolio</a>
         </div>
         <p class="who-mail"><a href="mailto:manuelreeb@icloud.com">manuelreeb@icloud.com</a></p>
       </aside>
@@ -596,6 +597,8 @@
       var picksHead = document.querySelector(".picks-head");
       var picksWrap = document.querySelector(".picks-wrap");
       var catalogHead = document.querySelector(".catalog-head");
+      var whoEl = document.getElementById("quien");
+      var pricesEl = document.getElementById("precios");
       var emptyEl = document.getElementById("hub-empty");
       var searchEl = document.getElementById("hub-search");
       var activeFilter = "all";
@@ -635,6 +638,9 @@
         if (picksHead) picksHead.hidden = visiblePicks === 0;
         if (picksWrap) picksWrap.hidden = visiblePicks === 0;
         if (catalogHead) catalogHead.hidden = visibleRows === 0;
+        var browsing = filter !== "all" || !!q;
+        if (whoEl) whoEl.hidden = browsing;
+        if (pricesEl) pricesEl.hidden = browsing;
         bands.forEach(function (band) {
           var key = band.getAttribute("data-band");
           var n = 0;
@@ -655,6 +661,17 @@
       });
 
       if (searchEl) searchEl.addEventListener("input", apply);
+
+      document.querySelectorAll('a[href="#quien"], a[href="#precios"]').forEach(function (a) {
+        a.addEventListener("click", function () {
+          activeFilter = "all";
+          if (searchEl) searchEl.value = "";
+          buttons.forEach(function (b) {
+            b.classList.toggle("is-on", (b.getAttribute("data-filter") || "") === "all");
+          });
+          apply();
+        });
+      });
 
       function alignHash() {
         var id = (location.hash || "").replace("#", "");
