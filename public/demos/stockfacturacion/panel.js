@@ -205,7 +205,12 @@ function renderStock() {
   document.getElementById("rows-stock").innerHTML = visible.map((p) => `
     <tr class="row ${p.id === selectedProd ? "on" : ""}" data-id="${esc(p.id)}">
       <td>${esc(p.codigo)}</td>
-      <td>${esc(p.nombre)}</td>
+      <td>
+        <div class="row-main">
+          ${p.img ? `<img class="thumb" src="${esc(p.img)}" alt="">` : ""}
+          <span>${esc(p.nombre)}</span>
+        </div>
+      </td>
       <td>${esc(catLabel(p.categoria))}</td>
       <td class="amount">${esc(money(p.precioVenta))}</td>
       <td class="amount">${p.stock}</td>
@@ -229,6 +234,7 @@ function renderStock() {
   const margen = prod.precioVenta - prod.precioCompra;
   const margenPct = prod.precioCompra > 0 ? Math.round((margen / prod.precioCompra) * 100) : 0;
   detail.innerHTML = `
+    ${prod.img ? `<img class="ficha-photo-panel" src="${esc(prod.img)}" alt="${esc(prod.nombre)}">` : ""}
     <p class="eyebrow">${esc(prod.codigo)} · ${esc(catLabel(prod.categoria))}</p>
     <h2>${esc(prod.nombre)}</h2>
     <div class="meta">
@@ -507,6 +513,7 @@ function renderAlertas() {
         <span>${esc(p.codigo)}</span>
         <span class="tag ${esc(stockStatus(p))}">${esc(label(stockStatus(p)))}</span>
       </div>
+      ${p.img ? `<img class="ficha-photo-panel" src="${esc(p.img)}" alt="">` : ""}
       <h3>${esc(p.nombre)}</h3>
       <p>Stock ${p.stock} · mínimo ${p.minimo}</p>
       <p class="muted">${esc(p.proveedor)} · ${esc(p.ubicacion)}</p>
