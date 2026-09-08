@@ -17,6 +17,7 @@
           <div class="panel-tabs">
             <button type="button" id="tab-stock" class="on">Stock</button>
             <button type="button" id="tab-pedidos">Pedidos a obra</button>
+            <button type="button" id="tab-proveedores">Proveedores</button>
             <button type="button" id="tab-arca">ARCA</button>
           </div>
           <button class="btn" id="open-create" type="button">Nuevo</button>
@@ -24,25 +25,22 @@
       </div>
     </header>
 
+    <div id="alertBanner"></div>
+
     <div id="view-stock">
       <div class="toolbar">
         <div>
           <p class="eyebrow">Datos de ejemplo</p>
           <h1>Stock del corralón</h1>
         </div>
+        <input type="search" id="searchStock" class="search-input" placeholder="Buscar código o material">
       </div>
       <div class="stats" id="stats"></div>
       <form class="create" id="create">
         <input name="codigo" placeholder="Código" required>
         <input name="nombre" placeholder="Nombre" required>
-        <select name="categoria">
-          <option value="cemento">Cemento y cal</option>
-          <option value="mamposteria">Ladrillos</option>
-          <option value="hierro">Hierros</option>
-          <option value="aridos">Áridos</option>
-          <option value="pinturas">Pinturas</option>
-          <option value="terminaciones">Terminaciones</option>
-        </select>
+        <select name="categoria" id="createCat"></select>
+        <select name="proveedorId" id="createProv"></select>
         <input name="unidad" placeholder="Unidad (bolsa, m³…)" value="unidad">
         <input name="precio" type="number" placeholder="Precio" required>
         <input name="stock" type="number" placeholder="Stock">
@@ -77,6 +75,14 @@
         </div>
       </div>
       <div class="stats" id="pedido-stats"></div>
+      <form class="create" id="create-pedido">
+        <input name="cliente" placeholder="Cliente / empresa" required>
+        <input name="obra" placeholder="Obra / dirección" required>
+        <input name="tel" placeholder="Teléfono">
+        <select name="prodId" id="pedidoProd"></select>
+        <input name="cantidad" type="number" min="1" value="1">
+        <button class="btn-panel" type="submit">Cargar pedido</button>
+      </form>
       <div class="workspace">
         <section class="list">
           <table>
@@ -92,6 +98,41 @@
           </table>
         </section>
         <aside class="detail" id="pedido-detail"></aside>
+      </div>
+    </div>
+
+    <div id="view-proveedores" class="panel-hidden">
+      <div class="toolbar">
+        <div>
+          <p class="eyebrow">Compras</p>
+          <h1>Proveedores</h1>
+        </div>
+      </div>
+      <div class="stats" id="prov-stats"></div>
+      <form class="create" id="create-prov">
+        <input name="nombre" placeholder="Razón social" required>
+        <input name="rubro" placeholder="Rubro">
+        <input name="tel" placeholder="Teléfono">
+        <input name="cuit" placeholder="CUIT">
+        <input name="contacto" placeholder="Contacto">
+        <input name="nota" placeholder="Nota de entrega">
+        <button class="btn-panel" type="submit">Agregar proveedor</button>
+      </form>
+      <div class="workspace">
+        <section class="list">
+          <table>
+            <thead>
+              <tr>
+                <th>Proveedor</th>
+                <th>Rubro</th>
+                <th>Teléfono</th>
+                <th>Alertas</th>
+              </tr>
+            </thead>
+            <tbody id="prov-rows"></tbody>
+          </table>
+        </section>
+        <aside class="detail" id="prov-detail"></aside>
       </div>
     </div>
 

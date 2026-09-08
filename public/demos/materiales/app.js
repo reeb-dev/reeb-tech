@@ -7,6 +7,7 @@
   const checkoutOverlay = document.getElementById("checkoutOverlay");
 
   let currentFilter = "all";
+  let stockFilter = "all";
   let searchTerm = "";
 
   function products() { return load(); }
@@ -15,8 +16,11 @@
     const term = searchTerm.trim().toLowerCase();
     return products().filter((p) => {
       if (currentFilter !== "all" && p.categoria !== currentFilter) return false;
+      if (stockFilter === "ok" && stockStatus(p) !== "stock") return false;
+      if (stockFilter === "bajo" && stockStatus(p) === "stock") return false;
       if (!term) return true;
-      return `${p.nombre} ${p.descripcion || ""}`.toLowerCase().includes(term);
+      const hay = `${p.nombre} ${p.descripcion || ""} ${p.codigo || ""} ${catLabel(p.categoria)}`.toLowerCase();
+      return hay.includes(term);
     });
   }
 
@@ -25,6 +29,24 @@
     if (status === "agotado") return "Sin stock";
     if (status === "bajo") return `Últimas ${item.stock} ${item.unidad}`;
     return `Stock: ${item.stock} ${item.unidad}`;
+  }
+
+  function cardHtml(p) {
+    const status = stockStatus(p);
+    return `
+      <article class="product-card" data-open="${esc(p.id)}" tabindex="0">
+        <img src="${esc(p.imagen)}" alt="${esc(p.nombre)}">
+        <div class="card-body">
+          <p class="cat">${esc(catLabel(p.categoria))}</p>
+          <h3>${esc(p.nombre)}</h3>
+          <p class="price">${money(p.precio)} <small>/${esc(p.unidad)}</small></p>
+          <p class="stock ${esc(status)}">${stockLine(p)}</p>
+          <div class="tile-actions">
+            <button type="button" class="ghost" data-add="${esc(p.id)}" ${status === "agotado" ? "disabled" : ""}>Agregar</button>
+          </div>
+        </div>
+      </article>
+    `;
   }
 
   function renderCats() {
@@ -56,6 +78,26 @@
         renderCatalog();
       });
     });
+    const stockBtns = [
+      { id: "all", label: "Cualquier stock" },
+      { id: "ok", label: "En stock" },
+      { id: "bajo", label: "Bajo o sin stock" }
+    ];
+    document.getElementById("stockFilters").innerHTML = stockBtns.map((f) =>
+      `<button type="button" data-stock="${f.id}" class="${stockFilter === f.id ? "active" : ""}">${esc(f.label)}</button>`
+    ).join("");
+    document.querySelectorAll("#stockFilters button").forEach((btn) => {
+      btn.addEventListener("click", () => {
+        stockFilter = btn.dataset.stock;
+        renderFilters();
+        renderCatalog();
+      });
+    });
+  }
+
+  function renderDestacados() {
+    const list = products().filter((p) => p.destacado);
+    document.getElementById("destacadosGrid").innerHTML = list.map(cardHtml).join("");
   }
 
   function renderCatalog() {
@@ -63,23 +105,7 @@
     document.getElementById("catalogCount").textContent = list.length
       ? `${list.length} material${list.length === 1 ? "" : "es"}`
       : "No hay materiales con ese filtro.";
-    catalog.innerHTML = list.map((p) => {
-      const status = stockStatus(p);
-      return `
-        <article class="product-card" data-open="${esc(p.id)}" tabindex="0">
-          <img src="${esc(p.imagen)}" alt="${esc(p.nombre)}">
-          <div class="card-body">
-            <p class="cat">${esc(catLabel(p.categoria))}</p>
-            <h3>${esc(p.nombre)}</h3>
-            <p class="price">${money(p.precio)} <small>/${esc(p.unidad)}</small></p>
-            <p class="stock ${esc(status)}">${stockLine(p)}</p>
-            <div class="tile-actions">
-              <button type="button" class="ghost" data-add="${esc(p.id)}" ${status === "agotado" ? "disabled" : ""}>Agregar</button>
-            </div>
-          </div>
-        </article>
-      `;
-    }).join("");
+    catalog.innerHTML = list.map(cardHtml).join("");
   }
 
   function openFicha(productId) {
@@ -87,16 +113,22 @@
     if (!item) return;
     const status = stockStatus(item);
     const agotado = status === "agotado";
+    const prov = proveedorNombre(item.proveedorId);
     fichaBody.innerHTML = `
       <img class="ficha-photo" src="${esc(item.imagen)}" alt="${esc(item.nombre)}">
       <div class="ficha-info">
-        <p class="cat">${esc(catLabel(item.categoria))}</p>
+        <p class="cat">${esc(catLabel(item.categoria))} · ${esc(item.codigo)}</p>
         <h2 id="fichaTitle">${esc(item.nombre)}</h2>
         <p class="ficha-desc">${esc(item.descripcion || "")}</p>
         <dl class="ficha-meta">
           <div><dt>Precio</dt><dd>${esc(money(item.precio))} / ${esc(item.unidad)}</dd></div>
           <div><dt>Stock</dt><dd>${stockLine(item)}</dd></div>
+          <div><dt>Proveedor</dt><dd>${esc(prov)}</dd></div>
+          <div><dt>Unidad</dt><dd>${esc(item.unidad)}</dd></div>
         </dl>
+        <label class="qty-label">Cantidad
+          <input id="fichaQty" type="number" min="1" max="${item.stock}" value="1" ${agotado ? "disabled" : ""}>
+        </label>
         <div class="tile-actions">
           <button type="button" class="ghost" data-add="${esc(item.id)}" ${agotado ? "disabled" : ""}>Agregar al pedido</button>
           <button type="button" class="btn-panel" data-buy="${esc(item.id)}" ${agotado ? "disabled" : ""}>Pedir a obra</button>
@@ -108,9 +140,20 @@
     document.body.classList.add("ficha-open");
   }
 
+  function fichaQty() {
+    return Number(document.getElementById("fichaQty")?.value || 1);
+  }
+
   function closeFicha() {
     overlay.hidden = true;
     document.body.classList.remove("ficha-open");
+  }
+
+  function onAddClick(productId, qty) {
+    const result = addToCart(productId, qty);
+    showToast(result.ok ? "Agregado al pedido" : "Sin stock suficiente");
+    renderCart();
+    return result;
   }
 
   catalog.addEventListener("click", (event) => {
@@ -118,9 +161,18 @@
     const tile = event.target.closest("[data-open]");
     if (addBtn) {
       event.stopPropagation();
-      const result = addToCart(addBtn.dataset.add);
-      showToast(result.ok ? "Agregado al pedido" : "Sin stock suficiente");
-      renderCart();
+      onAddClick(addBtn.dataset.add, 1);
+      return;
+    }
+    if (tile) openFicha(tile.dataset.open);
+  });
+
+  document.getElementById("destacadosGrid").addEventListener("click", (event) => {
+    const addBtn = event.target.closest("[data-add]");
+    const tile = event.target.closest("[data-open]");
+    if (addBtn) {
+      event.stopPropagation();
+      onAddClick(addBtn.dataset.add, 1);
       return;
     }
     if (tile) openFicha(tile.dataset.open);
@@ -130,14 +182,12 @@
     const addBtn = event.target.closest("[data-add]");
     const buyBtn = event.target.closest("[data-buy]");
     if (addBtn) {
-      const result = addToCart(addBtn.dataset.add);
-      showToast(result.ok ? "Agregado al pedido" : "Sin stock suficiente");
-      renderCart();
-      openFicha(addBtn.dataset.add);
+      const result = onAddClick(addBtn.dataset.add, fichaQty());
+      if (result.ok) openFicha(addBtn.dataset.add);
       return;
     }
     if (buyBtn) {
-      const result = addToCart(buyBtn.dataset.buy);
+      const result = addToCart(buyBtn.dataset.buy, fichaQty());
       if (!result.ok) { showToast("Sin stock suficiente"); return; }
       renderCart();
       closeFicha();
@@ -234,7 +284,8 @@
   document.getElementById("checkoutConfirm").addEventListener("click", () => {
     const nombre = document.getElementById("checkoutNombre").value.trim();
     const obra = document.getElementById("checkoutObra").value.trim();
-    const result = checkoutCart(nombre, obra);
+    const tel = document.getElementById("checkoutTel").value.trim();
+    const result = checkoutCart(nombre, obra, tel);
     if (!result.ok) {
       showToast(result.reason === "vacio" ? "El pedido está vacío" : `Sin stock: ${result.nombre || "un material"}`);
       return;
@@ -242,13 +293,30 @@
     checkoutOverlay.hidden = true;
     document.getElementById("checkoutNombre").value = "";
     document.getElementById("checkoutObra").value = "";
+    document.getElementById("checkoutTel").value = "";
     showToast("Pedido a obra · " + result.pedido.codigo);
+    renderDestacados();
     renderCatalog();
     renderCart();
   });
-  document.getElementById("searchProd").addEventListener("input", (event) => {
-    searchTerm = event.target.value;
+
+  function applySearch(value) {
+    searchTerm = value;
+    document.getElementById("searchProd").value = value;
+    document.getElementById("searchHero").value = value;
     renderCatalog();
+  }
+
+  document.getElementById("searchProd").addEventListener("input", (event) => {
+    applySearch(event.target.value);
+  });
+  document.getElementById("heroSearchForm").addEventListener("submit", (event) => {
+    event.preventDefault();
+    applySearch(document.getElementById("searchHero").value);
+    document.getElementById("productos").scrollIntoView({ behavior: "smooth" });
+  });
+  document.getElementById("searchHero").addEventListener("input", (event) => {
+    applySearch(event.target.value);
   });
 
   function showToast(message) {
@@ -267,6 +335,7 @@
 
   renderCats();
   renderFilters();
+  renderDestacados();
   renderCatalog();
   renderCartBadge();
 })();

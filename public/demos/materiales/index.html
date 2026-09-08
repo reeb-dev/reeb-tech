@@ -22,6 +22,7 @@
       <a class="logo" href="index.html">El Árido<small>Corralón · Villa Devoto</small></a>
       <nav>
         <a href="#productos">Catálogo</a>
+        <a href="#obra">Pedido a obra</a>
         <a href="#info">Horario</a>
         <div class="cart-wrap">
           <button class="cart-btn" id="cartBtn" type="button" aria-label="Carrito">Pedido <span class="cart-badge" id="cartBadge">0</span></button>
@@ -39,11 +40,16 @@
       <div class="wrap hero-inner">
         <div>
           <p class="kicker light">Corralón de obra · CABA</p>
-          <h1>Cemento, ladrillo, hierro y arena. Precio y stock en el catálogo.</h1>
-          <p class="lead light">Armá el pedido a obra desde el carrito. Datos de ejemplo en el navegador.</p>
+          <h1>Cemento, ladrillo, hierro, arena, cal, pinturas, caños y madera.</h1>
+          <p class="lead light">Precio y stock en el catálogo. Armá el pedido a obra desde el carrito. Datos de ejemplo en el navegador.</p>
+          <form class="hero-search" id="heroSearchForm" role="search">
+            <label class="sr-only" for="searchHero">Buscar material</label>
+            <input id="searchHero" type="search" placeholder="Buscar: cemento, hierro del 12, PVC…" autocomplete="off">
+            <button class="btn" type="submit">Buscar</button>
+          </form>
           <div class="hero-actions">
             <a class="btn" href="#productos">Ver catálogo</a>
-            <a class="btn btn-ghost" href="#info">Horario y pagos</a>
+            <a class="btn btn-ghost" href="#obra">Pedido a obra</a>
           </div>
         </div>
         <aside class="local-card">
@@ -63,6 +69,12 @@
         <div class="cat-grid" id="catGrid"></div>
       </section>
 
+      <section class="section" id="destacados">
+        <p class="kicker">Para llevar ahora</p>
+        <h2>Destacados</h2>
+        <div class="products-grid" id="destacadosGrid"></div>
+      </section>
+
       <section class="section" id="productos">
         <div class="catalog-header">
           <div>
@@ -72,13 +84,33 @@
           <div class="catalog-tools">
             <label class="search-field">
               <span class="sr-only">Buscar material</span>
-              <input id="searchProd" type="search" placeholder="Buscar…" autocomplete="off">
+              <input id="searchProd" type="search" placeholder="Nombre o código…" autocomplete="off">
             </label>
             <div class="filters" id="filters"></div>
+            <div class="filters" id="stockFilters"></div>
           </div>
         </div>
         <p class="catalog-count" id="catalogCount"></p>
         <div class="products-grid" id="catalog"></div>
+      </section>
+
+      <section class="section" id="obra">
+        <p class="kicker">Despacho</p>
+        <h2>Pedido a obra</h2>
+        <div class="info-grid">
+          <article>
+            <h3>1. Armá el carrito</h3>
+            <p>Elegí materiales, cantidad y abrí la ficha para ver stock y precio.</p>
+          </article>
+          <article>
+            <h3>2. Dirección de la obra</h3>
+            <p>Nombre o empresa y calle. El panel ve el pedido en “Pedidos a obra”.</p>
+          </article>
+          <article>
+            <h3>3. Factura ARCA</h3>
+            <p>En el panel se emite Factura A, B o C de ejemplo (sin AFIP real).</p>
+          </article>
+        </div>
       </section>
 
       <section class="section" id="info">
@@ -120,6 +152,9 @@
       </label>
       <label>Obra / dirección
         <input id="checkoutObra" type="text" placeholder="Dirección de la obra">
+      </label>
+      <label>Teléfono
+        <input id="checkoutTel" type="tel" placeholder="11-5555-0000">
       </label>
       <div class="checkout-actions">
         <button class="ghost" type="button" id="checkoutCancel">Seguir armando</button>
