@@ -584,6 +584,7 @@ input, select, textarea {
   gap: 28px;
   align-items: stretch;
 }
+.map-block .map-embed { grid-column: 1 / -1; }
 .map-embed {
   position: relative;
   border-radius: var(--radius);
