@@ -4,7 +4,16 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Rotisería — Pollos, empanadas y más</title>
+  <script>
+    (function () {
+      var p = location.pathname;
+      if (p && p.charAt(p.length - 1) !== "/" && !/\.[a-zA-Z0-9]+$/.test(p)) {
+        location.replace(p + "/" + location.search + location.hash);
+      }
+    })();
+  </script>
   <link rel="stylesheet" href="styles.css">
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" crossorigin="">
   <style>
     :root { --naranja: #e67e22; --naranja-light: #f39c12; }
     .catalog-header { display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 16px; margin-bottom: 24px; }
@@ -49,10 +58,8 @@
         <p class="lead">Pollos al spiedo, empanadas, milanesas y más. Todo recién hecho, todos los días. Mostrador y delivery en Caballito.</p>
         <a class="btn" href="#productos" style="background:var(--naranja);color:white;">Ver el menú de hoy</a>
       </div>
-      <aside class="produccion-card">
-        <div class="prod-img">
-          <img src="https://images.unsplash.com/photo-1598515214211-89d3c73ae83b?w=400&h=200&fit=crop" alt="Pollos rotisería" style="width:100%;border-radius:12px;">
-        </div>
+      <aside class="hero-photo">
+        <img src="https://images.unsplash.com/photo-1598515214211-89d3c73ae83b?w=800&h=600&fit=crop" alt="Pollos al spiedo de la rotisería">
       </aside>
     </section>
 
@@ -98,7 +105,7 @@
 
     <section class="section" id="ubicacion">
       <h2>Dónde estamos</h2>
-      <div class="modules" style="grid-template-columns: repeat(3, 1fr);">
+      <div class="modules ubicacion-grid">
         <article>
           <h3>🕐 Horario</h3>
           <p>Lunes a sábado: 11 a 14 y 19 a 22</p>
@@ -116,12 +123,8 @@
         </article>
       </div>
       <div class="map-embed">
-        <iframe
-          id="mapa-sucursal"
-          title="Mapa de la rotisería en Caballito"
-          src="https://www.openstreetmap.org/export/embed.html?bbox=-58.4489,-34.6264,-58.4249,-34.6104&amp;layer=mapnik&amp;marker=-34.6184,-58.4369"
-          loading="lazy"
-          referrerpolicy="no-referrer-when-downgrade"></iframe>
+        <p class="map-fallback" id="mapa-fallback">Av. Rivadavia 4500, Caballito, CABA</p>
+        <div id="mapa-sucursal" class="map-canvas" role="img" aria-label="Mapa de la rotisería en Caballito"></div>
       </div>
       <p class="map-caption"><a id="mapa-link" href="https://www.openstreetmap.org/?mlat=-34.6184&amp;mlon=-58.4369#map=16/-34.6184/-58.4369" target="_blank" rel="noopener">Ver mapa más grande</a></p>
     </section>
@@ -143,21 +146,40 @@
 
   <footer class="wrap" id="site-footer">Rotisería · Av. Rivadavia 4500, Caballito, CABA · demo de producto · no es un comercio en actividad.</footer>
 
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" crossorigin=""></script>
   <script src="data.js"></script>
   <script>
     const suc = loadSucursal();
-    const products = loadProductos();
+    const products = Array.isArray(loadProductos()) ? loadProductos() : [];
     let currentFilter = "all";
 
-    document.getElementById("header-dir").textContent = `${suc.direccion} · ${suc.barrio}, ${suc.ciudad}`;
-    document.getElementById("delivery-zona").textContent = `Zona: ${zonaEntregaTexto(suc)}`;
-    document.getElementById("delivery-tel").textContent = `📞 ${suc.telefono}`;
-    document.getElementById("info-dir").textContent = suc.direccion;
-    document.getElementById("info-barrio").textContent = `${suc.barrio}, ${suc.ciudad}`;
-    document.getElementById("info-radio").textContent = `Radio ${suc.radioCuadras} cuadras`;
-    document.getElementById("mapa-sucursal").src = mapaEmbedUrl(suc);
-    document.getElementById("mapa-link").href = `https://www.openstreetmap.org/?mlat=${suc.lat}&mlon=${suc.lng}#map=16/${suc.lat}/${suc.lng}`;
-    document.getElementById("site-footer").textContent = `Rotisería · ${direccionCompleta(suc)} · demo de producto · no es un comercio en actividad.`;
+    try {
+      document.getElementById("header-dir").textContent = `${suc.direccion} · ${suc.barrio}, ${suc.ciudad}`;
+      document.getElementById("delivery-zona").textContent = `Zona: ${zonaEntregaTexto(suc)}`;
+      document.getElementById("delivery-tel").textContent = `📞 ${suc.telefono}`;
+      document.getElementById("info-dir").textContent = suc.direccion;
+      document.getElementById("info-barrio").textContent = `${suc.barrio}, ${suc.ciudad}`;
+      document.getElementById("info-radio").textContent = `Radio ${suc.radioCuadras} cuadras`;
+      document.getElementById("mapa-fallback").textContent = direccionCompleta(suc);
+      document.getElementById("mapa-link").href = `https://www.openstreetmap.org/?mlat=${suc.lat}&mlon=${suc.lng}#map=16/${suc.lat}/${suc.lng}`;
+      pintarMapa(suc);
+      document.getElementById("site-footer").textContent = `Rotisería · ${direccionCompleta(suc)} · demo de producto · no es un comercio en actividad.`;
+    } catch (err) {
+      console.warn("No se pudo completar la sucursal", err);
+    }
+
+    function pintarMapa(s) {
+      const el = document.getElementById("mapa-sucursal");
+      if (!el || typeof L === "undefined") return;
+      const lat = Number(s.lat);
+      const lng = Number(s.lng);
+      const map = L.map(el, { scrollWheelZoom: false }).setView([lat, lng], 16);
+      L.tileLayer("https://tile.openstreetmap.org/{z}/{x}/{y}.png", {
+        attribution: "&copy; OpenStreetMap"
+      }).addTo(map);
+      L.marker([lat, lng]).addTo(map);
+      setTimeout(() => map.invalidateSize(), 80);
+    }
 
     function renderCatalog() {
       const filtered = currentFilter === "all"

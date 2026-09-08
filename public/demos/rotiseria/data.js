@@ -155,16 +155,34 @@ let pedidos = null;
 let ingredientes = null;
 let sucursal = null;
 
+function readJson(key) {
+  try {
+    const raw = localStorage.getItem(key);
+    if (!raw) return null;
+    return JSON.parse(raw);
+  } catch {
+    return null;
+  }
+}
+
+function writeJson(key, value) {
+  try {
+    localStorage.setItem(key, JSON.stringify(value));
+  } catch {
+    /* private mode / quota */
+  }
+}
+
 function loadProductos() {
   if (productos) return productos;
   const seed = seedProductos();
-  const raw = localStorage.getItem("rotiseria-productos-v1");
-  if (!raw) {
+  const parsed = readJson("rotiseria-productos-v1");
+  if (!Array.isArray(parsed)) {
     productos = seed;
-    localStorage.setItem("rotiseria-productos-v1", JSON.stringify(productos));
+    writeJson("rotiseria-productos-v1", productos);
     return productos;
   }
-  productos = JSON.parse(raw);
+  productos = parsed;
   const seedById = Object.fromEntries(seed.map((p) => [p.id, p]));
   let changed = false;
   productos.forEach((p) => {
@@ -179,32 +197,42 @@ function loadProductos() {
 
 function loadPedidos() {
   if (pedidos) return pedidos;
-  const raw = localStorage.getItem("rotiseria-pedidos-v1");
-  if (!raw) { pedidos = seedPedidos(); localStorage.setItem("rotiseria-pedidos-v1", JSON.stringify(pedidos)); return pedidos; }
-  return pedidos = JSON.parse(raw);
+  const parsed = readJson("rotiseria-pedidos-v1");
+  if (!Array.isArray(parsed)) {
+    pedidos = seedPedidos();
+    writeJson("rotiseria-pedidos-v1", pedidos);
+    return pedidos;
+  }
+  return pedidos = parsed;
 }
 
 function loadIngredientes() {
   if (ingredientes) return ingredientes;
-  const raw = localStorage.getItem("rotiseria-ingredientes-v1");
-  if (!raw) { ingredientes = seedIngredientes(); localStorage.setItem("rotiseria-ingredientes-v1", JSON.stringify(ingredientes)); return ingredientes; }
-  return ingredientes = JSON.parse(raw);
+  const parsed = readJson("rotiseria-ingredientes-v1");
+  if (!Array.isArray(parsed)) {
+    ingredientes = seedIngredientes();
+    writeJson("rotiseria-ingredientes-v1", ingredientes);
+    return ingredientes;
+  }
+  return ingredientes = parsed;
 }
 
-function saveProductos() { localStorage.setItem("rotiseria-productos-v1", JSON.stringify(productos)); }
-function savePedidos() { localStorage.setItem("rotiseria-pedidos-v1", JSON.stringify(pedidos)); }
-function saveIngredientes() { localStorage.setItem("rotiseria-ingredientes-v1", JSON.stringify(ingredientes)); }
+function saveProductos() { writeJson("rotiseria-productos-v1", productos); }
+function savePedidos() { writeJson("rotiseria-pedidos-v1", pedidos); }
+function saveIngredientes() { writeJson("rotiseria-ingredientes-v1", ingredientes); }
 
 function loadSucursal() {
   if (sucursal) return sucursal;
-  const raw = localStorage.getItem("rotiseria-sucursal-v1");
-  sucursal = raw ? { ...SUCURSAL_DEFAULT, ...JSON.parse(raw) } : { ...SUCURSAL_DEFAULT };
-  if (!raw) localStorage.setItem("rotiseria-sucursal-v1", JSON.stringify(sucursal));
+  const parsed = readJson("rotiseria-sucursal-v1");
+  sucursal = parsed && typeof parsed === "object" && !Array.isArray(parsed)
+    ? { ...SUCURSAL_DEFAULT, ...parsed }
+    : { ...SUCURSAL_DEFAULT };
+  if (!parsed) writeJson("rotiseria-sucursal-v1", sucursal);
   return sucursal;
 }
 
 function saveSucursal() {
-  localStorage.setItem("rotiseria-sucursal-v1", JSON.stringify(sucursal));
+  writeJson("rotiseria-sucursal-v1", sucursal);
 }
 
 function direccionCompleta(s = loadSucursal()) {
