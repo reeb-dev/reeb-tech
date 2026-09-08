@@ -5,35 +5,18 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Librería — Libros, útiles y papelería</title>
   <link rel="stylesheet" href="styles.css">
-  <style>
-    :root { --verde: #27ae60; --verde-light: #2ecc71; }
-    .catalog-header { display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 16px; margin-bottom: 24px; }
-    .filters { display: flex; gap: 8px; flex-wrap: wrap; }
-    .filters button { background: var(--card); border: 1px solid var(--line); padding: 8px 16px; border-radius: 20px; cursor: pointer; font-size: 13px; }
-    .filters button:hover { border-color: var(--verde); }
-    .filters button.active { background: var(--verde); color: white; border-color: var(--verde); }
-    .products-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 16px; }
-    .product-card { background: var(--card); border-radius: 12px; padding: 16px; display: flex; gap: 16px; box-shadow: 0 2px 8px rgba(0,0,0,0.06); }
-    .product-card .emoji { font-size: 40px; }
-    .product-card .info { flex: 1; }
-    .product-card h3 { margin: 0 0 4px; font-size: 14px; }
-    .product-card .autor { font-size: 12px; color: var(--muted); margin-bottom: 8px; }
-    .product-card .price { font-size: 18px; font-weight: 700; color: var(--verde); }
-    .product-card .stock { font-size: 11px; margin-top: 4px; }
-    .product-card .stock.bajo { color: #e67e22; }
-    .product-card .stock.agotado { color: #e74c3c; }
-    .pedido-box { background: linear-gradient(135deg, var(--verde) 0%, var(--verde-light) 100%); color: white; padding: 24px; border-radius: 12px; margin-top: 32px; }
-    .pedido-box h3 { margin: 0 0 8px; }
-    .admin-link { text-align: center; margin-top: 32px; padding: 24px; background: var(--card); border-radius: 12px; }
-  </style>
 </head>
 <body>
-  <header class="top" style="background: var(--verde);">
+  <header class="top" style="background: var(--verde, #27ae60);">
     <div class="top-inner">
       <a class="logo" href="index.html">LIBRERÍA<small>Libros, útiles y papelería</small></a>
       <nav>
         <a href="#catalogo">Catálogo</a>
         <a href="#pedidos">Pedidos</a>
+        <div class="cart-wrap">
+          <button class="cart-btn" id="cartBtn" type="button" aria-label="Carrito">🛒 <span class="cart-badge" id="cartBadge">0</span></button>
+          <div class="cart-dropdown" id="cartDropdown" hidden></div>
+        </div>
         <a class="btn" href="panel.html">Panel Admin</a>
       </nav>
     </div>
@@ -43,49 +26,33 @@
     <section class="hero">
       <div>
         <p class="kicker">Tu librería de confianza</p>
-        <h1>Libros, útiles escolares y todo para la oficina.</h1>
-        <p class="lead">El mejor catálogo del barrio. Libros de todas las editoriales, útiles escolares, papelería y artículos de arte. ¿No encontrás lo que buscás? Te lo encargamos.</p>
-        <a class="btn" href="#catalogo" style="background:var(--verde);color:white;">Ver catálogo</a>
+        <h1>Libros con tapa, útiles escolares y todo para la oficina.</h1>
+        <p class="lead">Catálogo del barrio: Borges, Cortázar, García Márquez, El Eternauta y más. ¿No está lo que buscás? Te lo encargamos.</p>
+        <a class="btn" href="#catalogo" style="background:var(--verde,#27ae60);color:white;">Ver catálogo</a>
       </div>
-      <aside class="book-card">
-        <img src="https://images.unsplash.com/photo-1481627834876-b7833e8f5570?w=400&h=250&fit=crop" alt="Estantes librería" style="width:100%;border-radius:12px;">
+      <aside class="hero-covers" aria-hidden="true">
+        <img src="img/el-aleph.jpg" alt="">
+        <img src="img/rayuela.png" alt="">
+        <img src="img/cien-anos-de-soledad.png" alt="">
       </aside>
     </section>
 
-    <!-- Galería de productos -->
-    <section class="section" style="padding-bottom: 0;">
-      <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 12px;">
-        <img src="https://images.unsplash.com/photo-1495446815901-a7297e633e8d?w=300&h=200&fit=crop" alt="Libros apilados" style="width:100%;height:140px;object-fit:cover;border-radius:8px;">
-        <img src="https://images.unsplash.com/photo-1513542789411-b6a5d4f31634?w=300&h=200&fit=crop" alt="Útiles escolares" style="width:100%;height:140px;object-fit:cover;border-radius:8px;">
-        <img src="https://images.unsplash.com/photo-1452457750107-cd084dce177d?w=300&h=200&fit=crop" alt="Cuadernos" style="width:100%;height:140px;object-fit:cover;border-radius:8px;">
-        <img src="https://images.unsplash.com/photo-1456735190827-d1262f71b8a3?w=300&h=200&fit=crop" alt="Lápices de colores" style="width:100%;height:140px;object-fit:cover;border-radius:8px;">
-      </div>
-    </section>
-
-    <!-- CATÁLOGO PÚBLICO -->
     <section class="section" id="catalogo">
       <div class="catalog-header">
-        <h2>Nuestro catálogo</h2>
-        <div class="filters">
-          <button class="active" data-filter="all">Todo</button>
-          <button data-filter="libros">📚 Libros</button>
-          <button data-filter="utiles">✏️ Útiles</button>
-          <button data-filter="papeleria">📄 Papelería</button>
-          <button data-filter="arte">🎨 Arte</button>
-          <button data-filter="tecnologia">💻 Tecnología</button>
-        </div>
+        <h2>Venta de libros</h2>
+        <div class="filters" id="filters"></div>
       </div>
-      <div class="products-grid" id="catalog"></div>
-      
+      <div class="book-grid" id="catalog"></div>
+
       <div class="pedido-box" id="pedidos">
-        <h3>📦 Pedidos especiales</h3>
-        <p>¿Necesitás un libro que no tenemos en stock? Te lo encargamos a la editorial. Dejá una seña y te avisamos cuando llegue.</p>
-        <p style="margin-top:12px;font-weight:600;">📞 011-4555-1234</p>
+        <h3>Pedidos especiales</h3>
+        <p>¿Necesitás un título que no tenemos en góndola? Te lo encargamos a la editorial. Dejá una seña y te avisamos cuando llegue.</p>
+        <p style="margin-top:12px;font-weight:600;">011-4555-1234</p>
       </div>
 
       <div class="admin-link">
         <p>¿Sos el dueño de la librería?</p>
-        <a class="btn" href="panel.html" style="background:var(--verde);color:white;">Acceder al panel de gestión</a>
+        <a class="btn" href="panel.html" style="background:var(--verde,#27ae60);color:white;">Acceder al panel de gestión</a>
       </div>
     </section>
 
@@ -93,17 +60,17 @@
       <h2>Información</h2>
       <div class="modules" style="grid-template-columns: repeat(3, 1fr);">
         <article>
-          <h3>🕐 Horario</h3>
+          <h3>Horario</h3>
           <p>Lunes a viernes: 9 a 19</p>
           <p>Sábados: 9 a 13</p>
         </article>
         <article>
-          <h3>📍 Ubicación</h3>
+          <h3>Ubicación</h3>
           <p>Av. Rivadavia 5678</p>
           <p>Caballito, CABA</p>
         </article>
         <article>
-          <h3>💳 Pagos</h3>
+          <h3>Pagos</h3>
           <p>Efectivo, débito, crédito</p>
           <p>Hasta 3 cuotas sin interés</p>
         </article>
@@ -111,56 +78,209 @@
     </section>
   </main>
 
+  <div class="checkout-overlay" id="checkoutOverlay" hidden>
+    <div class="checkout-modal" role="dialog" aria-labelledby="checkoutTitle">
+      <h2 id="checkoutTitle">Confirmar compra</h2>
+      <div id="checkoutSummary"></div>
+      <label>Nombre (opcional)
+        <input id="checkoutNombre" type="text" placeholder="Cliente mostrador">
+      </label>
+      <div class="checkout-actions">
+        <button class="ghost" type="button" id="checkoutCancel">Seguir mirando</button>
+        <button class="btn-panel" type="button" id="checkoutConfirm">Pagar y llevar</button>
+      </div>
+    </div>
+  </div>
+
   <footer class="wrap">Librería · demo de producto · no es una librería en actividad.</footer>
 
   <script src="data.js"></script>
   <script>
-    const EMOJIS = {
-      libros: "📚",
-      utiles: "✏️",
-      papeleria: "📄",
-      arte: "🎨",
-      tecnologia: "💻",
-      juegos: "🧩"
-    };
+    const FILTERS = [
+      { id: "all", label: "Todo" },
+      { id: "ficcion", label: "Ficción" },
+      { id: "ensayo", label: "Ensayo" },
+      { id: "infantil", label: "Infantil" },
+      { id: "historieta", label: "Historieta" },
+      { id: "clasico", label: "Clásico" },
+      { id: "utiles", label: "Útiles" }
+    ];
 
     let currentFilter = "all";
-    const products = seed().filter(p => p.status !== "pedido");
 
-    function renderCatalog() {
-      const filtered = currentFilter === "all" 
-        ? products 
-        : products.filter(p => p.categoria === currentFilter);
-
-      document.getElementById("catalog").innerHTML = filtered.map(p => {
-        const status = stockStatus(p);
-        return `
-          <article class="product-card">
-            <div class="emoji">${EMOJIS[p.categoria] || "📦"}</div>
-            <div class="info">
-              <h3>${esc(p.nombre)}</h3>
-              ${p.autor ? `<div class="autor">${esc(p.autor)} · ${esc(p.editorial || '')}</div>` : `<div class="autor">${esc(catLabel(p.categoria))}</div>`}
-              <div class="price">${money(p.precio)}</div>
-              <div class="stock ${status === 'agotado' ? 'agotado' : status === 'bajo' ? 'bajo' : ''}">
-                ${status === 'agotado' ? '❌ Agotado' : status === 'bajo' ? `⚠️ Últimas ${p.stock} unidades` : `✅ En stock (${p.stock})`}
-              </div>
-            </div>
-          </article>
-        `;
-      }).join("");
+    function products() {
+      return load().filter((p) => p.status !== "pedido");
     }
 
-    document.querySelectorAll(".filters button").forEach(btn => {
-      btn.addEventListener("click", () => {
-        document.querySelectorAll(".filters button").forEach(b => b.classList.remove("active"));
-        btn.classList.add("active");
-        currentFilter = btn.dataset.filter;
-        renderCatalog();
+    function coverHtml(item, extraClass) {
+      if (item.imagen) {
+        return `<img class="${extraClass || ""}" src="${esc(item.imagen)}" alt="Tapa de ${esc(item.nombre)}">`;
+      }
+      return `<div class="cover-fallback">${esc((item.nombre || "?").slice(0, 1))}</div>`;
+    }
+
+    function renderFilters() {
+      document.getElementById("filters").innerHTML = FILTERS.map((f) =>
+        `<button type="button" data-filter="${f.id}" class="${currentFilter === f.id ? "active" : ""}">${esc(f.label)}</button>`
+      ).join("");
+      document.querySelectorAll("#filters button").forEach((btn) => {
+        btn.addEventListener("click", () => {
+          currentFilter = btn.dataset.filter;
+          render();
+        });
       });
+    }
+
+    function renderCatalog() {
+      const list = currentFilter === "all"
+        ? products()
+        : products().filter((p) => p.categoria === currentFilter);
+
+      document.getElementById("catalog").innerHTML = list.map((p) => {
+        const status = stockStatus(p);
+        const agotado = status === "agotado";
+        return `
+          <article class="book-tile">
+            <div class="cover">${coverHtml(p)}</div>
+            <div class="body">
+              <p class="cat">${esc(catLabel(p.categoria))}</p>
+              <h3>${esc(p.nombre)}</h3>
+              <p class="autor">${p.autor ? `${esc(p.autor)} · ${esc(p.editorial || "")}` : esc(p.editorial || catLabel(p.categoria))}</p>
+              <p class="price">${money(p.precio)}</p>
+              <p class="stock ${esc(status)}">${
+                agotado ? "Agotado" : status === "bajo" ? `Últimas ${p.stock} unidades` : `En stock (${p.stock})`
+              }</p>
+              <div class="tile-actions">
+                <button type="button" class="ghost" data-add="${esc(p.id)}" ${agotado ? "disabled" : ""}>Agregar</button>
+                <button type="button" class="btn-panel" data-buy="${esc(p.id)}" ${agotado ? "disabled" : ""}>Comprar</button>
+              </div>
+            </div>
+          </article>`;
+      }).join("") || `<p class="note">No hay títulos en esta categoría.</p>`;
+
+      document.querySelectorAll("[data-add]").forEach((btn) => {
+        btn.addEventListener("click", () => {
+          const result = addToCart(btn.dataset.add);
+          showToast(result.ok ? "Agregado al carrito" : "Sin stock suficiente");
+          renderCart();
+        });
+      });
+      document.querySelectorAll("[data-buy]").forEach((btn) => {
+        btn.addEventListener("click", () => {
+          const result = addToCart(btn.dataset.buy);
+          if (!result.ok) {
+            showToast("Sin stock suficiente");
+            return;
+          }
+          renderCart();
+          openCheckout();
+        });
+      });
+    }
+
+    function renderCartBadge() {
+      document.getElementById("cartBadge").textContent = String(cartCount());
+    }
+
+    function renderCartDropdown() {
+      const cart = loadCart();
+      const el = document.getElementById("cartDropdown");
+      if (!cart.length) {
+        el.innerHTML = `<h4>Carrito</h4><p class="cart-empty">Todavía no hay libros.</p>`;
+        return;
+      }
+      el.innerHTML = `
+        <h4>Carrito</h4>
+        <div class="cart-items">
+          ${cart.map((c) => `
+            <div class="cart-item">
+              ${c.imagen ? `<img src="${esc(c.imagen)}" alt="">` : `<div class="cover-fallback mini">${esc((c.nombre || "?").slice(0, 1))}</div>`}
+              <div class="info">
+                <p class="title">${esc(c.nombre)}</p>
+                <p class="price">${c.cantidad || 1} × ${money(c.precio)}</p>
+              </div>
+              <button type="button" class="remove" data-remove="${esc(c.id)}" aria-label="Quitar">×</button>
+            </div>`).join("")}
+        </div>
+        <div class="cart-footer">
+          <div class="total"><span>Total</span><strong>${money(cartTotal(cart))}</strong></div>
+          <button type="button" class="btn-panel" id="openCheckout">Comprar ahora</button>
+        </div>`;
+      el.querySelectorAll("[data-remove]").forEach((btn) => {
+        btn.addEventListener("click", () => {
+          removeFromCart(btn.dataset.remove);
+          render();
+        });
+      });
+      el.querySelector("#openCheckout")?.addEventListener("click", openCheckout);
+    }
+
+    function renderCart() {
+      renderCartBadge();
+      if (!document.getElementById("cartDropdown").hidden) renderCartDropdown();
+    }
+
+    function openCheckout() {
+      const cart = loadCart();
+      if (!cart.length) {
+        showToast("El carrito está vacío");
+        return;
+      }
+      document.getElementById("checkoutSummary").innerHTML = `
+        ${cart.map((c) => `<p>${esc(c.nombre)} × ${c.cantidad || 1} — ${money(c.precio * (c.cantidad || 1))}</p>`).join("")}
+        <p class="checkout-total">Total ${money(cartTotal(cart))}</p>`;
+      document.getElementById("cartDropdown").hidden = true;
+      document.getElementById("checkoutOverlay").hidden = false;
+    }
+
+    document.getElementById("cartBtn").addEventListener("click", (event) => {
+      event.stopPropagation();
+      const dropdown = document.getElementById("cartDropdown");
+      dropdown.hidden = !dropdown.hidden;
+      if (!dropdown.hidden) renderCartDropdown();
     });
 
-    renderCatalog();
+    document.addEventListener("click", (event) => {
+      if (!event.target.closest(".cart-wrap")) {
+        document.getElementById("cartDropdown").hidden = true;
+      }
+    });
+
+    document.getElementById("checkoutCancel").addEventListener("click", () => {
+      document.getElementById("checkoutOverlay").hidden = true;
+    });
+
+    document.getElementById("checkoutConfirm").addEventListener("click", () => {
+      const nombre = document.getElementById("checkoutNombre").value.trim();
+      const result = checkoutCart(nombre);
+      if (!result.ok) {
+        showToast(result.reason === "vacio" ? "El carrito está vacío" : `Sin stock: ${result.nombre || "un título"}`);
+        return;
+      }
+      document.getElementById("checkoutOverlay").hidden = true;
+      document.getElementById("checkoutNombre").value = "";
+      showToast("Compra registrada · " + money(result.venta.total));
+      render();
+    });
+
+    function showToast(message) {
+      const existing = document.querySelector(".toast");
+      if (existing) existing.remove();
+      const toast = document.createElement("div");
+      toast.className = "toast";
+      toast.textContent = message;
+      document.body.appendChild(toast);
+      setTimeout(() => toast.classList.add("show"), 10);
+      setTimeout(() => { toast.classList.remove("show"); setTimeout(() => toast.remove(), 300); }, 3000);
+    }
+
+    function render() {
+      renderFilters();
+      renderCatalog();
+      renderCart();
+    }
+
+    render();
   </script>
-  <script src="../contacto.js" data-phone="5491140001234" data-text="Hola, quiero consultar por un libro o un pedido" data-subject="Consulta demo — Librería" data-title="Consultar un libro"></script>
 </body>
 </html>

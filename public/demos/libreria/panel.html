@@ -20,7 +20,7 @@
     <div class="toolbar">
       <div>
         <p class="eyebrow">Datos de ejemplo</p>
-        <h1>Catálogo de productos</h1>
+        <h1>Catálogo y ventas</h1>
       </div>
     </div>
     <div class="stats" id="stats"></div>
@@ -28,11 +28,13 @@
       <input name="codigo" placeholder="Código" required>
       <input name="nombre" placeholder="Nombre" required>
       <select name="categoria">
-        <option value="libros">Libros</option>
+        <option value="ficcion">Ficción</option>
+        <option value="ensayo">Ensayo</option>
+        <option value="infantil">Infantil</option>
+        <option value="historieta">Historieta</option>
+        <option value="clasico">Clásico</option>
         <option value="utiles">Útiles escolares</option>
         <option value="papeleria">Papelería</option>
-        <option value="arte">Arte</option>
-        <option value="tecnologia">Tecnología</option>
       </select>
       <input name="autor" placeholder="Autor (libros)">
       <input name="precio" type="number" placeholder="Precio" required>
@@ -43,15 +45,28 @@
     <div class="workspace">
       <section class="list">
         <table>
-          <thead><tr><th>Código</th><th>Producto</th><th>Cat.</th><th class="amount">Precio</th><th class="amount">Stock</th><th>Estado</th></tr></thead>
+          <thead>
+            <tr>
+              <th></th>
+              <th>Código</th>
+              <th>Producto</th>
+              <th>Cat.</th>
+              <th class="amount">Precio</th>
+              <th class="amount">Stock</th>
+              <th>Estado</th>
+            </tr>
+          </thead>
           <tbody id="rows"></tbody>
         </table>
+        <section class="ventas-panel">
+          <h3>Ventas recientes</h3>
+          <div id="ventas"></div>
+        </section>
       </section>
       <aside class="detail" id="detail"></aside>
     </div>
   </div>
   <script src="data.js"></script>
   <script src="panel.js"></script>
-  <script src="../contacto.js" data-phone="5491140001234" data-text="Hola, quiero consultar por un libro o un pedido" data-subject="Consulta demo — Librería" data-title="Consultar un libro" data-place="panel"></script>
 </body>
 </html>
