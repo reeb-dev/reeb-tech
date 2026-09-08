@@ -3,31 +3,13 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Carpintería — Muebles a medida</title>
+  <title>Carpintería El Quebracho — Villa Devoto</title>
   <link rel="stylesheet" href="styles.css">
-  <style>
-    :root { --marron: #8B4513; --marron-light: #A0522D; }
-    .portfolio-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 20px; }
-    .portfolio-card { background: var(--card); border-radius: 12px; overflow: hidden; box-shadow: 0 2px 12px rgba(0,0,0,0.08); }
-    .portfolio-card .img { height: 160px; background: linear-gradient(135deg, var(--marron) 0%, var(--marron-light) 100%); display: flex; align-items: center; justify-content: center; }
-    .portfolio-card .img .emoji { font-size: 64px; }
-    .portfolio-card .body { padding: 16px; }
-    .portfolio-card h3 { margin: 0 0 8px; font-size: 16px; }
-    .portfolio-card .desc { font-size: 13px; color: var(--muted); margin-bottom: 8px; }
-    .services-list { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 16px; margin-top: 24px; }
-    .service-item { background: var(--card); border-radius: 12px; padding: 16px; text-align: center; }
-    .service-item .emoji { font-size: 32px; margin-bottom: 8px; }
-    .service-item h4 { margin: 0; font-size: 14px; }
-    .presup-box { background: linear-gradient(135deg, var(--marron) 0%, var(--marron-light) 100%); color: white; padding: 32px; border-radius: 12px; text-align: center; margin-top: 32px; }
-    .presup-box h3 { margin: 0 0 8px; font-size: 24px; }
-    .presup-box .tel { font-size: 28px; font-weight: 700; margin-top: 12px; }
-    .admin-link { text-align: center; margin-top: 32px; padding: 24px; background: var(--card); border-radius: 12px; }
-  </style>
 </head>
 <body>
-  <header class="top" style="background: var(--marron);">
+  <header class="top">
     <div class="top-inner">
-      <a class="logo" href="index.html">CARPINTERÍA<small>Muebles a medida</small></a>
+      <a class="logo" href="index.html">EL QUEBRACHO<small>Carpintería · Villa Devoto</small></a>
       <nav>
         <a href="#portfolio">Trabajos</a>
         <a href="#servicios">Servicios</a>
@@ -37,139 +19,107 @@
     </div>
   </header>
 
-  <main class="wrap">
-    <section class="hero">
-      <div>
-        <p class="kicker">Carpintería artesanal</p>
-        <h1>Muebles a medida, hechos para vos.</h1>
-        <p class="lead">Placards, cocinas, escritorios, bibliotecas y más. Diseño personalizado, materiales de primera calidad y entrega puntual. Presupuesto sin cargo.</p>
-        <a class="btn" href="#presupuesto" style="background:var(--marron);color:white;">Pedir presupuesto</a>
-      </div>
-      <aside class="pedido-card">
-        <img src="https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=400&h=280&fit=crop" alt="Taller carpintería" style="width:100%;border-radius:12px;">
-      </aside>
-    </section>
-
-    <!-- Galería de trabajos reales -->
-    <section class="section" style="padding-bottom: 0;">
-      <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 12px;">
-        <img src="https://images.unsplash.com/photo-1555041469-a586c61ea9bc?w=300&h=200&fit=crop" alt="Mueble de madera" style="width:100%;height:140px;object-fit:cover;border-radius:8px;">
-        <img src="https://images.unsplash.com/photo-1595428774223-ef52624120d2?w=300&h=200&fit=crop" alt="Mesa de madera" style="width:100%;height:140px;object-fit:cover;border-radius:8px;">
-        <img src="https://images.unsplash.com/photo-1600585152220-90363fe7e115?w=300&h=200&fit=crop" alt="Cocina a medida" style="width:100%;height:140px;object-fit:cover;border-radius:8px;">
-        <img src="https://images.unsplash.com/photo-1505693416388-ac5ce068fe85?w=300&h=200&fit=crop" alt="Placard" style="width:100%;height:140px;object-fit:cover;border-radius:8px;">
-      </div>
-    </section>
-
-    <!-- PORTFOLIO -->
-    <section class="section" id="portfolio">
-      <h2>Trabajos realizados</h2>
-      <div class="portfolio-grid" id="catalog"></div>
-    </section>
-
-    <section class="section" id="servicios">
-      <h2>Qué hacemos</h2>
-      <div class="services-list">
-        <div class="service-item">
-          <div class="emoji">🚪</div>
-          <h4>Placards</h4>
+  <main>
+    <section class="hero-wood">
+      <img class="hero-wood-photo" src="img/hero-taller.jpg" alt="Taller de carpintería: taladro sobre madera">
+      <div class="hero-wood-shade"></div>
+      <div class="wrap hero-wood-inner">
+        <div>
+          <p class="kicker light">Taller de madera · CABA</p>
+          <h1>Carpintería El Quebracho</h1>
+          <p class="lead light">Muebles a medida, restauración y decks. Medimos en tu casa, fabricamos en Villa Devoto y entregamos instalado.</p>
+          <div class="hero-actions">
+            <a class="btn" href="#presupuesto">Pedir presupuesto</a>
+            <a class="btn btn-ghost" href="#portfolio">Ver trabajos</a>
+          </div>
         </div>
-        <div class="service-item">
-          <div class="emoji">🍳</div>
-          <h4>Cocinas</h4>
-        </div>
-        <div class="service-item">
-          <div class="emoji">🖥️</div>
-          <h4>Escritorios</h4>
-        </div>
-        <div class="service-item">
-          <div class="emoji">📚</div>
-          <h4>Bibliotecas</h4>
-        </div>
-        <div class="service-item">
-          <div class="emoji">🛋️</div>
-          <h4>Racks TV</h4>
-        </div>
-        <div class="service-item">
-          <div class="emoji">👔</div>
-          <h4>Vestidores</h4>
-        </div>
-        <div class="service-item">
-          <div class="emoji">🛏️</div>
-          <h4>Camas</h4>
-        </div>
-        <div class="service-item">
-          <div class="emoji">🪑</div>
-          <h4>Mesas</h4>
-        </div>
-      </div>
-    </section>
-
-    <section class="section" id="presupuesto">
-      <div class="presup-box">
-        <h3>📐 Presupuesto sin cargo</h3>
-        <p>Contanos qué necesitás y te visitamos para medir</p>
-        <div class="tel">📞 011-4555-1234</div>
-      </div>
-      <div class="admin-link">
-        <p>¿Sos el dueño del taller?</p>
-        <a class="btn" href="panel.html" style="background:var(--marron);color:white;">Acceder al panel de gestión</a>
-      </div>
-    </section>
-
-    <section class="section">
-      <h2>Información</h2>
-      <div class="modules" style="grid-template-columns: repeat(3, 1fr);">
-        <article>
-          <h3>🪵 Materiales</h3>
-          <p>Melamina, MDF, madera maciza</p>
-          <p>Herrajes importados</p>
-        </article>
-        <article>
-          <h3>📍 Taller</h3>
+        <aside class="local-card">
+          <p class="local-name">El Quebracho</p>
           <p>Av. San Martín 3456</p>
           <p>Villa Devoto, CABA</p>
-        </article>
-        <article>
-          <h3>🚚 Entrega</h3>
-          <p>Instalación incluida</p>
-          <p>Garantía 2 años</p>
-        </article>
+          <p class="local-hours">Lun a vie 8 a 18 · Sáb 8 a 13</p>
+          <p class="local-tel">011-4555-3480</p>
+        </aside>
       </div>
     </section>
+
+    <div class="wrap">
+      <section class="section" id="portfolio">
+        <p class="kicker">Portfolio</p>
+        <h2>Trabajos del taller</h2>
+        <p class="section-lead">Cada ficha tiene foto, materiales, plazo y precio de ejemplo. Tocá una tarjeta para ver el detalle.</p>
+        <div class="portfolio-grid" id="catalog"></div>
+      </section>
+
+      <section class="section" id="servicios">
+        <p class="kicker">Servicios</p>
+        <h2>Qué hacemos</h2>
+        <div class="service-grid" id="serviciosGrid"></div>
+      </section>
+
+      <section class="section" id="presupuesto">
+        <div class="presup-card">
+          <div>
+            <p class="kicker light">Presupuesto</p>
+            <h2>Contanos el trabajo</h2>
+            <p>Tipo, medidas y un teléfono o mail. Queda guardado en este navegador para el panel del taller. No sale a un servidor.</p>
+          </div>
+          <form id="presupuestoForm" class="presup-form">
+            <label>Tipo de trabajo
+              <select name="tipo" required></select>
+            </label>
+            <label>Medidas
+              <input name="medidas" required maxlength="80" placeholder="Ej. 1.80 × 0.90 m">
+            </label>
+            <label>Nombre
+              <input name="nombre" required maxlength="80" placeholder="Nombre y apellido">
+            </label>
+            <label>Contacto
+              <input name="contacto" required maxlength="120" placeholder="Teléfono o mail">
+            </label>
+            <label class="full">Detalle
+              <textarea name="detalle" maxlength="400" placeholder="Madera, color, si hay que instalar…"></textarea>
+            </label>
+            <button class="btn" type="submit">Enviar consulta</button>
+          </form>
+        </div>
+      </section>
+
+      <section class="section" id="info">
+        <h2>El taller</h2>
+        <div class="modules info-grid">
+          <article>
+            <h3>Horarios</h3>
+            <p>Lunes a viernes: 8 a 18</p>
+            <p>Sábados: 8 a 13</p>
+          </article>
+          <article>
+            <h3>Dirección</h3>
+            <p>Av. San Martín 3456</p>
+            <p>Villa Devoto, CABA</p>
+          </article>
+          <article>
+            <h3>Entrega</h3>
+            <p>Instalación incluida en CABA y GBA</p>
+            <p>Garantía 2 años de estructura</p>
+          </article>
+        </div>
+      </section>
+    </div>
   </main>
 
-  <footer class="wrap">Carpintería · demo de producto · no es un taller en actividad.</footer>
+  <div class="ficha-overlay" id="fichaOverlay" hidden>
+    <div class="ficha-modal" role="dialog" aria-modal="true" aria-labelledby="fichaTitle">
+      <button class="ficha-close" id="fichaClose" type="button" aria-label="Cerrar">×</button>
+      <div id="fichaBody"></div>
+    </div>
+  </div>
+
+  <div id="contacto"></div>
+  <footer class="wrap">Carpintería El Quebracho · demo de producto · no es un taller en actividad.</footer>
 
   <script src="data.js"></script>
-  <script>
-    const EMOJIS = {
-      placard: "🚪",
-      cocina: "🍳",
-      escritorio: "🖥️",
-      biblioteca: "📚",
-      mesa: "🪑",
-      sillas: "🪑",
-      cama: "🛏️",
-      vanitory: "🚿",
-      rack: "📺",
-      vestidor: "👔",
-      otro: "🔨"
-    };
-
-    // Mostrar trabajos entregados como portfolio
-    const trabajos = seed().filter(t => t.status === "entregado" || t.status === "produccion" || t.status === "terminado");
-    
-    document.getElementById("catalog").innerHTML = trabajos.slice(0, 6).map(t => `
-      <article class="portfolio-card">
-        <div class="img"><div class="emoji">${EMOJIS[t.tipo] || "🔨"}</div></div>
-        <div class="body">
-          <h3>${esc(tipoLabel(t.tipo))}</h3>
-          <div class="desc">${esc(t.descripcion)}</div>
-          <div style="font-size:12px;color:var(--muted);">📐 ${esc(t.medidas)}</div>
-        </div>
-      </article>
-    `).join("");
-  </script>
-  <script src="../contacto.js" data-phone="5491140001234" data-text="Hola, quiero consultar por un trabajo a medida" data-subject="Consulta demo — Carpintería" data-title="Consultar un trabajo"></script>
+  <script src="app.js"></script>
+  <script src="../contacto.js" data-phone="5491140001234" data-text="Hola, quiero consultar por un trabajo a medida en El Quebracho" data-subject="Consulta demo — Carpintería El Quebracho" data-title="Consultar un trabajo"></script>
 </body>
 </html>

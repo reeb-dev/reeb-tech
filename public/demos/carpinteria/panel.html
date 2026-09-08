@@ -3,72 +3,110 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Panel · Carpintería</title>
+  <title>Panel · El Quebracho</title>
   <link rel="stylesheet" href="styles.css">
 </head>
 <body>
   <div class="app">
     <header class="top">
       <div class="top-inner">
-        <a class="logo" href="index.html">CARPINTERÍA<small>Muebles a medida · demo</small></a>
+        <a class="logo" href="index.html">EL QUEBRACHO<small>Taller · panel</small></a>
         <nav>
           <a href="index.html">Inicio</a>
+          <div class="panel-tabs">
+            <button type="button" id="tab-pedidos" class="on">Pedidos</button>
+            <button type="button" id="tab-trabajos">Trabajos</button>
+          </div>
           <button class="btn" id="open-create" type="button">Nuevo pedido</button>
         </nav>
       </div>
     </header>
 
-    <div class="toolbar">
-      <div>
-        <p class="eyebrow">Datos de ejemplo</p>
-        <h1>Pedidos del taller</h1>
+    <div id="view-pedidos">
+      <div class="toolbar">
+        <div>
+          <p class="eyebrow">Datos de ejemplo</p>
+          <h1>Pedidos del taller</h1>
+        </div>
+      </div>
+
+      <div class="stats" id="stats"></div>
+
+      <form class="create" id="create">
+        <input name="cliente" placeholder="Nombre cliente" required>
+        <input name="tel" placeholder="Teléfono">
+        <input name="direccion" placeholder="Dirección">
+        <select name="tipo">
+          <option value="mesa">Mesa</option>
+          <option value="placard">Placard</option>
+          <option value="cocina">Cocina</option>
+          <option value="deck">Deck</option>
+          <option value="silla">Silla</option>
+          <option value="restauracion">Restauración</option>
+          <option value="escritorio">Escritorio</option>
+          <option value="vestidor">Vestidor</option>
+          <option value="otro">Otro</option>
+        </select>
+        <input name="medidas" placeholder="Medidas">
+        <textarea name="descripcion" placeholder="Descripción del trabajo"></textarea>
+        <button class="btn-panel" type="submit">Crear pedido</button>
+      </form>
+
+      <div class="workspace">
+        <section class="list">
+          <table>
+            <thead>
+              <tr>
+                <th>Pedido</th>
+                <th>Cliente</th>
+                <th>Trabajo</th>
+                <th>Entrega</th>
+                <th class="amount">Total</th>
+                <th>Estado</th>
+              </tr>
+            </thead>
+            <tbody id="rows"></tbody>
+          </table>
+        </section>
+        <aside class="detail" id="detail"></aside>
       </div>
     </div>
 
-    <div class="stats" id="stats"></div>
+    <div id="view-trabajos" class="panel-hidden">
+      <div class="toolbar">
+        <div>
+          <p class="eyebrow">Portfolio de la landing</p>
+          <h1>Trabajos publicados</h1>
+        </div>
+        <button class="btn" id="open-trabajo" type="button">Nuevo trabajo</button>
+      </div>
 
-    <form class="create" id="create">
-      <input name="cliente" placeholder="Nombre cliente" required>
-      <input name="tel" placeholder="Teléfono">
-      <input name="direccion" placeholder="Dirección">
-      <select name="tipo">
-        <option value="placard">Placard</option>
-        <option value="cocina">Mueble de cocina</option>
-        <option value="escritorio">Escritorio</option>
-        <option value="biblioteca">Biblioteca</option>
-        <option value="mesa">Mesa</option>
-        <option value="cama">Cama/Respaldo</option>
-        <option value="rack">Rack/Mueble TV</option>
-        <option value="vestidor">Vestidor</option>
-        <option value="otro">Otro</option>
-      </select>
-      <input name="medidas" placeholder="Medidas">
-      <textarea name="descripcion" placeholder="Descripción del mueble"></textarea>
-      <button class="btn-panel" type="submit">Crear pedido</button>
-    </form>
+      <form class="create" id="create-trabajo">
+        <input name="titulo" placeholder="Título" required>
+        <select name="tipo">
+          <option value="mesa">Mesa</option>
+          <option value="placard">Placard</option>
+          <option value="cocina">Cocina</option>
+          <option value="deck">Deck</option>
+          <option value="silla">Silla</option>
+          <option value="restauracion">Restauración</option>
+          <option value="escritorio">Escritorio</option>
+          <option value="vestidor">Vestidor</option>
+        </select>
+        <input name="precio" type="number" placeholder="Precio" required>
+        <input name="plazo" placeholder="Plazo (ej. 3 semanas)" required>
+        <input name="medidas" placeholder="Medidas">
+        <input name="materiales" placeholder="Materiales">
+        <textarea name="descripcion" placeholder="Descripción"></textarea>
+        <button class="btn-panel" type="submit">Guardar trabajo</button>
+      </form>
 
-    <div class="workspace">
-      <section class="list">
-        <table>
-          <thead>
-            <tr>
-              <th>Pedido</th>
-              <th>Cliente</th>
-              <th>Mueble</th>
-              <th>Entrega</th>
-              <th class="amount">Total</th>
-              <th>Estado</th>
-            </tr>
-          </thead>
-          <tbody id="rows"></tbody>
-        </table>
-      </section>
-      <aside class="detail" id="detail"></aside>
+      <div class="trabajos-grid" id="trabajosGrid"></div>
     </div>
   </div>
 
   <script src="data.js"></script>
   <script src="panel.js"></script>
-  <script src="../contacto.js" data-phone="5491140001234" data-text="Hola, quiero consultar por un trabajo a medida" data-subject="Consulta demo — Carpintería" data-title="Consultar un trabajo" data-place="panel"></script>
+  <script src="../contacto.js" data-phone="5491140001234" data-text="Hola, quiero consultar por un trabajo a medida en El Quebracho" data-subject="Consulta demo — Carpintería El Quebracho" data-title="Consultar un trabajo" data-place="panel"></script>
 </body>
 </html>
