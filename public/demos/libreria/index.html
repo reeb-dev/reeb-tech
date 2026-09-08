@@ -78,6 +78,13 @@
     </section>
   </main>
 
+  <div class="ficha-overlay" id="fichaOverlay" hidden>
+    <div class="ficha-modal" role="dialog" aria-modal="true" aria-labelledby="fichaTitle">
+      <button class="ficha-close" id="fichaClose" type="button" aria-label="Cerrar">×</button>
+      <div id="fichaBody"></div>
+    </div>
+  </div>
+
   <div class="checkout-overlay" id="checkoutOverlay" hidden>
     <div class="checkout-modal" role="dialog" aria-labelledby="checkoutTitle">
       <h2 id="checkoutTitle">Confirmar compra</h2>
@@ -141,7 +148,7 @@
         const status = stockStatus(p);
         const agotado = status === "agotado";
         return `
-          <article class="book-tile">
+          <article class="book-tile" data-open="${esc(p.id)}" tabindex="0" role="button" aria-label="Ver ficha de ${esc(p.nombre)}">
             <div class="cover">${coverHtml(p)}</div>
             <div class="body">
               <p class="cat">${esc(catLabel(p.categoria))}</p>
@@ -159,26 +166,109 @@
             </div>
           </article>`;
       }).join("") || `<p class="note">No hay títulos en esta categoría.</p>`;
-
-      document.querySelectorAll("[data-add]").forEach((btn) => {
-        btn.addEventListener("click", () => {
-          const result = addToCart(btn.dataset.add);
-          showToast(result.ok ? "Agregado al carrito" : "Sin stock suficiente");
-          renderCart();
-        });
-      });
-      document.querySelectorAll("[data-buy]").forEach((btn) => {
-        btn.addEventListener("click", () => {
-          const result = addToCart(btn.dataset.buy);
-          if (!result.ok) {
-            showToast("Sin stock suficiente");
-            return;
-          }
-          renderCart();
-          openCheckout();
-        });
-      });
     }
+
+    function stockLine(item) {
+      const status = stockStatus(item);
+      if (status === "agotado") return "Agotado";
+      if (status === "bajo") return `Últimas ${item.stock} unidades`;
+      return `En stock (${item.stock})`;
+    }
+
+    function openFicha(productId) {
+      const item = products().find((p) => p.id === productId);
+      if (!item) return;
+      const status = stockStatus(item);
+      const agotado = status === "agotado";
+      document.getElementById("fichaBody").innerHTML = `
+        <div class="ficha-cover">${coverHtml(item)}</div>
+        <div class="ficha-info">
+          <p class="cat">${esc(catLabel(item.categoria))}</p>
+          <h2 id="fichaTitle">${esc(item.nombre)}</h2>
+          <p class="autor">${item.autor ? `${esc(item.autor)} · ${esc(item.editorial || "")}` : esc(item.editorial || "")}</p>
+          <p class="ficha-desc">${esc(item.descripcion || "Sin descripción cargada.")}</p>
+          <p class="price">${money(item.precio)}</p>
+          <p class="stock ${esc(status)}">${stockLine(item)}</p>
+          <div class="tile-actions">
+            <button type="button" class="ghost" data-add="${esc(item.id)}" ${agotado ? "disabled" : ""}>Agregar</button>
+            <button type="button" class="btn-panel" data-buy="${esc(item.id)}" ${agotado ? "disabled" : ""}>Comprar</button>
+          </div>
+        </div>`;
+      document.getElementById("cartDropdown").hidden = true;
+      document.getElementById("fichaOverlay").hidden = false;
+      document.body.classList.add("ficha-open");
+    }
+
+    function closeFicha() {
+      document.getElementById("fichaOverlay").hidden = true;
+      document.body.classList.remove("ficha-open");
+    }
+
+    document.getElementById("catalog").addEventListener("click", (event) => {
+      const addBtn = event.target.closest("[data-add]");
+      const buyBtn = event.target.closest("[data-buy]");
+      const tile = event.target.closest("[data-open]");
+      if (addBtn) {
+        event.stopPropagation();
+        const result = addToCart(addBtn.dataset.add);
+        showToast(result.ok ? "Agregado al carrito" : "Sin stock suficiente");
+        renderCart();
+        if (!document.getElementById("fichaOverlay").hidden) openFicha(addBtn.dataset.add);
+        return;
+      }
+      if (buyBtn) {
+        event.stopPropagation();
+        const result = addToCart(buyBtn.dataset.buy);
+        if (!result.ok) {
+          showToast("Sin stock suficiente");
+          return;
+        }
+        renderCart();
+        closeFicha();
+        openCheckout();
+        return;
+      }
+      if (tile) openFicha(tile.dataset.open);
+    });
+
+    document.getElementById("catalog").addEventListener("keydown", (event) => {
+      if (event.key !== "Enter" && event.key !== " ") return;
+      if (event.target.closest("button")) return;
+      const tile = event.target.closest("[data-open]");
+      if (!tile) return;
+      event.preventDefault();
+      openFicha(tile.dataset.open);
+    });
+
+    document.getElementById("fichaBody").addEventListener("click", (event) => {
+      const addBtn = event.target.closest("[data-add]");
+      const buyBtn = event.target.closest("[data-buy]");
+      if (addBtn) {
+        const result = addToCart(addBtn.dataset.add);
+        showToast(result.ok ? "Agregado al carrito" : "Sin stock suficiente");
+        renderCart();
+        openFicha(addBtn.dataset.add);
+        return;
+      }
+      if (buyBtn) {
+        const result = addToCart(buyBtn.dataset.buy);
+        if (!result.ok) {
+          showToast("Sin stock suficiente");
+          return;
+        }
+        renderCart();
+        closeFicha();
+        openCheckout();
+      }
+    });
+
+    document.getElementById("fichaOverlay").addEventListener("click", (event) => {
+      if (event.target === event.currentTarget) closeFicha();
+    });
+    document.getElementById("fichaClose").addEventListener("click", closeFicha);
+    document.addEventListener("keydown", (event) => {
+      if (event.key === "Escape" && !document.getElementById("fichaOverlay").hidden) closeFicha();
+    });
 
     function renderCartBadge() {
       document.getElementById("cartBadge").textContent = String(cartCount());
@@ -232,6 +322,7 @@
         ${cart.map((c) => `<p>${esc(c.nombre)} × ${c.cantidad || 1} — ${money(c.precio * (c.cantidad || 1))}</p>`).join("")}
         <p class="checkout-total">Total ${money(cartTotal(cart))}</p>`;
       document.getElementById("cartDropdown").hidden = true;
+      closeFicha();
       document.getElementById("checkoutOverlay").hidden = false;
     }
 
