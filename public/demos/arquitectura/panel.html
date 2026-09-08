@@ -18,9 +18,11 @@
           <div class="panel-tabs">
             <button type="button" id="tab-obras" class="on">Obras</button>
             <button type="button" id="tab-clientes">Clientes</button>
+            <button type="button" id="tab-etapas">Etapas</button>
+            <button type="button" id="tab-docs">Planos</button>
             <button type="button" id="tab-arca">ARCA</button>
           </div>
-          <button class="btn" id="open-create" type="button">Nueva obra</button>
+          <button class="btn" id="open-create" type="button">Nuevo</button>
         </nav>
       </div>
     </header>
@@ -73,7 +75,74 @@
           <h1>Clientes</h1>
         </div>
       </div>
-      <div class="clientes-grid" id="clientesGrid"></div>
+      <div class="stats" id="clientes-stats"></div>
+      <form class="create" id="create-cliente">
+        <input name="nombre" placeholder="Nombre" required>
+        <input name="tel" placeholder="Teléfono">
+        <input name="mail" placeholder="Mail" type="email">
+        <input name="cuit" placeholder="CUIT">
+        <input name="barrio" placeholder="Barrio">
+        <button class="btn-panel" type="submit">Guardar cliente</button>
+      </form>
+      <div class="workspace">
+        <section class="list">
+          <table>
+            <thead>
+              <tr>
+                <th>Cliente</th>
+                <th>Teléfono</th>
+                <th>Barrio</th>
+                <th>Obras</th>
+              </tr>
+            </thead>
+            <tbody id="cliente-rows"></tbody>
+          </table>
+        </section>
+        <aside class="detail" id="cliente-detail"></aside>
+      </div>
+    </div>
+
+    <div id="view-etapas" class="panel-hidden">
+      <div class="toolbar">
+        <div>
+          <p class="eyebrow">Seguimiento</p>
+          <h1>Etapas de obra</h1>
+        </div>
+      </div>
+      <div class="stats" id="etapas-stats"></div>
+      <div class="etapas-board" id="etapasBoard"></div>
+    </div>
+
+    <div id="view-docs" class="panel-hidden">
+      <div class="toolbar">
+        <div>
+          <p class="eyebrow">Documentación</p>
+          <h1>Planos y documentos</h1>
+        </div>
+      </div>
+      <div class="stats" id="docs-stats"></div>
+      <form class="create" id="create-doc">
+        <select name="obraId" required></select>
+        <input name="nombre" placeholder="Nombre del archivo" required>
+        <select name="tipo"></select>
+        <button class="btn-panel" type="submit">Agregar a la lista</button>
+      </form>
+      <div class="workspace">
+        <section class="list">
+          <table>
+            <thead>
+              <tr>
+                <th>Documento</th>
+                <th>Tipo</th>
+                <th>Obra</th>
+                <th>Fecha</th>
+              </tr>
+            </thead>
+            <tbody id="doc-rows"></tbody>
+          </table>
+        </section>
+        <aside class="detail" id="doc-detail"></aside>
+      </div>
     </div>
 
     <div id="view-arca" class="panel-hidden">

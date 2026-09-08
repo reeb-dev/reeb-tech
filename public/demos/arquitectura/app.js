@@ -4,23 +4,30 @@
   const fichaBody = document.getElementById("fichaBody");
   const fichaClose = document.getElementById("fichaClose");
   const form = document.getElementById("consultaForm");
+  let filtro = "all";
 
   function publicados() {
     return loadProyectos().filter((p) => p.publicado !== false);
   }
 
+  function visibles() {
+    const all = publicados();
+    return filtro === "all" ? all : all.filter((p) => p.tipo === filtro);
+  }
+
   function renderPortfolio() {
-    catalog.innerHTML = publicados().map((p) => `
+    const items = visibles();
+    catalog.innerHTML = items.map((p) => `
       <article class="work-card" data-id="${esc(p.id)}">
         <img src="${esc(p.imagen)}" alt="${esc(p.titulo)}">
         <div class="work-body">
           <p class="work-tipo">${esc(tipoLabel(p.tipo))}</p>
           <h3>${esc(p.titulo)}</h3>
           <p class="work-desc">${esc(p.descripcion)}</p>
-          <p class="work-meta">${esc(p.superficie)} · ${esc(p.barrio)}</p>
+          <p class="work-meta">${esc(p.superficie)} · ${esc(etapaLabel(p.etapa))} · ${esc(p.barrio)}</p>
         </div>
       </article>
-    `).join("");
+    `).join("") || "<p>No hay proyectos en este tipo.</p>";
     catalog.querySelectorAll(".work-card").forEach((card) => {
       card.addEventListener("click", () => openFicha(card.dataset.id));
     });
@@ -35,12 +42,28 @@
       <h2 id="fichaTitle">${esc(p.titulo)}</h2>
       <p>${esc(p.descripcion)}</p>
       <dl class="ficha-meta">
+        <div><dt>Programa</dt><dd>${esc(p.programa || tipoLabel(p.tipo))}</dd></div>
         <div><dt>Superficie</dt><dd>${esc(p.superficie)}</dd></div>
+        <div><dt>Etapa</dt><dd>${esc(etapaLabel(p.etapa))}</dd></div>
+        <div><dt>Materiales</dt><dd>${esc(p.materiales || "—")}</dd></div>
         <div><dt>Barrio</dt><dd>${esc(p.barrio)}</dd></div>
         <div><dt>Año</dt><dd>${esc(p.anio)}</dd></div>
-        <div><dt>Tipo</dt><dd>${esc(tipoLabel(p.tipo))}</dd></div>
       </dl>
       <a class="btn" href="#consulta">Pedir un proyecto similar</a>
+    `;
+    overlay.hidden = false;
+    document.body.style.overflow = "hidden";
+  }
+
+  function openGaleria(id) {
+    const g = GALERIA.find((item) => item.id === id);
+    if (!g) return;
+    fichaBody.innerHTML = `
+      <img class="ficha-photo" src="${esc(g.imagen)}" alt="${esc(g.titulo)}">
+      <p class="kicker">Galería</p>
+      <h2 id="fichaTitle">${esc(g.titulo)}</h2>
+      <p>${esc(g.caption)}</p>
+      <a class="btn" href="#consulta">Consultar un proyecto</a>
     `;
     overlay.hidden = false;
     document.body.style.overflow = "hidden";
@@ -59,6 +82,15 @@
     if (event.key === "Escape" && !overlay.hidden) closeFicha();
   });
 
+  document.querySelectorAll("#filters button").forEach((btn) => {
+    btn.addEventListener("click", () => {
+      document.querySelectorAll("#filters button").forEach((b) => b.classList.remove("active"));
+      btn.classList.add("active");
+      filtro = btn.dataset.filter;
+      renderPortfolio();
+    });
+  });
+
   document.getElementById("serviciosGrid").innerHTML = SERVICIOS.map((s) => `
     <article class="service-card">
       <img src="${esc(s.imagen)}" alt="${esc(s.titulo)}">
@@ -68,6 +100,37 @@
       </div>
     </article>
   `).join("");
+
+  document.getElementById("equipoGrid").innerHTML = EQUIPO.map((p) => `
+    <article class="profesional-card">
+      <img src="${esc(p.imagen)}" alt="${esc(p.nombre)}">
+      <h3>${esc(p.nombre)}</h3>
+      <p class="pro-rol">${esc(p.rol)}</p>
+      <p>${esc(p.bio)}</p>
+    </article>
+  `).join("");
+
+  document.getElementById("galeriaGrid").innerHTML = GALERIA.map((g) => `
+    <article class="galeria-card" data-id="${esc(g.id)}">
+      <img src="${esc(g.imagen)}" alt="${esc(g.titulo)}">
+      <p>${esc(g.caption)}</p>
+    </article>
+  `).join("");
+  document.querySelectorAll(".galeria-card").forEach((card) => {
+    card.addEventListener("click", () => openGaleria(card.dataset.id));
+  });
+
+  function pintarMapa() {
+    const el = document.getElementById("mapa-local");
+    if (!el || typeof L === "undefined") return;
+    const map = L.map(el, { scrollWheelZoom: false }).setView([LOCAL.lat, LOCAL.lng], 16);
+    L.tileLayer("https://tile.openstreetmap.org/{z}/{x}/{y}.png", {
+      attribution: "&copy; OpenStreetMap"
+    }).addTo(map);
+    L.marker([LOCAL.lat, LOCAL.lng]).addTo(map).bindPopup("Estudio Loma · Humboldt 2140, Palermo");
+    setTimeout(() => map.invalidateSize(), 80);
+  }
+  pintarMapa();
 
   form.querySelector('[name="tipo"]').innerHTML = TIPOS.map((t) =>
     `<option value="${esc(t.id)}">${esc(t.label)}</option>`

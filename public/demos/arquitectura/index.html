@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Estudio Loma — arquitectura en CABA</title>
+  <title>Estudio Loma — arquitectura en CABA y GBA</title>
   <script>
     (function () {
       var p = location.pathname;
@@ -14,6 +14,7 @@
   </script>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;600;700&family=Outfit:wght@400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" crossorigin="">
   <link rel="stylesheet" href="styles.css">
 </head>
 <body>
@@ -23,6 +24,9 @@
       <nav>
         <a href="#proyectos">Proyectos</a>
         <a href="#servicios">Servicios</a>
+        <a href="#equipo">Equipo</a>
+        <a href="#galeria">Galería</a>
+        <a href="#lugar">Ubicación</a>
         <a href="#consulta">Consulta</a>
         <a class="btn" href="panel.html">Panel</a>
       </nav>
@@ -35,7 +39,7 @@
       <div class="hero-shade"></div>
       <div class="wrap hero-inner">
         <div>
-          <p class="kicker light">Estudio de arquitectura · CABA</p>
+          <p class="kicker light">Estudio de arquitectura · CABA y GBA</p>
           <h1>Casa, reforma o PH. El plano y la obra en la misma ficha.</h1>
           <p class="lead light">Proyecto, dirección de obra y renders. Datos de ejemplo en el navegador: no es un estudio en actividad.</p>
           <div class="hero-actions">
@@ -57,14 +61,65 @@
       <section class="section" id="proyectos">
         <p class="kicker">Portfolio</p>
         <h2>Proyectos de ejemplo</h2>
-        <p class="section-lead">Casas nuevas y reformas. Tocá una tarjeta para ver la ficha. No son clientes reales.</p>
+        <p class="section-lead">Casas, PH, departamentos y reformas en CABA y GBA. Tocá una tarjeta para ver programa, m², etapa y materiales. No son clientes reales.</p>
+        <div class="filters" id="filters">
+          <button class="active" data-filter="all" type="button">Todo</button>
+          <button data-filter="casa" type="button">Casas</button>
+          <button data-filter="ph" type="button">PH</button>
+          <button data-filter="departamento" type="button">Departamentos</button>
+          <button data-filter="reforma" type="button">Reformas</button>
+        </div>
         <div class="portfolio-grid" id="catalog"></div>
       </section>
 
       <section class="section" id="servicios">
         <p class="kicker">Servicios</p>
         <h2>Qué hacemos</h2>
+        <p class="section-lead">Del croquis al permiso y la visita de obra. Honorarios según etapa y superficie; factura A, B o C en el panel (demo ARCA).</p>
         <div class="service-grid" id="serviciosGrid"></div>
+      </section>
+
+      <section class="section" id="equipo">
+        <p class="kicker">El estudio</p>
+        <h2>Quién lleva el encargo</h2>
+        <img class="equipo-banner" src="img/equipo-loma.jpg" alt="Equipo de Estudio Loma alrededor de la mesa de planos">
+        <div class="profesionales" id="equipoGrid"></div>
+      </section>
+
+      <section class="section" id="galeria">
+        <p class="kicker">Galería</p>
+        <h2>Obra, patio, cocina y planos</h2>
+        <p class="section-lead">Fotos de ejemplo del portfolio. Tocá una para ampliar.</p>
+        <div class="galeria-grid" id="galeriaGrid"></div>
+      </section>
+
+      <section class="section" id="lugar">
+        <p class="kicker">Ubicación</p>
+        <h2>Palermo, CABA</h2>
+        <div class="map-block">
+          <div>
+            <div class="info-grid" style="grid-template-columns:1fr">
+              <article>
+                <h3>Dirección</h3>
+                <p>Humboldt 2140</p>
+                <p>Palermo, Ciudad Autónoma de Buenos Aires</p>
+                <p>A metros de Córdoba y Juan B. Justo. Subte B, bondis por Córdoba.</p>
+              </article>
+              <article>
+                <h3>Área de trabajo</h3>
+                <p>CABA: Palermo, Colegiales, Núñez, Caballito, San Telmo, Villa Crespo, Chacarita, Recoleta, Villa Urquiza.</p>
+                <p>GBA: Vicente López, San Isidro y alrededores.</p>
+              </article>
+            </div>
+            <p class="map-caption"><a href="https://www.openstreetmap.org/?mlat=-34.5858&amp;mlon=-58.4395#map=16/-34.5858/-58.4395" target="_blank" rel="noopener">Ver mapa más grande</a></p>
+          </div>
+          <div>
+            <div class="map-embed">
+              <p class="map-fallback">Humboldt 2140, Palermo, CABA</p>
+              <div id="mapa-local" class="map-canvas" role="img" aria-label="Mapa del estudio en Palermo, CABA"></div>
+            </div>
+          </div>
+        </div>
       </section>
 
       <section class="section" id="consulta">
@@ -72,7 +127,7 @@
           <div>
             <p class="kicker light">Presupuesto</p>
             <h2>Contanos el encargo</h2>
-            <p>Tipo, barrio y un teléfono o mail. Queda guardado en este navegador para el panel. No sale a un servidor.</p>
+            <p>Tipo, barrio y un teléfono o mail. Queda guardado en este navegador para el panel. No sale a un servidor. También podés escribir por WhatsApp.</p>
           </div>
           <form id="consultaForm" class="presup-form">
             <label>Tipo
@@ -88,12 +143,15 @@
               <input name="contacto" required maxlength="120" placeholder="Teléfono o mail">
             </label>
             <label class="full">Lugar
-              <input name="lugar" maxlength="120" placeholder="Barrio o dirección">
+              <input name="lugar" maxlength="120" placeholder="Barrio en CABA o GBA">
             </label>
             <label class="full">Detalle
-              <textarea name="detalle" maxlength="400" placeholder="Casa nueva, reforma, PH…"></textarea>
+              <textarea name="detalle" maxlength="400" placeholder="Casa nueva, reforma, PH, terraza…"></textarea>
             </label>
-            <button class="btn" type="submit">Enviar consulta</button>
+            <div class="full reserva-actions">
+              <button class="btn" type="submit">Enviar consulta</button>
+              <a class="btn btn-ghost btn-whatsapp" href="#">WhatsApp</a>
+            </div>
           </form>
         </div>
       </section>
@@ -131,6 +189,7 @@
   <div id="contacto"></div>
   <footer class="wrap">Estudio Loma · demo de producto · no es un estudio en actividad.</footer>
 
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" crossorigin=""></script>
   <script src="data.js"></script>
   <script src="app.js"></script>
   <script src="../contacto.js" data-phone="5492915757934" data-text="Hola, quiero consultar un proyecto en Estudio Loma" data-subject="Consulta demo — Estudio Loma" data-title="Consultar un proyecto"></script>
