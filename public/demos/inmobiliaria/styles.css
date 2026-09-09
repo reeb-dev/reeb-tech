@@ -383,6 +383,90 @@ textarea:focus {
   font-size: 0.95rem;
 }
 
+.zone-picks {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 12px;
+  margin: 0 0 16px;
+}
+
+.zone-pick {
+  display: grid;
+  grid-template-rows: 118px auto auto;
+  align-content: start;
+  text-align: left;
+  padding: 0;
+  border: 1px solid var(--line);
+  border-radius: 16px;
+  overflow: hidden;
+  background: var(--card);
+  cursor: pointer;
+  color: inherit;
+  min-height: 44px;
+}
+
+.zone-pick img {
+  width: 100%;
+  height: 118px;
+  object-fit: cover;
+  display: block;
+}
+
+.zone-pick span {
+  display: block;
+  padding: 10px 12px 0;
+  font-weight: 650;
+  font-size: 1rem;
+}
+
+.zone-pick small {
+  display: block;
+  padding: 4px 12px 12px;
+  color: var(--muted);
+  font-size: 0.85rem;
+  line-height: 1.35;
+}
+
+.zone-pick.active {
+  outline: 2px solid #2f3b34;
+  outline-offset: 1px;
+}
+
+.mapa-box,
+.ficha-mapa {
+  position: relative;
+  z-index: 1;
+}
+
+.mapa {
+  height: 360px;
+  border-radius: 16px;
+  overflow: hidden;
+  border: 1px solid var(--line);
+  background: #d5e2e8;
+}
+
+.mapa-note,
+.ficha-mapa p {
+  margin: 8px 0 0;
+  color: var(--muted);
+  font-size: 0.9rem;
+}
+
+.ficha-mapa {
+  margin: 0 0 18px;
+}
+
+.ficha-mapa h4 {
+  margin: 0 0 4px;
+  font-size: 1.05rem;
+}
+
+.ficha-mapa .mapa {
+  height: 240px;
+  margin-top: 8px;
+}
+
 .ficha-facts {
   display: grid;
   grid-template-columns: 1fr 1fr;
@@ -446,6 +530,10 @@ textarea:focus {
   grid-template-columns: repeat(2, minmax(0, 1fr));
   gap: 22px;
   padding-bottom: 36px;
+}
+
+@media (min-width: 1024px) {
+  .properties-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); }
 }
 
 .properties-grid.list { grid-template-columns: 1fr; }
@@ -1245,6 +1333,8 @@ input, select, textarea {
   .search-actions { grid-column: 1 / -1; }
   .hero-photo img { height: 260px; }
   .paisaje-grid { grid-template-columns: 1fr 1fr; }
+  .zone-picks { grid-template-columns: 1fr 1fr; }
+  .mapa { height: 300px; }
   .detail { margin-right: 22px; margin-left: 22px; }
   .properties-grid.list .property-card { grid-template-columns: 1fr; }
 }
@@ -1277,6 +1367,12 @@ input, select, textarea {
   .zone-grid,
   .paisaje-grid,
   .ficha-facts { grid-template-columns: 1fr; }
+
+  .zone-picks { grid-template-columns: 1fr 1fr; }
+  .zone-pick { grid-template-rows: 92px auto auto; }
+  .zone-pick img { height: 92px; }
+  .zone-pick small { font-size: 0.78rem; }
+  .mapa { height: 260px; }
 
   .search-actions { flex-direction: column; }
   .search-btn { width: 100%; }

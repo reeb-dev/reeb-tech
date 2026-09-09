@@ -19,6 +19,14 @@ function formatPrice(price, operacion) {
   return "$ " + Number(price).toLocaleString("es-AR") + "/mes";
 }
 
+let mapaComarca = null;
+let mapaFicha = null;
+
+function zonaPorBarrio(barrio) {
+  if (typeof ZONAS === "undefined") return null;
+  return ZONAS.find((z) => z.id === barrio) || null;
+}
+
 function populateBarrios() {
   const barrios = [...new Set(properties.map((p) => p.barrio))].sort((a, b) => a.localeCompare(b, "es"));
   const select = document.getElementById("filterBarrio");
@@ -29,6 +37,7 @@ function populateBarrios() {
     select.appendChild(opt);
   });
   renderBarrioChips();
+  renderZoneCards();
 }
 
 function renderBarrioChips() {
@@ -59,7 +68,9 @@ function readFiltersFromForm() {
 function applyFilters() {
   readFiltersFromForm();
   renderBarrioChips();
+  renderZoneCards();
   renderProperties();
+  pintarMapaComarca();
 }
 
 function clearFilters() {
@@ -76,6 +87,77 @@ function filterByBarrioChip(barrio) {
   const select = document.getElementById("filterBarrio");
   select.value = select.value === barrio ? "" : barrio;
   applyFilters();
+}
+
+function selectZona(id, scroll) {
+  const select = document.getElementById("filterBarrio");
+  if (select) select.value = id || "";
+  applyFilters();
+  if (scroll && id) {
+    document.getElementById("propiedades")?.scrollIntoView({ behavior: "smooth", block: "start" });
+  }
+}
+
+function renderZoneCards() {
+  const host = document.getElementById("zoneCards");
+  if (!host || typeof ZONAS === "undefined") return;
+  host.innerHTML = ZONAS.map((z) => `
+    <button type="button" class="zone-pick ${currentFilters.barrio === z.id ? "active" : ""}" data-zona="${esc(z.id)}" aria-pressed="${currentFilters.barrio === z.id ? "true" : "false"}">
+      <img src="${esc(z.foto)}" alt="${esc(z.nombre)}">
+      <span>${esc(z.nombre)}</span>
+      <small>${esc(z.texto)}</small>
+    </button>
+  `).join("");
+}
+
+function tilesOsm(map) {
+  L.tileLayer("https://tile.openstreetmap.org/{z}/{x}/{y}.png", {
+    attribution: "&copy; OpenStreetMap",
+    maxZoom: 19
+  }).addTo(map);
+}
+
+function pintarMapaComarca() {
+  const el = document.getElementById("mapaComarca");
+  if (!el || typeof L === "undefined" || typeof ZONAS === "undefined") return;
+  if (mapaComarca) {
+    mapaComarca.remove();
+    mapaComarca = null;
+  }
+  const zonas = ZONAS.filter((z) => z.id);
+  mapaComarca = L.map(el, { scrollWheelZoom: false }).setView([-41.35, -71.38], 9);
+  tilesOsm(mapaComarca);
+  zonas.forEach((z) => {
+    const activa = currentFilters.barrio === z.id;
+    const marker = L.circleMarker([z.lat, z.lng], {
+      radius: activa ? 12 : 8,
+      color: "#2f3b34",
+      fillColor: activa ? "#c45c26" : "#5f7f68",
+      fillOpacity: 0.92,
+      weight: 2
+    }).addTo(mapaComarca);
+    marker.bindPopup(z.nombre);
+    marker.on("click", () => selectZona(z.id, true));
+  });
+  const activa = zonaPorBarrio(currentFilters.barrio);
+  if (activa) mapaComarca.setView([activa.lat, activa.lng], activa.id === "El Bolsón" ? 11 : 12);
+  else mapaComarca.fitBounds(zonas.map((z) => [z.lat, z.lng]), { padding: [28, 28] });
+  window.setTimeout(() => mapaComarca && mapaComarca.invalidateSize(), 80);
+}
+
+function pintarMapaFicha(p) {
+  const el = document.getElementById("mapaFicha");
+  if (!el || typeof L === "undefined") return;
+  if (mapaFicha) {
+    mapaFicha.remove();
+    mapaFicha = null;
+  }
+  const z = zonaPorBarrio(p.barrio) || { lat: -41.1335, lng: -71.3103, nombre: p.barrio };
+  mapaFicha = L.map(el, { scrollWheelZoom: false }).setView([z.lat, z.lng], 13);
+  tilesOsm(mapaFicha);
+  L.marker([z.lat, z.lng]).addTo(mapaFicha).bindPopup(esc(p.barrio) + " · zona aproximada");
+  window.setTimeout(() => mapaFicha && mapaFicha.invalidateSize(), 120);
+  window.setTimeout(() => mapaFicha && mapaFicha.invalidateSize(), 420);
 }
 
 function matchesPrice(p, raw) {
@@ -164,7 +246,7 @@ function renderProperties() {
         <div class="body">
           <div class="type-location">${esc(tipoLabel(p.tipo))}</div>
           <h3>${esc(p.titulo)}</h3>
-          <div class="location">${esc(p.direccion)}</div>
+          <div class="location">Zona ${esc(p.barrio)}</div>
           <div class="price">${formatPrice(p.precio, p.operacion)}</div>
           ${p.expensas ? `<div class="expenses">+ Expensas: ${esc(money(p.expensas))}</div>` : ""}
           <div class="specs">
@@ -218,7 +300,13 @@ function openModal(id) {
       ${p.status === "reservada" ? '<span class="badge reservada">Reservada</span>' : ""}
     </div>
     <h2 id="modalTitle">${esc(p.titulo)}</h2>
-    <div class="location">${esc(p.direccion)} · ${esc(p.barrio)}, ${esc(p.zona)}</div>
+    <div class="location">Zona ${esc(p.barrio)} · ${esc(p.zona)}</div>
+
+    <div class="ficha-mapa">
+      <h4>Ubicación de la zona</h4>
+      <p>El pin marca el barrio, no la parcela. No publicamos la dirección exacta.</p>
+      <div id="mapaFicha" class="mapa"></div>
+    </div>
 
     <div class="price-box">
       <div class="price">${formatPrice(p.precio, p.operacion)}</div>
@@ -322,9 +410,14 @@ function openModal(id) {
 
   document.getElementById("modal").classList.add("open");
   document.body.style.overflow = "hidden";
+  pintarMapaFicha(p);
 }
 
 function closeModal() {
+  if (mapaFicha) {
+    mapaFicha.remove();
+    mapaFicha = null;
+  }
   document.getElementById("modal").classList.remove("open");
   document.body.style.overflow = "";
   currentProperty = null;
@@ -371,6 +464,12 @@ document.getElementById("barrioChips").addEventListener("click", (event) => {
   const chip = event.target.closest("[data-barrio]");
   if (!chip) return;
   filterByBarrioChip(chip.dataset.barrio);
+});
+
+document.getElementById("zoneCards")?.addEventListener("click", (event) => {
+  const card = event.target.closest("[data-zona]");
+  if (!card) return;
+  selectZona(card.dataset.zona, true);
 });
 
 document.querySelector(".view-toggle").addEventListener("click", (event) => {
@@ -462,3 +561,4 @@ function wireNav() {
 wireNav();
 populateBarrios();
 renderProperties();
+pintarMapaComarca();

@@ -7,7 +7,8 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@560;640&family=Figtree:wght@400;500;600;700&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="styles.css?v=bariloche3">
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" crossorigin="">
+  <link rel="stylesheet" href="styles.css?v=bariloche4">
 </head>
 <body class="vitrina">
   <header class="top">
@@ -44,7 +45,7 @@
         <p class="lead">Veinte fichas de muestra en Bariloche y el sur cercano. Venta o alquiler permanente, no estadía de hotel. El paisaje es el lago, los cerros y el bosque.</p>
       </div>
       <figure class="hero-photo">
-        <img src="https://images.unsplash.com/photo-1501785888041-af3ef285b470?w=1600&h=1100&fit=crop" alt="Lago de montaña y cerros, paisaje del Nahuel Huapi">
+        <img src="img/lago.jpg" alt="Lago de montaña y cerros, paisaje del Nahuel Huapi">
       </figure>
     </div>
     <div class="wrap">
@@ -114,19 +115,19 @@
       <p class="comarca-lead">Bariloche se mira desde el agua y desde la altura. En verano el lago está abierto y los días son largos. En invierno nieva, el cerro se pone blanco y la casa se vive adentro: por eso cada ficha dice cómo se calefacciona.</p>
       <div class="paisaje-grid">
         <figure>
-          <img src="https://images.unsplash.com/photo-1501785888041-af3ef285b470?w=900&h=700&fit=crop" alt="Lago de montaña con cerros al fondo">
+          <img src="img/lago.jpg" alt="Lago de montaña con cerros al fondo">
           <figcaption>Lago Nahuel Huapi</figcaption>
         </figure>
         <figure>
-          <img src="https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?w=900&h=700&fit=crop" alt="Cerro rocoso con nieve en las cumbres">
+          <img src="img/cerro.jpg" alt="Cerro rocoso con nieve en las cumbres">
           <figcaption>Cerros</figcaption>
         </figure>
         <figure>
-          <img src="https://images.unsplash.com/photo-1441974231531-c6227db76b6e?w=900&h=700&fit=crop" alt="Bosque de pinos con luz entre los árboles">
+          <img src="img/bosque.jpg" alt="Bosque de pinos con luz entre los árboles">
           <figcaption>Bosque</figcaption>
         </figure>
         <figure>
-          <img src="https://images.unsplash.com/photo-1418985991508-e47386d96a71?w=900&h=700&fit=crop" alt="Montaña nevada en invierno">
+          <img src="img/nieve.jpg" alt="Montaña nevada en invierno">
           <figcaption>Invierno</figcaption>
         </figure>
       </div>
@@ -137,32 +138,11 @@
     <div class="wrap">
       <p class="kicker">La comarca</p>
       <h2>Bariloche y el sur patagónico</h2>
-      <p class="comarca-lead">San Carlos de Bariloche queda sobre el lago Nahuel Huapi, en Río Negro. Las casas de la zona se reconocen por la piedra, la madera y el techo a dos aguas. Esta vitrina muestra viviendas y lotes para vivir, no estadías de turismo.</p>
-      <div class="zone-grid">
-        <article>
-          <h3>Centro</h3>
-          <p>Para quien quiere caminar a Mitre, al Centro Cívico y al lago. Departamentos y alguna casa baja. En invierno hay nieve en la calle; conviene calefacción y cochera.</p>
-        </article>
-        <article>
-          <h3>Melipal</h3>
-          <p>Barrio residencial entre el centro y el oeste. Casas y cabañas de pino, lotes con bosque. Se llega en colectivo o auto en pocos minutos.</p>
-        </article>
-        <article>
-          <h3>Llao Llao y Circuito Chico</h3>
-          <p>Oeste, sobre el lago. Casas de piedra con vista y lotes amplios. El camino es pintoresco; en temporada hay más tránsito de visitantes.</p>
-        </article>
-        <article>
-          <h3>Dina Huapi y Colonia Suiza</h3>
-          <p>Dina Huapi es pueblo aparte, al este del lago. Colonia Suiza queda sobre el Circuito Chico, con casas entre árboles. Más quietud que el centro.</p>
-        </article>
-        <article>
-          <h3>El Bolsón</h3>
-          <p>Sur cercano, en el valle. Casas de montaña y lotes con cerro. No es el mismo municipio: se llega por la ruta 40, unas dos horas.</p>
-        </article>
-        <article>
-          <h3>Cómo se visita</h3>
-          <p>La consulta es por esta ficha. Puede escribir por WhatsApp o pedir una visita. Las visitas se anotan en el panel del agente, no en esta vitrina.</p>
-        </article>
+      <p class="comarca-lead">Toque una zona para ver solo esas propiedades. El mapa marca el barrio, no la parcela. Las visitas se anotan en el panel, no en esta vitrina.</p>
+      <div class="zone-picks" id="zoneCards"></div>
+      <div class="mapa-box">
+        <div id="mapaComarca" class="mapa" role="region" aria-label="Mapa de la comarca de Bariloche"></div>
+        <p class="mapa-note">Mapa de la comarca. El pin es aproximado de cada zona.</p>
       </div>
     </div>
   </section>
@@ -246,9 +226,10 @@
     <p>Inmobiliaria Nahuel · Bariloche · demo de producto · datos ficticios con fines ilustrativos. La venta se muestra en dólares y el alquiler permanente en pesos.</p>
   </footer>
 
-  <script src="data.js?v=bariloche3"></script>
-  <script src="app.js?v=bariloche3"></script>
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" crossorigin=""></script>
+  <script src="data.js?v=bariloche4"></script>
+  <script src="app.js?v=bariloche4"></script>
   <script src="../contacto.js" data-phone="5492915757934" data-text="Hola, quiero consultar por una propiedad en Bariloche" data-subject="Consulta demo — Inmobiliaria Nahuel" data-title="Consultar una propiedad"></script>
-  <link rel="stylesheet" href="styles.css?v=bariloche3">
+  <link rel="stylesheet" href="styles.css?v=bariloche4">
 </body>
 </html>

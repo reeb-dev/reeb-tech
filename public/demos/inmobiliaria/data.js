@@ -37,32 +37,43 @@ const AMENITIES = [
 ];
 
 const FOTOS = {
-  casaLago: "https://images.unsplash.com/photo-1470770841072-f978cf4d019e?w=1400&h=900&fit=crop",
-  casaPiedra: "https://images.unsplash.com/photo-1518780664697-55e3ad937233?w=1400&h=900&fit=crop",
-  casaPinos: "https://images.unsplash.com/photo-1572120360610-d971b9d7767c?w=1400&h=900&fit=crop",
-  casaMadera: "https://images.unsplash.com/photo-1600047509807-ba8f99d2cdbc?w=1400&h=900&fit=crop",
-  casaInterior: "https://images.unsplash.com/photo-1600210492486-724fe5c67fb0?w=1400&h=900&fit=crop",
-  cabanaBosque: "https://images.unsplash.com/photo-1449158743715-0a90ebb6d2d8?w=1400&h=900&fit=crop",
-  cabanaTecho: "https://images.unsplash.com/photo-1542718610-a1d656d1884c?w=1400&h=900&fit=crop",
-  cabanaHogar: "https://images.unsplash.com/photo-1510798831971-661eb04b3739?w=1400&h=900&fit=crop",
-  cabanaDeck: "https://images.unsplash.com/photo-1470770903676-69b98201ea1c?w=1400&h=900&fit=crop",
-  cabanaDormi: "https://images.unsplash.com/photo-1505693416388-ac5ce068fe85?w=1400&h=900&fit=crop",
-  deptoLiving: "https://images.unsplash.com/photo-1600210492493-0946911123ea?w=1400&h=900&fit=crop",
-  deptoCocina: "https://images.unsplash.com/photo-1600585154526-990dced4db0d?w=1400&h=900&fit=crop",
-  deptoBalcon: "https://images.unsplash.com/photo-1600566753086-00f18fb6b3ea?w=1400&h=900&fit=crop",
-  lago: "https://images.unsplash.com/photo-1501785888041-af3ef285b470?w=1400&h=900&fit=crop",
-  cerro: "https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?w=1400&h=900&fit=crop",
-  bosque: "https://images.unsplash.com/photo-1441974231531-c6227db76b6e?w=1400&h=900&fit=crop",
-  valle: "https://images.unsplash.com/photo-1500534314209-a25ddb2bd429?w=1400&h=900&fit=crop",
-  local: "https://images.unsplash.com/photo-1441984904996-e0b6ba687e04?w=1400&h=900&fit=crop",
-  nieve: "https://images.unsplash.com/photo-1418985991508-e47386d96a71?w=1400&h=900&fit=crop",
-  verano: "https://images.unsplash.com/photo-1439066615861-d1af74d74000?w=1400&h=900&fit=crop",
-  bosque2: "https://images.unsplash.com/photo-1469474968028-56623f02e42e?w=1400&h=900&fit=crop",
-  cerro2: "https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=1400&h=900&fit=crop",
-  lago2: "https://images.unsplash.com/photo-1476514525535-07fb3b4ae5f1?w=1400&h=900&fit=crop",
-  casaLago2: "https://images.unsplash.com/photo-1482192505345-5655af888cc4?w=1400&h=900&fit=crop",
-  cabanaAframe: "https://images.unsplash.com/photo-1587061949409-02df41d5e562?w=1400&h=900&fit=crop"
+  casaLago: "img/casa-lago.jpg",
+  casaPiedra: "img/casa-piedra.jpg",
+  casaPinos: "img/casa-pinos.jpg",
+  casaMadera: "img/casa-madera.jpg",
+  casaInterior: "img/casa-interior.jpg",
+  cabanaBosque: "img/cabana-bosque.jpg",
+  cabanaTecho: "img/cabana-techo.jpg",
+  cabanaHogar: "img/cabana-hogar.jpg",
+  cabanaDeck: "img/cabana-deck.jpg",
+  cabanaDormi: "img/cabana-dormi.jpg",
+  deptoLiving: "img/depto-living.jpg",
+  deptoCocina: "img/depto-cocina.jpg",
+  deptoBalcon: "img/depto-balcon.jpg",
+  lago: "img/lago.jpg",
+  cerro: "img/cerro.jpg",
+  bosque: "img/bosque.jpg",
+  valle: "img/valle.jpg",
+  local: "img/local.jpg",
+  nieve: "img/nieve.jpg",
+  verano: "img/verano.jpg",
+  bosque2: "img/bosque2.jpg",
+  cerro2: "img/cerro2.jpg",
+  lago2: "img/lago2.jpg",
+  casaLago2: "img/casa-lago2.jpg",
+  cabanaAframe: "img/cabana-aframe.jpg"
 };
+
+const ZONAS = [
+  { id: "", nombre: "Todas", foto: "img/lago.jpg", texto: "Toda la cartera de Bariloche y el sur cercano.", lat: -41.1335, lng: -71.3103 },
+  { id: "Centro", nombre: "Centro", foto: "img/lago2.jpg", texto: "Cerca de Mitre, el Centro Cívico y el lago.", lat: -41.1335, lng: -71.3103 },
+  { id: "Melipal", nombre: "Melipal", foto: "img/bosque.jpg", texto: "Casas y cabañas entre el centro y el oeste.", lat: -41.121, lng: -71.352 },
+  { id: "Llao Llao", nombre: "Llao Llao", foto: "img/casa-lago.jpg", texto: "Oeste, sobre el lago Nahuel Huapi.", lat: -41.056, lng: -71.416 },
+  { id: "Circuito Chico", nombre: "Circuito Chico", foto: "img/cerro.jpg", texto: "Camino al oeste, cerro, bosque y tramos de lago.", lat: -41.09, lng: -71.40 },
+  { id: "Dina Huapi", nombre: "Dina Huapi", foto: "img/verano.jpg", texto: "Pueblo al este del lago, más quieto.", lat: -41.07, lng: -71.166 },
+  { id: "Colonia Suiza", nombre: "Colonia Suiza", foto: "img/bosque2.jpg", texto: "Casas entre árboles, sobre el Circuito Chico.", lat: -41.096, lng: -71.508 },
+  { id: "El Bolsón", nombre: "El Bolsón", foto: "img/valle.jpg", texto: "Sur cercano, valle y cerro. Unas dos horas por la ruta 40.", lat: -41.966, lng: -71.533 }
+];
 
 function fotoPorTipo(tipo) {
   if (tipo === "casa") return FOTOS.casaPiedra;
@@ -706,7 +717,7 @@ function seed() {
   ];
 }
 
-const STORAGE_KEY = "inmobiliaria-demo-v6";
+const STORAGE_KEY = "inmobiliaria-demo-v7";
 const DEMO_WA_PHONE = "5492915757934";
 
 function load() {
