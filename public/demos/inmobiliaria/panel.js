@@ -371,22 +371,31 @@ function htmlPublishBlock(item, isCreate, readonly) {
         <p class="lead-mini">Guarde la propiedad primero. El sitio propio toma la ficha apenas exista en la cartera. Después podrá marcar portales y redes. Demo: no se envía nada afuera.</p>
       </section>`;
   }
+  const sitiosOn = destinosPorGrupo("sitio").filter((d) => d.fijo || destinoConectado(d.id)).length;
+  const redesOn = destinosPorGrupo("red").filter((d) => destinoConectado(d.id)).length;
   return `
     <section class="nh-form-section difusion-ficha" id="bloque-publicar">
-      <h3>Publicación</h3>
-      <p class="lead-mini">Elija destinos conectados y toque Publicar este aviso. El sitio propio siempre queda en la vitrina. Portales y redes solo si la cuenta está conectada en Difusión. Demo: no se envía nada afuera.</p>
-      <p class="difusion-ficha-grupo">Sitios y portales</p>
-      <div class="destino-list">
-        ${destinosPorGrupo("sitio").map((dest) => htmlDestinoFila(dest, item, readonly)).join("")}
-      </div>
-      <p class="difusion-ficha-grupo">Redes sociales</p>
-      <div class="destino-list">
-        ${destinosPorGrupo("red").map((dest) => htmlDestinoFila(dest, item, readonly)).join("")}
+      <h3>Publicación en otras páginas y redes</h3>
+      <p class="lead-mini">Marque destinos <strong>ya conectados</strong> en Difusión y toque publicar. Sitio propio: siempre en la vitrina. Hoy hay ${sitiosOn} sitios/portales y ${redesOn} redes listas. Demo: no se envía nada afuera.</p>
+      <div class="publish-grid">
+        <div class="publish-col">
+          <p class="difusion-ficha-grupo">Sitios y portales</p>
+          <div class="destino-list">
+            ${destinosPorGrupo("sitio").map((dest) => htmlDestinoFila(dest, item, readonly)).join("")}
+          </div>
+        </div>
+        <div class="publish-col">
+          <p class="difusion-ficha-grupo">Redes sociales</p>
+          <div class="destino-list">
+            ${destinosPorGrupo("red").map((dest) => htmlDestinoFila(dest, item, readonly)).join("")}
+          </div>
+        </div>
       </div>
       <div class="form-actions difusion-acciones">
         ${readonly ? "" : `<button class="btn-panel" type="button" id="publicar-aviso">Publicar este aviso</button>`}
         <button class="ghost" type="button" id="copiar-aviso">Copiar texto para redes</button>
         <a class="ghost" id="wa-aviso" href="${esc("https://wa.me/?text=" + encodeURIComponent(textoRed(item)))}" target="_blank" rel="noopener">Enviar por WhatsApp</a>
+        <button class="ghost" type="button" data-go-difusion>Abrir Difusión</button>
       </div>
     </section>`;
 }
@@ -562,12 +571,12 @@ function htmlCuenta(dest) {
   const publicados = avisosEnDestino(dest.id);
   const meta = cuentaDe(dest.id);
   const last = meta.lastAction
-    ? `Última acción: ${esc(meta.lastAction)}${meta.lastAt ? " · " + esc(meta.lastAt) : ""}`
+    ? `${esc(meta.lastAction)}${meta.lastAt ? " · " + esc(meta.lastAt) : ""}`
     : "Sin movimientos todavía.";
   const editable = canEditDifusion();
   const accion = dest.fijo
-    ? `<span class="cuenta-estado on">Siempre activa</span>`
-    : `<button type="button" class="ghost cuenta-btn" data-cuenta="${esc(dest.id)}" ${editable ? "" : "disabled"}>${on ? "Desconectar" : "Conectar (demo)"}</button>`;
+    ? `<span class="cuenta-estado on">Siempre en la vitrina</span>`
+    : `<button type="button" class="${on ? "ghost" : "btn-panel"} cuenta-btn" data-cuenta="${esc(dest.id)}" ${editable ? "" : "disabled"}>${on ? "Desconectar" : "Conectar"}</button>`;
   return `
     <article class="cuenta ${on ? "is-on" : ""}">
       <header class="cuenta-head">
@@ -579,9 +588,11 @@ function htmlCuenta(dest) {
         <span class="cuenta-badge ${on ? "is-on" : ""}">${on ? "Conectado" : "Sin conectar"}</span>
       </header>
       <p>${esc(dest.beneficio)}</p>
-      <p class="cuenta-meta">${on ? publicados + " aviso" + (publicados === 1 ? "" : "s") + " de la cartera en este destino" : "Sin conectar. Conecte para marcar avisos."}</p>
-      <p class="cuenta-accion">${last}</p>
-      ${accion}
+      <p class="cuenta-meta">${on
+        ? (publicados + " aviso" + (publicados === 1 ? "" : "s") + " marcado" + (publicados === 1 ? "" : "s") + " en la cartera")
+        : "Conecte para poder marcar avisos acá."}</p>
+      <p class="cuenta-accion"><span>Última acción</span>${last}</p>
+      <footer class="cuenta-foot">${accion}</footer>
     </article>`;
 }
 
@@ -679,15 +690,158 @@ function agregarACola(itemId, destId) {
   renderDifusion();
 }
 
-function htmlGrupoCuentas(grupo, titulo, texto) {
+function conectarRedesMuestra() {
+  if (!canEditDifusion()) return;
+  ["instagram", "facebook", "fbmarket", "whatsapp", "tiktok"].forEach((id) => {
+    if (!DESTINOS.some((d) => d.id === id)) return;
+    setCuentaAccion(id, true, "Conectada de muestra (demo). No se envió nada afuera.");
+  });
+  showToast("Redes de muestra conectadas. Puede marcar avisos en Instagram, Facebook y WhatsApp.");
+  renderDifusion();
+}
+
+function publicarListosCola() {
+  if (!canEditDifusion()) return;
+  const listos = filasCola().filter((f) => f.estado === "listo" && destinoConectado(f.dest.id));
+  if (!listos.length) {
+    showToast("No hay avisos en estado Listo. Agréguelos a la cola o márquelos desde Publicar.");
+    return;
+  }
+  showPanelLoading(
+    "Publicando la cola…",
+    "Marcando " + listos.length + " aviso" + (listos.length === 1 ? "" : "s") + " como publicados (demo).",
+    () => {
+      listos.forEach((fila) => {
+        cola = {
+          ...cola,
+          [colaClave(fila.item.id, fila.dest.id)]: { estado: "publicado", when: ahoraDemo() }
+        };
+        items = items.map((row) => row.id !== fila.item.id ? row : {
+          ...row,
+          portales: { ...portalesDe(row), [fila.dest.id]: true },
+          history: [{
+            when: "hoy",
+            text: fila.dest.nombre + " marcado como publicado desde la cola (demo)."
+          }, ...(row.history || [])]
+        });
+        setCuentaAccion(fila.dest.id, true, "Cola: " + fila.item.codigo + " publicado (demo).");
+      });
+      saveCola(cola);
+      save(items);
+      showToast(listos.length + " marcado" + (listos.length === 1 ? "" : "s") + " como publicado. Nada salió afuera.");
+      renderDifusion();
+      if (currentView === "cartera") render();
+    },
+    720
+  );
+}
+
+function htmlGrupoCuentas(grupo, titulo, texto, paso) {
   const destinos = destinosPorGrupo(grupo);
+  const conectados = destinos.filter((d) => destinoConectado(d.id)).length;
   return `
-    <section class="difusion-grupo">
+    <section class="difusion-grupo" id="difusion-${esc(grupo)}">
       <div class="difusion-grupo-head">
+        <p class="difusion-paso">Paso ${paso}</p>
         <h2>${esc(titulo)}</h2>
-        <p>${esc(texto)}</p>
+        <p>${esc(texto)} <strong>${conectados} de ${destinos.length}</strong> conectados.</p>
       </div>
       <div class="cuentas">${destinos.map(htmlCuenta).join("")}</div>
+    </section>`;
+}
+
+function htmlDifusionResumen(editable) {
+  const sitios = destinosPorGrupo("sitio");
+  const redes = destinosPorGrupo("red");
+  const sitiosOn = sitios.filter((d) => destinoConectado(d.id)).length;
+  const redesOn = redes.filter((d) => destinoConectado(d.id)).length;
+  const filas = filasCola();
+  const listos = filas.filter((f) => f.estado === "listo").length;
+  const publicados = filas.filter((f) => f.estado === "publicado").length;
+  return `
+    <section class="difusion-resumen" aria-label="Resumen de difusión">
+      <div class="difusion-resumen-grid">
+        <article><span>Sitio propio</span><strong>${items.length}</strong><small>avisos en la vitrina</small></article>
+        <article><span>Portales</span><strong>${sitiosOn}/${sitios.length}</strong><small>cuentas conectadas</small></article>
+        <article><span>Redes</span><strong>${redesOn}/${redes.length}</strong><small>cuentas conectadas</small></article>
+        <article><span>Cola</span><strong>${listos}</strong><small>listos · ${publicados} publicados</small></article>
+      </div>
+      ${editable ? `
+      <div class="form-actions difusion-resumen-acciones">
+        <button type="button" class="btn-panel" data-difusion-scroll="difusion-publicar">Publicar un aviso</button>
+        <button type="button" class="ghost" data-conectar-redes>Conectar redes de muestra</button>
+        <button type="button" class="ghost" data-publicar-listos ${listos ? "" : "disabled"}>Publicar los listos (${listos})</button>
+      </div>` : `<p class="cola-vacia">Con su rol puede ver la difusión. Quien administra las cuentas marca y publica.</p>`}
+      <p class="difusion-aviso-demo">Demo honesta: conectar o publicar solo deja marcas en este navegador. No hay envío a Mercado Libre, Zonaprop ni redes.</p>
+    </section>`;
+}
+
+function htmlDifusionPublicar(editable) {
+  const destinosOk = DESTINOS.filter((d) => !d.fijo && destinoConectado(d.id));
+  const shareItem = items.find((i) => i.id === selected) || items[0];
+  if (!editable) {
+    return `
+      <section class="difusion-publicar" id="difusion-publicar">
+        <div class="difusion-grupo-head">
+          <p class="difusion-paso">Paso 3</p>
+          <h2>Publicar un aviso</h2>
+          <p>Solo lectura con su rol. Un titular, agente, comercial o marketing puede marcar destinos.</p>
+        </div>
+      </section>`;
+  }
+  if (!destinosOk.length) {
+    return `
+      <section class="difusion-publicar" id="difusion-publicar">
+        <div class="difusion-grupo-head">
+          <p class="difusion-paso">Paso 3</p>
+          <h2>Publicar un aviso</h2>
+          <p>Todavía no hay portales ni redes conectados. Use “Conectar redes de muestra” o conecte un portal arriba.</p>
+        </div>
+      </section>`;
+  }
+  return `
+    <section class="difusion-publicar" id="difusion-publicar">
+      <div class="difusion-grupo-head">
+        <p class="difusion-paso">Paso 3</p>
+        <h2>Publicar un aviso</h2>
+        <p>Elija la ficha, marque portales y redes conectados, y publique. El sitio propio ya está en la vitrina. No se envía nada afuera.</p>
+      </div>
+      <form class="difusion-publicar-form form-shell" id="difusion-publicar-form">
+        <div class="nh-field">
+          <label for="pub-item">Aviso de la cartera</label>
+          <select id="pub-item" name="item" required>
+            ${items.map((item) => `<option value="${esc(item.id)}" ${shareItem && item.id === shareItem.id ? "selected" : ""}>${esc(item.codigo)} · ${esc(item.titulo)}</option>`).join("")}
+          </select>
+        </div>
+        <div class="publish-grid">
+          <div class="publish-col">
+            <p class="difusion-ficha-grupo">Portales conectados</p>
+            <div class="destino-list">
+              ${destinosPorGrupo("sitio").filter((d) => !d.fijo && destinoConectado(d.id)).map((dest) => `
+                <label class="destino-row">
+                  <span class="cuenta-mark destino-row-mark" data-dest="${esc(dest.id)}" aria-hidden="true">${esc(destMarca(dest))}</span>
+                  <span class="destino-check"><input type="checkbox" name="dest" value="${esc(dest.id)}"></span>
+                  <span><strong>${esc(dest.nombre)}</strong><small>${esc(destTipoLabel(dest))}</small></span>
+                </label>`).join("") || "<p class=\"cola-vacia\">Ningún portal conectado.</p>"}
+            </div>
+          </div>
+          <div class="publish-col">
+            <p class="difusion-ficha-grupo">Redes conectadas</p>
+            <div class="destino-list">
+              ${destinosPorGrupo("red").filter((d) => destinoConectado(d.id)).map((dest) => `
+                <label class="destino-row">
+                  <span class="cuenta-mark destino-row-mark" data-dest="${esc(dest.id)}" aria-hidden="true">${esc(destMarca(dest))}</span>
+                  <span class="destino-check"><input type="checkbox" name="dest" value="${esc(dest.id)}" checked></span>
+                  <span><strong>${esc(dest.nombre)}</strong><small>${esc(destTipoLabel(dest))}</small></span>
+                </label>`).join("") || "<p class=\"cola-vacia\">Ninguna red conectada.</p>"}
+            </div>
+          </div>
+        </div>
+        <div class="form-actions">
+          <button class="btn-panel" type="submit">Publicar en los destinos marcados</button>
+          <button class="ghost" type="button" data-panel-nav="cartera">Abrir ficha en cartera</button>
+        </div>
+      </form>
     </section>`;
 }
 
@@ -700,12 +854,15 @@ function renderDifusion() {
   const shareItem = items.find((i) => i.id === selected) || items[0];
   const shareText = shareItem ? textoRed(shareItem) : "";
   host.innerHTML = `
-    ${htmlGrupoCuentas("sitio", "Sitios y portales", "Vitrina propia y portales de inmuebles de Argentina. Conectar no envía el aviso: es una marca de ejemplo.")}
-    ${htmlGrupoCuentas("red", "Redes sociales", "Instagram, Facebook (página), Marketplace, WhatsApp y TikTok. Acá se arma el texto; usted lo pega o lo envía a mano. No hay publicación automática.")}
-    <section class="difusion-cola">
+    ${htmlDifusionResumen(editable)}
+    ${htmlGrupoCuentas("sitio", "Sitios y portales", "Vitrina propia y portales de inmuebles de Argentina. Conectar no envía el aviso: es una marca de ejemplo.", "1")}
+    ${htmlGrupoCuentas("red", "Redes sociales", "Instagram, Facebook (página), Marketplace, WhatsApp y TikTok. Acá se arma el texto; usted lo pega o lo envía a mano.", "2")}
+    ${htmlDifusionPublicar(editable)}
+    <section class="difusion-cola" id="difusion-cola">
       <div class="difusion-grupo-head">
+        <p class="difusion-paso">Paso 4</p>
         <h2>Cola de publicación</h2>
-        <p>Sitio propio: ${items.length} propiedades de esta cartera salen en la vitrina. Abajo, portales y redes. Estados de ejemplo: listo, programado o publicado. No hay alcance ni seguidores inventados. Publicado, en esta demo, solo marca el aviso: no sale afuera.</p>
+        <p>Seguimiento de portales y redes. Estados: listo, programado o publicado. Publicado, en esta demo, solo marca el aviso.</p>
       </div>
       ${editable && destinosCola.length ? `
         <form class="cola-alta form-shell" id="cola-alta">
@@ -740,7 +897,12 @@ function renderDifusion() {
             ${filas.length ? filas.map((fila) => `
               <tr>
                 <td>${esc(fila.item.codigo)}<br><small>${esc(fila.item.titulo)}</small></td>
-                <td>${esc(fila.dest.nombre)}<br><small>${esc(destTipoLabel(fila.dest))}</small></td>
+                <td>
+                  <span class="cola-dest-cell">
+                    <span class="cuenta-mark destino-row-mark" data-dest="${esc(fila.dest.id)}" aria-hidden="true">${esc(destMarca(fila.dest))}</span>
+                    <span>${esc(fila.dest.nombre)}<br><small>${esc(destTipoLabel(fila.dest))}</small></span>
+                  </span>
+                </td>
                 <td>
                   ${fila.dest.fijo || !editable
                     ? `<span class="tag cola-${esc(fila.estado)}">${esc(colaEstadoLabel(fila.estado))}</span>`
@@ -755,10 +917,11 @@ function renderDifusion() {
         </table>
       </div>
     </section>
-    <section class="difusion-share">
+    <section class="difusion-share" id="difusion-share">
       <div class="difusion-grupo-head">
-        <h2>Texto para redes</h2>
-        <p>El mismo texto de la ficha. Cópielo o ábralo en WhatsApp. No se publica solo.</p>
+        <p class="difusion-paso">Paso 5</p>
+        <h2>Texto para redes y otras páginas</h2>
+        <p>El mismo texto de la ficha para Instagram, Facebook, WhatsApp u otra página. Cópielo o ábralo en WhatsApp. No se publica solo.</p>
       </div>
       <div class="nh-field">
         <label for="difusion-share-item">Aviso de la cartera</label>
@@ -767,10 +930,10 @@ function renderDifusion() {
         </select>
       </div>
       <div class="nh-field">
-        <label for="difusion-share-text">Texto</label>
+        <label for="difusion-share-text">Texto listo para pegar</label>
         <textarea id="difusion-share-text" rows="5" readonly>${esc(shareText)}</textarea>
       </div>
-      <div class="difusion-acciones">
+      <div class="difusion-acciones form-actions">
         <button class="btn-panel" type="button" id="difusion-copiar" ${shareItem ? "" : "disabled"}>Copiar texto</button>
         <a class="ghost" id="difusion-wa" ${shareItem ? `href="${esc("https://wa.me/?text=" + encodeURIComponent(shareText))}"` : ""} target="_blank" rel="noopener">Abrir WhatsApp</a>
         <button class="ghost" type="button" data-panel-nav="cartera">Ver ficha en cartera</button>
@@ -807,6 +970,32 @@ function renderDifusion() {
     });
   });
 
+  host.querySelector("[data-conectar-redes]")?.addEventListener("click", () => conectarRedesMuestra());
+  host.querySelector("[data-publicar-listos]")?.addEventListener("click", () => publicarListosCola());
+  host.querySelectorAll("[data-difusion-scroll]").forEach((btn) => {
+    btn.addEventListener("click", () => {
+      document.getElementById(btn.dataset.difusionScroll)?.scrollIntoView({ behavior: "smooth", block: "start" });
+    });
+  });
+
+  host.querySelector("#difusion-publicar-form")?.addEventListener("submit", (event) => {
+    event.preventDefault();
+    const data = new FormData(event.target);
+    const itemId = String(data.get("item") || "");
+    const destIds = data.getAll("dest").map(String);
+    const item = items.find((i) => i.id === itemId);
+    if (!item) {
+      showToast("Elija un aviso de la cartera.");
+      return;
+    }
+    selected = item.id;
+    if (!destIds.length) {
+      showToast("Marque al menos un portal o una red.");
+      return;
+    }
+    publicarAviso(item, destIds);
+  });
+
   host.querySelector("#cola-alta")?.addEventListener("submit", (event) => {
     event.preventDefault();
     const data = new FormData(event.target);
@@ -839,8 +1028,10 @@ function renderDifusion() {
     }
   });
 
-  host.querySelector("[data-panel-nav='cartera']")?.addEventListener("click", () => {
-    openCarteraEditor(selected || items[0]?.id, { instant: false });
+  host.querySelectorAll("[data-panel-nav='cartera']").forEach((btn) => {
+    btn.addEventListener("click", () => {
+      openCarteraEditor(selected || items[0]?.id, { instant: false });
+    });
   });
 }
 
@@ -1149,6 +1340,10 @@ function paintCarteraEditor() {
     } catch {
       showToast("No se pudo copiar. Seleccione el texto a mano.");
     }
+  });
+
+  detail.querySelector("[data-go-difusion]")?.addEventListener("click", () => {
+    showPanelView("difusion");
   });
 
   detail.querySelector("#edit")?.addEventListener("submit", (event) => {
@@ -1696,7 +1891,9 @@ function applySessionChrome() {
     rolSelect.innerHTML = STAFF_ROLES.map((r) =>
       `<option value="${esc(r.id)}">${esc(r.label)}</option>`
     ).join("");
+    rolSelect.value = "agente";
   }
+  paintUsuarioAlta();
 }
 
 function placedLoginUser() {
@@ -1766,9 +1963,31 @@ function enterStaff(user) {
   );
 }
 
+function paintUsuarioAlta() {
+  const alta = document.getElementById("usuario-alta");
+  const nota = document.getElementById("usuario-alta-nota");
+  const puede = canManageUsers();
+  if (alta) {
+    alta.hidden = !puede;
+    alta.setAttribute("aria-hidden", puede ? "false" : "true");
+    alta.querySelectorAll("input, select, button").forEach((el) => {
+      el.disabled = !puede;
+    });
+  }
+  if (nota) nota.hidden = puede;
+}
+
+function newStaffId() {
+  if (typeof crypto !== "undefined" && typeof crypto.randomUUID === "function") {
+    return crypto.randomUUID();
+  }
+  return "u-" + Date.now().toString(36) + "-" + Math.random().toString(36).slice(2, 8);
+}
+
 function renderUsuarios() {
   const host = document.getElementById("usuario-rows");
   if (!host) return;
+  paintUsuarioAlta();
   const titular = canManageUsers();
   host.innerHTML = staff.map((u) => {
     const rolSelect = titular
@@ -1839,37 +2058,51 @@ function toggleStaff(id) {
 
 document.getElementById("usuario-alta")?.addEventListener("submit", (event) => {
   event.preventDefault();
-  if (!canManageUsers()) return;
-  const data = new FormData(event.target);
+  const form = event.target;
   const err = document.getElementById("usuario-alta-error");
+  if (!canManageUsers()) {
+    if (err) err.textContent = "Solo el titular puede agregar usuarios en esta demo.";
+    showToast("Entre como milena (titular) para dar de alta cuentas.");
+    return;
+  }
+  const data = new FormData(form);
   const user = String(data.get("user") || "").trim().toLowerCase().replace(/[^a-z0-9._-]/g, "");
   const nombre = String(data.get("nombre") || "").trim();
   const rol = String(data.get("rol") || "agente");
   const pass = String(data.get("pass") || "demo").trim() || "demo";
-  event.target.querySelectorAll(".is-invalid").forEach((el) => el.classList.remove("is-invalid"));
+  form.querySelectorAll(".is-invalid").forEach((el) => el.classList.remove("is-invalid"));
   if (!STAFF_ROLES.some((r) => r.id === rol)) {
     if (err) err.textContent = "Elija un rol válido.";
     return;
   }
   if (!user || !nombre) {
-    if (!nombre) event.target.nombre.classList.add("is-invalid");
-    if (!user) event.target.user.classList.add("is-invalid");
+    const nombreEl = form.elements.namedItem("nombre");
+    const userEl = form.elements.namedItem("user");
+    if (nombreEl && !nombre) nombreEl.classList.add("is-invalid");
+    if (userEl && !user) userEl.classList.add("is-invalid");
     if (err) err.textContent = "Complete nombre y usuario.";
-    (nombre ? event.target.user : event.target.nombre).focus();
+    (nombre ? userEl : nombreEl)?.focus();
     return;
   }
   if (staff.some((u) => u.user === user)) {
-    event.target.user.classList.add("is-invalid");
-    if (err) err.textContent = "Ese usuario ya existe.";
-    event.target.user.focus();
+    form.elements.namedItem("user")?.classList.add("is-invalid");
+    if (err) err.textContent = "Ese usuario ya existe. Elija otro nombre de usuario.";
+    form.elements.namedItem("user")?.focus();
     return;
   }
   if (err) err.textContent = "";
-  staff = [{ id: crypto.randomUUID(), user, pass, nombre, rol, activo: true }, ...staff];
-  saveUsers(staff);
-  event.target.reset();
-  event.target.pass.value = "demo";
-  if (event.target.rol) event.target.rol.value = "agente";
-  showToast("Usuario agregado. Puede entrar con clave " + pass + ".");
-  renderUsuarios();
+  try {
+    staff = [{ id: newStaffId(), user, pass, nombre, rol, activo: true }, ...staff];
+    saveUsers(staff);
+    form.reset();
+    const passEl = form.elements.namedItem("pass");
+    const rolEl = form.elements.namedItem("rol");
+    if (passEl) passEl.value = "demo";
+    if (rolEl) rolEl.value = "agente";
+    showToast("Usuario agregado. Puede entrar con " + user + " / " + pass + ".");
+    renderUsuarios();
+  } catch (e) {
+    if (err) err.textContent = "No se pudo guardar la cuenta en este navegador.";
+    showToast("No se pudo agregar el usuario. Pruebe de nuevo.");
+  }
 });

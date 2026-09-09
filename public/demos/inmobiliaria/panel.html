@@ -7,7 +7,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@560;640&family=Figtree:wght@400;500;600;700&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="styles.css?v=bariloche26">
+  <link rel="stylesheet" href="styles.css?v=bariloche31">
   <style>
     body.panel-page:not(.nh-authed) .app { display: none !important; }
   </style>
@@ -46,7 +46,7 @@
       <p class="eyebrow">Estudio Nahuel Huapi</p>
       <p class="nh-loading-title" id="nh-loading-title">Cargando el panel…</p>
       <p id="nh-loading-lead">Abriendo la cartera y las secciones de la vitrina.</p>
-      <div class="nh-loading-bar" aria-hidden="true"></div>
+      <div class="nh-spinner" role="status" aria-label="Cargando"></div>
     </div>
   </div>
 
@@ -150,7 +150,7 @@
         <div>
           <p class="eyebrow">Sitios, portales y redes</p>
           <h1>Difusión</h1>
-          <p class="lead-panel">Gestor de ejemplo para el sitio propio, portales de inmuebles de Argentina y redes (Instagram, Facebook, Marketplace, WhatsApp). Conecte la cuenta, elija el aviso en la cartera y mire la cola. Demo: no se publica nada afuera. El aviso pago de cada portal se contrata aparte.</p>
+          <p class="lead-panel">Primero conecte las cuentas. Después elija un aviso y márquelo en portales o redes. El sitio propio ya muestra la cartera. Instagram, Facebook, Marketplace, WhatsApp y TikTok arman el texto; usted lo pega a mano. Demo: no se publica nada afuera. El aviso pago de cada portal se cotiza aparte.</p>
         </div>
       </div>
       <div class="difusion-desk" id="difusion-desk"></div>
@@ -184,13 +184,14 @@
         </div>
         <div class="nh-field">
           <label for="alta-pass">Clave</label>
-          <input id="alta-pass" name="pass" value="demo" autocomplete="off">
+          <input id="alta-pass" name="pass" value="demo" autocomplete="new-password">
         </div>
         <p class="nh-form-error" id="usuario-alta-error" role="alert"></p>
         <div class="form-actions">
-          <button class="btn-panel" type="submit">Agregar usuario</button>
+          <button class="btn-panel" type="submit" id="usuario-alta-submit">Agregar usuario</button>
         </div>
       </form>
+      <p class="usuario-alta-nota lead-mini" id="usuario-alta-nota" hidden>Solo el titular puede dar de alta o pausar cuentas. Usted puede ver la lista.</p>
       <div class="table-scroll">
         <table>
           <thead>
@@ -219,9 +220,9 @@
     </section>
   </div>
 
-  <script src="data.js?v=bariloche26"></script>
-  <script src="panel.js?v=bariloche26"></script>
-  <script src="../contacto.js?v=bariloche26" data-phone="5492915757934" data-text="Hola, quiero consultar por una propiedad en Bariloche" data-subject="Consulta demo — Estudio Nahuel Huapi" data-title="Consultar una propiedad" data-place="panel" data-tone="usted"></script>
-  <link rel="stylesheet" href="styles.css?v=bariloche26">
+  <script src="data.js?v=bariloche31"></script>
+  <script src="panel.js?v=bariloche31"></script>
+  <script src="../contacto.js?v=bariloche31" data-phone="5492915757934" data-text="Hola, quiero consultar por una propiedad en Bariloche" data-subject="Consulta demo — Estudio Nahuel Huapi" data-title="Consultar una propiedad" data-place="panel" data-tone="usted"></script>
+  <link rel="stylesheet" href="styles.css?v=bariloche31">
 </body>
 </html>

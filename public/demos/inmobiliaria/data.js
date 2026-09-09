@@ -1825,10 +1825,19 @@ function htmlPublicBadges(p) {
   return bits.join("");
 }
 
+function avisoZonaCorta(p) {
+  const barrio = String(p?.barrio || "").trim();
+  if (!barrio) return "";
+  const z = typeof zonaPorBarrio === "function" ? zonaPorBarrio(barrio) : null;
+  return (z && z.nombre) || barrio;
+}
+
 function htmlAvisoFlags(p) {
   const bits = [];
-  if (p.bajoPrecio) bits.push('<span class="aviso-flag is-baja">Bajó de precio</span>');
-  if (p.nuevo) bits.push('<span class="aviso-flag is-nueva">Nueva publicación</span>');
+  const zona = avisoZonaCorta(p);
+  const zonaBit = zona ? ` · ${esc(zona)}` : "";
+  if (p.bajoPrecio) bits.push(`<span class="aviso-flag is-baja">Bajó de precio${zonaBit}</span>`);
+  if (p.nuevo) bits.push(`<span class="aviso-flag is-nueva">Nueva publicación${zonaBit}</span>`);
   return bits.length ? `<div class="aviso-flags">${bits.join("")}</div>` : "";
 }
 
@@ -1842,9 +1851,11 @@ function htmlPrecioVitrina(p) {
   const was = p.bajoPrecio && p.precioAnterior
     ? `<span class="price-was">${esc(precioPublicoTexto(p, true))}</span>`
     : "";
+  const zona = avisoZonaCorta(p);
+  const zonaBit = zona ? ` · ${esc(zona)}` : "";
   const notes = [];
-  if (p.bajoPrecio) notes.push('<span class="precio-nota is-baja">Bajó de precio</span>');
-  if (p.nuevo) notes.push('<span class="precio-nota is-nueva">Nueva publicación</span>');
+  if (p.bajoPrecio) notes.push(`<span class="precio-nota is-baja">Bajó de precio${zonaBit}</span>`);
+  if (p.nuevo) notes.push(`<span class="precio-nota is-nueva">Nueva publicación${zonaBit}</span>`);
   return `<div class="precio-vitrina">
     <div class="precio-vitrina-row">${was}<strong class="price">${esc(precioPublicoTexto(p, false))}</strong></div>
     ${notes.length ? `<div class="precio-vitrina-notas">${notes.join("")}</div>` : ""}
