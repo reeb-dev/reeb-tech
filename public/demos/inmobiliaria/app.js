@@ -242,11 +242,21 @@ function watchListEnd() {
 
 function renderProperties() {
   const filtered = sortProperties(filterProperties());
-  document.getElementById("resultsCount").textContent = filtered.length;
+  const visible = filtered.slice(0, shownCount);
+  const shownEl = document.getElementById("resultsShown");
+  const countEl = document.getElementById("resultsCount");
+  if (shownEl) shownEl.textContent = filtered.length ? visible.length : 0;
+  if (countEl) countEl.textContent = filtered.length;
+  const moreBtn = document.getElementById("btnVerMas");
+  if (moreBtn) moreBtn.hidden = shownCount >= filtered.length || filtered.length === 0;
   const grid = document.getElementById("catalog");
   grid.classList.toggle("list", currentView === "list");
 
   if (filtered.length === 0) {
+    const shownEl = document.getElementById("resultsShown");
+    const countEl = document.getElementById("resultsCount");
+    if (shownEl) shownEl.textContent = "0";
+    if (countEl) countEl.textContent = "0";
     grid.innerHTML = `
       <div class="no-results">
         <h3>No encontramos propiedades</h3>
@@ -254,10 +264,11 @@ function renderProperties() {
       </div>
     `;
     if (listObserver) listObserver.disconnect();
+    const moreBtnEmpty = document.getElementById("btnVerMas");
+    if (moreBtnEmpty) moreBtnEmpty.hidden = true;
     return;
   }
 
-  const visible = filtered.slice(0, shownCount);
   grid.innerHTML = visible.map((p) => {
     const fotos = p.imagenes || [];
     const portada = fotos[0] || fotoPorTipo(p.tipo);
@@ -449,6 +460,7 @@ function prevImage() {
 }
 
 document.getElementById("btnLimpiar")?.addEventListener("click", clearFilters);
+document.getElementById("btnVerMas")?.addEventListener("click", loadMoreListings);
 document.getElementById("zoneAll")?.addEventListener("click", () => selectZona("", true));
 ["filterOperacion", "filterTipo", "filterBarrio", "filterAmbientes", "filterPrecio", "sortSelect"].forEach((id) => {
   document.getElementById(id).addEventListener("change", applyFilters);
