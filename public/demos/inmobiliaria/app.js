@@ -158,23 +158,21 @@ function renderProperties() {
             ${p.status === "reservada" ? '<span class="badge reservada">Reservada</span>' : ""}
           </div>
           <button class="favorite ${favorites.has(p.id) ? "on" : ""}" type="button" data-fav="${esc(p.id)}" aria-label="Favorito">${favorites.has(p.id) ? "♥" : "♡"}</button>
+          <span class="barrio-pill">${esc(p.barrio)}</span>
           ${fotos.length > 1 ? `<div class="gallery-count">${fotos.length} fotos</div>` : ""}
         </div>
         <div class="body">
-          <div class="type-location">${esc(tipoLabel(p.tipo))} en ${esc(p.barrio)}</div>
+          <div class="type-location">${esc(tipoLabel(p.tipo))}</div>
           <h3>${esc(p.titulo)}</h3>
           <div class="location">${esc(p.direccion)}</div>
           <div class="price">${formatPrice(p.precio, p.operacion)}</div>
           ${p.expensas ? `<div class="expenses">+ Expensas: ${esc(money(p.expensas))}</div>` : ""}
           <div class="specs">
             <span>${p.superficie} m²</span>
-            ${p.ambientes > 0 ? `<span>${p.ambientes} amb.</span>` : ""}
             ${p.dormitorios > 0 ? `<span>${p.dormitorios} dorm.</span>` : ""}
+            ${p.ambientes > 0 ? `<span>${p.ambientes} amb.</span>` : ""}
             ${p.banos > 0 ? `<span>${p.banos} baño${p.banos > 1 ? "s" : ""}</span>` : ""}
             ${p.cochera ? "<span>Cochera</span>" : ""}
-          </div>
-          <div class="stats">
-            <span>${p.diasPublicada} días</span>
           </div>
         </div>
       </article>
@@ -219,7 +217,7 @@ function openModal(id) {
       ${p.nuevo ? '<span class="badge nuevo">Nuevo</span>' : ""}
       ${p.status === "reservada" ? '<span class="badge reservada">Reservada</span>' : ""}
     </div>
-    <h2>${esc(p.titulo)}</h2>
+    <h2 id="modalTitle">${esc(p.titulo)}</h2>
     <div class="location">${esc(p.direccion)} · ${esc(p.barrio)}, ${esc(p.zona)}</div>
 
     <div class="price-box">
@@ -434,5 +432,24 @@ document.getElementById("modalContent").addEventListener("submit", (event) => {
   showFichaToast("Consulta enviada (demo)");
 });
 
+function wireNav() {
+  const toggle = document.getElementById("navToggle");
+  const nav = document.getElementById("siteNav");
+  if (!toggle || !nav) return;
+  toggle.addEventListener("click", () => {
+    const open = nav.classList.toggle("open");
+    toggle.setAttribute("aria-expanded", open ? "true" : "false");
+    toggle.textContent = open ? "Cerrar" : "Menú";
+  });
+  nav.addEventListener("click", (event) => {
+    if (event.target.closest("a")) {
+      nav.classList.remove("open");
+      toggle.setAttribute("aria-expanded", "false");
+      toggle.textContent = "Menú";
+    }
+  });
+}
+
+wireNav();
 populateBarrios();
 renderProperties();

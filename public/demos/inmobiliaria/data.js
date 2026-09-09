@@ -66,7 +66,7 @@ const FOTOS = {
   casaNoche: "https://images.unsplash.com/photo-1512917774080-9991f1c4c750?w=1200&h=800&fit=crop",
   casaCocina: "https://images.unsplash.com/photo-1600585154526-990dced4db0d?w=1200&h=800&fit=crop",
   local: "https://images.unsplash.com/photo-1441986300917-64674bd600d8?w=1200&h=800&fit=crop",
-  local2: "https://images.unsplash.com/photo-1604328698692-f76ea9498e76?w=1200&h=800&fit=crop",
+  local2: "https://images.unsplash.com/photo-1528698827591-e19ccd7bc23d?w=1200&h=800&fit=crop",
   oficina: "https://images.unsplash.com/photo-1497366216548-37526070297c?w=1200&h=800&fit=crop",
   oficina2: "https://images.unsplash.com/photo-1497366811353-6870744d04b2?w=1200&h=800&fit=crop"
 };

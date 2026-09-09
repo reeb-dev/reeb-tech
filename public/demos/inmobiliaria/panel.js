@@ -80,7 +80,7 @@ function render() {
     <button type="button" data-filter="reservada" class="${filter === "reservada" ? "on" : ""}"><strong>${reservadas}</strong>reservadas</button>
     <button type="button" data-filter="alquilada" class="${filter === "alquilada" ? "on" : ""}"><strong>${alquiladas}</strong>alquiladas</button>
     <button type="button" data-filter="vendida" class="${filter === "vendida" ? "on" : ""}"><strong>${vendidas}</strong>vendidas</button>
-    <input type="text" id="search" placeholder="🔍 Buscar..." value="${esc(searchTerm)}" style="margin-left:auto;padding:8px 12px;border:1px solid var(--line);border-radius:4px;width:180px;">
+    <input class="panel-search" type="text" id="search" placeholder="Buscar barrio o dirección" value="${esc(searchTerm)}" aria-label="Buscar">
   `;
   
   document.getElementById("search").addEventListener("input", (e) => {
@@ -301,4 +301,16 @@ function showToast(message) {
   setTimeout(() => { toast.classList.remove("show"); setTimeout(() => toast.remove(), 300); }, 3000);
 }
 
+function wireNav() {
+  const toggle = document.getElementById("navToggle");
+  const nav = document.getElementById("siteNav");
+  if (!toggle || !nav) return;
+  toggle.addEventListener("click", () => {
+    const open = nav.classList.toggle("open");
+    toggle.setAttribute("aria-expanded", open ? "true" : "false");
+    toggle.textContent = open ? "Cerrar" : "Menú";
+  });
+}
+
+wireNav();
 render();
