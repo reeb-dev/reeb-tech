@@ -25,7 +25,9 @@ function pintarGaleria() {
   img.src = fotos[fotoIndex];
   if (counter) counter.textContent = (fotoIndex + 1) + " / " + fotos.length;
   document.querySelectorAll("[data-thumb]").forEach((btn) => {
-    btn.classList.toggle("active", Number(btn.dataset.thumb) === fotoIndex);
+    const active = Number(btn.dataset.thumb) === fotoIndex;
+    btn.classList.toggle("active", active);
+    if (active) btn.scrollIntoView({ inline: "nearest", block: "nearest" });
   });
 }
 
@@ -55,16 +57,26 @@ function pintarMapaFicha(p) {
 
 function renderVacia() {
   const root = document.getElementById("fichaRoot");
+  const volver = listadoHref(zonaVolver);
   document.title = "Propiedad no encontrada — Estudio Nahuel Huapi";
   root.innerHTML = `
-    <p class="ficha-back"><a href="${esc(listadoHref(zonaVolver))}">← Volver al listado</a></p>
+    <p class="ficha-back"><a href="${esc(volver)}">← Volver al listado</a></p>
     <article class="ficha-sheet">
-      <div class="modal-content">
-        <h2>No encontramos esa propiedad</h2>
+      <div class="ficha-vacia">
+        <h1>No encontramos esa propiedad</h1>
         <p>El enlace no coincide con ninguna ficha de la cartera.</p>
-        <p><a href="${esc(listadoHref(zonaVolver))}">Volver al listado</a></p>
+        <p><a href="${esc(volver)}">Volver al listado</a></p>
       </div>
     </article>
+  `;
+}
+
+function dato(etiqueta, valor, ancho) {
+  return `
+    <div class="ficha-dato${ancho ? " ancho" : ""}">
+      <span>${esc(etiqueta)}</span>
+      <strong>${esc(valor || "—")}</strong>
+    </div>
   `;
 }
 
@@ -77,96 +89,78 @@ function renderFicha(p) {
   const volver = listadoHref(zonaVolver);
   document.title = p.titulo;
 
+  const precio = formatPrice(p.precio, p.operacion);
+
   root.innerHTML = `
     <p class="ficha-back"><a href="${esc(volver)}">← Volver al listado</a></p>
     <article class="ficha-sheet">
-      <div class="modal-gallery">
-        <img id="fichaFoto" src="${esc(fotos[0])}" alt="${esc(p.titulo)}">
+      <section class="ficha-galeria" aria-label="Fotos de la propiedad">
+        <div class="ficha-stage" id="fichaStage">
+          <img id="fichaFoto" src="${esc(fotos[0])}" alt="${esc(p.titulo)}">
+          ${fotos.length > 1 ? `
+            <button class="ficha-arrow prev" type="button" id="prevImage" aria-label="Foto anterior">‹</button>
+            <button class="ficha-arrow next" type="button" id="nextImage" aria-label="Foto siguiente">›</button>
+          ` : ""}
+          <div class="ficha-counter" id="fichaCounter">1 / ${fotos.length}</div>
+        </div>
         ${fotos.length > 1 ? `
-          <button class="nav-btn prev" type="button" id="prevImage" aria-label="Foto anterior">‹</button>
-          <button class="nav-btn next" type="button" id="nextImage" aria-label="Foto siguiente">›</button>
-          <div class="counter" id="fichaCounter">1 / ${fotos.length}</div>
-        ` : `<div class="counter" id="fichaCounter">1 / 1</div>`}
-      </div>
-      ${fotos.length > 1 ? `
-        <div class="modal-thumbs" id="fichaThumbs">
-          ${fotos.map((src, i) => `<button type="button" data-thumb="${i}" class="${i === 0 ? "active" : ""}"><img src="${esc(src)}" alt=""></button>`).join("")}
-        </div>
-      ` : ""}
-      <div class="modal-content">
-        <div class="badges">
-          <span class="badge ${esc(p.operacion)}">${esc(opLabel(p.operacion))}</span>
-          ${p.destacado ? '<span class="badge destacado">Destacado</span>' : ""}
-          ${p.nuevo ? '<span class="badge nuevo">Nuevo</span>' : ""}
-          ${p.status === "reservada" ? '<span class="badge reservada">Reservada</span>' : ""}
-        </div>
-        <h1>${esc(p.titulo)}</h1>
-        <div class="location">Zona ${esc(p.barrio)}</div>
-
-        <div class="price-box">
-          <div class="price">${formatPrice(p.precio, p.operacion)}</div>
-          ${p.expensas ? `<div class="expenses">+ Expensas: ${esc(money(p.expensas))}</div>` : ""}
-        </div>
-
-        <div class="modal-specs">
-          <div class="spec">
-            <div class="value">${p.cubierta || "—"}</div>
-            <div class="label">m² cubiertos</div>
-          </div>
-          <div class="spec">
-            <div class="value">${p.superficie}</div>
-            <div class="label">m² de lote</div>
-          </div>
-          <div class="spec">
-            <div class="value">${p.dormitorios || "—"}</div>
-            <div class="label">Dormitorios</div>
-          </div>
-          <div class="spec">
-            <div class="value">${p.banos || "—"}</div>
-            <div class="label">Baños</div>
-          </div>
-          ${esDepto && p.piso ? `
-          <div class="spec">
-            <div class="value">${esc(p.piso)}</div>
-            <div class="label">Piso</div>
-          </div>` : ""}
-        </div>
-
-        <dl class="ficha-facts">
-          <div><dt>Vista</dt><dd>${esc(p.vista || "—")}</dd></div>
-          <div><dt>Calefacción</dt><dd>${esc(p.calefaccion || "—")}</dd></div>
-          <div><dt>Servicios</dt><dd>${esc(p.servicios || "—")}</dd></div>
-        </dl>
-
-        <div class="modal-description">
-          <h2>Descripción</h2>
-          <p>${esc(p.descripcion)}</p>
-        </div>
-
-        <div class="ficha-mapa">
-          <h2>Zona aproximada</h2>
-          <p>El pin marca la zona, no la parcela.</p>
-          <div id="mapaFicha" class="mapa"></div>
-        </div>
-
-        ${amenities.length ? `
-          <div class="modal-amenities">
-            <h2>Características</h2>
-            <div class="amenities-list">
-              ${amenities.map((a) => `<span class="amenity-tag">${amenityIcon(a)} ${esc(amenityLabel(a))}</span>`).join("")}
-            </div>
+          <div class="ficha-thumbs" id="fichaThumbs">
+            ${fotos.map((src, i) => `<button type="button" data-thumb="${i}" class="${i === 0 ? "active" : ""}" aria-label="Foto ${i + 1}"><img src="${esc(src)}" alt=""></button>`).join("")}
           </div>
         ` : ""}
+      </section>
+      <div class="ficha-layout">
+        <div class="ficha-story">
+          <div class="ficha-badges">
+            <span class="badge ${esc(p.operacion)}">${esc(opLabel(p.operacion))}</span>
+            ${p.destacado ? '<span class="badge destacado">Destacado</span>' : ""}
+            ${p.nuevo ? '<span class="badge nuevo">Nuevo</span>' : ""}
+            ${p.status === "reservada" ? '<span class="badge reservada">Reservada</span>' : ""}
+          </div>
+          <p class="ficha-zona">${esc(tipoLabel(p.tipo))} · Zona ${esc(p.barrio)}</p>
+          <h1 class="ficha-titulo">${esc(p.titulo)}</h1>
+          <p class="ficha-precio">${esc(precio)}</p>
+          ${p.expensas ? `<p class="ficha-expensas">+ Expensas: ${esc(money(p.expensas))}</p>` : ""}
 
-        <div class="modal-contact">
-          <div>
-            <h2>¿Le interesa esta propiedad?</h2>
-            <p>Escríbanos por WhatsApp. Es el camino más directo.</p>
+          <div class="ficha-datos">
+            ${dato("m² cubiertos", p.cubierta ? String(p.cubierta) : "—")}
+            ${dato("m² de lote", p.superficie ? String(p.superficie) : "—")}
+            ${dato("Dormitorios", p.dormitorios ? String(p.dormitorios) : "—")}
+            ${dato("Baños", p.banos || "—")}
+            ${esDepto && p.piso ? dato("Piso", p.piso) : ""}
+            ${dato("Vista", p.vista || "—", true)}
+            ${dato("Calefacción", p.calefaccion || "—", true)}
+            ${dato("Servicios", p.servicios || "—", true)}
           </div>
-          <div class="btns">
-            <a class="btn-ficha-wa" href="${esc(propertyWaUrl(p))}" target="_blank" rel="noopener">Escribir por WhatsApp</a>
-          </div>
+
+          <section class="ficha-bloque">
+            <h2>Descripción</h2>
+            <p class="ficha-descripcion">${esc(p.descripcion)}</p>
+          </section>
+
+          ${amenities.length ? `
+            <section class="ficha-bloque">
+              <h2>Características</h2>
+              <div class="ficha-chips">
+                ${amenities.map((a) => `<span class="amenity-tag">${amenityIcon(a)} ${esc(amenityLabel(a))}</span>`).join("")}
+              </div>
+            </section>
+          ` : ""}
+
+          <section class="ficha-bloque">
+            <h2>Zona aproximada</h2>
+            <p class="ficha-nota">El pin marca la zona, no la parcela.</p>
+            <div id="mapaFicha" class="mapa ficha-mapa-box"></div>
+          </section>
         </div>
+        <aside class="ficha-aside">
+          <p class="ficha-aside-kicker">Consulta</p>
+          <h2>¿Le interesa esta propiedad?</h2>
+          <p>Escríbanos por WhatsApp. Es el camino más directo.</p>
+          <p class="ficha-aside-precio">${esc(precio)}</p>
+          <a class="ficha-wa" href="${esc(propertyWaUrl(p))}" target="_blank" rel="noopener">Escribir por WhatsApp</a>
+          <a class="ficha-aside-back" href="${esc(volver)}">Volver al listado</a>
+        </aside>
       </div>
     </article>
   `;
@@ -178,8 +172,30 @@ function renderFicha(p) {
     if (!thumb) return;
     fotoIndex = Number(thumb.dataset.thumb);
     pintarGaleria();
+    thumb.scrollIntoView({ inline: "center", block: "nearest", behavior: "smooth" });
   });
+  wireSwipe();
   pintarMapaFicha(p);
+}
+
+function wireSwipe() {
+  const stage = document.getElementById("fichaStage");
+  if (!stage || fotos.length < 2) return;
+  let startX = 0;
+  let tracking = false;
+  stage.addEventListener("pointerdown", (event) => {
+    if (event.target.closest("button")) return;
+    tracking = true;
+    startX = event.clientX;
+  });
+  stage.addEventListener("pointerup", (event) => {
+    if (!tracking) return;
+    tracking = false;
+    const delta = event.clientX - startX;
+    if (delta > 48) pasoFoto(-1);
+    else if (delta < -48) pasoFoto(1);
+  });
+  stage.addEventListener("pointercancel", () => { tracking = false; });
 }
 
 function formatPrice(price, operacion) {
