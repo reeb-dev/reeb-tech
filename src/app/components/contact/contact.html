@@ -2,7 +2,7 @@
   <div class="container-custom">
     <div class="max-w-3xl mx-auto">
       <header class="text-center mb-10">
-        <h2 class="heading-lg mb-4 text-ink dark:text-white">{{ i18n.t().contact.title }}</h2>
+        <h2 class="heading-lg mb-4 text-ink dark:text-ink-dark">{{ i18n.t().contact.title }}</h2>
         <p class="text-lg text-subtle dark:text-subtle-dark mb-4">
           {{ i18n.t().contact.subtitle }}
         </p>
@@ -16,7 +16,7 @@
           [href]="whatsappHref"
           target="_blank"
           rel="noopener noreferrer"
-          class="contact-channel"
+          class="contact-channel border border-line bg-surface dark:border-line-dark dark:bg-surface-dark"
         >
           <span class="contact-channel__icon" aria-hidden="true">
             <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24">
@@ -29,7 +29,7 @@
           <span class="contact-channel__cta">{{ i18n.t().contact.whatsappCta }}</span>
         </a>
 
-        <a href="mailto:manuelreeb@icloud.com" class="contact-channel">
+        <a href="mailto:manuelreeb@icloud.com" class="contact-channel border border-line bg-surface dark:border-line-dark dark:bg-surface-dark">
           <span class="contact-channel__icon" aria-hidden="true">
             <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"></path>
@@ -41,13 +41,13 @@
         </a>
       </div>
 
-      <form class="bg-surface dark:bg-surface-dark rounded-xl border border-line dark:border-line-dark p-6 md:p-8" (ngSubmit)="onSubmit($event)" novalidate>
+      <form class="contact-form border border-line bg-surface dark:border-line-dark dark:bg-surface-dark" (ngSubmit)="onSubmit($event)" novalidate>
         <fieldset class="mb-8 border-0 p-0">
-          <legend class="block text-sm font-medium text-ink dark:text-white mb-3">{{ i18n.t().contact.whatNeed }}</legend>
+          <legend class="block text-sm font-medium text-ink dark:text-ink-dark mb-3">{{ i18n.t().contact.whatNeed }}</legend>
           <div class="flex flex-col gap-2">
             <label
               *ngFor="let interest of i18n.t().contact.interests"
-              class="contact-chip"
+              class="contact-chip border border-line bg-sand/50 text-subtle dark:border-line-dark dark:bg-dark dark:text-subtle-dark"
               [class.contact-chip--on]="checked[interest.id]"
             >
               <input
@@ -65,7 +65,7 @@
         <div class="space-y-5">
           <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
             <div>
-              <label for="contact-name" class="block text-sm font-medium text-ink dark:text-white mb-2">{{ i18n.t().contact.name }}</label>
+              <label for="contact-name" class="block text-sm font-medium text-ink dark:text-ink-dark mb-2">{{ i18n.t().contact.name }}</label>
               <input
                 id="contact-name"
                 name="name"
@@ -77,12 +77,12 @@
                 [attr.aria-invalid]="!!nameError"
                 [attr.aria-describedby]="nameError ? 'contact-name-error' : null"
                 [class.contact-field--error]="!!nameError"
-                class="contact-field"
+                class="contact-field border border-line bg-cream text-ink placeholder-subtle focus:border-brand focus:outline-none focus:ring-2 focus:ring-brand/30 dark:border-line-dark dark:bg-dark dark:text-ink-dark dark:placeholder-subtle-dark dark:focus:border-brand-dark dark:focus:ring-brand-dark/30"
               >
               <p *ngIf="nameError" id="contact-name-error" class="contact-error">{{ nameError }}</p>
             </div>
             <div>
-              <label for="contact-email" class="block text-sm font-medium text-ink dark:text-white mb-2">{{ i18n.t().contact.email }}</label>
+              <label for="contact-email" class="block text-sm font-medium text-ink dark:text-ink-dark mb-2">{{ i18n.t().contact.email }}</label>
               <input
                 id="contact-email"
                 name="email"
@@ -94,14 +94,14 @@
                 [attr.aria-invalid]="!!emailError"
                 [attr.aria-describedby]="emailError ? 'contact-email-error' : null"
                 [class.contact-field--error]="!!emailError"
-                class="contact-field"
+                class="contact-field border border-line bg-cream text-ink placeholder-subtle focus:border-brand focus:outline-none focus:ring-2 focus:ring-brand/30 dark:border-line-dark dark:bg-dark dark:text-ink-dark dark:placeholder-subtle-dark dark:focus:border-brand-dark dark:focus:ring-brand-dark/30"
               >
               <p *ngIf="emailError" id="contact-email-error" class="contact-error">{{ emailError }}</p>
             </div>
           </div>
 
           <div>
-            <label for="contact-message" class="block text-sm font-medium text-ink dark:text-white mb-2">{{ i18n.t().contact.message }}</label>
+            <label for="contact-message" class="block text-sm font-medium text-ink dark:text-ink-dark mb-2">{{ i18n.t().contact.message }}</label>
             <textarea
               id="contact-message"
               name="message"
@@ -112,12 +112,12 @@
               [attr.aria-invalid]="!!messageError"
               [attr.aria-describedby]="messageError ? 'contact-message-error' : null"
               [class.contact-field--error]="!!messageError"
-              class="contact-field resize-none"
+              class="contact-field resize-none border border-line bg-cream text-ink placeholder-subtle focus:border-brand focus:outline-none focus:ring-2 focus:ring-brand/30 dark:border-line-dark dark:bg-dark dark:text-ink-dark dark:placeholder-subtle-dark dark:focus:border-brand-dark dark:focus:ring-brand-dark/30"
             ></textarea>
             <p *ngIf="messageError" id="contact-message-error" class="contact-error">{{ messageError }}</p>
           </div>
 
-          <button type="submit" class="w-full inline-flex items-center justify-center gap-2 px-8 py-4 btn-accent hover:scale-[1.01]">
+          <button type="submit" class="contact-submit btn-accent">
             <span>{{ i18n.t().contact.send }}</span>
             <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"></path>

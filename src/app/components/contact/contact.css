@@ -1,53 +1,218 @@
 .contact-channel {
-  @apply flex flex-col items-start gap-1 rounded-xl border border-line dark:border-line-dark bg-surface dark:bg-surface-dark px-5 py-4 text-left transition-all duration-200;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 0.25rem;
+  padding: 1rem 1.25rem;
+  text-align: left;
+  border-radius: 0.75rem;
+  transition: border-color 0.2s ease, background-color 0.2s ease, box-shadow 0.2s ease;
 }
 
 .contact-channel:hover,
 .contact-channel:focus-visible {
-  @apply border-brand dark:border-brand-dark shadow-md outline-none;
+  border-color: #0a5c54;
+  background: #e4cc9a;
+  box-shadow: 0 4px 16px rgba(28, 22, 16, 0.08);
+  outline: none;
+}
+
+:host-context(.dark) .contact-channel:hover,
+:host-context(.dark) .contact-channel:focus-visible {
+  border-color: #6ed9cc;
+  background: #1c1610;
 }
 
 .contact-channel__icon {
-  @apply mb-1 text-brand dark:text-brand-dark;
+  margin-bottom: 0.25rem;
+  color: #0a5c54;
+}
+
+:host-context(.dark) .contact-channel__icon {
+  color: #6ed9cc;
 }
 
 .contact-channel__label {
-  @apply text-xs font-medium uppercase tracking-wider text-subtle dark:text-subtle-dark;
+  font-size: 0.75rem;
+  font-weight: 500;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: #6b5340;
+}
+
+:host-context(.dark) .contact-channel__label {
+  color: #cdb9a0;
 }
 
 .contact-channel__value {
-  @apply text-base font-semibold text-ink dark:text-white break-all;
+  font-size: 1rem;
+  font-weight: 600;
+  color: #2a1c12;
+  overflow-wrap: anywhere;
+}
+
+:host-context(.dark) .contact-channel__value {
+  color: #f8f0e4;
 }
 
 .contact-channel__cta {
-  @apply mt-1 text-sm font-medium text-brand dark:text-brand-dark;
+  margin-top: 0.25rem;
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: #0a5c54;
+}
+
+:host-context(.dark) .contact-channel__cta {
+  color: #6ed9cc;
+}
+
+.contact-form {
+  border-radius: 0.75rem;
+  padding: 1.5rem;
+  box-shadow: 0 8px 24px rgba(28, 22, 16, 0.06);
+}
+
+@media (min-width: 768px) {
+  .contact-form {
+    padding: 2rem;
+  }
+}
+
+:host-context(.dark) .contact-form {
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.25);
 }
 
 .contact-chip {
-  @apply flex items-center rounded-lg border border-line dark:border-line-dark bg-cream dark:bg-dark-alt px-4 py-3 text-sm text-subtle dark:text-subtle-dark cursor-pointer transition-colors duration-200;
+  display: flex;
+  align-items: center;
+  border-radius: 0.5rem;
+  padding: 0.75rem 1rem;
+  font-size: 0.875rem;
+  cursor: pointer;
+  transition: border-color 0.2s ease, background-color 0.2s ease, color 0.2s ease, box-shadow 0.2s ease;
 }
 
 .contact-chip:hover,
 .contact-chip:focus-within {
-  @apply border-brand/50 dark:border-brand-dark/50 text-ink dark:text-white;
+  border-color: rgba(10, 92, 84, 0.6);
+  color: #2a1c12;
+}
+
+:host-context(.dark) .contact-chip:hover,
+:host-context(.dark) .contact-chip:focus-within {
+  border-color: rgba(110, 217, 204, 0.6);
+  color: #f8f0e4;
+}
+
+.contact-chip:focus-within {
+  outline: none;
+  box-shadow: 0 0 0 3px rgba(10, 92, 84, 0.28);
+}
+
+:host-context(.dark) .contact-chip:focus-within {
+  box-shadow: 0 0 0 3px rgba(110, 217, 204, 0.3);
 }
 
 .contact-chip--on {
-  @apply border-brand dark:border-brand-dark bg-brand/10 text-ink dark:text-white;
+  border-color: #0a5c54;
+  background: #d4ebe6;
+  color: #0a5c54;
+}
+
+:host-context(.dark) .contact-chip--on {
+  border-color: #6ed9cc;
+  background: rgba(110, 217, 204, 0.15);
+  color: #6ed9cc;
 }
 
 .contact-field {
-  @apply w-full px-4 py-3 rounded-lg border border-line dark:border-line-dark bg-cream dark:bg-dark-alt text-ink dark:text-white placeholder-subtle dark:placeholder-subtle-dark transition-colors;
+  width: 100%;
+  border-radius: 0.5rem;
+  padding: 0.75rem 1rem;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.contact-field:hover {
+  border-color: rgba(10, 92, 84, 0.45);
+}
+
+:host-context(.dark) .contact-field:hover {
+  border-color: rgba(110, 217, 204, 0.45);
 }
 
 .contact-field:focus {
-  @apply outline-none border-brand ring-2 ring-brand/30 dark:border-brand-dark dark:ring-brand-dark/30;
+  outline: none;
+  border-color: #0a5c54;
+  box-shadow: 0 0 0 3px rgba(10, 92, 84, 0.28);
 }
 
-.contact-field--error {
-  @apply border-[#B45309] dark:border-[#FBBF24];
+:host-context(.dark) .contact-field:focus {
+  border-color: #6ed9cc;
+  box-shadow: 0 0 0 3px rgba(110, 217, 204, 0.32);
+}
+
+.contact-field:-webkit-autofill,
+.contact-field:-webkit-autofill:hover,
+.contact-field:-webkit-autofill:focus {
+  -webkit-text-fill-color: #2a1c12;
+  caret-color: #2a1c12;
+  box-shadow: 0 0 0 1000px #efe2c6 inset;
+}
+
+:host-context(.dark) .contact-field:-webkit-autofill,
+:host-context(.dark) .contact-field:-webkit-autofill:hover,
+:host-context(.dark) .contact-field:-webkit-autofill:focus {
+  -webkit-text-fill-color: #f8f0e4;
+  caret-color: #f8f0e4;
+  box-shadow: 0 0 0 1000px #1c1610 inset;
+}
+
+.contact-field--error,
+.contact-field--error:focus {
+  border-color: #8c3a22;
+}
+
+.contact-field--error:focus {
+  box-shadow: 0 0 0 3px rgba(140, 58, 34, 0.25);
+}
+
+:host-context(.dark) .contact-field--error,
+:host-context(.dark) .contact-field--error:focus {
+  border-color: #e8b4a0;
+}
+
+:host-context(.dark) .contact-field--error:focus {
+  box-shadow: 0 0 0 3px rgba(232, 180, 160, 0.3);
 }
 
 .contact-error {
-  @apply mt-2 text-sm text-[#B45309] dark:text-[#FBBF24];
+  margin-top: 0.5rem;
+  font-size: 0.875rem;
+  color: #8c3a22;
+}
+
+:host-context(.dark) .contact-error {
+  color: #e8b4a0;
+}
+
+.contact-submit {
+  display: inline-flex;
+  width: 100%;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  padding: 1rem 2rem;
+}
+
+.contact-submit:hover {
+  transform: scale(1.01);
+}
+
+.contact-submit:focus-visible {
+  outline: none;
+  box-shadow: 0 0 0 2px #fff8ec, 0 0 0 5px rgba(10, 92, 84, 0.45);
+}
+
+:host-context(.dark) .contact-submit:focus-visible {
+  box-shadow: 0 0 0 2px #2a221a, 0 0 0 5px rgba(110, 217, 204, 0.5);
 }
