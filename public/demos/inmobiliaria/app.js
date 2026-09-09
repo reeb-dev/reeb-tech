@@ -110,6 +110,12 @@ function selectZona(id, scroll) {
   }
 }
 
+function detalleHref(id) {
+  const q = new URLSearchParams({ id });
+  if (currentFilters.barrio) q.set("zona", currentFilters.barrio);
+  return "propiedad.html?" + q.toString();
+}
+
 function renderZoneCards() {
   const host = document.getElementById("zoneCards");
   if (!host || typeof ZONAS === "undefined") return;
@@ -275,20 +281,22 @@ function renderProperties() {
     return `
       <article class="property-card" data-id="${esc(p.id)}">
         <div class="image">
-          <img src="${esc(portada)}" alt="${esc(p.titulo)}">
-          <div class="badges">
-            <span class="badge ${esc(p.operacion)}">${esc(opLabel(p.operacion))}</span>
-            ${p.destacado ? '<span class="badge destacado">Destacado</span>' : ""}
-            ${p.nuevo ? '<span class="badge nuevo">Nuevo</span>' : ""}
-            ${p.status === "reservada" ? '<span class="badge reservada">Reservada</span>' : ""}
-          </div>
+          <a class="card-cover" href="${esc(detalleHref(p.id))}">
+            <img src="${esc(portada)}" alt="${esc(p.titulo)}">
+            <div class="badges">
+              <span class="badge ${esc(p.operacion)}">${esc(opLabel(p.operacion))}</span>
+              ${p.destacado ? '<span class="badge destacado">Destacado</span>' : ""}
+              ${p.nuevo ? '<span class="badge nuevo">Nuevo</span>' : ""}
+              ${p.status === "reservada" ? '<span class="badge reservada">Reservada</span>' : ""}
+            </div>
+            <span class="barrio-pill">${esc(p.barrio)}</span>
+            ${fotos.length > 1 ? `<div class="gallery-count">${fotos.length} fotos</div>` : ""}
+          </a>
           <button class="favorite ${favorites.has(p.id) ? "on" : ""}" type="button" data-fav="${esc(p.id)}" aria-label="Favorito">${favorites.has(p.id) ? "♥" : "♡"}</button>
-          <span class="barrio-pill">${esc(p.barrio)}</span>
-          ${fotos.length > 1 ? `<div class="gallery-count">${fotos.length} fotos</div>` : ""}
         </div>
         <div class="body">
           <div class="type-location">${esc(tipoLabel(p.tipo))}</div>
-          <h3>${esc(p.titulo)}</h3>
+          <h3><a href="${esc(detalleHref(p.id))}">${esc(p.titulo)}</a></h3>
           <div class="location">Zona ${esc(p.barrio)}</div>
           <div class="price">${formatPrice(p.precio, p.operacion)}</div>
           ${p.expensas ? `<div class="expenses">+ Expensas: ${esc(money(p.expensas))}</div>` : ""}
@@ -299,6 +307,7 @@ function renderProperties() {
             ${p.vista ? `<span>${esc(p.vista)}</span>` : ""}
             ${p.calefaccion ? `<span>${esc(p.calefaccion)}</span>` : ""}
           </div>
+          <a class="ver-detalle" href="${esc(detalleHref(p.id))}">Ver detalle</a>
         </div>
       </article>
     `;
@@ -490,8 +499,9 @@ document.getElementById("catalog").addEventListener("click", (event) => {
     renderProperties();
     return;
   }
+  if (event.target.closest("a")) return;
   const card = event.target.closest(".property-card");
-  if (card) openModal(card.dataset.id);
+  if (card) window.location.href = detalleHref(card.dataset.id);
 });
 
 document.getElementById("modalClose").addEventListener("click", closeModal);
@@ -629,7 +639,22 @@ function ajustarContacto() {
 wireNav();
 wireLugares();
 populateBarrios();
+aplicarZonaDesdeUrl();
 renderProperties();
 markFilterFields();
 pintarMapaComarca();
+
+function aplicarZonaDesdeUrl() {
+  const zona = new URLSearchParams(location.search).get("zona");
+  if (!zona) return;
+  const select = document.getElementById("filterBarrio");
+  if (!select || ![...select.options].some((opt) => opt.value === zona)) return;
+  select.value = zona;
+  applyFilters();
+  if (location.hash === "#propiedades") {
+    window.setTimeout(() => {
+      document.getElementById("propiedades")?.scrollIntoView({ block: "start" });
+    }, 40);
+  }
+}
 window.addEventListener("load", ajustarContacto);

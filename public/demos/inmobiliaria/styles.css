@@ -875,6 +875,28 @@ textarea:focus {
   overflow: hidden;
 }
 
+.property-card .card-cover {
+  display: block;
+  height: 100%;
+  color: inherit;
+  text-decoration: none;
+}
+
+.property-card h3 a {
+  color: inherit;
+  text-decoration: none;
+}
+
+.property-card .ver-detalle {
+  display: inline-block;
+  margin-top: 12px;
+  color: var(--sage-deep);
+  font-weight: 650;
+  text-decoration: none;
+}
+
+.property-card .ver-detalle:hover { text-decoration: underline; }
+
 .properties-grid.list .property-card .image { height: 100%; min-height: 240px; }
 
 .property-card .image img {
@@ -1025,6 +1047,57 @@ textarea:focus {
 }
 
 .agent-inner p { margin: 0; color: var(--muted); max-width: 40rem; }
+
+.ficha-main { padding: 22px 0 48px; }
+
+.ficha-back {
+  margin: 0 0 14px;
+}
+
+.ficha-back a {
+  color: var(--sage-deep);
+  font-weight: 650;
+  text-decoration: none;
+}
+
+.ficha-status { color: var(--muted); }
+
+.ficha-sheet {
+  background: var(--card);
+  border: 1px solid var(--line);
+  border-radius: 24px;
+  overflow: hidden;
+  max-width: 920px;
+  margin: 0 auto;
+}
+
+.ficha-sheet .modal-content h1 {
+  margin: 0 0 8px;
+  font-family: "Cormorant Garamond", Georgia, serif;
+  font-size: 2rem;
+  font-weight: 640;
+  color: var(--ink);
+  overflow-wrap: anywhere;
+}
+
+.ficha-sheet .modal-description h2,
+.ficha-sheet .ficha-mapa h2,
+.ficha-sheet .modal-amenities h2 {
+  margin: 0 0 8px;
+  font-family: "Cormorant Garamond", Georgia, serif;
+  font-size: 1.45rem;
+  font-weight: 640;
+  color: var(--ink);
+}
+
+.ficha-sheet .modal-contact h2 {
+  margin: 0;
+  font-size: 1.25rem;
+  color: #fffdf9;
+}
+
+.ficha-mapa { margin-bottom: 22px; }
+.ficha-mapa p { margin: 0 0 10px; color: var(--muted); }
 
 /* Modal */
 .modal-overlay {
@@ -1708,6 +1781,8 @@ input, select, textarea {
   .agent-inner { flex-direction: column; align-items: flex-start; }
   .modal-specs, .modal-stats { grid-template-columns: 1fr 1fr; }
   .modal-gallery { height: 240px; }
+  .ficha-sheet .modal-content h1 { font-size: 1.65rem; }
+  .ficha-main { padding-top: 16px; }
   .hero-photo { min-height: 0; }
   .panel-search { margin-left: 0; width: 100%; }
   .create { margin-left: 14px; margin-right: 14px; }

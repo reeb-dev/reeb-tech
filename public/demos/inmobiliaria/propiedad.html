@@ -1,0 +1,50 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Propiedad — Estudio Nahuel Huapi</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@560;640&family=Figtree:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" crossorigin="">
+  <link rel="stylesheet" href="styles.css?v=bariloche10">
+</head>
+<body class="vitrina ficha-page">
+  <header class="top">
+    <div class="top-inner">
+      <a class="logo" href="index.html">
+        <span class="logo-mark" aria-hidden="true"></span>
+        <span>Estudio Nahuel Huapi<small>Casas en Bariloche</small></span>
+      </a>
+      <details class="mobile-menu">
+        <summary>Menú</summary>
+        <a href="index.html#zonas">Zonas</a>
+        <a href="index.html#propiedades">Propiedades</a>
+        <a href="index.html#lugares">Lugares</a>
+        <a href="index.html#contacto">Contacto</a>
+        <a href="panel.html">Para agentes</a>
+      </details>
+      <nav id="siteNav">
+        <a href="index.html#zonas">Zonas</a>
+        <a href="index.html#propiedades">Propiedades</a>
+        <a href="index.html#lugares">Lugares</a>
+        <a href="index.html#contacto">Contacto</a>
+        <a href="panel.html">Para agentes</a>
+      </nav>
+    </div>
+  </header>
+
+  <main class="wrap ficha-main" id="fichaRoot">
+    <p class="ficha-status">Cargando la ficha…</p>
+  </main>
+
+  <footer class="wrap site-foot">
+    <p>Estudio Nahuel Huapi · Bariloche · demo de producto · datos ficticios con fines ilustrativos. La venta se muestra en dólares y el alquiler permanente en pesos.</p>
+  </footer>
+
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" crossorigin=""></script>
+  <script src="data.js?v=bariloche8"></script>
+  <script src="ficha.js?v=bariloche10"></script>
+</body>
+</html>
