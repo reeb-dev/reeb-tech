@@ -3,36 +3,34 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Nahuel Huapi — Casas en Bariloche</title>
+  <title>Estudio Nahuel Huapi — Casas en Bariloche</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@560;640&family=Figtree:wght@400;500;600;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" crossorigin="">
-  <link rel="stylesheet" href="styles.css?v=bariloche4">
+  <link rel="stylesheet" href="styles.css?v=bariloche5">
 </head>
 <body class="vitrina">
   <header class="top">
     <div class="top-inner">
       <a class="logo" href="index.html">
         <span class="logo-mark" aria-hidden="true"></span>
-        <span>Nahuel Huapi<small>Casas en Bariloche</small></span>
+        <span>Estudio Nahuel Huapi<small>Casas en Bariloche</small></span>
       </a>
       <details class="mobile-menu">
         <summary>Menú</summary>
-        <a href="#paisaje">Paisaje</a>
-        <a href="#comarca">La zona</a>
-        <a href="#mudarse">Mudarse</a>
+        <a href="#zonas">Zonas</a>
         <a href="#propiedades">Propiedades</a>
+        <a href="#paisaje">Paisaje</a>
         <a href="#contacto">Contacto</a>
-        <a class="btn" href="panel.html">Panel</a>
+        <a href="panel.html">Para agentes</a>
       </details>
       <nav id="siteNav">
-        <a href="#paisaje">Paisaje</a>
-        <a href="#comarca">La zona</a>
-        <a href="#mudarse">Mudarse</a>
+        <a href="#zonas">Zonas</a>
         <a href="#propiedades">Propiedades</a>
+        <a href="#paisaje">Paisaje</a>
         <a href="#contacto">Contacto</a>
-        <a class="btn" href="panel.html">Panel</a>
+        <a href="panel.html">Para agentes</a>
       </nav>
     </div>
   </header>
@@ -42,21 +40,21 @@
       <div class="hero-copy">
         <p class="kicker">San Carlos de Bariloche · lago Nahuel Huapi</p>
         <h1>Casas de piedra y madera frente al lago</h1>
-        <p class="lead">Veinte fichas de muestra en Bariloche y el sur cercano. Venta o alquiler permanente, no estadía de hotel. El paisaje es el lago, los cerros y el bosque.</p>
+        <p class="lead">Venta o alquiler permanente en Bariloche y el sur cercano. No es estadía de hotel. El paisaje es el lago, los cerros y el bosque.</p>
       </div>
       <figure class="hero-photo">
-        <img src="img/lago.jpg" alt="Lago de montaña y cerros, paisaje del Nahuel Huapi">
+        <img src="img/hero-lago.jpg" alt="Lago Nahuel Huapi y cerros nevados">
       </figure>
     </div>
     <div class="wrap">
       <div class="search-box">
-        <div class="search-row">
+        <div class="search-row search-primary">
           <label class="field">
             <span>Operación</span>
             <select id="filterOperacion">
               <option value="">Venta o alquiler</option>
               <option value="venta">Venta</option>
-              <option value="alquiler">Alquiler</option>
+              <option value="alquiler">Alquiler permanente</option>
             </select>
           </label>
           <label class="field">
@@ -70,106 +68,54 @@
               <option value="local">Local</option>
             </select>
           </label>
-          <label class="field">
-            <span>Zona</span>
-            <select id="filterBarrio">
-              <option value="">Todas las zonas</option>
-            </select>
-          </label>
-          <label class="field">
-            <span>Ambientes</span>
-            <select id="filterAmbientes">
-              <option value="">Ambientes</option>
-              <option value="1">1 ambiente</option>
-              <option value="2">2 ambientes</option>
-              <option value="3">3 ambientes</option>
-              <option value="4">4+ ambientes</option>
-            </select>
-          </label>
-          <label class="field">
-            <span>Precio</span>
-            <select id="filterPrecio">
-              <option value="">Rango de precio</option>
-              <option value="v-0-200000">Venta · hasta USD 200.000</option>
-              <option value="v-200000-400000">Venta · USD 200.000 – 400.000</option>
-              <option value="v-400000-9999999">Venta · más de USD 400.000</option>
-              <option value="a-0-500000">Alquiler · hasta $500.000</option>
-              <option value="a-500000-1500000">Alquiler · $500.000 – $1.500.000</option>
-              <option value="a-1500000-99999999">Alquiler · más de $1.500.000</option>
-            </select>
-          </label>
-          <div class="search-actions">
-            <button class="search-btn" type="button" id="btnBuscar">Buscar</button>
-            <button class="search-btn ghost-clear" type="button" id="btnLimpiar">Limpiar</button>
-          </div>
         </div>
+        <details class="more-filters" id="moreFilters">
+          <summary>Más filtros</summary>
+          <div class="search-row">
+            <label class="field">
+              <span>Zona</span>
+              <select id="filterBarrio">
+                <option value="">Todas las zonas</option>
+              </select>
+            </label>
+            <label class="field">
+              <span>Ambientes</span>
+              <select id="filterAmbientes">
+                <option value="">Ambientes</option>
+                <option value="1">1 ambiente</option>
+                <option value="2">2 ambientes</option>
+                <option value="3">3 ambientes</option>
+                <option value="4">4 o más ambientes</option>
+              </select>
+            </label>
+            <label class="field">
+              <span>Precio</span>
+              <select id="filterPrecio">
+                <option value="">Rango de precio</option>
+                <option value="v-0-200000">Venta · hasta USD 200.000</option>
+                <option value="v-200000-400000">Venta · USD 200.000 – 400.000</option>
+                <option value="v-400000-9999999">Venta · más de USD 400.000</option>
+                <option value="a-0-500000">Alquiler · hasta $500.000</option>
+                <option value="a-500000-1500000">Alquiler · $500.000 – $1.500.000</option>
+                <option value="a-1500000-99999999">Alquiler · más de $1.500.000</option>
+              </select>
+            </label>
+            <div class="search-actions">
+              <button class="search-btn ghost-clear" type="button" id="btnLimpiar">Limpiar</button>
+            </div>
+          </div>
+        </details>
       </div>
-      <div class="barrio-chips" id="barrioChips"></div>
     </div>
   </section>
 
-  <section class="paisaje" id="paisaje">
-    <div class="wrap">
-      <p class="kicker">El paisaje</p>
-      <h2>Lago, cerros, bosque y las dos estaciones fuertes</h2>
-      <p class="comarca-lead">Bariloche se mira desde el agua y desde la altura. En verano el lago está abierto y los días son largos. En invierno nieva, el cerro se pone blanco y la casa se vive adentro: por eso cada ficha dice cómo se calefacciona.</p>
-      <div class="paisaje-grid">
-        <figure>
-          <img src="img/lago.jpg" alt="Lago de montaña con cerros al fondo">
-          <figcaption>Lago Nahuel Huapi</figcaption>
-        </figure>
-        <figure>
-          <img src="img/cerro.jpg" alt="Cerro rocoso con nieve en las cumbres">
-          <figcaption>Cerros</figcaption>
-        </figure>
-        <figure>
-          <img src="img/bosque.jpg" alt="Bosque de pinos con luz entre los árboles">
-          <figcaption>Bosque</figcaption>
-        </figure>
-        <figure>
-          <img src="img/nieve.jpg" alt="Montaña nevada en invierno">
-          <figcaption>Invierno</figcaption>
-        </figure>
-      </div>
-    </div>
-  </section>
-
-  <section class="comarca" id="comarca">
+  <section class="comarca" id="zonas">
     <div class="wrap">
       <p class="kicker">La comarca</p>
-      <h2>Bariloche y el sur patagónico</h2>
-      <p class="comarca-lead">Toque una zona para ver solo esas propiedades. El mapa marca el barrio, no la parcela. Las visitas se anotan en el panel, no en esta vitrina.</p>
+      <h2>Elija una zona</h2>
+      <p class="comarca-lead">Toque un recuadro para ver solo esas propiedades. El pin marca el barrio, no la parcela.</p>
+      <p class="zone-all-row"><button type="button" class="zone-all" id="zoneAll">Ver todas las zonas</button></p>
       <div class="zone-picks" id="zoneCards"></div>
-      <div class="mapa-box">
-        <div id="mapaComarca" class="mapa" role="region" aria-label="Mapa de la comarca de Bariloche"></div>
-        <p class="mapa-note">Mapa de la comarca. El pin es aproximado de cada zona.</p>
-      </div>
-    </div>
-  </section>
-
-  <section class="mudarse" id="mudarse">
-    <div class="wrap">
-      <p class="kicker">Mudarse</p>
-      <h2>Qué implica vivir acá</h2>
-      <p class="comarca-lead">No hay una promesa de plusvalía ni de alquiler turístico. Estas fichas son para quien busca casa, cabaña o lote para usar de forma permanente, o como segunda vivienda. Lo que sí se puede decir, con los pies en la tierra:</p>
-      <div class="zone-grid">
-        <article>
-          <h3>El lago queda cerca</h3>
-          <p>En el Centro se camina hasta la costanera. En Llao Llao, Circuito Chico o Dina Huapi la vista al agua es parte del lote. No todas las casas dan al lago: mire la ficha.</p>
-        </article>
-        <article>
-          <h3>El invierno se vive adentro</h3>
-          <p>Nieve y frío son normales. Conviene hogar a leña, radiadores o losa radiante, y cochera si no quiere dejar el auto a la intemperie. Cada aviso indica la calefacción.</p>
-        </article>
-        <article>
-          <h3>El ritmo es otro</h3>
-          <p>Melipal, Colonia Suiza y El Bolsón son más quietos que Mitre en temporada. El Centro tiene comercios a la vuelta. El Bolsón está a unas dos horas por la ruta 40.</p>
-        </article>
-        <article>
-          <h3>Permanente o segunda casa</h3>
-          <p>La mayoría de estas fichas son para vivir el año. Si la casa sirve también de segunda vivienda, lo dice el texto. No ofrecemos rentabilidad ni “inversión segura”.</p>
-        </article>
-      </div>
     </div>
   </section>
 
@@ -184,7 +130,6 @@
           <option value="precio-asc">Menor precio</option>
           <option value="precio-desc">Mayor precio</option>
           <option value="m2-desc">Mayor superficie</option>
-          <option value="recientes">Más recientes</option>
         </select>
         <div class="view-toggle">
           <button type="button" class="active" data-view="grid" title="Vista de grilla" aria-label="Vista de grilla">▦</button>
@@ -196,13 +141,67 @@
     <div class="properties-grid" id="catalog"></div>
   </main>
 
-  <section class="agent-note">
-    <div class="wrap agent-inner">
-      <div>
-        <h2>¿Es agente inmobiliario?</h2>
-        <p>El panel lista la cartera, cambia estados, registra visitas y simula una factura ARCA. Los datos quedan en este navegador.</p>
+  <section class="comarca" id="comarca">
+    <div class="wrap">
+      <p class="kicker">Mapa</p>
+      <h2>La comarca, a grandes rasgos</h2>
+      <p class="comarca-lead">Cada nombre es la zona, no la parcela. Las visitas se anotan en el panel, no en esta vitrina.</p>
+      <div class="mapa-box">
+        <div id="mapaComarca" class="mapa" role="region" aria-label="Mapa de la comarca de Bariloche"></div>
+        <p class="mapa-note">Toque un nombre para filtrar esa zona.</p>
       </div>
-      <a class="btn" href="panel.html">Abrir el panel</a>
+    </div>
+  </section>
+
+  <section class="paisaje" id="paisaje">
+    <div class="wrap">
+      <p class="kicker">El paisaje</p>
+      <h2>Lago, cerro, bosque y valle</h2>
+      <p class="comarca-lead">Bariloche se mira desde el agua y desde la altura. En invierno la casa se vive adentro: cada ficha dice cómo se calefacciona.</p>
+      <div class="paisaje-grid">
+        <figure>
+          <img src="img/hero-lago.jpg" alt="Lago Nahuel Huapi y cerros nevados">
+          <figcaption>Lago Nahuel Huapi</figcaption>
+        </figure>
+        <figure>
+          <img src="img/zona-circuito.jpg" alt="Cerro y lago del Circuito Chico">
+          <figcaption>Cerro</figcaption>
+        </figure>
+        <figure>
+          <img src="img/zona-colonia.jpg" alt="Bosque y arroyo en Colonia Suiza">
+          <figcaption>Bosque</figcaption>
+        </figure>
+        <figure>
+          <img src="img/zona-bolson.jpg" alt="Valle y cerro al sur">
+          <figcaption>Valle al sur</figcaption>
+        </figure>
+      </div>
+    </div>
+  </section>
+
+  <section class="mudarse" id="mudarse">
+    <div class="wrap">
+      <p class="kicker">Mudarse</p>
+      <h2>Qué implica vivir acá</h2>
+      <p class="comarca-lead">No hay una promesa de plusvalía ni de alquiler turístico. Estas fichas son para quien busca casa, cabaña o lote para vivir de forma permanente, o como segunda vivienda.</p>
+      <div class="zone-grid">
+        <article>
+          <h3>El lago queda cerca</h3>
+          <p>En el Centro se camina hasta la costanera. En Llao Llao, Circuito Chico o Dina Huapi la vista al agua puede ser parte del lote. Mire la ficha: no todas dan al lago.</p>
+        </article>
+        <article>
+          <h3>El invierno se vive adentro</h3>
+          <p>Nieve y frío son normales. Conviene hogar a leña, radiadores o losa radiante, y cochera si no quiere dejar el auto a la intemperie.</p>
+        </article>
+        <article>
+          <h3>El ritmo es otro</h3>
+          <p>Melipal, Colonia Suiza y El Bolsón son más quietos que Mitre en temporada. El Centro tiene comercios a la vuelta. El Bolsón está a unas dos horas por la ruta 40.</p>
+        </article>
+        <article>
+          <h3>Permanente o segunda casa</h3>
+          <p>La mayoría de estas fichas son para vivir el año. Si la casa sirve también de segunda vivienda, lo dice el texto. No ofrecemos rentabilidad ni inversión segura.</p>
+        </article>
+      </div>
     </div>
   </section>
 
@@ -222,14 +221,15 @@
     </div>
   </div>
 
-  <footer class="wrap">
-    <p>Inmobiliaria Nahuel · Bariloche · demo de producto · datos ficticios con fines ilustrativos. La venta se muestra en dólares y el alquiler permanente en pesos.</p>
+  <footer class="wrap site-foot">
+    <p><a href="panel.html">¿Es agente inmobiliario?</a> El panel lista la cartera, cambia estados y registra visitas. Esos datos no se muestran acá.</p>
+    <p>Estudio Nahuel Huapi · Bariloche · demo de producto · datos ficticios con fines ilustrativos. La venta se muestra en dólares y el alquiler permanente en pesos.</p>
   </footer>
 
   <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" crossorigin=""></script>
-  <script src="data.js?v=bariloche4"></script>
-  <script src="app.js?v=bariloche4"></script>
-  <script src="../contacto.js" data-phone="5492915757934" data-text="Hola, quiero consultar por una propiedad en Bariloche" data-subject="Consulta demo — Inmobiliaria Nahuel" data-title="Consultar una propiedad"></script>
-  <link rel="stylesheet" href="styles.css?v=bariloche4">
+  <script src="data.js?v=bariloche5"></script>
+  <script src="app.js?v=bariloche5"></script>
+  <script src="../contacto.js" data-phone="5492915757934" data-text="Hola, quiero consultar por una propiedad en Bariloche" data-subject="Consulta demo — Estudio Nahuel Huapi" data-title="Consultar una propiedad"></script>
+  <link rel="stylesheet" href="styles.css?v=bariloche5">
 </body>
 </html>

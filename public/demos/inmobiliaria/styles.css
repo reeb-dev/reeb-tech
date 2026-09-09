@@ -28,6 +28,7 @@ body {
   background: var(--sand);
   font-family: "Figtree", "Segoe UI", system-ui, sans-serif;
   line-height: 1.5;
+  overflow-x: hidden;
 }
 
 img { max-width: 100%; }
@@ -381,6 +382,67 @@ textarea:focus {
   margin: 0;
   color: #3d4842;
   font-size: 0.95rem;
+}
+
+.search-primary {
+  grid-template-columns: 1fr 1fr;
+}
+
+.more-filters {
+  margin-top: 10px;
+}
+
+.more-filters summary {
+  cursor: pointer;
+  font-weight: 650;
+  min-height: 44px;
+  display: inline-flex;
+  align-items: center;
+}
+
+.more-filters .search-row {
+  margin-top: 10px;
+}
+
+.zone-all-row {
+  margin: 0 0 12px;
+}
+
+.zone-all {
+  background: transparent;
+  border: 0;
+  padding: 8px 0;
+  min-height: 44px;
+  color: var(--muted);
+  font: inherit;
+  font-weight: 650;
+  cursor: pointer;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+.zone-all.is-quiet {
+  font-weight: 500;
+}
+
+.zona-tip {
+  background: #fffdf8;
+  border: 1px solid #c9b8a8;
+  border-radius: 999px;
+  color: #2f3b34;
+  font-weight: 650;
+  font-size: 12px;
+  box-shadow: none;
+  padding: 2px 8px;
+}
+
+.zona-tip::before {
+  display: none;
+}
+
+.site-foot a {
+  color: inherit;
+  font-weight: 650;
 }
 
 .zone-picks {
@@ -1329,7 +1391,8 @@ input, select, textarea {
   .workspace,
   .create.open { grid-template-columns: 1fr; }
 
-  .search-row { grid-template-columns: 1fr 1fr; }
+  .search-row,
+  .search-primary { grid-template-columns: 1fr 1fr; }
   .search-actions { grid-column: 1 / -1; }
   .hero-photo img { height: 260px; }
   .paisaje-grid { grid-template-columns: 1fr 1fr; }
@@ -1363,10 +1426,15 @@ input, select, textarea {
   .top nav button.btn { width: 100%; }
 
   .search-row,
+  .search-primary,
   .properties-grid,
   .zone-grid,
   .paisaje-grid,
   .ficha-facts { grid-template-columns: 1fr; }
+
+  .hero-photo img { height: 180px; }
+  .hero-copy h1 { font-size: 2rem; }
+  .search-primary { grid-template-columns: 1fr 1fr; }
 
   .zone-picks { grid-template-columns: 1fr 1fr; }
   .zone-pick { grid-template-rows: 92px auto auto; }

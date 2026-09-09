@@ -41,18 +41,9 @@ function populateBarrios() {
 }
 
 function renderBarrioChips() {
-  const counts = {};
-  properties.forEach((p) => {
-    if (p.status === "disponible" || p.status === "reservada") {
-      counts[p.barrio] = (counts[p.barrio] || 0) + 1;
-    }
-  });
-  const barrios = Object.keys(counts).sort((a, b) => a.localeCompare(b, "es"));
-  document.getElementById("barrioChips").innerHTML = barrios.map((barrio) => `
-    <button type="button" class="barrio-chip ${currentFilters.barrio === barrio ? "active" : ""}" data-barrio="${esc(barrio)}">
-      ${esc(barrio)}
-    </button>
-  `).join("");
+  const host = document.getElementById("barrioChips");
+  if (!host) return;
+  host.innerHTML = "";
 }
 
 function readFiltersFromForm() {
@@ -93,7 +84,7 @@ function selectZona(id, scroll) {
   const select = document.getElementById("filterBarrio");
   if (select) select.value = id || "";
   applyFilters();
-  if (scroll && id) {
+  if (scroll) {
     document.getElementById("propiedades")?.scrollIntoView({ behavior: "smooth", block: "start" });
   }
 }
@@ -101,7 +92,9 @@ function selectZona(id, scroll) {
 function renderZoneCards() {
   const host = document.getElementById("zoneCards");
   if (!host || typeof ZONAS === "undefined") return;
-  host.innerHTML = ZONAS.map((z) => `
+  const allBtn = document.getElementById("zoneAll");
+  if (allBtn) allBtn.classList.toggle("is-quiet", !currentFilters.barrio);
+  host.innerHTML = ZONAS.filter((z) => z.id).map((z) => `
     <button type="button" class="zone-pick ${currentFilters.barrio === z.id ? "active" : ""}" data-zona="${esc(z.id)}" aria-pressed="${currentFilters.barrio === z.id ? "true" : "false"}">
       <img src="${esc(z.foto)}" alt="${esc(z.nombre)}">
       <span>${esc(z.nombre)}</span>
@@ -136,7 +129,7 @@ function pintarMapaComarca() {
       fillOpacity: 0.92,
       weight: 2
     }).addTo(mapaComarca);
-    marker.bindPopup(z.nombre);
+    marker.bindTooltip(z.nombre, { permanent: true, direction: "top", className: "zona-tip", offset: [0, -6] });
     marker.on("click", () => selectZona(z.id, true));
   });
   const activa = zonaPorBarrio(currentFilters.barrio);
@@ -199,7 +192,6 @@ function sortProperties(list) {
       case "precio-asc": return a.precio - b.precio;
       case "precio-desc": return b.precio - a.precio;
       case "m2-desc": return b.superficie - a.superficie;
-      case "recientes": return a.diasPublicada - b.diasPublicada;
       default:
         if (a.destacado && !b.destacado) return -1;
         if (!a.destacado && b.destacado) return 1;
@@ -287,10 +279,8 @@ function openModal(id) {
   updateModalImage();
 
   const p = currentProperty;
-  const precioM2 = p.superficie ? Math.round(p.precio / p.superficie) : 0;
-  const zonaRef = p.precioM2Zona || precioM2 || 1;
-  const diffZona = Math.round(((precioM2 / zonaRef) - 1) * 100);
   const amenities = p.amenities || [];
+  const esDepto = p.tipo === "departamento";
 
   document.getElementById("modalContent").innerHTML = `
     <div class="badges">
@@ -300,50 +290,37 @@ function openModal(id) {
       ${p.status === "reservada" ? '<span class="badge reservada">Reservada</span>' : ""}
     </div>
     <h2 id="modalTitle">${esc(p.titulo)}</h2>
-    <div class="location">Zona ${esc(p.barrio)} · ${esc(p.zona)}</div>
-
-    <div class="ficha-mapa">
-      <h4>Ubicación de la zona</h4>
-      <p>El pin marca el barrio, no la parcela. No publicamos la dirección exacta.</p>
-      <div id="mapaFicha" class="mapa"></div>
-    </div>
+    <div class="location">Zona ${esc(p.barrio)}</div>
 
     <div class="price-box">
       <div class="price">${formatPrice(p.precio, p.operacion)}</div>
       ${p.expensas ? `<div class="expenses">+ Expensas: ${esc(money(p.expensas))}</div>` : ""}
-      <div class="expenses">${p.operacion === "venta" ? `USD ${precioM2.toLocaleString("es-AR")}/m²` : ""}</div>
     </div>
 
     <div class="modal-specs">
       <div class="spec">
-        <div class="icon">lote</div>
-        <div class="value">${p.superficie}</div>
-        <div class="label">m² de terreno</div>
-      </div>
-      <div class="spec">
-        <div class="icon">cub.</div>
         <div class="value">${p.cubierta || "—"}</div>
         <div class="label">m² cubiertos</div>
       </div>
       <div class="spec">
-        <div class="icon">dorm.</div>
+        <div class="value">${p.superficie}</div>
+        <div class="label">m² de lote</div>
+      </div>
+      <div class="spec">
         <div class="value">${p.dormitorios || "—"}</div>
         <div class="label">Dormitorios</div>
       </div>
+      ${esDepto && p.piso ? `
       <div class="spec">
-        <div class="icon">baño</div>
-        <div class="value">${p.banos || "—"}</div>
-        <div class="label">Baños</div>
-      </div>
+        <div class="value">${esc(p.piso)}</div>
+        <div class="label">Piso</div>
+      </div>` : ""}
     </div>
 
     <dl class="ficha-facts">
-      <div><dt>Operación</dt><dd>${esc(opLabel(p.operacion))}</dd></div>
-      <div><dt>Estado</dt><dd>${esc(label(p.status))}</dd></div>
       <div><dt>Vista</dt><dd>${esc(p.vista || "—")}</dd></div>
       <div><dt>Calefacción</dt><dd>${esc(p.calefaccion || "—")}</dd></div>
       <div><dt>Servicios</dt><dd>${esc(p.servicios || "—")}</dd></div>
-      <div><dt>Precio</dt><dd>${formatPrice(p.precio, p.operacion)}${p.operacion === "venta" ? " · venta en dólares" : " · alquiler permanente en pesos"}</dd></div>
     </dl>
 
     <div class="modal-description">
@@ -351,23 +328,10 @@ function openModal(id) {
       <p>${esc(p.descripcion)}</p>
     </div>
 
-    <div class="modal-specs">
-      <div class="spec">
-        <div class="value">${p.banos || "—"}</div>
-        <div class="label">Baños</div>
-      </div>
-      <div class="spec">
-        <div class="value">${p.piso || "PB"}</div>
-        <div class="label">Piso</div>
-      </div>
-      <div class="spec">
-        <div class="value">${esc(p.orientacion || "—")}</div>
-        <div class="label">Orientación</div>
-      </div>
-      <div class="spec">
-        <div class="value">${p.antiguedad === 0 ? "A estrenar" : (p.antiguedad != null ? p.antiguedad + " años" : "—")}</div>
-        <div class="label">Antigüedad</div>
-      </div>
+    <div class="ficha-mapa">
+      <h4>Zona aproximada</h4>
+      <p>El pin marca el barrio, no la parcela.</p>
+      <div id="mapaFicha" class="mapa"></div>
     </div>
 
     ${amenities.length ? `
@@ -379,31 +343,20 @@ function openModal(id) {
       </div>
     ` : ""}
 
-    <div class="modal-stats">
-      <div class="stat">
-        <div class="value">${p.diasPublicada}</div>
-        <div class="label">Días publicada</div>
-      </div>
-      <div class="stat">
-        <div class="value" style="color: ${diffZona >= 0 ? "#ef4444" : "#22c55e"}">${diffZona >= 0 ? "+" : ""}${diffZona}%</div>
-        <div class="label">vs. precio zona</div>
-      </div>
-    </div>
-
     <div class="modal-contact">
       <div>
         <h4>¿Le interesa esta propiedad?</h4>
-        <p>Consulta de ejemplo. El mensaje no sale a un servidor.</p>
+        <p>Escríbanos por WhatsApp. Es el camino más directo.</p>
       </div>
       <div class="btns">
-        <a class="btn-ficha-wa" data-consulta="wa" href="${esc(propertyWaUrl(p))}" target="_blank" rel="noopener">WhatsApp</a>
-        <a class="btn-ficha-call" data-consulta="call" href="tel:+5492915757934">Llamar</a>
+        <a class="btn-ficha-wa" data-consulta="wa" href="${esc(propertyWaUrl(p))}" target="_blank" rel="noopener">Escribir por WhatsApp</a>
       </div>
       <form class="modal-consulta" id="modalConsulta" novalidate>
-        <input name="nombre" autocomplete="name" placeholder="Nombre">
-        <input name="email" type="email" autocomplete="email" required placeholder="correo@ejemplo.com">
-        <textarea name="mensaje" required placeholder="Consulta sobre ${esc(p.titulo)}"></textarea>
-        <button type="submit">Consultar</button>
+        <input name="nombre" autocomplete="name" placeholder="Su nombre">
+        <input name="email" type="email" autocomplete="email" required placeholder="su-correo@ejemplo.com">
+        <input name="telefono" type="tel" autocomplete="tel" placeholder="294 442-0000">
+        <textarea name="mensaje" required placeholder="Cuéntenos qué le interesa de esta ficha"></textarea>
+        <button type="submit">Enviar consulta</button>
       </form>
     </div>
   `;
@@ -454,16 +407,10 @@ function prevImage() {
   updateModalImage();
 }
 
-document.getElementById("btnBuscar").addEventListener("click", applyFilters);
-document.getElementById("btnLimpiar").addEventListener("click", clearFilters);
+document.getElementById("btnLimpiar")?.addEventListener("click", clearFilters);
+document.getElementById("zoneAll")?.addEventListener("click", () => selectZona("", true));
 ["filterOperacion", "filterTipo", "filterBarrio", "filterAmbientes", "filterPrecio", "sortSelect"].forEach((id) => {
   document.getElementById(id).addEventListener("change", applyFilters);
-});
-
-document.getElementById("barrioChips").addEventListener("click", (event) => {
-  const chip = event.target.closest("[data-barrio]");
-  if (!chip) return;
-  filterByBarrioChip(chip.dataset.barrio);
 });
 
 document.getElementById("zoneCards")?.addEventListener("click", (event) => {
@@ -528,7 +475,7 @@ document.getElementById("modalContent").addEventListener("submit", (event) => {
   const email = String(data.get("email") || "").trim();
   const mensaje = String(data.get("mensaje") || "").trim();
   if (!email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
-    showFichaToast("Ingresá un email válido.");
+    showFichaToast("Ingrese un correo válido.");
     return;
   }
   if (!mensaje) {
@@ -558,7 +505,25 @@ function wireNav() {
   });
 }
 
+function ajustarContacto() {
+  const root = document.getElementById("contacto");
+  if (!root) return;
+  const tel = root.querySelector('input[name="telefono"]');
+  if (tel) tel.placeholder = "294 442-0000";
+  const email = root.querySelector('input[name="email"]');
+  if (email) email.placeholder = "su-correo@ejemplo.com";
+  const nombre = root.querySelector('input[name="nombre"]');
+  if (nombre) nombre.placeholder = "Su nombre";
+  const msg = root.querySelector("textarea");
+  if (msg) msg.placeholder = "Cuéntenos qué propiedad le interesa";
+  const lead = root.querySelector(".demo-contacto-lead");
+  if (lead) lead.textContent = "Escríbanos por WhatsApp o deje su consulta. El mensaje no sale a un servidor.";
+  const labels = root.querySelectorAll("form label");
+  if (labels[0]) labels[0].childNodes[0].textContent = "Su nombre";
+}
+
 wireNav();
 populateBarrios();
 renderProperties();
 pintarMapaComarca();
+window.addEventListener("load", ajustarContacto);
