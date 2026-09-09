@@ -11,6 +11,9 @@ let currentView = "grid";
 let currentProperty = null;
 let currentImageIndex = 0;
 let countedViewId = null;
+const PAGE_SIZE = 8;
+let shownCount = PAGE_SIZE;
+let listObserver = null;
 
 function formatPrice(price, operacion) {
   if (operacion === "venta") {
@@ -68,9 +71,14 @@ function markFilterFields() {
   }
 }
 
+function resetListingWindow() {
+  shownCount = PAGE_SIZE;
+}
+
 function applyFilters() {
   readFiltersFromForm();
   markFilterFields();
+  resetListingWindow();
   renderBarrioChips();
   renderZoneCards();
   renderProperties();
@@ -215,6 +223,23 @@ function sortProperties(list) {
   });
 }
 
+function loadMoreListings() {
+  const total = sortProperties(filterProperties()).length;
+  if (shownCount >= total) return;
+  shownCount = Math.min(shownCount + PAGE_SIZE, total);
+  renderProperties();
+}
+
+function watchListEnd() {
+  if (listObserver) listObserver.disconnect();
+  const sentinel = document.getElementById("listSentinel");
+  if (!sentinel) return;
+  listObserver = new IntersectionObserver((entries) => {
+    if (entries.some((entry) => entry.isIntersecting)) loadMoreListings();
+  }, { rootMargin: "240px 0px" });
+  listObserver.observe(sentinel);
+}
+
 function renderProperties() {
   const filtered = sortProperties(filterProperties());
   document.getElementById("resultsCount").textContent = filtered.length;
@@ -228,10 +253,12 @@ function renderProperties() {
         <p>Pruebe otra zona, tipo o rango de precio.</p>
       </div>
     `;
+    if (listObserver) listObserver.disconnect();
     return;
   }
 
-  grid.innerHTML = filtered.map((p) => {
+  const visible = filtered.slice(0, shownCount);
+  grid.innerHTML = visible.map((p) => {
     const fotos = p.imagenes || [];
     const portada = fotos[0] || fotoPorTipo(p.tipo);
     return `
@@ -264,7 +291,8 @@ function renderProperties() {
         </div>
       </article>
     `;
-  }).join("");
+  }).join("") + (shownCount < filtered.length ? '<div id="listSentinel" class="list-sentinel" aria-hidden="true"></div>' : "");
+  watchListEnd();
 }
 
 function showFichaToast(message) {

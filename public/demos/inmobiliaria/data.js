@@ -712,11 +712,173 @@ function seed() {
       diasPublicada: 11,
       precioM2Zona: 7500,
       history: [{ when: "29 ago", text: "Publicada." }]
+    }),
+    ficha({
+      id: "p21", codigo: "VTA-121", titulo: "Departamento de dos dormitorios en el Centro, venta",
+      tipo: "departamento", operacion: "venta", direccion: "Zona Centro, Bariloche", barrio: "Centro",
+      ambientes: 3, dormitorios: 2, banos: 1, superficie: 78, cubierta: 72, precio: 168000,
+      antiguedad: 22, orientacion: "Norte", piso: "2°", calefaccion: "Radiadores a gas",
+      vista: "Calle arbolada y cerro a lo lejos", servicios: "Luz, gas de red, agua, cloacas",
+      amenities: ["balcon"], descripcion: "Departamento en venta en el Centro, a pocas cuadras del Centro Cívico. Dos dormitorios, balcón y radiadores. No publicamos la parcela exacta.",
+      imagenes: ["img/depto-cocina.jpg", "img/zona-centro.jpg"]
+    }),
+    ficha({
+      id: "p22", codigo: "VTA-122", titulo: "Departamento con vista al lago, Centro",
+      tipo: "departamento", operacion: "venta", direccion: "Zona Centro, Bariloche", barrio: "Centro",
+      ambientes: 2, dormitorios: 1, banos: 1, superficie: 54, cubierta: 48, precio: 142000,
+      antiguedad: 16, orientacion: "Oeste", piso: "4°", calefaccion: "Radiadores a gas",
+      vista: "Lago Nahuel Huapi", servicios: "Luz, gas de red, agua, cloacas",
+      amenities: ["balcon"], descripcion: "Venta de un ambiente amplio con dormitorio, balcón hacia el lago y calefacción por radiadores. El pin de la ficha es la zona, no el edificio.",
+      imagenes: ["img/lugar-lago.jpg", "img/depto-living.jpg"]
+    }),
+    ficha({
+      id: "p23", codigo: "VTA-123", titulo: "Casa de madera entre pinos, Melipal",
+      tipo: "casa", operacion: "venta", direccion: "Zona Melipal, Bariloche", barrio: "Melipal",
+      ambientes: 4, dormitorios: 2, banos: 2, superficie: 480, cubierta: 96, precio: 245000,
+      antiguedad: 14, orientacion: "Norte", cochera: true, calefaccion: "Hogar a leña y radiadores a gas",
+      vista: "Bosque y barrio", servicios: "Luz, gas de red, agua, cloacas",
+      amenities: ["lena", "jardin", "cochera"], descripcion: "Casa de madera en venta en Melipal, entre pinos, con hogar y cochera. Para vivir el año, no estadía.",
+      imagenes: ["img/cabana-aframe.jpg", "img/zona-melipal.jpg"]
+    }),
+    ficha({
+      id: "p24", codigo: "VTA-124", titulo: "Lote arbolado en Melipal",
+      tipo: "terreno", operacion: "venta", direccion: "Zona Melipal, Bariloche", barrio: "Melipal",
+      ambientes: 0, dormitorios: 0, banos: 0, superficie: 720, cubierta: 0, precio: 98000,
+      antiguedad: null, orientacion: "Noreste", calefaccion: "—",
+      vista: "Bosque", servicios: "Luz y agua en la calle",
+      amenities: [], descripcion: "Lote en venta en Melipal, entre árboles, para construir casa permanente. No incluye proyecto ni promesa de plusvalía.",
+      imagenes: ["img/bosque2.jpg", "img/zona-melipal.jpg"]
+    }),
+    ficha({
+      id: "p25", codigo: "VTA-125", titulo: "Casa de piedra y madera en Llao Llao",
+      tipo: "casa", operacion: "venta", direccion: "Zona Llao Llao, Bariloche", barrio: "Llao Llao",
+      ambientes: 6, dormitorios: 4, banos: 3, superficie: 1600, cubierta: 210, precio: 620000,
+      antiguedad: 11, orientacion: "Oeste", cochera: true, calefaccion: "Losa radiante y hogar a leña",
+      vista: "Lago Nahuel Huapi", servicios: "Luz, gas de red, agua, cloacas",
+      amenities: ["lena", "jardin", "cochera", "parrilla"], descripcion: "Casa en venta en Llao Llao, piedra y madera, techo a dos aguas y vista al lago. Cochera cubierta para el invierno.",
+      imagenes: ["img/lugar-panuelo.jpg", "img/zona-llao.jpg"]
+    }),
+    ficha({
+      id: "p26", codigo: "VTA-126", titulo: "Lote con costa de lago, Llao Llao",
+      tipo: "terreno", operacion: "venta", direccion: "Zona Llao Llao, Bariloche", barrio: "Llao Llao",
+      ambientes: 0, dormitorios: 0, banos: 0, superficie: 2100, cubierta: 0, precio: 410000,
+      antiguedad: null, orientacion: "Oeste", calefaccion: "—",
+      vista: "Lago Nahuel Huapi", servicios: "Luz en el camino; agua a consultar",
+      amenities: [], descripcion: "Lote en venta en Llao Llao, con frente hacia el lago. El pin es de la zona, no de la parcela.",
+      imagenes: ["img/zona-llao.jpg", "img/lugar-lago.jpg"]
+    }),
+    ficha({
+      id: "p27", codigo: "VTA-127", titulo: "Casa de madera camino al cerro, Circuito Chico",
+      tipo: "casa", operacion: "venta", direccion: "Zona Circuito Chico, Bariloche", barrio: "Circuito Chico",
+      ambientes: 5, dormitorios: 3, banos: 2, superficie: 1100, cubierta: 142, precio: 390000,
+      antiguedad: 9, orientacion: "Sur", cochera: true, calefaccion: "Hogar a leña y salamandra",
+      vista: "Cerro nevado y bosque", servicios: "Luz, agua de red, gas envasado",
+      amenities: ["lena", "jardin", "cochera"], descripcion: "Casa de madera en venta sobre el Circuito Chico. En invierno el cerro se pone blanco y la casa se vive adentro: tiene hogar y cochera.",
+      imagenes: ["img/lugar-catedral.jpg", "img/zona-circuito.jpg"]
+    }),
+    ficha({
+      id: "p28", codigo: "VTA-128", titulo: "Cabaña de pino en el Circuito Chico, venta",
+      tipo: "cabana", operacion: "venta", direccion: "Zona Circuito Chico, Bariloche", barrio: "Circuito Chico",
+      ambientes: 3, dormitorios: 2, banos: 1, superficie: 640, cubierta: 68, precio: 215000,
+      antiguedad: 7, orientacion: "Oeste", calefaccion: "Salamandra a leña y calefactor a gas",
+      vista: "Bosque y tramo de lago", servicios: "Luz, agua de red, gas envasado",
+      amenities: ["lena", "parrilla", "jardin"], descripcion: "Cabaña de pino en venta en el Circuito Chico. Dos dormitorios, deck y calefacción para el invierno. Vivienda, no estadía de fin de semana.",
+      imagenes: ["img/cabana-techo.jpg", "img/zona-circuito.jpg"]
+    }),
+    ficha({
+      id: "p29", codigo: "VTA-129", titulo: "Casa baja de piedra en Dina Huapi",
+      tipo: "casa", operacion: "venta", direccion: "Zona Dina Huapi, Bariloche", barrio: "Dina Huapi",
+      ambientes: 4, dormitorios: 2, banos: 1, superficie: 560, cubierta: 88, precio: 198000,
+      antiguedad: 20, orientacion: "Este", cochera: true, calefaccion: "Hogar a leña y radiadores",
+      vista: "Pueblo y lago a lo lejos", servicios: "Luz, agua de red, gas envasado",
+      amenities: ["lena", "jardin", "cochera"], descripcion: "Casa baja en venta en Dina Huapi, pueblo al este del lago. Más quieto que el Centro. Hogar y cochera para el invierno.",
+      imagenes: ["img/zona-dina.jpg", "img/cabana-bosque.jpg"]
+    }),
+    ficha({
+      id: "p30", codigo: "VTA-130", titulo: "Lote con vista al lago, Dina Huapi",
+      tipo: "terreno", operacion: "venta", direccion: "Zona Dina Huapi, Bariloche", barrio: "Dina Huapi",
+      ambientes: 0, dormitorios: 0, banos: 0, superficie: 900, cubierta: 0, precio: 125000,
+      antiguedad: null, orientacion: "Oeste", calefaccion: "—",
+      vista: "Lago Nahuel Huapi", servicios: "Luz en la calle",
+      amenities: [], descripcion: "Lote en venta en Dina Huapi, hacia el lago. Pueblo aparte del centro. El pin es aproximado de la zona, no de la parcela.",
+      imagenes: ["img/paisaje-lago.jpg", "img/zona-dina.jpg"]
+    }),
+    ficha({
+      id: "p31", codigo: "VTA-131", titulo: "Casa de madera entre árboles, Colonia Suiza",
+      tipo: "casa", operacion: "venta", direccion: "Zona Colonia Suiza, Bariloche", barrio: "Colonia Suiza",
+      ambientes: 5, dormitorios: 3, banos: 2, superficie: 980, cubierta: 134, precio: 275000,
+      antiguedad: 12, orientacion: "Norte", cochera: true, calefaccion: "Losa radiante y hogar a leña",
+      vista: "Bosque y cerro", servicios: "Luz, agua de red, gas envasado",
+      amenities: ["lena", "jardin", "cochera"], descripcion: "Casa de madera en venta en Colonia Suiza, entre árboles, sobre el oeste. Para vivir el año. En temporada hay más visitantes en la zona.",
+      imagenes: ["img/cabana-hogar.jpg", "img/zona-colonia.jpg"]
+    }),
+    ficha({
+      id: "p32", codigo: "VTA-132", titulo: "Cabaña de pino en Colonia Suiza, venta",
+      tipo: "cabana", operacion: "venta", direccion: "Zona Colonia Suiza, Bariloche", barrio: "Colonia Suiza",
+      ambientes: 3, dormitorios: 2, banos: 1, superficie: 700, cubierta: 74, precio: 189000,
+      antiguedad: 6, orientacion: "Este", calefaccion: "Salamandra a leña",
+      vista: "Bosque", servicios: "Luz, agua de red, gas envasado",
+      amenities: ["lena", "jardin", "parrilla"], descripcion: "Cabaña de pino en venta en Colonia Suiza. Dos dormitorios, jardín y salamandra. El contrato de uso previsto es vivienda permanente o segunda casa, no alquiler turístico.",
+      imagenes: ["img/cabana-dormi.jpg", "img/zona-colonia.jpg"]
+    }),
+    ficha({
+      id: "p33", codigo: "VTA-133", titulo: "Casa de montaña en El Bolsón, venta",
+      tipo: "casa", operacion: "venta", direccion: "Zona El Bolsón", barrio: "El Bolsón",
+      ambientes: 5, dormitorios: 3, banos: 2, superficie: 1300, cubierta: 156, precio: 230000,
+      antiguedad: 15, orientacion: "Norte", cochera: true, calefaccion: "Hogar a leña y radiadores",
+      vista: "Valle y cerro", servicios: "Luz, agua de red, gas envasado",
+      amenities: ["lena", "jardin", "cochera"], descripcion: "Casa de montaña en venta en El Bolsón, al sur de Bariloche. Se llega por la ruta 40, unas dos horas. Valle y cerro, no el lago Nahuel Huapi en la puerta.",
+      imagenes: ["img/zona-bolson.jpg", "img/cabana-hogar.jpg"]
+    }),
+    ficha({
+      id: "p34", codigo: "VTA-134", titulo: "Lote con cerro en El Bolsón",
+      tipo: "terreno", operacion: "venta", direccion: "Zona El Bolsón", barrio: "El Bolsón",
+      ambientes: 0, dormitorios: 0, banos: 0, superficie: 1800, cubierta: 0, precio: 72000,
+      antiguedad: null, orientacion: "Oeste", calefaccion: "—",
+      vista: "Valle y cerro", servicios: "Luz en el camino",
+      amenities: [], descripcion: "Lote en venta en el valle de El Bolsón, con vista al cerro. No es el mismo municipio que Bariloche.",
+      imagenes: ["img/valle.jpg", "img/zona-bolson.jpg"]
+    }),
+    ficha({
+      id: "p35", codigo: "VTA-135", titulo: "Casa baja en el Centro, venta",
+      tipo: "casa", operacion: "venta", direccion: "Zona Centro, Bariloche", barrio: "Centro",
+      ambientes: 4, dormitorios: 2, banos: 1, superficie: 220, cubierta: 92, precio: 260000,
+      antiguedad: 40, orientacion: "Sur", cochera: false, calefaccion: "Hogar a leña y radiadores a gas",
+      vista: "Calle del centro", servicios: "Luz, gas de red, agua, cloacas",
+      amenities: ["lena"], descripcion: "Casa baja en venta en el Centro, cerca de la costanera. Dos dormitorios y hogar. En invierno hay nieve en la calle; la ficha indica la calefacción.",
+      imagenes: ["img/zona-centro.jpg", "img/interior-hogar.jpg"]
+    }),
+    ficha({
+      id: "p36", codigo: "VTA-136", titulo: "Casa con jardín en Melipal, venta",
+      tipo: "casa", operacion: "venta", direccion: "Zona Melipal, Bariloche", barrio: "Melipal",
+      ambientes: 5, dormitorios: 3, banos: 2, superficie: 610, cubierta: 140, precio: 310000,
+      antiguedad: 8, orientacion: "Norte", cochera: true, calefaccion: "Radiadores a gas y hogar a leña",
+      vista: "Barrio arbolado", servicios: "Luz, gas de red, agua, cloacas",
+      amenities: ["lena", "jardin", "cochera", "parrilla"], descripcion: "Casa familiar en venta en Melipal, entre el centro y el oeste. Tres dormitorios, jardín y cochera. Alquiler permanente no: es venta.",
+      imagenes: ["img/casa-madera.jpg", "img/zona-melipal.jpg"]
+    }),
+    ficha({
+      id: "p37", codigo: "VTA-137", titulo: "Cabaña con techo a dos aguas, Llao Llao, venta",
+      tipo: "cabana", operacion: "venta", direccion: "Zona Llao Llao, Bariloche", barrio: "Llao Llao",
+      ambientes: 4, dormitorios: 2, banos: 1, superficie: 800, cubierta: 82, precio: 340000,
+      antiguedad: 4, orientacion: "Oeste", calefaccion: "Hogar a leña y losa radiante",
+      vista: "Lago y bosque", servicios: "Luz, gas de red, agua, cloacas",
+      amenities: ["lena", "terraza", "jardin"], descripcion: "Cabaña en venta en Llao Llao, techo a dos aguas y terraza hacia el lago. Puede usarse de vivienda permanente o segunda casa. No prometemos alquiler turístico.",
+      imagenes: ["img/hero-lago.jpg", "img/cabana-dormi.jpg"]
+    }),
+    ficha({
+      id: "p38", codigo: "VTA-138", titulo: "Local sobre la costanera, Centro, venta",
+      tipo: "local", operacion: "venta", direccion: "Zona Centro, Bariloche", barrio: "Centro",
+      ambientes: 1, dormitorios: 0, banos: 1, superficie: 64, cubierta: 64, precio: 210000,
+      antiguedad: 30, orientacion: "Oeste", piso: "PB", calefaccion: "Calefactor a gas",
+      vista: "Costanera y lago", servicios: "Luz, gas de red, agua, cloacas",
+      amenities: [], descripcion: "Local en venta sobre la costanera del Centro, con vista al lago. Vidriera a la calle. No es vivienda.",
+      imagenes: ["img/local.jpg", "img/zona-centro.jpg"]
     })
   ];
 }
 
-const STORAGE_KEY = "inmobiliaria-demo-v8";
+const STORAGE_KEY = "inmobiliaria-demo-v9";
 const DEMO_WA_PHONE = "5492915757934";
 
 function load() {
