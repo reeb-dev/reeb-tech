@@ -190,6 +190,9 @@ function blankItem() {
     imagenes: [],
     destacado: false,
     nuevo: true,
+    bajoPrecio: false,
+    precioAnterior: 0,
+    ingresada: 0,
     vistas: 0,
     consultas: 0,
     diasPublicada: 0,
@@ -197,7 +200,7 @@ function blankItem() {
     status: "disponible",
     cliente: null,
     visitas: [],
-    portales: { web: true, ml: false, zonaprop: false, argenprop: false, instagram: false, facebook: false, whatsapp: false },
+    portales: portalesBase(),
     history: []
   };
 }
@@ -205,6 +208,8 @@ function blankItem() {
 function applyFormToItem(form, item) {
   const data = new FormData(form);
   const barrio = String(data.get("barrio") || item.barrio);
+  const nextPrecio = Number(data.get("precio") || 0);
+  if (item.id) aplicarBajaPrecio(item, nextPrecio);
   Object.assign(item, {
     codigo: String(data.get("codigo") || ""),
     titulo: String(data.get("titulo") || ""),
@@ -222,7 +227,7 @@ function applyFormToItem(form, item) {
     vista: String(data.get("vista") || ""),
     calefaccion: String(data.get("calefaccion") || ""),
     servicios: String(data.get("servicios") || ""),
-    precio: Number(data.get("precio") || 0),
+    precio: nextPrecio,
     expensas: Number(data.get("expensas") || 0),
     descripcion: String(data.get("descripcion") || ""),
     amenities: data.getAll("amenity").map(String),
@@ -253,8 +258,7 @@ function htmlDestinosChips(item) {
   const bits = destinosActivosDe(item);
   if (!bits.length) return `<span class="destino-chip is-off">Sin destinos</span>`;
   return `<div class="destino-chips">${bits.map((d) => {
-    const name = d.id === "web" ? "Vitrina" : d.id === "ml" ? "ML" : d.nombre;
-    return `<span class="destino-chip">${esc(name)}</span>`;
+    return `<span class="destino-chip">${esc(destChipNombre(d))}</span>`;
   }).join("")}</div>`;
 }
 
@@ -280,6 +284,7 @@ function htmlDestinoFila(dest, item, readonly) {
       : "Conecte la cuenta en Difusión";
   return `
     <label class="destino-row ${!lista && !dest.fijo ? "is-off" : ""}">
+      <span class="cuenta-mark destino-row-mark" data-dest="${esc(dest.id)}" aria-hidden="true">${esc(destMarca(dest))}</span>
       <input type="checkbox" data-pub-dest="${esc(dest.id)}" ${on ? "checked" : ""} ${disabled ? "disabled" : ""}>
       <span>
         <strong>${esc(dest.nombre)} <em class="destino-estado ${st.on ? "" : "is-off"}">${esc(st.label)}</em></strong>
@@ -301,9 +306,9 @@ function htmlPublishBlock(item, isCreate, readonly) {
       <h4>Publicar este aviso</h4>
       <p>Elija destinos conectados y toque Publicar este aviso. El sitio propio siempre queda en la vitrina. Portales y redes solo si la cuenta está conectada en Difusión. Demo: no se envía nada afuera.</p>
       <p class="difusion-ficha-grupo">Sitios y portales</p>
-      ${DESTINOS.filter((d) => d.grupo !== "red").map((dest) => htmlDestinoFila(dest, item, readonly)).join("")}
+      ${destinosPorGrupo("sitio").map((dest) => htmlDestinoFila(dest, item, readonly)).join("")}
       <p class="difusion-ficha-grupo">Redes sociales</p>
-      ${DESTINOS.filter((d) => d.grupo === "red").map((dest) => htmlDestinoFila(dest, item, readonly)).join("")}
+      ${destinosPorGrupo("red").map((dest) => htmlDestinoFila(dest, item, readonly)).join("")}
       <div class="difusion-acciones">
         ${readonly ? "" : `<button class="btn-panel" type="button" id="publicar-aviso">Publicar este aviso</button>`}
         <button class="ghost" type="button" id="copiar-aviso">Copiar texto para redes</button>
@@ -411,6 +416,10 @@ function guardarAlta(item) {
     ...item,
     id: crypto.randomUUID(),
     imagenes: imagenes.length ? imagenes : [fotoPorTipo(item.tipo)],
+    nuevo: item.nuevo !== false,
+    ingresada: Date.now(),
+    bajoPrecio: false,
+    precioAnterior: 0,
     history: [{ when: "hoy", text: "Propiedad agregada a la cartera." }]
   };
   const prevItems = items;
@@ -485,10 +494,16 @@ function htmlCuenta(dest) {
     : `<button type="button" class="ghost cuenta-btn" data-cuenta="${esc(dest.id)}" ${editable ? "" : "disabled"}>${on ? "Desconectar" : "Conectar (demo)"}</button>`;
   return `
     <article class="cuenta ${on ? "is-on" : ""}">
-      <p class="cuenta-tipo">${esc(destTipoLabel(dest))}</p>
-      <h3>${esc(dest.nombre)}</h3>
+      <header class="cuenta-head">
+        <span class="cuenta-mark" data-dest="${esc(dest.id)}" aria-hidden="true">${esc(destMarca(dest))}</span>
+        <div class="cuenta-titles">
+          <p class="cuenta-tipo">${esc(destTipoLabel(dest))}</p>
+          <h3>${esc(dest.nombre)}</h3>
+        </div>
+        <span class="cuenta-badge ${on ? "is-on" : ""}">${on ? "Conectado" : "Sin conectar"}</span>
+      </header>
       <p>${esc(dest.beneficio)}</p>
-      <p class="cuenta-meta">${on ? publicados + " aviso" + (publicados === 1 ? "" : "s") + " de la cartera en este destino" : "Sin conectar"}</p>
+      <p class="cuenta-meta">${on ? publicados + " aviso" + (publicados === 1 ? "" : "s") + " de la cartera en este destino" : "Sin conectar. Conecte para marcar avisos."}</p>
       <p class="cuenta-accion">${last}</p>
       ${accion}
     </article>`;
@@ -609,8 +624,8 @@ function renderDifusion() {
   const shareItem = items.find((i) => i.id === selected) || items[0];
   const shareText = shareItem ? textoRed(shareItem) : "";
   host.innerHTML = `
-    ${htmlGrupoCuentas("sitio", "Sitios y portales", "Vitrina propia y portales de inmuebles de esta demo. Conectar no envía el aviso: es una marca de ejemplo.")}
-    ${htmlGrupoCuentas("red", "Redes sociales", "Instagram, Facebook y WhatsApp. Acá se arma el texto; usted lo pega o lo envía a mano. No hay publicación automática.")}
+    ${htmlGrupoCuentas("sitio", "Sitios y portales", "Vitrina propia y portales de inmuebles de Argentina. Conectar no envía el aviso: es una marca de ejemplo.")}
+    ${htmlGrupoCuentas("red", "Redes sociales", "Instagram, Facebook (página), Marketplace, WhatsApp y TikTok. Acá se arma el texto; usted lo pega o lo envía a mano. No hay publicación automática.")}
     <section class="difusion-cola">
       <div class="difusion-grupo-head">
         <h2>Cola de publicación</h2>
@@ -805,6 +820,10 @@ function paintCarteraList() {
       <td>${esc(item.barrio)}</td>
       <td class="amount">${item.operacion === "venta" ? esc(money(item.precio, true)) : esc(money(item.precio))}</td>
       <td><span class="tag ${esc(item.status)}">${esc(label(item.status))}</span></td>
+      <td class="cartera-metricas">
+        <strong>${Number(item.vistas || 0)}</strong> visitas web
+        <small>${Number(item.consultas || 0)} consultas · ${interaccionesDe(item)} interacc.</small>
+      </td>
       <td>${htmlDestinosChips(item)}</td>
       <td>
         <div class="row-actions">
@@ -814,7 +833,7 @@ function paintCarteraList() {
         </div>
       </td>
     </tr>`;
-  }).join("") || `<tr><td colspan="8">No hay propiedades en este estado.</td></tr>`;
+      }).join("") || `<tr><td colspan="9">No hay propiedades en este estado.</td></tr>`;
 
   host.querySelectorAll("[data-edit]").forEach((btn) => {
     btn.addEventListener("click", () => openCarteraEditor(btn.dataset.edit));
@@ -848,7 +867,7 @@ function paintCarteraEditor() {
       <div>
         <p class="eyebrow">${isCreate ? "Alta en cartera" : esc(opLabel(item.operacion)) + " · " + esc(tipoLabel(item.tipo))}</p>
         <h2>${isCreate ? "Nueva propiedad" : esc(item.titulo || "Ficha")}</h2>
-        <p>${isCreate ? "Complete la ficha. Al guardar, sale en la vitrina de este navegador." : esc(item.direccion || "Sin dirección")}</p>
+        <p>${isCreate ? "Complete la ficha. Al guardar, sale en la vitrina de este navegador." : esc(item.direccion || "Sin dirección") + " · " + precioStr}</p>
       </div>
       <button type="button" class="ghost" id="volver-listado">Volver al listado</button>
     </div>
@@ -856,10 +875,13 @@ function paintCarteraEditor() {
     ${htmlGaleria(fotos, readonly)}
     ${isCreate ? "" : `
     <div class="metric-box">
-      <div><span>Visitas al anuncio</span><strong>${Number(item.vistas || 0)}</strong></div>
-      <div><span>Consultas</span><strong>${Number(item.consultas || 0)}</strong></div>
-      <div><span>Precio</span><strong>${esc(precioStr)}</strong></div>
-    </div>`}
+      <div><span>Visitas en la web</span><strong>${Number(item.vistas || 0)}</strong><small>Aperturas de esta ficha en la vitrina. Solo se ven en el panel.</small></div>
+      <div><span>Consultas</span><strong>${Number(item.consultas || 0)}</strong><small>WhatsApp o formulario de esta propiedad.</small></div>
+      <div><span>Favorito</span><strong>${favoritosDe(item)}</strong><small>Marcado en este navegador (0 o 1). No es un recuento de personas.</small></div>
+      <div><span>Visitas presenciales</span><strong>${visitasPresencialesDe(item)}</strong><small>Agenda cargada en esta ficha.</small></div>
+      <div><span>Interacciones</span><strong>${interaccionesDe(item)}</strong><small>Consultas + favorito + visitas presenciales. No hay tráfico inventado.</small></div>
+    </div>
+    ${item.bajoPrecio ? `<p class="editor-precio-nota">Este aviso muestra “Bajó de precio” en la vitrina${item.precioAnterior ? " (antes " + esc(item.operacion === "venta" ? money(item.precioAnterior, true) : money(item.precioAnterior)) + ")" : ""}. Si sube el precio y guarda, se quita.</p>` : ""}`}
     <form id="edit">
       <div class="editor-grid">
         <label>Código<input name="codigo" value="${esc(item.codigo)}" required ${dis}></label>
@@ -907,9 +929,10 @@ function paintCarteraEditor() {
             </label>`).join("")}
         </div>
         <div class="edit-flags">
-          <label><input type="checkbox" name="destacado" ${item.destacado ? "checked" : ""} ${dis}> Destacado en vitrina</label>
-          <label><input type="checkbox" name="nuevo" ${item.nuevo ? "checked" : ""} ${dis}> Nuevo</label>
+          <label><input type="checkbox" name="destacado" ${item.destacado ? "checked" : ""} ${dis}> Destacar en la vitrina</label>
+          <label><input type="checkbox" name="nuevo" ${item.nuevo ? "checked" : ""} ${dis}> Mostrar como reciente</label>
         </div>
+        <p class="lead-mini">Puede destacar varias. “Reciente” sale en la tira de últimas ingresadas y con el sello Nuevo. Bajar el precio al guardar marca “Bajó de precio” en la web; subirlo lo quita.</p>
       </div>
       ${readonly ? "" : `
       <div class="actions">
@@ -1016,6 +1039,7 @@ function paintCarteraEditor() {
     event.preventDefault();
     if (!canEditCartera()) return;
     const prevStatus = item.status;
+    const prevPrecio = Number(item.precio || 0);
     applyFormToItem(event.target, item);
     if (isCreate) {
       guardarAlta(item);
@@ -1023,6 +1047,8 @@ function paintCarteraEditor() {
     }
     if (prevStatus !== item.status) {
       item.history = [{ when: "hoy", text: `Estado cambiado a: ${label(item.status)}.` }, ...(item.history || [])];
+    } else if (item.precio < prevPrecio) {
+      item.history = [{ when: "hoy", text: "Precio bajado. La vitrina muestra “Bajó de precio”. No se inventó un descuento." }, ...(item.history || [])];
     } else {
       item.history = [{ when: "hoy", text: "Ficha actualizada. La vitrina ya toma estos datos." }, ...(item.history || [])];
     }
@@ -1176,6 +1202,10 @@ function renderResumen() {
   const consultas = items.reduce((sum, i) => sum + Number(i.consultas || 0), 0);
   const avisosPortales = items.filter((item) => DESTINOS.some((d) => !d.fijo && portalesDe(item)[d.id])).length;
   const cuentasOn = DESTINOS.filter((d) => destinoConectado(d.id)).length;
+  const destacadas = items.filter((i) => i.destacado);
+  const recientes = recientesDe(items, 4);
+  const topVistas = [...items].sort((a, b) => Number(b.vistas || 0) - Number(a.vistas || 0)).slice(0, 5);
+  const topInter = [...items].sort((a, b) => interaccionesDe(b) - interaccionesDe(a)).slice(0, 5);
   const actividad = actividadReciente();
   host.innerHTML = `
     <header class="resumen-hello">
@@ -1208,7 +1238,7 @@ function renderResumen() {
       <button type="button" class="resumen-card" data-go="difusion">
         <span>Avisos en portales</span>
         <strong>${avisosPortales}</strong>
-        <small>marcados en ML, Zonaprop, Argenprop o redes</small>
+        <small>marcados en portales o redes de esta demo</small>
       </button>
       <button type="button" class="resumen-card" data-go="difusion">
         <span>Cuentas conectadas</span>
@@ -1235,8 +1265,71 @@ function renderResumen() {
           <button type="button" data-go="difusion"><strong>Ir a Difusión</strong><small>Conectar portales y armar la cola</small></button>
           <button type="button" data-go="usuarios"><strong>Ir a Usuarios</strong><small>${staff.filter((u) => u.activo !== false).length} cuentas activas de ${staff.length}</small></button>
         </div>
+      </section>
+    </div>
+    <div class="resumen-split">
+      <section class="resumen-panel">
+        <h2>Más vistas en la web</h2>
+        <p>Aperturas de cada ficha en este navegador. No se muestran en la vitrina pública.</p>
+        <ul class="resumen-rank">
+          ${topVistas.map((row) => `
+            <li>
+              <button type="button" data-ficha="${esc(row.id)}">
+                <strong>${esc(row.codigo)} · ${esc(row.titulo)}</strong>
+                <span>${Number(row.vistas || 0)} visitas web · ${interaccionesDe(row)} interacc.</span>
+              </button>
+            </li>`).join("")}
+        </ul>
+      </section>
+      <section class="resumen-panel">
+        <h2>Más interacciones</h2>
+        <p>Consultas + favorito de este navegador + visitas presenciales. Sin números inventados.</p>
+        <ul class="resumen-rank">
+          ${topInter.map((row) => `
+            <li>
+              <button type="button" data-ficha="${esc(row.id)}">
+                <strong>${esc(row.codigo)} · ${esc(row.titulo)}</strong>
+                <span>${Number(row.consultas || 0)} consultas · ${favoritosDe(row)} favorito · ${visitasPresencialesDe(row)} presenciales</span>
+              </button>
+            </li>`).join("")}
+        </ul>
+      </section>
+    </div>
+    <div class="resumen-split">
+      <section class="resumen-panel">
+        <h2>Destacadas en la vitrina</h2>
+        <p>Puede destacar una o varias. El catálogo público las pone primero y con sello Destacado.</p>
+        ${destacadas.length ? `<ul class="resumen-rank">${destacadas.map((row) => `
+          <li>
+            <button type="button" data-ficha="${esc(row.id)}">
+              <strong>${esc(row.codigo)} · ${esc(row.titulo)}</strong>
+              <span>${esc(row.barrio)}</span>
+            </button>
+          </li>`).join("")}</ul>` : `<p class="resumen-empty">Ningún aviso está destacado. Márquelo en la ficha de Cartera.</p>`}
+        <h2 class="resumen-sub">Recientes</h2>
+        <p>Avisos con “Mostrar como reciente” o recién cargados.</p>
+        ${recientes.length ? `<ul class="resumen-rank">${recientes.map((row) => `
+          <li>
+            <button type="button" data-ficha="${esc(row.id)}">
+              <strong>${esc(row.codigo)} · ${esc(row.titulo)}</strong>
+              <span>${row.nuevo ? "Reciente en vitrina" : "Alta reciente"}</span>
+            </button>
+          </li>`).join("")}</ul>` : `<p class="resumen-empty">Ningún aviso está marcado como reciente.</p>`}
+      </section>
+      <section class="resumen-panel">
+        <h2>Destinos de esta demo</h2>
+        <p>Sitios, portales y redes. Conecte en Difusión. Nada se envía afuera.</p>
+        <p class="difusion-ficha-grupo">Sitios y portales</p>
         <ul class="resumen-cuentas">
-          ${DESTINOS.map((d) => {
+          ${destinosPorGrupo("sitio").map((d) => {
+            const on = destinoConectado(d.id);
+            const n = avisosEnDestino(d.id);
+            return `<li><strong>${esc(d.nombre)}</strong><span>${on ? n + " aviso" + (n === 1 ? "" : "s") : "No conectado"}</span></li>`;
+          }).join("")}
+        </ul>
+        <p class="difusion-ficha-grupo">Redes sociales</p>
+        <ul class="resumen-cuentas">
+          ${destinosPorGrupo("red").map((d) => {
             const on = destinoConectado(d.id);
             const n = avisosEnDestino(d.id);
             return `<li><strong>${esc(d.nombre)}</strong><span>${on ? n + " aviso" + (n === 1 ? "" : "s") : "No conectado"}</span></li>`;
@@ -1246,6 +1339,9 @@ function renderResumen() {
     </div>`;
   host.querySelectorAll("[data-go]").forEach((btn) => {
     btn.addEventListener("click", () => showPanelView(btn.dataset.go));
+  });
+  host.querySelectorAll("[data-ficha]").forEach((btn) => {
+    btn.addEventListener("click", () => openCarteraEditor(btn.dataset.ficha, { instant: false }));
   });
 }
 

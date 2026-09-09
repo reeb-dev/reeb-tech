@@ -1,5 +1,5 @@
 let properties = load();
-const favorites = new Set();
+const favorites = new Set(loadFavoritoIds());
 let currentFilters = {
   operacion: "",
   tipo: "",
@@ -219,6 +219,14 @@ function sortProperties(list) {
       case "precio-asc": return a.precio - b.precio;
       case "precio-desc": return b.precio - a.precio;
       case "m2-desc": return b.superficie - a.superficie;
+      case "recientes": {
+        const tb = Number(b.ingresada || 0);
+        const ta = Number(a.ingresada || 0);
+        if (tb !== ta) return tb - ta;
+        if (a.nuevo && !b.nuevo) return -1;
+        if (!a.nuevo && b.nuevo) return 1;
+        return 0;
+      }
       default:
         if (a.destacado && !b.destacado) return -1;
         if (!a.destacado && b.destacado) return 1;
@@ -272,22 +280,23 @@ function renderProperties() {
     if (listObserver) listObserver.disconnect();
     const moreBtnEmpty = document.getElementById("btnVerMas");
     if (moreBtnEmpty) moreBtnEmpty.hidden = true;
+    renderRecientes();
     return;
   }
 
   grid.innerHTML = visible.map((p) => {
     const fotos = p.imagenes || [];
     const portada = fotos[0] || fotoPorTipo(p.tipo);
+    const precioWas = p.bajoPrecio && p.precioAnterior
+      ? `<div class="price-was">${esc(formatPrice(p.precioAnterior, p.operacion))}</div>`
+      : "";
     return `
-      <article class="property-card" data-id="${esc(p.id)}">
+      <article class="property-card${p.destacado ? " is-destacada" : ""}" data-id="${esc(p.id)}">
         <div class="image">
           <a class="card-cover" href="${esc(detalleHref(p.id))}">
             <img src="${esc(portada)}" alt="${esc(p.titulo)}">
             <div class="badges">
-              <span class="badge ${esc(p.operacion)}">${esc(opLabel(p.operacion))}</span>
-              ${p.destacado ? '<span class="badge destacado">Destacado</span>' : ""}
-              ${p.nuevo ? '<span class="badge nuevo">Nuevo</span>' : ""}
-              ${p.status === "reservada" ? '<span class="badge reservada">Reservada</span>' : ""}
+              ${htmlPublicBadges(p)}
             </div>
             <span class="barrio-pill">${esc(p.barrio)}</span>
             ${fotos.length > 1 ? `<div class="gallery-count">${fotos.length} fotos</div>` : ""}
@@ -298,6 +307,7 @@ function renderProperties() {
           <div class="type-location">${esc(tipoLabel(p.tipo))}</div>
           <h3><a href="${esc(detalleHref(p.id))}">${esc(p.titulo)}</a></h3>
           <div class="location">Zona ${esc(p.barrio)}</div>
+          ${precioWas}
           <div class="price">${formatPrice(p.precio, p.operacion)}</div>
           ${p.expensas ? `<div class="expenses">+ Expensas: ${esc(money(p.expensas))}</div>` : ""}
           <div class="specs">
@@ -313,6 +323,26 @@ function renderProperties() {
     `;
   }).join("") + (shownCount < filtered.length ? '<div id="listSentinel" class="list-sentinel" aria-hidden="true"></div>' : "");
   watchListEnd();
+  renderRecientes();
+}
+
+function renderRecientes() {
+  const host = document.getElementById("recientes");
+  const track = document.getElementById("recientesTrack");
+  if (!host || !track) return;
+  const visibles = properties.filter((p) => p.status === "disponible" || p.status === "reservada");
+  const list = recientesDe(visibles, 4);
+  host.hidden = list.length === 0;
+  track.innerHTML = list.map((p) => {
+    const portada = (p.imagenes || [])[0] || fotoPorTipo(p.tipo);
+    return `
+      <a class="recientes-card" href="${esc(detalleHref(p.id))}">
+        <img src="${esc(portada)}" alt="">
+        <span class="recientes-card-badges">${htmlPublicBadges(p)}</span>
+        <strong>${esc(p.titulo)}</strong>
+        <span>${esc(p.barrio)} · ${esc(formatPrice(p.precio, p.operacion))}</span>
+      </a>`;
+  }).join("");
 }
 
 function showFichaToast(message) {
@@ -345,15 +375,13 @@ function openModal(id) {
 
   document.getElementById("modalContent").innerHTML = `
     <div class="badges">
-      <span class="badge ${esc(p.operacion)}">${esc(opLabel(p.operacion))}</span>
-      ${p.destacado ? '<span class="badge destacado">Destacado</span>' : ""}
-      ${p.nuevo ? '<span class="badge nuevo">Nuevo</span>' : ""}
-      ${p.status === "reservada" ? '<span class="badge reservada">Reservada</span>' : ""}
+      ${htmlPublicBadges(p)}
     </div>
     <h2 id="modalTitle">${esc(p.titulo)}</h2>
     <div class="location">Zona ${esc(p.barrio)}</div>
 
     <div class="price-box">
+      ${p.bajoPrecio && p.precioAnterior ? `<div class="price-was">${esc(formatPrice(p.precioAnterior, p.operacion))}</div>` : ""}
       <div class="price">${formatPrice(p.precio, p.operacion)}</div>
       ${p.expensas ? `<div class="expenses">+ Expensas: ${esc(money(p.expensas))}</div>` : ""}
     </div>
@@ -496,6 +524,7 @@ document.getElementById("catalog").addEventListener("click", (event) => {
     const id = fav.dataset.fav;
     if (favorites.has(id)) favorites.delete(id);
     else favorites.add(id);
+    saveFavoritoIds([...favorites]);
     renderProperties();
     return;
   }

@@ -814,6 +814,57 @@ textarea:focus {
 }
 
 /* Results */
+.recientes-strip {
+  padding: 8px 0 4px;
+}
+
+.recientes-strip h2 { margin: 0 0 6px; }
+.recientes-track {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 12px;
+  margin-top: 14px;
+}
+
+.recientes-card {
+  display: grid;
+  gap: 8px;
+  text-decoration: none;
+  color: inherit;
+  background: var(--card);
+  border: 1px solid var(--line);
+  border-radius: 16px;
+  overflow: hidden;
+  padding-bottom: 12px;
+}
+
+.recientes-card img {
+  width: 100%;
+  height: 140px;
+  object-fit: cover;
+  display: block;
+}
+
+.recientes-card-badges {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+  padding: 0 12px;
+}
+
+.recientes-card-badges .badge { font-size: 10px; }
+.recientes-card strong {
+  display: block;
+  padding: 0 12px;
+  font-size: 0.95rem;
+  line-height: 1.3;
+}
+.recientes-card span:last-child {
+  padding: 0 12px;
+  font-size: 13px;
+  color: var(--muted);
+}
+
 .results-header {
   display: flex;
   justify-content: space-between;
@@ -957,7 +1008,20 @@ textarea:focus {
 .badge.alquiler { background: #fff7f1; color: var(--clay-deep); }
 .badge.destacado { background: var(--clay); color: #fff; }
 .badge.nuevo { background: #f3d7c8; color: var(--clay-deep); }
+.badge.bajo-precio { background: #27573a; color: #f4f6f3; }
 .badge.reservada { background: #f6e4c4; color: #7a5318; }
+
+.property-card.is-destacada {
+  outline: 2px solid rgba(77, 109, 130, 0.35);
+  outline-offset: 0;
+}
+
+.price-was {
+  margin: 0 0 2px;
+  font-size: 13px;
+  color: var(--muted);
+  text-decoration: line-through;
+}
 
 .property-card .favorite {
   position: absolute;
@@ -1763,8 +1827,8 @@ footer {
 
 .cuentas {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
-  gap: 10px;
+  grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+  gap: 12px;
 }
 
 .cuenta {
@@ -1772,12 +1836,59 @@ footer {
   border: 1px solid var(--line);
   border-radius: 16px;
   padding: 14px;
+  display: grid;
+  gap: 6px;
 }
 
 .cuenta.is-on { border-color: var(--clay); background: #fff7f1; }
 
+.cuenta-head {
+  display: grid;
+  grid-template-columns: auto 1fr auto;
+  gap: 10px;
+  align-items: start;
+}
+
+.cuenta-mark {
+  width: 38px;
+  height: 38px;
+  border-radius: 12px;
+  display: grid;
+  place-items: center;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  color: #f4f6f3;
+  background: #334b5c;
+  flex-shrink: 0;
+}
+
+.cuenta-mark[data-dest="web"] { background: #4d6d82; }
+.cuenta-mark[data-dest="ml"] { background: #8a6848; }
+.cuenta-mark[data-dest="zonaprop"] { background: #3f7d58; }
+.cuenta-mark[data-dest="argenprop"] { background: #334b5c; }
+.cuenta-mark[data-dest="properati"] { background: #5c675f; }
+.cuenta-mark[data-dest="buscainmueble"] { background: #6b4e34; }
+.cuenta-mark[data-dest="icasas"] { background: #27573a; }
+.cuenta-mark[data-dest="google"] { background: #4d6d82; }
+.cuenta-mark[data-dest="instagram"] { background: #7a3d52; }
+.cuenta-mark[data-dest="facebook"] { background: #334b5c; }
+.cuenta-mark[data-dest="fbmarket"] { background: #3d5a73; }
+.cuenta-mark[data-dest="whatsapp"] { background: #3f7d58; }
+.cuenta-mark[data-dest="tiktok"] { background: #24302a; }
+
+.cuenta-titles { min-width: 0; }
+.cuenta-titles h3 { margin: 0; font-size: 1.05rem; }
+.cuenta-badge {
+  font-size: 11px;
+  font-weight: 650;
+  color: var(--muted);
+  white-space: nowrap;
+}
+.cuenta-badge.is-on { color: #27573a; }
+
 .cuenta-tipo {
-  margin: 0 0 4px;
+  margin: 0 0 2px;
   font-size: 11px;
   letter-spacing: 0.08em;
   text-transform: uppercase;
@@ -2205,6 +2316,34 @@ body.nh-authed #nh-login {
 
 .resumen-cuentas span { color: var(--muted); }
 
+.resumen-sub {
+  margin: 18px 0 6px;
+  font-size: 1.15rem;
+}
+
+.resumen-rank {
+  list-style: none;
+  margin: 10px 0 0;
+  padding: 0;
+  display: grid;
+  gap: 6px;
+}
+
+.resumen-rank button {
+  width: 100%;
+  text-align: left;
+  background: var(--sand);
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  padding: 10px 12px;
+  font: inherit;
+  cursor: pointer;
+  color: var(--ink);
+}
+
+.resumen-rank strong { display: block; font-size: 13px; }
+.resumen-rank span { display: block; margin-top: 2px; font-size: 12px; color: var(--muted); }
+
 .vitrina-gestor {
   max-width: 1240px;
   margin: 0 auto 32px;
@@ -2281,7 +2420,15 @@ body.nh-rol-agenda .usuario-alta { display: none; }
   color: var(--ink);
 }
 
-.destino-row input { width: auto; margin-top: 3px; }
+.destino-row-mark {
+  width: 28px;
+  height: 28px;
+  border-radius: 8px;
+  font-size: 9px;
+  margin-top: 1px;
+}
+
+.destino-row input { width: auto; margin-top: 6px; }
 .destino-row span { display: grid; gap: 2px; }
 .destino-row small { color: var(--muted); font-size: 12px; }
 .destino-row.is-off { opacity: 0.55; }
@@ -2605,6 +2752,26 @@ tbody tr:hover { background: #fff8f2; }
 
 .metric-box span { display: block; color: var(--muted); font-size: 12px; }
 .metric-box strong { font-size: 1.4rem; color: var(--ink);   font-family: "Cormorant Garamond", Georgia, serif; }
+.metric-box small {
+  display: block;
+  margin-top: 4px;
+  font-size: 11px;
+  color: var(--muted);
+  line-height: 1.35;
+}
+
+.editor-precio-nota {
+  margin: -6px 0 14px;
+  font-size: 13px;
+  color: #27573a;
+}
+
+.cartera-metricas {
+  font-size: 13px;
+  line-height: 1.3;
+}
+.cartera-metricas strong { display: block; font-size: 1.05rem; }
+.cartera-metricas small { display: block; color: var(--muted); font-size: 11px; }
 
 label { display: block; font-size: 13px; color: var(--muted); margin-top: 10px; }
 
@@ -2845,6 +3012,7 @@ input, select, textarea {
   .zone-picks { grid-template-columns: 1fr 1fr; }
   .detail { margin-right: 22px; margin-left: 22px; }
   .editor-span-2 { grid-column: 1 / -1; }
+  .recientes-track { grid-template-columns: 1fr 1fr; }
   .cartera-editor .metric-box { grid-template-columns: 1fr; }
   .properties-grid.list .property-card { grid-template-columns: 1fr; }
 }
@@ -2852,7 +3020,7 @@ input, select, textarea {
 @media (max-width: 760px) {
   .top-inner { flex-wrap: wrap; min-height: 64px; padding-top: 10px; padding-bottom: 10px; padding-right: 22px; }
 
-  .mobile-menu { display: block; justify-self: end; }
+  .recientes-track { grid-template-columns: 1fr; }
   .mobile-menu[open] {
     display: grid;
     gap: 8px;

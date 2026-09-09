@@ -112,13 +112,11 @@ function renderFicha(p) {
       <div class="ficha-layout">
         <div class="ficha-story">
           <div class="ficha-badges">
-            <span class="badge ${esc(p.operacion)}">${esc(opLabel(p.operacion))}</span>
-            ${p.destacado ? '<span class="badge destacado">Destacado</span>' : ""}
-            ${p.nuevo ? '<span class="badge nuevo">Nuevo</span>' : ""}
-            ${p.status === "reservada" ? '<span class="badge reservada">Reservada</span>' : ""}
+            ${htmlPublicBadges(p)}
           </div>
           <p class="ficha-zona">${esc(tipoLabel(p.tipo))} · Zona ${esc(p.barrio)}</p>
           <h1 class="ficha-titulo">${esc(p.titulo)}</h1>
+          ${p.bajoPrecio && p.precioAnterior ? `<p class="price-was">${esc(formatPrice(p.precioAnterior, p.operacion))}</p>` : ""}
           <p class="ficha-precio">${esc(precio)}</p>
           ${p.expensas ? `<p class="ficha-expensas">+ Expensas: ${esc(money(p.expensas))}</p>` : ""}
 
@@ -176,6 +174,9 @@ function renderFicha(p) {
   });
   wireSwipe();
   pintarMapaFicha(p);
+  document.querySelector(".ficha-wa")?.addEventListener("click", () => {
+    recordListingConsulta(items, p.id);
+  });
 }
 
 function wireSwipe() {

@@ -8,7 +8,7 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@560;640&family=Figtree:wght@400;500;600;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" crossorigin="">
-  <link rel="stylesheet" href="styles.css?v=bariloche18">
+  <link rel="stylesheet" href="styles.css?v=bariloche20">
 </head>
 <body class="vitrina">
   <header class="top">
@@ -125,6 +125,15 @@
     </div>
   </section>
 
+  <section class="recientes-strip" id="recientes" hidden>
+    <div class="wrap">
+      <p class="kicker">Últimas ingresadas</p>
+      <h2>Recién cargadas</h2>
+      <p class="comarca-lead">Avisos que el estudio marcó como recientes. No es un ranking de visitas.</p>
+      <div class="recientes-track" id="recientesTrack"></div>
+    </div>
+  </section>
+
   <main class="wrap" id="propiedades" data-nh-section="propiedades">
     <div class="results-header">
       <div class="results-count">
@@ -133,6 +142,7 @@
       <div class="results-tools">
         <select class="sort-select" id="sortSelect" aria-label="Ordenar">
           <option value="destacados">Destacados primero</option>
+          <option value="recientes">Últimas ingresadas</option>
           <option value="precio-asc">Menor precio</option>
           <option value="precio-desc">Mayor precio</option>
           <option value="m2-desc">Mayor superficie</option>
@@ -283,9 +293,9 @@
   </footer>
 
   <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" crossorigin=""></script>
-  <script src="data.js?v=bariloche18"></script>
-  <script src="app.js?v=bariloche18"></script>
+  <script src="data.js?v=bariloche20"></script>
+  <script src="app.js?v=bariloche20"></script>
   <script src="../contacto.js" data-phone="5492915757934" data-text="Hola, quiero consultar por una propiedad en Bariloche" data-subject="Consulta demo — Estudio Nahuel Huapi" data-title="Consultar una propiedad"></script>
-  <link rel="stylesheet" href="styles.css?v=bariloche18">
+  <link rel="stylesheet" href="styles.css?v=bariloche20">
 </body>
 </html>

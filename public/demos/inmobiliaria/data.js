@@ -1262,6 +1262,7 @@ const DESTINOS = [
     tipo: "api",
     grupo: "sitio",
     fijo: true,
+    marca: "SP",
     beneficio: "La vitrina toma el catálogo de este panel. No hay aviso pago."
   },
   {
@@ -1269,42 +1270,96 @@ const DESTINOS = [
     nombre: "Mercado Libre",
     tipo: "api",
     grupo: "sitio",
-    beneficio: "Se envía por la API de inmuebles. Hace falta el paquete de ML."
+    marca: "ML",
+    beneficio: "Se envía por la API de inmuebles. Hace falta el paquete de ML. Demo: no se envía nada."
   },
   {
     id: "zonaprop",
     nombre: "Zonaprop",
     tipo: "api",
     grupo: "sitio",
-    beneficio: "Conexión tipo OpenNavent. El abono del portal es aparte."
+    marca: "ZP",
+    beneficio: "Conexión tipo OpenNavent. El abono del portal es aparte. Demo: no se envía nada."
   },
   {
     id: "argenprop",
     nombre: "Argenprop",
     tipo: "api",
     grupo: "sitio",
-    beneficio: "En un sistema real suele ir por un CRM homologado o un acuerdo con el portal."
+    marca: "AP",
+    beneficio: "En un sistema real suele ir por un CRM homologado o un acuerdo con el portal. Demo: no se envía nada."
+  },
+  {
+    id: "properati",
+    nombre: "Properati",
+    tipo: "api",
+    grupo: "sitio",
+    marca: "PR",
+    beneficio: "Portal de avisos usado en Argentina. En esta demo solo se marca el destino; no hay envío real."
+  },
+  {
+    id: "buscainmueble",
+    nombre: "BuscaInmueble",
+    tipo: "api",
+    grupo: "sitio",
+    marca: "BI",
+    beneficio: "Portal argentino de inmuebles. Demo: conectar no publica el aviso afuera."
+  },
+  {
+    id: "icasas",
+    nombre: "Icasas",
+    tipo: "api",
+    grupo: "sitio",
+    marca: "IC",
+    beneficio: "Portal de inmuebles con presencia en Argentina. Demo: no se publica nada afuera."
+  },
+  {
+    id: "google",
+    nombre: "Google (ficha de negocio)",
+    tipo: "api",
+    grupo: "sitio",
+    marca: "G",
+    beneficio: "Texto para la ficha de Google. No hay API de avisos; usted lo carga a mano."
   },
   {
     id: "instagram",
     nombre: "Instagram",
     tipo: "red",
     grupo: "red",
-    beneficio: "Arma el texto y el enlace a la ficha. No hay API de avisos como en ML."
+    marca: "IG",
+    beneficio: "Arma el texto y el enlace a la ficha. No hay API de avisos como en Mercado Libre."
   },
   {
     id: "facebook",
-    nombre: "Facebook",
+    nombre: "Facebook (página)",
     tipo: "red",
     grupo: "red",
-    beneficio: "Texto listo para grupos o Marketplace. En vivienda, Meta suele pedir perfil personal."
+    marca: "FB",
+    beneficio: "Texto para la página del estudio. Demo: no se publica solo."
+  },
+  {
+    id: "fbmarket",
+    nombre: "Facebook Marketplace",
+    tipo: "red",
+    grupo: "red",
+    marca: "MK",
+    beneficio: "Destino aparte de la página. En vivienda, Meta suele pedir perfil personal. Demo: solo se marca el aviso."
   },
   {
     id: "whatsapp",
     nombre: "WhatsApp",
     tipo: "red",
     grupo: "red",
+    marca: "WA",
     beneficio: "Comparte la ficha con el mensaje ya armado."
+  },
+  {
+    id: "tiktok",
+    nombre: "TikTok",
+    tipo: "red",
+    grupo: "red",
+    marca: "TT",
+    beneficio: "Arma el texto y el enlace a la ficha. No hay publicación automática."
   }
 ];
 
@@ -1320,8 +1375,21 @@ function destinosPorGrupo(grupo) {
 
 function destTipoLabel(dest) {
   if (dest.fijo || dest.id === "web") return "Sitio";
+  if (dest.id === "google") return "Ficha";
   if (dest.tipo === "red") return "Red";
   return "Portal";
+}
+
+function destMarca(dest) {
+  return dest.marca || String(dest.nombre || "?").slice(0, 2).toUpperCase();
+}
+
+function destChipNombre(dest) {
+  if (dest.id === "web") return "Vitrina";
+  if (dest.id === "ml") return "ML";
+  if (dest.id === "fbmarket") return "Marketplace";
+  if (dest.id === "google") return "Google";
+  return dest.nombre;
 }
 
 function colaEstadoLabel(id) {
@@ -1333,15 +1401,17 @@ function ahoraDemo() {
 }
 
 function defaultCuentas() {
-  return {
-    web: { connected: true, lastAction: "La vitrina toma el catálogo.", lastAt: "siempre" },
-    ml: { connected: false, lastAction: "Sin conectar", lastAt: "" },
-    zonaprop: { connected: false, lastAction: "Sin conectar", lastAt: "" },
-    argenprop: { connected: false, lastAction: "Sin conectar", lastAt: "" },
-    instagram: { connected: false, lastAction: "Sin conectar", lastAt: "" },
-    facebook: { connected: false, lastAction: "Sin conectar", lastAt: "" },
-    whatsapp: { connected: true, lastAction: "Cuenta de muestra conectada.", lastAt: "demo" }
-  };
+  const out = {};
+  DESTINOS.forEach((d) => {
+    if (d.fijo) {
+      out[d.id] = { connected: true, lastAction: "La vitrina toma el catálogo.", lastAt: "siempre" };
+    } else if (d.id === "whatsapp") {
+      out[d.id] = { connected: true, lastAction: "Cuenta de muestra conectada.", lastAt: "demo" };
+    } else {
+      out[d.id] = { connected: false, lastAction: "Sin conectar", lastAt: "" };
+    }
+  });
+  return out;
 }
 
 function loadCuentas() {
@@ -1386,17 +1456,83 @@ function colaClave(itemId, destId) {
   return String(itemId) + ":" + String(destId);
 }
 
+function portalesBase() {
+  const out = {};
+  DESTINOS.forEach((d) => {
+    out[d.id] = Boolean(d.fijo);
+  });
+  return out;
+}
+
 function portalesDe(item) {
   return {
-    web: true,
-    ml: false,
-    zonaprop: false,
-    argenprop: false,
-    instagram: false,
-    facebook: false,
-    whatsapp: false,
+    ...portalesBase(),
     ...(item.portales || {})
   };
+}
+
+const FAVS_KEY = "inmobiliaria-demo-favs-v1";
+
+function loadFavoritoIds() {
+  try {
+    const raw = JSON.parse(localStorage.getItem(FAVS_KEY) || "[]");
+    return Array.isArray(raw) ? raw.map(String) : [];
+  } catch {
+    return [];
+  }
+}
+
+function saveFavoritoIds(ids) {
+  localStorage.setItem(FAVS_KEY, JSON.stringify(ids.map(String)));
+}
+
+function esFavorito(id) {
+  return loadFavoritoIds().includes(String(id));
+}
+
+function favoritosDe(item) {
+  return esFavorito(item?.id) ? 1 : 0;
+}
+
+function visitasPresencialesDe(item) {
+  return (item?.visitas || []).length;
+}
+
+function interaccionesDe(item) {
+  return Number(item?.consultas || 0) + favoritosDe(item) + visitasPresencialesDe(item);
+}
+
+function aplicarBajaPrecio(item, nextPrecio) {
+  const prev = Number(item.precio || 0);
+  const next = Number(nextPrecio || 0);
+  if (prev > 0 && next > 0 && next < prev) {
+    item.bajoPrecio = true;
+    item.precioAnterior = prev;
+  } else if (prev > 0 && next > prev) {
+    item.bajoPrecio = false;
+    item.precioAnterior = 0;
+  }
+}
+
+function recientesDe(list, n) {
+  const pool = (list || []).filter((p) => p.nuevo);
+  return [...pool].sort((a, b) => {
+    const tb = Number(b.ingresada || 0);
+    const ta = Number(a.ingresada || 0);
+    if (tb !== ta) return tb - ta;
+    return 0;
+  }).slice(0, n || 4);
+}
+
+function htmlPublicBadges(p) {
+  const bits = [
+    `<span class="badge ${esc(p.operacion)}">${esc(opLabel(p.operacion))}</span>`
+  ];
+  if (p.destacado) bits.push('<span class="badge destacado">Destacado</span>');
+  if (p.nuevo) bits.push('<span class="badge nuevo">Nuevo</span>');
+  if (p.bajoPrecio) bits.push('<span class="badge bajo-precio">Bajó de precio</span>');
+  if (p.status === "reservada") bits.push('<span class="badge reservada">Reservada</span>');
+  return bits.join("");
 }
 
 function textoRed(item) {
