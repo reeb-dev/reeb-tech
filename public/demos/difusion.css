@@ -1,0 +1,110 @@
+.demo-difusion {
+  max-width: 1100px;
+  margin: 28px auto 8px;
+  padding: 0 22px 8px;
+  color: var(--ink, #1c1917);
+}
+
+.demo-difusion.is-panel {
+  margin: 10px auto 6px;
+  max-width: 1240px;
+}
+
+.demo-difusion h2 {
+  font-size: clamp(1.25rem, 2.2vw, 1.7rem);
+  margin: 4px 0 8px;
+}
+
+.demo-difusion-kicker {
+  margin: 0;
+  font-size: 12px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  font-weight: 650;
+  opacity: 0.75;
+}
+
+.demo-difusion > p {
+  margin: 0 0 14px;
+  max-width: 72ch;
+  line-height: 1.45;
+  opacity: 0.88;
+}
+
+.demo-cuentas {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(210px, 1fr));
+  gap: 10px;
+}
+
+.demo-cuenta {
+  background: var(--card, #fff);
+  border: 1px solid var(--line, rgba(0, 0, 0, 0.12));
+  border-radius: 16px;
+  padding: 14px;
+}
+
+.demo-cuenta.is-on {
+  outline: 1px solid color-mix(in srgb, currentColor 22%, transparent);
+}
+
+.demo-cuenta-tipo {
+  margin: 0 0 4px;
+  font-size: 11px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  font-weight: 650;
+  opacity: 0.7;
+}
+
+.demo-cuenta h3 {
+  margin: 0 0 6px;
+  font-size: 1.05rem;
+}
+
+.demo-cuenta p {
+  margin: 0;
+  font-size: 13px;
+  line-height: 1.4;
+  opacity: 0.82;
+}
+
+.demo-cuenta-meta {
+  margin: 8px 0 10px !important;
+  font-size: 12px !important;
+  opacity: 1 !important;
+  font-weight: 650;
+}
+
+.demo-cuenta button,
+.demo-difusion-acciones a,
+.demo-difusion-acciones button {
+  font: inherit;
+  cursor: pointer;
+  border-radius: 999px;
+  border: 1px solid var(--line, rgba(0, 0, 0, 0.16));
+  background: transparent;
+  color: inherit;
+  padding: 8px 14px;
+  text-decoration: none;
+  display: inline-flex;
+  align-items: center;
+}
+
+.demo-cuenta-fijo {
+  display: inline-block;
+  margin-top: 8px;
+  font-size: 12px;
+  font-weight: 650;
+}
+
+.demo-difusion-acciones {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 14px;
+}
+
+@media (max-width: 760px) {
+  .demo-difusion { padding-left: 14px; padding-right: 14px; }
+}

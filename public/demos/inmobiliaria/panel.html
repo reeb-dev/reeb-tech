@@ -7,9 +7,31 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@560;640&family=Figtree:wght@400;500;600;700&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="styles.css?v=bariloche12">
+  <link rel="stylesheet" href="styles.css?v=bariloche16">
+  <style>
+    body.panel-page:not(.nh-authed) .app { display: none !important; }
+  </style>
 </head>
 <body class="panel-page">
+  <section id="nh-login" class="nh-login" role="dialog" aria-modal="true" aria-labelledby="nh-login-title">
+    <div class="nh-login-card">
+      <p class="eyebrow">Acceso de ejemplo</p>
+      <h1 id="nh-login-title">Panel del estudio</h1>
+      <p>El público no entra. Toque una cuenta o use el acceso de muestra ya cargado. La clave es <strong>demo</strong>.</p>
+      <div class="nh-login-users" id="nh-login-users">
+        <button type="button" data-user="milena"><strong>Milena Huapi</strong><span>Titular · usuario milena</span></button>
+        <button type="button" data-user="nahuel"><strong>Nahuel Lagos</strong><span>Agente · usuario nahuel</span></button>
+        <button type="button" data-user="agenda"><strong>Laura Visitas</strong><span>Agenda · usuario agenda</span></button>
+      </div>
+      <form class="nh-login-form" id="nh-login-form" novalidate>
+        <label>Usuario<input name="user" value="milena" autocomplete="username" spellcheck="false"></label>
+        <label>Clave<input name="pass" type="password" value="demo" autocomplete="current-password"></label>
+        <p class="nh-login-error" role="alert"></p>
+      </form>
+      <button class="btn-panel nh-login-enter" type="submit" form="nh-login-form" id="nh-login-enter">Ingresar al panel</button>
+      <p class="nh-login-hint">No es un acceso real. <a href="index.html">Volver a la vitrina</a></p>
+    </div>
+  </section>
   <div class="app">
     <header class="top">
       <div class="top-inner">
@@ -21,11 +43,13 @@
           <summary>Menú</summary>
           <a href="index.html">Vitrina</a>
           <a href="#difusion">Difusión</a>
+          <a href="#usuarios">Usuarios</a>
           <a href="#contacto">Contacto</a>
         </details>
         <nav id="siteNav">
           <a href="index.html">Vitrina</a>
           <a href="#difusion">Difusión</a>
+          <a href="#usuarios">Usuarios</a>
         </nav>
         <button class="btn" id="open-create" type="button">Nueva propiedad</button>
       </div>
@@ -48,6 +72,39 @@
       <div class="cuentas" id="cuentas"></div>
     </section>
 
+    <section class="usuarios" id="usuarios">
+      <div class="difusion-head">
+        <p class="eyebrow">Cuentas del estudio</p>
+        <h2>Control de usuarios</h2>
+        <p>Quién entra al panel. El titular da de alta o pausa cuentas. Demo: no hay servidor; la clave de muestra es <strong>demo</strong>.</p>
+      </div>
+      <form class="usuario-alta" id="usuario-alta">
+        <input name="nombre" placeholder="Nombre" required>
+        <input name="user" placeholder="Usuario" required autocomplete="off" spellcheck="false">
+        <select name="rol">
+          <option value="agente">Agente</option>
+          <option value="agenda">Agenda</option>
+          <option value="titular">Titular</option>
+        </select>
+        <input name="pass" placeholder="Clave (demo)" value="demo" autocomplete="off">
+        <button class="btn-panel" type="submit">Agregar usuario</button>
+      </form>
+      <div class="table-scroll">
+        <table>
+          <thead>
+            <tr>
+              <th>Nombre</th>
+              <th>Usuario</th>
+              <th>Rol</th>
+              <th>Estado</th>
+              <th></th>
+            </tr>
+          </thead>
+          <tbody id="usuario-rows"></tbody>
+        </table>
+      </div>
+    </section>
+
     <div class="stats" id="stats"></div>
 
     <form class="create" id="create">
@@ -61,15 +118,33 @@
         <option value="local">Local</option>
       </select>
       <select name="operacion">
-        <option value="alquiler">Alquiler</option>
+        <option value="alquiler">Alquiler permanente</option>
         <option value="venta">Venta</option>
       </select>
       <input name="direccion" placeholder="Dirección">
-      <input name="barrio" placeholder="Zona">
+      <select name="barrio" aria-label="Zona">
+        <option value="Centro">Centro</option>
+        <option value="Melipal">Melipal</option>
+        <option value="Llao Llao">Llao Llao</option>
+        <option value="Circuito Chico">Circuito Chico</option>
+        <option value="Dina Huapi">Dina Huapi</option>
+        <option value="Colonia Suiza">Colonia Suiza</option>
+        <option value="El Bolsón">El Bolsón</option>
+      </select>
       <input name="ambientes" type="number" placeholder="Ambientes">
-      <input name="superficie" type="number" placeholder="Superficie m²">
+      <input name="dormitorios" type="number" placeholder="Dormitorios">
+      <input name="banos" type="number" placeholder="Baños">
+      <input name="cubierta" type="number" placeholder="m² cubiertos">
+      <input name="superficie" type="number" placeholder="m² de lote">
       <input name="precio" type="number" placeholder="Precio" required>
       <input name="expensas" type="number" placeholder="Expensas">
+      <label class="create-span">Descripción de la ficha<textarea name="descripcion" rows="3" placeholder="Texto que ve el público en la vitrina"></textarea></label>
+      <div class="create-span create-fotos">
+        <p>Fotos de la vitrina</p>
+        <p class="create-fotos-hint">La primera es la portada del aviso. Las demás salen en la galería de la ficha.</p>
+        <label class="foto-cargar">Cargar fotos<input id="create-fotos" name="fotos" type="file" accept="image/*" multiple></label>
+        <div class="foto-thumbs" id="create-fotos-preview"></div>
+      </div>
       <button class="btn-panel" type="submit">Agregar propiedad</button>
     </form>
 
@@ -100,9 +175,9 @@
     <div class="panel-contact wrap" id="contacto"></div>
   </div>
 
-  <script src="data.js?v=bariloche12"></script>
-  <script src="panel.js?v=bariloche12"></script>
+  <script src="data.js?v=bariloche16"></script>
+  <script src="panel.js?v=bariloche16"></script>
   <script src="../contacto.js" data-phone="5492915757934" data-text="Hola, quiero consultar por una propiedad en Bariloche" data-subject="Consulta demo — Estudio Nahuel Huapi" data-title="Consultar una propiedad" data-place="panel"></script>
-  <link rel="stylesheet" href="styles.css?v=bariloche12">
+  <link rel="stylesheet" href="styles.css?v=bariloche16">
 </body>
 </html>

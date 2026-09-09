@@ -880,7 +880,72 @@ function seed() {
 
 const STORAGE_KEY = "inmobiliaria-demo-v9";
 const CUENTAS_KEY = "inmobiliaria-demo-cuentas-v1";
+const USERS_KEY = "inmobiliaria-demo-usuarios-v1";
+const SESSION_KEY = "inmobiliaria-demo-sesion-v1";
 const DEMO_WA_PHONE = "5492915757934";
+
+const STAFF_ROLES = [
+  { id: "titular", label: "Titular" },
+  { id: "agente", label: "Agente" },
+  { id: "agenda", label: "Agenda" }
+];
+
+function defaultUsers() {
+  return [
+    { id: "u-titular", user: "milena", pass: "demo", nombre: "Milena Huapi", rol: "titular", activo: true },
+    { id: "u-agente", user: "nahuel", pass: "demo", nombre: "Nahuel Lagos", rol: "agente", activo: true },
+    { id: "u-agenda", user: "agenda", pass: "demo", nombre: "Laura Visitas", rol: "agenda", activo: true }
+  ];
+}
+
+function loadUsers() {
+  try {
+    const raw = localStorage.getItem(USERS_KEY);
+    if (!raw) {
+      const data = defaultUsers();
+      localStorage.setItem(USERS_KEY, JSON.stringify(data));
+      return data;
+    }
+    const parsed = JSON.parse(raw);
+    if (!Array.isArray(parsed) || !parsed.length) {
+      const data = defaultUsers();
+      localStorage.setItem(USERS_KEY, JSON.stringify(data));
+      return data;
+    }
+    return parsed;
+  } catch (e) {
+    return defaultUsers();
+  }
+}
+
+function saveUsers(users) {
+  localStorage.setItem(USERS_KEY, JSON.stringify(users));
+}
+
+function loadStaffSession() {
+  try {
+    const raw = localStorage.getItem(SESSION_KEY);
+    if (!raw) return null;
+    const data = JSON.parse(raw);
+    if (!data || !data.user) return null;
+    const user = loadUsers().find((u) => u.user === data.user && u.activo !== false);
+    return user || null;
+  } catch (e) {
+    return null;
+  }
+}
+
+function saveStaffSession(user) {
+  localStorage.setItem(SESSION_KEY, JSON.stringify({ user: user.user, nombre: user.nombre, rol: user.rol }));
+}
+
+function clearStaffSession() {
+  localStorage.removeItem(SESSION_KEY);
+}
+
+function roleLabel(rol) {
+  return STAFF_ROLES.find((r) => r.id === rol)?.label || rol;
+}
 
 const DESTINOS = [
   {
