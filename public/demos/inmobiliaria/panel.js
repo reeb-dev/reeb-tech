@@ -6,19 +6,16 @@ let session = null;
 let selected = items[0]?.id || "";
 let filter = "todos";
 let searchTerm = "";
-let createDraftFotos = [];
 let currentView = "resumen";
 let loadingTimer = 0;
+let carteraMode = "list";
+let editorFocus = "";
+let editorDraft = null;
 const MAX_FOTOS = 6;
 const PANEL_VIEWS = ["resumen", "cartera", "vitrina", "difusion", "usuarios", "contacto"];
 
 document.getElementById("open-create").addEventListener("click", () => {
-  if (session?.rol === "agenda") {
-    showToast("La agenda no carga propiedades. Eso lo hace un agente o el titular.");
-    return;
-  }
-  showPanelView("cartera", { instant: true });
-  document.getElementById("create").classList.toggle("open");
+  openCarteraCreate();
 });
 
 function fotosDeItem(item) {
@@ -81,41 +78,6 @@ async function leerArchivosFoto(fileList, cupo) {
   return out;
 }
 
-function pintarCreatePreview() {
-  const host = document.getElementById("create-fotos-preview");
-  if (!host) return;
-  host.innerHTML = createDraftFotos.map((src, i) => `
-    <figure class="foto-thumb ${i === 0 ? "is-portada" : ""}">
-      <img src="${esc(src)}" alt="Foto ${i + 1}">
-      ${i === 0 ? "<figcaption>Portada</figcaption>" : ""}
-      <div class="foto-thumb-actions">
-        ${i > 0 ? `<button type="button" data-create-portada="${i}">Portada</button>` : ""}
-        <button type="button" data-create-quitar="${i}">Quitar</button>
-      </div>
-    </figure>`).join("");
-  host.querySelectorAll("[data-create-quitar]").forEach((btn) => {
-    btn.addEventListener("click", () => {
-      createDraftFotos = createDraftFotos.filter((_, idx) => idx !== Number(btn.dataset.createQuitar));
-      pintarCreatePreview();
-    });
-  });
-  host.querySelectorAll("[data-create-portada]").forEach((btn) => {
-    btn.addEventListener("click", () => {
-      const i = Number(btn.dataset.createPortada);
-      const picked = createDraftFotos.splice(i, 1)[0];
-      createDraftFotos = [picked, ...createDraftFotos];
-      pintarCreatePreview();
-    });
-  });
-}
-
-document.getElementById("create-fotos")?.addEventListener("change", async (event) => {
-  const extra = await leerArchivosFoto(event.target.files, MAX_FOTOS - createDraftFotos.length);
-  createDraftFotos = [...createDraftFotos, ...extra].slice(0, MAX_FOTOS);
-  pintarCreatePreview();
-  event.target.value = "";
-});
-
 function zonaOptions(selected) {
   const ids = ZONAS.map((z) => z.id);
   const extra = selected && !ids.includes(selected)
@@ -124,7 +86,7 @@ function zonaOptions(selected) {
   return extra + ZONAS.map((z) => `<option value="${esc(z.id)}" ${selected === z.id ? "selected" : ""}>${esc(z.nombre)}</option>`).join("");
 }
 
-function htmlGaleria(fotos) {
+function htmlGaleria(fotos, readonly) {
   return `
     <div class="foto-editor">
       <p class="eyebrow">Fotos de la vitrina</p>
@@ -133,44 +95,50 @@ function htmlGaleria(fotos) {
           <figure class="foto-thumb ${i === 0 ? "is-portada" : ""}">
             <img src="${esc(src)}" alt="Foto ${i + 1}">
             ${i === 0 ? "<figcaption>Portada</figcaption>" : ""}
+            ${readonly ? "" : `
             <div class="foto-thumb-actions">
               ${i > 0 ? `<button type="button" data-portada="${i}">Portada</button>` : ""}
               <button type="button" data-quitar="${i}">Quitar</button>
-            </div>
+            </div>`}
           </figure>`).join("")}
       </div>
-      <label class="foto-cargar">Cargar fotos<input type="file" accept="image/*" multiple data-add-fotos></label>
+      ${readonly ? "" : `<label class="foto-cargar">Cargar fotos<input type="file" accept="image/*" multiple data-add-fotos></label>`}
       <p class="create-fotos-hint">La primera es la portada del aviso. Hasta ${MAX_FOTOS} fotos; salen en la galería de la ficha.</p>
     </div>`;
 }
 
-function aplicarFotos(item, next) {
+function aplicarFotos(item, next, persist) {
   const prev = [...(item.imagenes || [])];
   const prevHistory = item.history;
-  item.imagenes = next.length ? next : [fotoPorTipo(item.tipo)];
-  item.history = [{ when: "hoy", text: "Fotos de la vitrina actualizadas." }, ...(item.history || [])];
-  if (!persistCartera()) {
-    item.imagenes = prev;
-    item.history = prevHistory;
-    return false;
+  item.imagenes = next.length ? next : (persist === false ? [] : [fotoPorTipo(item.tipo)]);
+  if (persist !== false) {
+    item.history = [{ when: "hoy", text: "Fotos de la vitrina actualizadas." }, ...(item.history || [])];
+    if (!persistCartera()) {
+      item.imagenes = prev;
+      item.history = prevHistory;
+      return false;
+    }
   }
   return true;
 }
 
-function wireFotoEditor(root, item) {
+function wireFotoEditor(root, item, persist) {
   root.querySelector("[data-add-fotos]")?.addEventListener("change", async (event) => {
-    const extra = await leerArchivosFoto(event.target.files, MAX_FOTOS - fotosDeItem(item).length);
+    captureEditorForm();
+    const extra = await leerArchivosFoto(event.target.files, MAX_FOTOS - (item.imagenes || []).filter(Boolean).length);
     event.target.value = "";
     if (!extra.length) return;
-    if (aplicarFotos(item, [...fotosDeItem(item), ...extra].slice(0, MAX_FOTOS))) {
-      showToast("Fotos actualizadas en la vitrina");
+    const next = [...(item.imagenes || []).filter(Boolean), ...extra].slice(0, MAX_FOTOS);
+    if (aplicarFotos(item, next, persist)) {
+      showToast(persist === false ? "Fotos listas. Guarde para que salgan en la vitrina." : "Fotos actualizadas en la vitrina");
       render();
     }
   });
   root.querySelectorAll("[data-quitar]").forEach((btn) => {
     btn.addEventListener("click", () => {
-      const next = fotosDeItem(item).filter((_, idx) => idx !== Number(btn.dataset.quitar));
-      if (aplicarFotos(item, next)) {
+      captureEditorForm();
+      const next = (item.imagenes || []).filter(Boolean).filter((_, idx) => idx !== Number(btn.dataset.quitar));
+      if (aplicarFotos(item, next, persist)) {
         showToast("Foto quitada");
         render();
       }
@@ -178,9 +146,10 @@ function wireFotoEditor(root, item) {
   });
   root.querySelectorAll("[data-portada]").forEach((btn) => {
     btn.addEventListener("click", () => {
-      const list = fotosDeItem(item).slice();
+      captureEditorForm();
+      const list = (item.imagenes || []).filter(Boolean).slice();
       const picked = list.splice(Number(btn.dataset.portada), 1)[0];
-      if (aplicarFotos(item, [picked, ...list])) {
+      if (aplicarFotos(item, [picked, ...list], persist)) {
         showToast("Esa foto es la portada de la vitrina");
         render();
       }
@@ -188,42 +157,37 @@ function wireFotoEditor(root, item) {
   });
 }
 
-document.getElementById("create").addEventListener("submit", async (event) => {
-  event.preventDefault();
-  if (session?.rol === "agenda") return;
-  const data = new FormData(event.target);
-  const tipo = String(data.get("tipo") || "departamento");
-  const superficie = Number(data.get("superficie") || 0);
-  const cubierta = Number(data.get("cubierta") || 0);
-  let imagenes = createDraftFotos.filter(Boolean);
-  if (!imagenes.length) {
-    imagenes = await leerArchivosFoto(event.target.fotos?.files, MAX_FOTOS);
-  }
-  if (!imagenes.length) imagenes = [fotoPorTipo(tipo)];
-  const barrio = String(data.get("barrio") || "Centro");
-  const item = {
-    id: crypto.randomUUID(),
-    codigo: String(data.get("codigo") || ""),
-    titulo: String(data.get("titulo") || ""),
-    tipo,
-    operacion: String(data.get("operacion") || "alquiler"),
-    direccion: String(data.get("direccion") || ""),
-    barrio,
-    zona: barrio === "El Bolsón" ? "El Bolsón" : "Bariloche",
-    ambientes: Number(data.get("ambientes") || 0),
-    dormitorios: Number(data.get("dormitorios") || 0),
-    banos: Number(data.get("banos") || 1),
-    superficie,
-    cubierta: cubierta || superficie,
-    precio: Number(data.get("precio") || 0),
-    expensas: Number(data.get("expensas") || 0),
+function canEditCartera() {
+  return session?.rol === "titular" || session?.rol === "agente";
+}
+
+function blankItem() {
+  return {
+    id: "",
+    codigo: "",
+    titulo: "",
+    tipo: "departamento",
+    operacion: "alquiler",
+    direccion: "",
+    barrio: "Centro",
+    zona: "Bariloche",
+    ambientes: 0,
+    dormitorios: 0,
+    banos: 1,
+    superficie: 0,
+    cubierta: 0,
+    precio: 0,
+    expensas: 0,
     antiguedad: null,
     orientacion: "",
     piso: "",
+    vista: "",
+    calefaccion: "",
+    servicios: "",
     cochera: false,
     amenities: [],
-    descripcion: String(data.get("descripcion") || ""),
-    imagenes,
+    descripcion: "",
+    imagenes: [],
     destacado: false,
     nuevo: true,
     vistas: 0,
@@ -234,23 +198,234 @@ document.getElementById("create").addEventListener("submit", async (event) => {
     cliente: null,
     visitas: [],
     portales: { web: true, ml: false, zonaprop: false, argenprop: false, instagram: false, facebook: false, whatsapp: false },
+    history: []
+  };
+}
+
+function applyFormToItem(form, item) {
+  const data = new FormData(form);
+  const barrio = String(data.get("barrio") || item.barrio);
+  Object.assign(item, {
+    codigo: String(data.get("codigo") || ""),
+    titulo: String(data.get("titulo") || ""),
+    tipo: String(data.get("tipo") || "departamento"),
+    operacion: String(data.get("operacion") || "alquiler"),
+    direccion: String(data.get("direccion") || ""),
+    barrio,
+    zona: barrio === "El Bolsón" ? "El Bolsón" : "Bariloche",
+    ambientes: Number(data.get("ambientes") || 0),
+    dormitorios: Number(data.get("dormitorios") || 0),
+    banos: Number(data.get("banos") || 0),
+    cubierta: Number(data.get("cubierta") || 0),
+    superficie: Number(data.get("superficie") || 0),
+    piso: String(data.get("piso") || ""),
+    vista: String(data.get("vista") || ""),
+    calefaccion: String(data.get("calefaccion") || ""),
+    servicios: String(data.get("servicios") || ""),
+    precio: Number(data.get("precio") || 0),
+    expensas: Number(data.get("expensas") || 0),
+    descripcion: String(data.get("descripcion") || ""),
+    amenities: data.getAll("amenity").map(String),
+    destacado: Boolean(form.destacado?.checked),
+    nuevo: Boolean(form.nuevo?.checked),
+    status: String(data.get("status") || item.status)
+  });
+}
+
+function editorWorkingItem() {
+  if (carteraMode === "create") return editorDraft;
+  return items.find((i) => i.id === selected) || null;
+}
+
+function captureEditorForm() {
+  const form = document.getElementById("edit");
+  const item = editorWorkingItem();
+  if (!form || !item) return item;
+  applyFormToItem(form, item);
+  return item;
+}
+
+function destinosActivosDe(item) {
+  return DESTINOS.filter((d) => d.fijo || Boolean(portalesDe(item)[d.id]));
+}
+
+function htmlDestinosChips(item) {
+  const bits = destinosActivosDe(item);
+  if (!bits.length) return `<span class="destino-chip is-off">Sin destinos</span>`;
+  return `<div class="destino-chips">${bits.map((d) => {
+    const name = d.id === "web" ? "Vitrina" : d.id === "ml" ? "ML" : d.nombre;
+    return `<span class="destino-chip">${esc(name)}</span>`;
+  }).join("")}</div>`;
+}
+
+function estadoDestino(dest, item) {
+  if (dest.fijo) return { label: "En vitrina", on: true };
+  if (!destinoConectado(dest.id)) return { label: "No conectado", on: false };
+  if (portalesDe(item)[dest.id]) {
+    const label = dest.id === "ml" ? "En ML" : "En " + dest.nombre;
+    return { label, on: true };
+  }
+  return { label: "Sin publicar", on: false };
+}
+
+function htmlDestinoFila(dest, item, readonly) {
+  const st = estadoDestino(dest, item);
+  const on = dest.fijo ? true : Boolean(portalesDe(item)[dest.id]);
+  const lista = destinoConectado(dest.id);
+  const disabled = dest.fijo || !lista || readonly;
+  const hint = dest.fijo
+    ? "Siempre en la vitrina"
+    : lista
+      ? (dest.grupo === "red" ? "Texto y enlace listos. No se publica solo." : "Listo para marcar (demo)")
+      : "Conecte la cuenta en Difusión";
+  return `
+    <label class="destino-row ${!lista && !dest.fijo ? "is-off" : ""}">
+      <input type="checkbox" data-pub-dest="${esc(dest.id)}" ${on ? "checked" : ""} ${disabled ? "disabled" : ""}>
+      <span>
+        <strong>${esc(dest.nombre)} <em class="destino-estado ${st.on ? "" : "is-off"}">${esc(st.label)}</em></strong>
+        <small>${esc(hint)}</small>
+      </span>
+    </label>`;
+}
+
+function htmlPublishBlock(item, isCreate, readonly) {
+  if (isCreate) {
+    return `
+      <div class="difusion-ficha" id="bloque-publicar">
+        <h4>Publicar este aviso</h4>
+        <p>Guarde la propiedad primero. El sitio propio toma la ficha apenas exista en la cartera. Después podrá marcar portales y redes. Demo: no se envía nada afuera.</p>
+      </div>`;
+  }
+  return `
+    <div class="difusion-ficha" id="bloque-publicar">
+      <h4>Publicar este aviso</h4>
+      <p>Elija destinos conectados y toque Publicar este aviso. El sitio propio siempre queda en la vitrina. Portales y redes solo si la cuenta está conectada en Difusión. Demo: no se envía nada afuera.</p>
+      <p class="difusion-ficha-grupo">Sitios y portales</p>
+      ${DESTINOS.filter((d) => d.grupo !== "red").map((dest) => htmlDestinoFila(dest, item, readonly)).join("")}
+      <p class="difusion-ficha-grupo">Redes sociales</p>
+      ${DESTINOS.filter((d) => d.grupo === "red").map((dest) => htmlDestinoFila(dest, item, readonly)).join("")}
+      <div class="difusion-acciones">
+        ${readonly ? "" : `<button class="btn-panel" type="button" id="publicar-aviso">Publicar este aviso</button>`}
+        <button class="ghost" type="button" id="copiar-aviso">Copiar texto para redes</button>
+        <a class="ghost" id="wa-aviso" href="${esc("https://wa.me/?text=" + encodeURIComponent(textoRed(item)))}" target="_blank" rel="noopener">Enviar por WhatsApp</a>
+      </div>
+    </div>`;
+}
+
+function publicarAviso(item, destIds) {
+  if (!canEditCartera() || !item?.id) return;
+  const destinos = destIds
+    .map((id) => DESTINOS.find((d) => d.id === id))
+    .filter(Boolean)
+    .filter((d) => d.fijo || destinoConectado(d.id));
+  if (!destinos.length) {
+    showToast("Elija al menos un destino conectado.");
+    return;
+  }
+  showPanelLoading(
+    "Publicando el aviso…",
+    "Marcando destinos en esta demo. No se envía nada afuera.",
+    () => {
+      const nombres = [];
+      destinos.forEach((dest) => {
+        nombres.push(dest.nombre);
+        if (dest.fijo) return;
+        item.portales = { ...portalesDe(item), [dest.id]: true };
+        cola = { ...cola, [colaClave(item.id, dest.id)]: { estado: "publicado", when: ahoraDemo() } };
+        setCuentaAccion(dest.id, true, "Aviso " + item.codigo + " publicado (demo).");
+      });
+      item.history = [{
+        when: "hoy",
+        text: "Marcado para " + nombres.join(", ") + " (demo). No se envió nada afuera."
+      }, ...(item.history || [])];
+      saveCola(cola);
+      persistCartera();
+      showToast("Marcado (demo) en: " + nombres.join(", ") + ". No se envió nada afuera.");
+      render();
+      if (currentView === "difusion") renderDifusion();
+    },
+    720
+  );
+}
+
+function showCarteraList() {
+  carteraMode = "list";
+  editorFocus = "";
+  editorDraft = null;
+  const list = document.getElementById("cartera-list");
+  const detail = document.getElementById("detail");
+  if (list) list.hidden = false;
+  if (detail) detail.hidden = true;
+}
+
+function openCarteraEditor(id, opts) {
+  const item = items.find((i) => i.id === id);
+  if (!item) return;
+  const paint = () => {
+    selected = id;
+    carteraMode = "edit";
+    editorDraft = null;
+    editorFocus = opts?.focus || "";
+    if (currentView !== "cartera") {
+      showPanelView("cartera", { instant: true, keepEditor: true });
+    } else {
+      render();
+    }
+    if (editorFocus === "publicar") {
+      document.getElementById("bloque-publicar")?.scrollIntoView({ block: "start", behavior: "smooth" });
+    }
+  };
+  if (opts?.instant) {
+    paint();
+    return;
+  }
+  showPanelLoading("Abriendo la ficha…", "Cargando los datos de esta propiedad.", paint, 520);
+}
+
+function openCarteraCreate() {
+  if (session?.rol === "agenda") {
+    showToast("La agenda no carga propiedades. Eso lo hace un agente o el titular.");
+    return;
+  }
+  const paint = () => {
+    carteraMode = "create";
+    editorDraft = blankItem();
+    editorFocus = "";
+    if (currentView !== "cartera") {
+      showPanelView("cartera", { instant: true, keepEditor: true });
+    } else {
+      render();
+    }
+  };
+  showPanelLoading("Abriendo el alta…", "Formulario para una propiedad nueva.", paint, 480);
+}
+
+function guardarAlta(item) {
+  if (!canEditCartera()) return;
+  if (!item.codigo || !item.titulo) {
+    showToast("Indique código y título.");
+    return;
+  }
+  const imagenes = (item.imagenes || []).filter(Boolean);
+  const nuevo = {
+    ...item,
+    id: crypto.randomUUID(),
+    imagenes: imagenes.length ? imagenes : [fotoPorTipo(item.tipo)],
     history: [{ when: "hoy", text: "Propiedad agregada a la cartera." }]
   };
   const prevItems = items;
-  items = [item, ...items];
-  selected = item.id;
+  items = [nuevo, ...items];
+  selected = nuevo.id;
   if (!persistCartera()) {
     items = prevItems;
     selected = items[0]?.id || "";
     return;
   }
-  createDraftFotos = [];
-  pintarCreatePreview();
-  event.target.reset();
-  event.target.classList.remove("open");
+  editorDraft = null;
+  carteraMode = "edit";
   showToast("Propiedad agregada. Ya sale en la vitrina.");
   render();
-});
+}
 
 function visible() {
   let result = filter === "todos" ? items : items.filter((item) => item.status === filter);
@@ -562,7 +737,7 @@ function renderDifusion() {
   });
 
   host.querySelector("[data-panel-nav='cartera']")?.addEventListener("click", () => {
-    showPanelView("cartera");
+    openCarteraEditor(selected || items[0]?.id, { instant: false });
   });
 }
 
@@ -572,12 +747,23 @@ function renderCuentas() {
 
 function render() {
   if (currentView === "difusion") renderDifusion();
+  paintCarteraStats();
+  if (carteraMode === "edit" || carteraMode === "create") {
+    paintCarteraEditor();
+    return;
+  }
+  paintCarteraList();
+}
+
+function paintCarteraStats() {
   const disponibles = items.filter((i) => i.status === "disponible").length;
   const reservadas = items.filter((i) => i.status === "reservada").length;
   const alquiladas = items.filter((i) => i.status === "alquilada").length;
   const vendidas = items.filter((i) => i.status === "vendida").length;
-
-  document.getElementById("stats").innerHTML = `
+  const stats = document.getElementById("stats");
+  if (!stats) return;
+  stats.hidden = carteraMode !== "list";
+  stats.innerHTML = `
     <button type="button" data-filter="todos" class="${filter === "todos" ? "on" : ""}"><strong>${items.length}</strong>propiedades</button>
     <button type="button" data-filter="disponible" class="${filter === "disponible" ? "on" : ""}"><strong>${disponibles}</strong>disponibles</button>
     <button type="button" data-filter="reservada" class="${filter === "reservada" ? "on" : ""}"><strong>${reservadas}</strong>reservadas</button>
@@ -585,121 +771,167 @@ function render() {
     <button type="button" data-filter="vendida" class="${filter === "vendida" ? "on" : ""}"><strong>${vendidas}</strong>vendidas</button>
     <input class="panel-search" type="text" id="search" placeholder="Buscar zona o dirección" value="${esc(searchTerm)}" aria-label="Buscar">
   `;
-  
-  document.getElementById("search").addEventListener("input", (e) => {
+  document.getElementById("search")?.addEventListener("input", (e) => {
     searchTerm = e.target.value;
     render();
   });
-
-  document.querySelectorAll("[data-filter]").forEach((btn) => {
+  stats.querySelectorAll("[data-filter]").forEach((btn) => {
     btn.addEventListener("click", () => {
       filter = btn.dataset.filter;
       render();
     });
   });
+}
 
+function paintCarteraList() {
+  const list = document.getElementById("cartera-list");
+  const detail = document.getElementById("detail");
+  if (list) list.hidden = false;
+  if (detail) {
+    detail.hidden = true;
+    detail.innerHTML = "";
+  }
+  const editable = canEditCartera();
   const rows = visible();
-  document.getElementById("rows").innerHTML = rows.map((item) => {
+  const host = document.getElementById("rows");
+  if (!host) return;
+  host.innerHTML = rows.map((item) => {
     const foto = fotosDeItem(item)[0];
     return `
     <tr class="row ${item.id === selected ? "on" : ""}" data-id="${esc(item.id)}">
       <td><img class="thumb" src="${esc(foto)}" alt=""></td>
       <td>${esc(item.codigo)}</td>
-      <td>${esc(item.titulo)}<br><small style="color:#666">${esc(tipoLabel(item.tipo))} · ${item.superficie || "—"} m² · ${item.ambientes || "—"} amb.</small></td>
-      <td>${esc(opLabel(item.operacion))}</td>
+      <td>${esc(item.titulo)}<br><small style="color:#666">${esc(tipoLabel(item.tipo))} · ${esc(opLabel(item.operacion))} · ${item.superficie || "—"} m²</small></td>
       <td>${esc(item.barrio)}</td>
       <td class="amount">${item.operacion === "venta" ? esc(money(item.precio, true)) : esc(money(item.precio))}</td>
-      <td class="amount">${Number(item.vistas || 0)}</td>
-      <td class="amount">${Number(item.consultas || 0)}</td>
       <td><span class="tag ${esc(item.status)}">${esc(label(item.status))}</span></td>
+      <td>${htmlDestinosChips(item)}</td>
+      <td>
+        <div class="row-actions">
+          <button type="button" class="ghost" data-edit="${esc(item.id)}">${editable ? "Editar" : "Ver ficha"}</button>
+          ${editable ? `<button type="button" class="ghost" data-pub="${esc(item.id)}">Publicar</button>` : ""}
+          <a class="ghost" href="propiedad.html?id=${esc(item.id)}" target="_blank" rel="noopener">Ver vitrina</a>
+        </div>
+      </td>
     </tr>`;
-  }).join("") || `<tr><td colspan="9">No hay propiedades en este estado.</td></tr>`;
+  }).join("") || `<tr><td colspan="8">No hay propiedades en este estado.</td></tr>`;
 
-  document.querySelectorAll(".row").forEach((row) => {
-    row.addEventListener("click", () => {
-      selected = row.dataset.id;
-      render();
-    });
+  host.querySelectorAll("[data-edit]").forEach((btn) => {
+    btn.addEventListener("click", () => openCarteraEditor(btn.dataset.edit));
   });
+  host.querySelectorAll("[data-pub]").forEach((btn) => {
+    btn.addEventListener("click", () => openCarteraEditor(btn.dataset.pub, { focus: "publicar" }));
+  });
+}
 
-  const item = items.find((i) => i.id === selected);
+function paintCarteraEditor() {
+  const list = document.getElementById("cartera-list");
   const detail = document.getElementById("detail");
+  const isCreate = carteraMode === "create";
+  const item = isCreate ? editorDraft : items.find((i) => i.id === selected);
+  if (list) list.hidden = true;
+  if (!detail) return;
+  detail.hidden = false;
   if (!item) {
-    detail.innerHTML = "<p>Elija una propiedad del listado.</p>";
+    showCarteraList();
+    paintCarteraList();
     return;
   }
 
+  const readonly = !canEditCartera();
+  const dis = readonly ? "disabled" : "";
+  const fotos = (item.imagenes || []).filter(Boolean);
   const precioStr = item.operacion === "venta" ? money(item.precio, true) : money(item.precio) + " /mes";
 
-  const fotos = fotosDeItem(item);
-  const foto = fotos[0];
   detail.innerHTML = `
-    <p class="eyebrow">${esc(opLabel(item.operacion))} · ${esc(tipoLabel(item.tipo))}</p>
-    <h2>${esc(item.titulo)}</h2>
-    <p>${esc(item.direccion)}</p>
-    <img class="detail-photo" src="${esc(foto)}" alt="${esc(item.titulo)}">
-    ${htmlGaleria(fotos)}
-    <div class="meta">
-      <div><span>Zona</span>${esc(item.barrio)}</div>
-      <div><span>Precio</span>${esc(precioStr)}</div>
-      <div><span>Superficie</span>${item.superficie} m²</div>
-      <div><span>Ambientes</span>${item.ambientes || "—"}</div>
-      ${item.expensas ? `<div><span>Expensas</span>${esc(money(item.expensas))}</div>` : ""}
-      ${item.cliente ? `<div><span>Cliente</span>${esc(item.cliente.nombre)}</div>` : ""}
+    <div class="editor-head">
+      <div>
+        <p class="eyebrow">${isCreate ? "Alta en cartera" : esc(opLabel(item.operacion)) + " · " + esc(tipoLabel(item.tipo))}</p>
+        <h2>${isCreate ? "Nueva propiedad" : esc(item.titulo || "Ficha")}</h2>
+        <p>${isCreate ? "Complete la ficha. Al guardar, sale en la vitrina de este navegador." : esc(item.direccion || "Sin dirección")}</p>
+      </div>
+      <button type="button" class="ghost" id="volver-listado">Volver al listado</button>
     </div>
+    ${readonly ? `<p class="editor-readonly">La agenda puede ver la ficha. Un agente o el titular la edita o la publica.</p>` : ""}
+    ${htmlGaleria(fotos, readonly)}
+    ${isCreate ? "" : `
     <div class="metric-box">
       <div><span>Visitas al anuncio</span><strong>${Number(item.vistas || 0)}</strong></div>
       <div><span>Consultas</span><strong>${Number(item.consultas || 0)}</strong></div>
-    </div>
-    <div class="difusion-ficha">
-      <h4>Publicar este aviso</h4>
-      <p>Elija destinos. El sitio propio siempre toma la ficha. Portales y redes solo si la cuenta está conectada en Difusión. Demo: no se envía nada afuera.</p>
-      <p class="difusion-ficha-grupo">Sitios y portales</p>
-      ${DESTINOS.filter((d) => d.grupo !== "red").map((dest) => {
-        const on = dest.fijo ? true : Boolean(portalesDe(item)[dest.id]);
-        const lista = destinoConectado(dest.id);
-        const disabled = dest.fijo || !lista;
-        return `
-          <label class="destino-row ${disabled && !dest.fijo ? "is-off" : ""}">
-            <input type="checkbox" data-portal="${esc(dest.id)}" ${on ? "checked" : ""} ${disabled ? "disabled" : ""}>
-            <span>
-              <strong>${esc(dest.nombre)}</strong>
-              <small>${dest.fijo ? "Siempre en la vitrina" : lista ? "Listo para enviar (demo)" : "Conecte la cuenta en Difusión"}</small>
-            </span>
-          </label>`;
-      }).join("")}
-      <p class="difusion-ficha-grupo">Redes sociales</p>
-      ${DESTINOS.filter((d) => d.grupo === "red").map((dest) => {
-        const on = Boolean(portalesDe(item)[dest.id]);
-        const lista = destinoConectado(dest.id);
-        const disabled = !lista;
-        return `
-          <label class="destino-row ${disabled ? "is-off" : ""}">
-            <input type="checkbox" data-portal="${esc(dest.id)}" ${on ? "checked" : ""} ${disabled ? "disabled" : ""}>
-            <span>
-              <strong>${esc(dest.nombre)}</strong>
-              <small>${lista ? "Texto y enlace listos. No se publica solo." : "Conecte la cuenta en Difusión"}</small>
-            </span>
-          </label>`;
-      }).join("")}
-      <div class="difusion-acciones">
-        <button class="ghost" type="button" id="copiar-aviso">Copiar texto para redes</button>
-        <a class="ghost" id="wa-aviso" href="${esc("https://wa.me/?text=" + encodeURIComponent(textoRed(item)))}" target="_blank" rel="noopener">Enviar por WhatsApp</a>
+      <div><span>Precio</span><strong>${esc(precioStr)}</strong></div>
+    </div>`}
+    <form id="edit">
+      <div class="editor-grid">
+        <label>Código<input name="codigo" value="${esc(item.codigo)}" required ${dis}></label>
+        <label class="editor-span-2">Título<input name="titulo" value="${esc(item.titulo)}" required ${dis}></label>
+        <label>Tipo
+          <select name="tipo" ${dis}>
+            ${TIPOS.map((t) => `<option value="${t.id}" ${item.tipo === t.id ? "selected" : ""}>${esc(t.label)}</option>`).join("")}
+          </select>
+        </label>
+        <label>Operación
+          <select name="operacion" ${dis}>
+            ${OPERACIONES.map((o) => `<option value="${o.id}" ${item.operacion === o.id ? "selected" : ""}>${esc(o.label)}</option>`).join("")}
+          </select>
+        </label>
+        <label>Estado
+          <select name="status" ${dis}>
+            ${STATUSES.map((s) => `<option value="${s.id}" ${item.status === s.id ? "selected" : ""}>${esc(s.label)}</option>`).join("")}
+          </select>
+        </label>
+        <label class="editor-span">Dirección<input name="direccion" value="${esc(item.direccion)}" ${dis}></label>
+        <label>Zona
+          <select name="barrio" ${dis}>${zonaOptions(item.barrio)}</select>
+        </label>
+        <label>Ambientes<input name="ambientes" type="number" value="${item.ambientes || 0}" ${dis}></label>
+        <label>Dormitorios<input name="dormitorios" type="number" value="${item.dormitorios || 0}" ${dis}></label>
+        <label>Baños<input name="banos" type="number" value="${item.banos || 0}" ${dis}></label>
+        <label>m² cubiertos<input name="cubierta" type="number" value="${item.cubierta || 0}" ${dis}></label>
+        <label>m² de lote<input name="superficie" type="number" value="${item.superficie || 0}" ${dis}></label>
+        <label>Piso<input name="piso" value="${esc(item.piso || "")}" ${dis}></label>
+        <label>Vista<input name="vista" value="${esc(item.vista || "")}" ${dis}></label>
+        <label>Calefacción<input name="calefaccion" value="${esc(item.calefaccion || "")}" ${dis}></label>
+        <label>Servicios<input name="servicios" value="${esc(item.servicios || "")}" ${dis}></label>
+        <label>Precio<input name="precio" type="number" value="${item.precio || 0}" required ${dis}></label>
+        <label>Expensas<input name="expensas" type="number" value="${item.expensas || 0}" ${dis}></label>
+        <label class="editor-span">Descripción de la ficha<textarea name="descripcion" rows="5" ${dis}>${esc(item.descripcion || "")}</textarea></label>
       </div>
+      <div class="editor-block">
+        <h3>Características</h3>
+        <p class="lead-mini">Salen como etiquetas en la ficha pública.</p>
+        <div class="edit-amenities">
+          ${AMENITIES.map((a) => `
+            <label>
+              <input type="checkbox" name="amenity" value="${esc(a.id)}" ${(item.amenities || []).includes(a.id) ? "checked" : ""} ${dis}>
+              ${esc(a.label)}
+            </label>`).join("")}
+        </div>
+        <div class="edit-flags">
+          <label><input type="checkbox" name="destacado" ${item.destacado ? "checked" : ""} ${dis}> Destacado en vitrina</label>
+          <label><input type="checkbox" name="nuevo" ${item.nuevo ? "checked" : ""} ${dis}> Nuevo</label>
+        </div>
+      </div>
+      ${readonly ? "" : `
+      <div class="actions">
+        <button class="btn-panel" type="submit">${isCreate ? "Agregar a la cartera" : "Guardar en vitrina"}</button>
+        ${isCreate ? "" : `<button class="ghost" type="button" id="remove">Eliminar</button>`}
+      </div>`}
+    </form>
+    <div class="editor-block">
+      ${htmlPublishBlock(item, isCreate, readonly)}
     </div>
-    
-    ${item.factura ? `
+    ${isCreate || item.factura ? (item.factura ? `
       <div class="factura-box">
-        <h4>✅ Operación facturada</h4>
+        <h4>Operación facturada</h4>
         <div><strong>Tipo:</strong> ${esc(compLabel(item.factura.tipo))}</div>
         <div><strong>Número:</strong> ${esc(item.factura.numero)}</div>
         <div><strong>Total:</strong> ${item.factura.total > 100000 ? money(item.factura.total, true) : money(item.factura.total)}</div>
         <div><strong>CAE:</strong> <span class="cae">${esc(item.factura.cae)}</span></div>
         <div><strong>Vto CAE:</strong> ${esc(item.factura.vto)}</div>
       </div>
-    ` : `
+    ` : "") : (readonly ? "" : `
       <div class="arca-section">
-        <h4>🧾 Facturación ARCA</h4>
+        <h4>Facturación ARCA</h4>
         <label>CUIT cliente<input id="arca-cuit" placeholder="20-12345678-9"></label>
         <label>Tipo comprobante
           <select id="arca-tipo">
@@ -719,60 +951,8 @@ function render() {
         </button>
         <p style="font-size:11px;color:#64748b;margin-top:8px;">Demo: genera CAE simulado. En producción se conecta a ARCA/AFIP.</p>
       </div>
-    `}
-    
-    <form id="edit">
-      <label>Código<input name="codigo" value="${esc(item.codigo)}"></label>
-      <label>Título<input name="titulo" value="${esc(item.titulo)}"></label>
-      <label>Tipo
-        <select name="tipo">
-          ${TIPOS.map((t) => `<option value="${t.id}" ${item.tipo === t.id ? "selected" : ""}>${esc(t.label)}</option>`).join("")}
-        </select>
-      </label>
-      <label>Operación
-        <select name="operacion">
-          ${OPERACIONES.map((o) => `<option value="${o.id}" ${item.operacion === o.id ? "selected" : ""}>${esc(o.label)}</option>`).join("")}
-        </select>
-      </label>
-      <label>Dirección<input name="direccion" value="${esc(item.direccion)}"></label>
-      <label>Zona
-        <select name="barrio">${zonaOptions(item.barrio)}</select>
-      </label>
-      <label>Ambientes<input name="ambientes" type="number" value="${item.ambientes || 0}"></label>
-      <label>Dormitorios<input name="dormitorios" type="number" value="${item.dormitorios || 0}"></label>
-      <label>Baños<input name="banos" type="number" value="${item.banos || 0}"></label>
-      <label>m² cubiertos<input name="cubierta" type="number" value="${item.cubierta || 0}"></label>
-      <label>m² de lote<input name="superficie" type="number" value="${item.superficie || 0}"></label>
-      <label>Piso<input name="piso" value="${esc(item.piso || "")}"></label>
-      <label>Vista<input name="vista" value="${esc(item.vista || "")}"></label>
-      <label>Calefacción<input name="calefaccion" value="${esc(item.calefaccion || "")}"></label>
-      <label>Servicios<input name="servicios" value="${esc(item.servicios || "")}"></label>
-      <label>Precio<input name="precio" type="number" value="${item.precio}"></label>
-      <label>Expensas<input name="expensas" type="number" value="${item.expensas || 0}"></label>
-      <label>Descripción de la ficha<textarea name="descripcion" rows="4">${esc(item.descripcion || "")}</textarea></label>
-      <p class="eyebrow" style="margin-top:12px">Características</p>
-      <div class="edit-amenities">
-        ${AMENITIES.map((a) => `
-          <label>
-            <input type="checkbox" name="amenity" value="${esc(a.id)}" ${(item.amenities || []).includes(a.id) ? "checked" : ""}>
-            ${esc(a.label)}
-          </label>`).join("")}
-      </div>
-      <div class="edit-flags">
-        <label><input type="checkbox" name="destacado" ${item.destacado ? "checked" : ""}> Destacado en vitrina</label>
-        <label><input type="checkbox" name="nuevo" ${item.nuevo ? "checked" : ""}> Nuevo</label>
-      </div>
-      <label>Estado
-        <select name="status">
-          ${STATUSES.map((s) => `<option value="${s.id}" ${item.status === s.id ? "selected" : ""}>${esc(s.label)}</option>`).join("")}
-        </select>
-      </label>
-      <div class="actions">
-        <button class="btn-panel" type="submit">Guardar en vitrina</button>
-        <button class="ghost" type="button" id="remove">Eliminar</button>
-      </div>
-    </form>
-    ${(item.visitas || []).length > 0 ? `
+    `)}
+    ${!isCreate && (item.visitas || []).length ? `
       <div class="visitas">
         <h3>Visitas presenciales</h3>
         ${item.visitas.map((v) => `
@@ -783,16 +963,22 @@ function render() {
         `).join("")}
       </div>
     ` : ""}
+    ${!isCreate ? `
     <div class="timeline">
       <h3>Historial</h3>
-      ${(item.history || []).map((h) => `<p><time>${esc(h.when)}</time>${esc(h.text)}</p>`).join("")}
-    </div>
+      ${(item.history || []).map((h) => `<p><time>${esc(h.when)}</time>${esc(h.text)}</p>`).join("") || "<p>Sin movimientos todavía.</p>"}
+    </div>` : ""}
   `;
 
-  wireFotoEditor(detail, item);
+  detail.querySelector("#volver-listado")?.addEventListener("click", () => {
+    showCarteraList();
+    render();
+  });
 
-  // Emitir factura ARCA
+  wireFotoEditor(detail, item, isCreate ? false : true);
+
   detail.querySelector("#emitir-factura")?.addEventListener("click", () => {
+    if (!canEditCartera()) return;
     const tipo = detail.querySelector("#arca-tipo").value;
     const cuit = detail.querySelector("#arca-cuit").value;
     const concepto = detail.querySelector("#arca-concepto").value;
@@ -801,11 +987,10 @@ function render() {
     const vtoDate = new Date();
     vtoDate.setDate(vtoDate.getDate() + 10);
     const vto = vtoDate.toLocaleDateString("es-AR", { day: "numeric", month: "short", year: "numeric" });
-    
-    const total = concepto === "comision" ? Math.round(item.precio * 0.03) : 
-                  concepto === "alquiler" ? item.precio : 
-                  concepto === "reserva" ? Math.round(item.precio * 0.1) : item.expensas || 0;
-
+    const total = concepto === "comision" ? Math.round(item.precio * 0.03)
+      : concepto === "alquiler" ? item.precio
+      : concepto === "reserva" ? Math.round(item.precio * 0.1)
+      : item.expensas || 0;
     item.factura = { tipo, numero, cae, vto, total, cuit, concepto };
     item.history = [{ when: "hoy", text: `Factura ${compLabel(tipo)} emitida. CAE: ${cae}` }, ...(item.history || [])];
     save(items);
@@ -813,89 +998,40 @@ function render() {
     render();
   });
 
-  detail.querySelectorAll("[data-portal]").forEach((input) => {
-    input.addEventListener("change", () => {
-      const id = input.dataset.portal;
-      const dest = DESTINOS.find((d) => d.id === id);
-      if (!dest || dest.fijo || !destinoConectado(id)) {
-        input.checked = Boolean(portalesDe(item)[id]);
-        return;
-      }
-      item.portales = { ...portalesDe(item), [id]: input.checked };
-      item.history = [{
-        when: "hoy",
-        text: input.checked ? "Marcado para " + dest.nombre + " (demo). No se envió nada afuera." : "Sacado de " + dest.nombre + "."
-      }, ...(item.history || [])];
-      save(items);
-      if (input.checked) {
-        cola = { ...cola, [colaClave(item.id, id)]: { estado: "publicado", when: ahoraDemo() } };
-      } else {
-        const nextCola = { ...cola };
-        delete nextCola[colaClave(item.id, id)];
-        cola = nextCola;
-      }
-      saveCola(cola);
-      setCuentaAccion(id, true, "Aviso " + item.codigo + (input.checked ? " publicado (demo)." : " sacado de este destino."));
-      showToast(input.checked ? "Marcado para " + dest.nombre + " (demo)" : "Sacado de " + dest.nombre);
-      render();
-    });
+  detail.querySelector("#publicar-aviso")?.addEventListener("click", () => {
+    const ids = [...detail.querySelectorAll("[data-pub-dest]:checked")].map((el) => el.dataset.pubDest);
+    publicarAviso(item, ids);
   });
 
   detail.querySelector("#copiar-aviso")?.addEventListener("click", async () => {
-    const texto = textoRed(item);
     try {
-      await navigator.clipboard.writeText(texto);
+      await navigator.clipboard.writeText(textoRed(item));
       showToast("Texto copiado");
     } catch {
       showToast("No se pudo copiar. Seleccione el texto a mano.");
     }
   });
 
-  detail.querySelector("#edit").addEventListener("submit", (event) => {
+  detail.querySelector("#edit")?.addEventListener("submit", (event) => {
     event.preventDefault();
-    const data = new FormData(event.target);
+    if (!canEditCartera()) return;
     const prevStatus = item.status;
-    const newStatus = String(data.get("status") || item.status);
-    const barrio = String(data.get("barrio") || item.barrio);
-
-    Object.assign(item, {
-      codigo: String(data.get("codigo") || ""),
-      titulo: String(data.get("titulo") || ""),
-      tipo: String(data.get("tipo") || "departamento"),
-      operacion: String(data.get("operacion") || "alquiler"),
-      direccion: String(data.get("direccion") || ""),
-      barrio,
-      zona: barrio === "El Bolsón" ? "El Bolsón" : "Bariloche",
-      ambientes: Number(data.get("ambientes") || 0),
-      dormitorios: Number(data.get("dormitorios") || 0),
-      banos: Number(data.get("banos") || 0),
-      cubierta: Number(data.get("cubierta") || 0),
-      superficie: Number(data.get("superficie") || 0),
-      piso: String(data.get("piso") || ""),
-      vista: String(data.get("vista") || ""),
-      calefaccion: String(data.get("calefaccion") || ""),
-      servicios: String(data.get("servicios") || ""),
-      precio: Number(data.get("precio") || 0),
-      expensas: Number(data.get("expensas") || 0),
-      descripcion: String(data.get("descripcion") || ""),
-      amenities: data.getAll("amenity").map(String),
-      destacado: Boolean(event.target.destacado?.checked),
-      nuevo: Boolean(event.target.nuevo?.checked),
-      status: newStatus
-    });
-
-    if (prevStatus !== newStatus) {
-      item.history = [{ when: "hoy", text: `Estado cambiado a: ${label(newStatus)}.` }, ...(item.history || [])];
+    applyFormToItem(event.target, item);
+    if (isCreate) {
+      guardarAlta(item);
+      return;
+    }
+    if (prevStatus !== item.status) {
+      item.history = [{ when: "hoy", text: `Estado cambiado a: ${label(item.status)}.` }, ...(item.history || [])];
     } else {
       item.history = [{ when: "hoy", text: "Ficha actualizada. La vitrina ya toma estos datos." }, ...(item.history || [])];
     }
-
     if (!persistCartera()) return;
     showToast("Cambios guardados en la vitrina");
     render();
   });
 
-  detail.querySelector("#remove").addEventListener("click", () => {
+  detail.querySelector("#remove")?.addEventListener("click", () => {
     if (session?.rol === "agenda") {
       showToast("La agenda no elimina fichas.");
       return;
@@ -904,9 +1040,14 @@ function render() {
     items = items.filter((i) => i.id !== item.id);
     selected = items[0]?.id || "";
     save(items);
+    showCarteraList();
     showToast("Propiedad eliminada");
     render();
   });
+
+  if (editorFocus === "publicar") {
+    detail.querySelector("#bloque-publicar")?.scrollIntoView({ block: "start" });
+  }
 }
 
 // Toast notification
@@ -918,7 +1059,7 @@ function showToast(message) {
   toast.textContent = message;
   document.body.appendChild(toast);
   setTimeout(() => toast.classList.add("show"), 10);
-  setTimeout(() => { toast.classList.remove("show"); setTimeout(() => toast.remove(), 300); }, 3000);
+  setTimeout(() => { toast.classList.remove("show"); setTimeout(() => toast.remove(), 300); }, Math.min(5600, 2800 + message.length * 18));
 }
 
 function canEditVitrina() {
@@ -969,6 +1110,7 @@ function showPanelView(id, opts) {
       el.hidden = el.getAttribute("data-panel-view") !== next;
     });
     paintPanelNav(next);
+    if (next === "cartera" && !opts?.keepEditor) showCarteraList();
     if (next === "resumen") renderResumen();
     if (next === "cartera") render();
     if (next === "vitrina") renderVitrinaGestor();
@@ -993,47 +1135,115 @@ function wirePanelNav() {
   });
 }
 
+function actividadReciente() {
+  const rows = [];
+  items.forEach((item) => {
+    (item.history || []).slice(0, 2).forEach((h) => {
+      rows.push({
+        when: h.when || "",
+        text: h.text || "",
+        codigo: item.codigo,
+        kind: "ficha"
+      });
+    });
+    (item.visitas || []).slice(0, 1).forEach((v) => {
+      rows.push({
+        when: v.fecha || "",
+        text: "Visita presencial: " + (v.cliente || "") + (v.nota ? " — " + v.nota : ""),
+        codigo: item.codigo,
+        kind: "visita"
+      });
+    });
+  });
+  filasCola().forEach((fila) => {
+    rows.push({
+      when: fila.when || "",
+      text: fila.dest.nombre + ": " + colaEstadoLabel(fila.estado) + " (demo)",
+      codigo: fila.item.codigo,
+      kind: "cola"
+    });
+  });
+  return rows.slice(0, 8);
+}
+
 function renderResumen() {
-  const host = document.getElementById("resumen-grid");
+  const host = document.getElementById("resumen-desk");
   if (!host) return;
+  const nombre = session?.nombre || "el estudio";
+  const rol = roleLabel(session?.rol);
   const disponibles = items.filter((i) => i.status === "disponible").length;
   const visitas = items.reduce((sum, i) => sum + Number(i.vistas || 0), 0);
   const consultas = items.reduce((sum, i) => sum + Number(i.consultas || 0), 0);
-  const activos = staff.filter((u) => u.activo !== false).length;
-  const page = loadVitrinaPage();
-  const visibles = VITRINA_SECTIONS.filter((s) => !s.alwaysOn && page.visible[s.id] !== false).length;
-  const totalSec = VITRINA_SECTIONS.filter((s) => !s.alwaysOn).length;
+  const avisosPortales = items.filter((item) => DESTINOS.some((d) => !d.fijo && portalesDe(item)[d.id])).length;
+  const cuentasOn = DESTINOS.filter((d) => destinoConectado(d.id)).length;
+  const actividad = actividadReciente();
   host.innerHTML = `
-    <button type="button" class="resumen-card" data-go="cartera">
-      <span>Cartera</span>
-      <strong>${items.length}</strong>
-      <small>propiedades en este navegador</small>
-    </button>
-    <button type="button" class="resumen-card" data-go="cartera">
-      <span>Disponibles</span>
-      <strong>${disponibles}</strong>
-      <small>listas para la vitrina</small>
-    </button>
-    <button type="button" class="resumen-card" data-go="cartera">
-      <span>Visitas al aviso</span>
-      <strong>${visitas}</strong>
-      <small>solo se ven en el panel</small>
-    </button>
-    <button type="button" class="resumen-card" data-go="cartera">
-      <span>Consultas</span>
-      <strong>${consultas}</strong>
-      <small>solo se ven en el panel</small>
-    </button>
-    <button type="button" class="resumen-card" data-go="usuarios">
-      <span>Usuarios activos</span>
-      <strong>${activos}</strong>
-      <small>de ${staff.length} cuentas del estudio</small>
-    </button>
-    <button type="button" class="resumen-card" data-go="vitrina">
-      <span>Vitrina visible</span>
-      <strong>${visibles}/${totalSec}</strong>
-      <small>bloques públicos encendidos</small>
-    </button>`;
+    <header class="resumen-hello">
+      <p class="eyebrow">Inicio del panel</p>
+      <span class="resumen-rol">${esc(rol)}</span>
+      <h1>Hola, ${esc(nombre)}</h1>
+      <p>Está adentro como ${esc(rol).toLowerCase()}. Estas cifras salen de la cartera, las visitas al aviso, las consultas y las cuentas de Difusión en este navegador. No son métricas de un producto en internet.</p>
+    </header>
+    <div class="resumen-cards">
+      <button type="button" class="resumen-card" data-go="cartera">
+        <span>Propiedades</span>
+        <strong>${items.length}</strong>
+        <small>en la cartera de este navegador</small>
+      </button>
+      <button type="button" class="resumen-card" data-go="cartera">
+        <span>Disponibles</span>
+        <strong>${disponibles}</strong>
+        <small>listas para la vitrina</small>
+      </button>
+      <button type="button" class="resumen-card" data-go="cartera">
+        <span>Visitas al anuncio</span>
+        <strong>${visitas}</strong>
+        <small>solo se ven en el panel</small>
+      </button>
+      <button type="button" class="resumen-card" data-go="cartera">
+        <span>Consultas</span>
+        <strong>${consultas}</strong>
+        <small>solo se ven en el panel</small>
+      </button>
+      <button type="button" class="resumen-card" data-go="difusion">
+        <span>Avisos en portales</span>
+        <strong>${avisosPortales}</strong>
+        <small>marcados en ML, Zonaprop, Argenprop o redes</small>
+      </button>
+      <button type="button" class="resumen-card" data-go="difusion">
+        <span>Cuentas conectadas</span>
+        <strong>${cuentasOn}</strong>
+        <small>de ${DESTINOS.length} destinos de esta demo</small>
+      </button>
+    </div>
+    <div class="resumen-split">
+      <section class="resumen-panel">
+        <h2>Actividad reciente</h2>
+        <p>Historial de fichas, visitas presenciales y cola de difusión. Todo es de ejemplo.</p>
+        ${actividad.length ? `<ul class="resumen-activity">${actividad.map((row) => `
+          <li>
+            <strong>${esc(row.codigo)} · ${esc(row.text)}</strong>
+            <span>${esc(row.when || "sin fecha")}</span>
+          </li>`).join("")}</ul>` : `<p class="resumen-empty">Todavía no hay movimientos en esta demo.</p>`}
+      </section>
+      <section class="resumen-panel">
+        <h2>Atajos</h2>
+        <p>Entre a la sección que necesita. El menú de arriba sigue disponible.</p>
+        <div class="resumen-shortcuts">
+          <button type="button" data-go="cartera"><strong>Ir a Cartera</strong><small>Editar avisos y publicar destinos</small></button>
+          <button type="button" data-go="vitrina"><strong>Ir a Vitrina</strong><small>Textos y bloques de la web pública</small></button>
+          <button type="button" data-go="difusion"><strong>Ir a Difusión</strong><small>Conectar portales y armar la cola</small></button>
+          <button type="button" data-go="usuarios"><strong>Ir a Usuarios</strong><small>${staff.filter((u) => u.activo !== false).length} cuentas activas de ${staff.length}</small></button>
+        </div>
+        <ul class="resumen-cuentas">
+          ${DESTINOS.map((d) => {
+            const on = destinoConectado(d.id);
+            const n = avisosEnDestino(d.id);
+            return `<li><strong>${esc(d.nombre)}</strong><span>${on ? n + " aviso" + (n === 1 ? "" : "s") : "No conectado"}</span></li>`;
+          }).join("")}
+        </ul>
+      </section>
+    </div>`;
   host.querySelectorAll("[data-go]").forEach((btn) => {
     btn.addEventListener("click", () => showPanelView(btn.dataset.go));
   });

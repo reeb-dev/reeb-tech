@@ -7,7 +7,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@560;640&family=Figtree:wght@400;500;600;700&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="styles.css?v=bariloche18">
+  <link rel="stylesheet" href="styles.css?v=bariloche19">
   <style>
     body.panel-page:not(.nh-authed) .app { display: none !important; }
   </style>
@@ -73,14 +73,7 @@
     </header>
 
     <section class="panel-view" data-panel-view="resumen" id="resumen">
-      <div class="toolbar">
-        <div>
-          <p class="eyebrow">Inicio del panel</p>
-          <h1>Resumen</h1>
-          <p class="lead-panel">Cifras de esta demo en su navegador: cartera, visitas al aviso, consultas y cuentas activas. No son métricas de un producto en internet.</p>
-        </div>
-      </div>
-      <div class="resumen-grid" id="resumen-grid"></div>
+      <div class="resumen-desk" id="resumen-desk"></div>
     </section>
 
     <section class="panel-view" data-panel-view="cartera" id="cartera" hidden>
@@ -94,69 +87,27 @@
 
       <div class="stats" id="stats"></div>
 
-      <form class="create" id="create">
-        <input name="codigo" placeholder="Código" required>
-        <input name="titulo" placeholder="Título" required>
-        <select name="tipo">
-          <option value="casa">Casa</option>
-          <option value="cabana">Cabaña</option>
-          <option value="departamento">Departamento</option>
-          <option value="terreno">Lote</option>
-          <option value="local">Local</option>
-        </select>
-        <select name="operacion">
-          <option value="alquiler">Alquiler permanente</option>
-          <option value="venta">Venta</option>
-        </select>
-        <input name="direccion" placeholder="Dirección">
-        <select name="barrio" aria-label="Zona">
-          <option value="Centro">Centro</option>
-          <option value="Melipal">Melipal</option>
-          <option value="Llao Llao">Llao Llao</option>
-          <option value="Circuito Chico">Circuito Chico</option>
-          <option value="Dina Huapi">Dina Huapi</option>
-          <option value="Colonia Suiza">Colonia Suiza</option>
-          <option value="El Bolsón">El Bolsón</option>
-        </select>
-        <input name="ambientes" type="number" placeholder="Ambientes">
-        <input name="dormitorios" type="number" placeholder="Dormitorios">
-        <input name="banos" type="number" placeholder="Baños">
-        <input name="cubierta" type="number" placeholder="m² cubiertos">
-        <input name="superficie" type="number" placeholder="m² de lote">
-        <input name="precio" type="number" placeholder="Precio" required>
-        <input name="expensas" type="number" placeholder="Expensas">
-        <label class="create-span">Descripción de la ficha<textarea name="descripcion" rows="3" placeholder="Texto que ve el público en la vitrina"></textarea></label>
-        <div class="create-span create-fotos">
-          <p>Fotos de la vitrina</p>
-          <p class="create-fotos-hint">La primera es la portada del aviso. Las demás salen en la galería de la ficha.</p>
-          <label class="foto-cargar">Cargar fotos<input id="create-fotos" name="fotos" type="file" accept="image/*" multiple></label>
-          <div class="foto-thumbs" id="create-fotos-preview"></div>
-        </div>
-        <button class="btn-panel" type="submit">Agregar propiedad</button>
-      </form>
-
-      <div class="workspace">
-        <section class="list">
+      <div class="cartera-desk">
+        <section class="cartera-list" id="cartera-list">
           <div class="table-scroll">
-            <table>
+            <table class="cartera-tabla">
               <thead>
                 <tr>
                   <th>Foto</th>
                   <th>Código</th>
-                  <th>Propiedad</th>
-                  <th>Operación</th>
+                  <th>Título</th>
                   <th>Zona</th>
                   <th class="amount">Precio</th>
-                  <th class="amount">Visitas</th>
-                  <th class="amount">Consultas</th>
                   <th>Estado</th>
+                  <th>Destinos</th>
+                  <th>Acciones</th>
                 </tr>
               </thead>
               <tbody id="rows"></tbody>
             </table>
           </div>
         </section>
-        <aside class="detail" id="detail"></aside>
+        <section class="cartera-editor" id="detail" hidden></section>
       </div>
     </section>
 
@@ -227,9 +178,9 @@
     </section>
   </div>
 
-  <script src="data.js?v=bariloche18"></script>
-  <script src="panel.js?v=bariloche18"></script>
+  <script src="data.js?v=bariloche19"></script>
+  <script src="panel.js?v=bariloche19"></script>
   <script src="../contacto.js" data-phone="5492915757934" data-text="Hola, quiero consultar por una propiedad en Bariloche" data-subject="Consulta demo — Estudio Nahuel Huapi" data-title="Consultar una propiedad" data-place="panel"></script>
-  <link rel="stylesheet" href="styles.css?v=bariloche18">
+  <link rel="stylesheet" href="styles.css?v=bariloche19">
 </body>
 </html>
