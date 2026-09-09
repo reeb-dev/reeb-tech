@@ -12,9 +12,10 @@ let carteraMode = "list";
 let editorFocus = "";
 let editorDraft = null;
 const MAX_FOTOS = 6;
-const PANEL_VIEWS = ["resumen", "cartera", "vitrina", "difusion", "usuarios", "contacto"];
+const PANEL_VIEWS = ["resumen", "cartera", "zonas", "vitrina", "difusion", "usuarios", "contacto"];
 
-document.getElementById("open-create").addEventListener("click", () => {
+document.addEventListener("click", (event) => {
+  if (!event.target.closest("#open-create, [data-open-create]")) return;
   openCarteraCreate();
 });
 
@@ -79,11 +80,16 @@ async function leerArchivosFoto(fileList, cupo) {
 }
 
 function zonaOptions(selected) {
-  const ids = ZONAS.map((z) => z.id);
+  const list = typeof zonasTodas === "function" ? zonasTodas() : ZONAS;
+  const ids = list.map((z) => z.id);
   const extra = selected && !ids.includes(selected)
     ? `<option value="${esc(selected)}" selected>${esc(selected)}</option>`
     : "";
-  return extra + ZONAS.map((z) => `<option value="${esc(z.id)}" ${selected === z.id ? "selected" : ""}>${esc(z.nombre)}</option>`).join("");
+  return extra + list.map((z) => {
+    const cerca = typeof zonaCercaNombre === "function" ? zonaCercaNombre(z) : "";
+    const label = cerca ? z.nombre + " (cerca de " + cerca + ")" : z.nombre;
+    return `<option value="${esc(z.id)}" ${selected === z.id ? "selected" : ""}>${esc(label)}</option>`;
+  }).join("");
 }
 
 function nhField(id, label, control, span) {
@@ -228,7 +234,7 @@ function applyFormToItem(form, item) {
     operacion: String(data.get("operacion") || "alquiler"),
     direccion: String(data.get("direccion") || ""),
     barrio,
-    zona: barrio === "El Bolsón" ? "El Bolsón" : "Bariloche",
+    zona: typeof zonaRegionDe === "function" ? zonaRegionDe(barrio) : (barrio === "El Bolsón" ? "El Bolsón" : "Bariloche"),
     ambientes: Number(data.get("ambientes") || 0),
     dormitorios: Number(data.get("dormitorios") || 0),
     banos: Number(data.get("banos") || 0),
@@ -419,7 +425,10 @@ function openCarteraCreate() {
 }
 
 function guardarAlta(item) {
-  if (!canEditCartera()) return;
+  if (!canEditCartera()) {
+    showToast("La agenda no carga propiedades. Eso lo hace un agente o el titular.");
+    return;
+  }
   if (!item.codigo || !item.titulo) {
     showToast("Indique código y título.");
     return;
@@ -429,7 +438,9 @@ function guardarAlta(item) {
     ...item,
     id: crypto.randomUUID(),
     imagenes: imagenes.length ? imagenes : [fotoPorTipo(item.tipo)],
-    nuevo: item.nuevo !== false,
+    status: "disponible",
+    nuevo: true,
+    portales: typeof portalesBase === "function" ? portalesBase() : (item.portales || {}),
     ingresada: Date.now(),
     bajoPrecio: false,
     precioAnterior: 0,
@@ -438,6 +449,7 @@ function guardarAlta(item) {
   const prevItems = items;
   items = [nuevo, ...items];
   selected = nuevo.id;
+  filter = "todos";
   if (!persistCartera()) {
     items = prevItems;
     selected = items[0]?.id || "";
@@ -1186,6 +1198,7 @@ function showPanelView(id, opts) {
     if (next === "cartera" && !opts?.keepEditor) showCarteraList();
     if (next === "resumen") renderResumen();
     if (next === "cartera") render();
+    if (next === "zonas") renderZonas();
     if (next === "vitrina") renderVitrinaGestor();
     if (next === "difusion") renderCuentas();
     if (next === "usuarios") renderUsuarios();
@@ -1307,7 +1320,9 @@ function renderResumen() {
         <h2>Atajos</h2>
         <p>Entre a la sección que necesita. El menú de arriba sigue disponible.</p>
         <div class="resumen-shortcuts">
+          <button type="button" data-open-create><strong>Nueva propiedad</strong><small>Alta en la cartera. Sale en la vitrina de este navegador</small></button>
           <button type="button" data-go="cartera"><strong>Ir a Cartera</strong><small>Editar avisos y publicar destinos</small></button>
+          <button type="button" data-go="zonas"><strong>Ir a Zonas</strong><small>Localidades y zonas relacionadas de la comarca</small></button>
           <button type="button" data-go="vitrina"><strong>Ir a Vitrina</strong><small>Textos y bloques de la web pública</small></button>
           <button type="button" data-go="difusion"><strong>Ir a Difusión</strong><small>Conectar portales y armar la cola</small></button>
           <button type="button" data-go="usuarios"><strong>Ir a Usuarios</strong><small>${staff.filter((u) => u.activo !== false).length} cuentas activas de ${staff.length}</small></button>
@@ -1389,6 +1404,98 @@ function renderResumen() {
   });
   host.querySelectorAll("[data-ficha]").forEach((btn) => {
     btn.addEventListener("click", () => openCarteraEditor(btn.dataset.ficha, { instant: false }));
+  });
+}
+
+function renderZonas() {
+  const host = document.getElementById("zonas-desk");
+  if (!host) return;
+  const editable = canEditCartera();
+  const list = typeof zonasTodas === "function" ? zonasTodas() : ZONAS;
+  const parentOpts = `<option value="">Ninguna · pin general de Bariloche</option>` + list.map((z) =>
+    `<option value="${esc(z.id)}">${esc(z.nombre)}</option>`
+  ).join("");
+  host.innerHTML = `
+    ${editable ? `
+    <form class="zona-alta" id="zona-alta">
+      <div class="nh-field">
+        <label for="zona-nombre">Nombre</label>
+        <input id="zona-nombre" name="nombre" required maxlength="60" placeholder="Villa Catedral">
+      </div>
+      <div class="nh-field">
+        <label for="zona-texto">Texto corto</label>
+        <input id="zona-texto" name="texto" maxlength="160" placeholder="Cerro y bosque, al oeste">
+      </div>
+      <div class="nh-field">
+        <label for="zona-parent">Zona relacionada</label>
+        <select id="zona-parent" name="parentId">${parentOpts}</select>
+      </div>
+      <p class="nh-form-error" id="zona-alta-error" role="alert"></p>
+      <button class="btn-panel" type="submit">Agregar zona</button>
+    </form>` : `<p class="cola-vacia">La agenda puede ver las zonas. Un agente o el titular carga una localidad nueva.</p>`}
+    <div class="table-scroll">
+      <table class="cartera-tabla">
+        <thead>
+          <tr>
+            <th>Zona</th>
+            <th>Texto</th>
+            <th>Relacionada</th>
+            <th>Origen</th>
+            <th></th>
+          </tr>
+        </thead>
+        <tbody>
+          ${list.map((z) => {
+            const cerca = typeof zonaCercaNombre === "function" ? zonaCercaNombre(z) : "";
+            const fija = !z.custom;
+            return `<tr>
+              <td><strong>${esc(z.nombre)}</strong></td>
+              <td>${esc(z.texto || "—")}</td>
+              <td>${cerca ? "Cerca de " + esc(cerca) : "—"}</td>
+              <td>${fija ? "Comarca" : "Cargada por el estudio"}</td>
+              <td>${fija || !editable ? "" : `<button type="button" class="ghost" data-zona-quitar="${esc(z.id)}">Quitar</button>`}</td>
+            </tr>`;
+          }).join("")}
+        </tbody>
+      </table>
+    </div>
+    <p class="lead-mini">Agregar una zona no crea avisos. Después elija esa localidad en la ficha de Cartera. El mapa usa el pin de la zona relacionada o el centro de Bariloche; no marca una parcela.</p>
+  `;
+
+  host.querySelector("#zona-alta")?.addEventListener("submit", (event) => {
+    event.preventDefault();
+    if (!canEditCartera()) {
+      showToast("La agenda no carga zonas. Eso lo hace un agente o el titular.");
+      return;
+    }
+    const data = new FormData(event.target);
+    const err = document.getElementById("zona-alta-error");
+    const result = agregarZonaCustom({
+      nombre: String(data.get("nombre") || ""),
+      texto: String(data.get("texto") || ""),
+      parentId: String(data.get("parentId") || "")
+    });
+    if (!result.ok) {
+      if (err) err.textContent = result.error;
+      event.target.nombre?.focus();
+      return;
+    }
+    if (err) err.textContent = "";
+    event.target.reset();
+    showToast("Zona agregada. Ya aparece en la vitrina y en el alta de propiedades. No se inventaron avisos.");
+    renderZonas();
+  });
+
+  host.querySelectorAll("[data-zona-quitar]").forEach((btn) => {
+    btn.addEventListener("click", () => {
+      if (!canEditCartera()) return;
+      if (!quitarZonaCustom(btn.dataset.zonaQuitar)) {
+        showToast("Las zonas de la comarca no se quitan.");
+        return;
+      }
+      showToast("Zona quitada. Los avisos que la usaban siguen en la cartera.");
+      renderZonas();
+    });
   });
 }
 
@@ -1478,6 +1585,7 @@ function bootPanel() {
   renderUsuarios();
   renderCuentas();
   renderVitrinaGestor();
+  renderZonas();
   renderResumen();
   render();
   showPanelView(viewFromHash() || "resumen", { instant: true });

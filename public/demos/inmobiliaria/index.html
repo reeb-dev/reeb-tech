@@ -8,7 +8,7 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@560;640&family=Figtree:wght@400;500;600;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" crossorigin="">
-  <link rel="stylesheet" href="styles.css?v=bariloche22">
+  <link rel="stylesheet" href="styles.css?v=bariloche24">
 </head>
 <body class="vitrina">
   <header class="top">
@@ -134,12 +134,22 @@
     </div>
   </section>
 
+  <section class="bajas-strip" id="bajas" hidden>
+    <div class="wrap">
+      <p class="kicker">Precio</p>
+      <h2>Bajaron de precio</h2>
+      <p class="comarca-lead">El estudio bajó el precio de estos avisos. Se ve el valor anterior tachado y el sello en la foto. No es un descuento inventado por la web.</p>
+      <div class="recientes-track" id="bajasTrack"></div>
+    </div>
+  </section>
+
   <main class="wrap" id="propiedades" data-nh-section="propiedades">
     <div class="results-header">
       <div class="results-count">
         <strong id="resultsShown">0</strong> de <strong id="resultsCount">0</strong>
       </div>
       <div class="results-tools">
+        <div class="novedad-chips" id="novedadChips"></div>
         <select class="sort-select" id="sortSelect" aria-label="Ordenar">
           <option value="destacados">Destacados primero</option>
           <option value="recientes">Últimas ingresadas</option>
@@ -293,9 +303,9 @@
   </footer>
 
   <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" crossorigin=""></script>
-  <script src="data.js?v=bariloche22"></script>
-  <script src="app.js?v=bariloche22"></script>
-  <script src="../contacto.js?v=bariloche22" data-phone="5492915757934" data-text="Hola, quiero consultar por una propiedad en Bariloche" data-subject="Consulta demo — Estudio Nahuel Huapi" data-title="Consultar una propiedad" data-tone="usted" data-lead="Deje un mensaje o escriba por WhatsApp. Es un canal de ejemplo; no sale a un servidor."></script>
-  <link rel="stylesheet" href="styles.css?v=bariloche22">
+  <script src="data.js?v=bariloche24"></script>
+  <script src="app.js?v=bariloche24"></script>
+  <script src="../contacto.js?v=bariloche24" data-phone="5492915757934" data-text="Hola, quiero consultar por una propiedad en Bariloche" data-subject="Consulta demo — Estudio Nahuel Huapi" data-title="Consultar una propiedad" data-tone="usted" data-lead="Deje un mensaje o escriba por WhatsApp. Es un canal de ejemplo; no sale a un servidor."></script>
+  <link rel="stylesheet" href="styles.css?v=bariloche24">
 </body>
 </html>

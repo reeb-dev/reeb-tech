@@ -5,7 +5,8 @@ let currentFilters = {
   tipo: "",
   barrio: "",
   ambientes: "",
-  precio: ""
+  precio: "",
+  novedad: ""
 };
 let currentView = "grid";
 let currentProperty = null;
@@ -25,18 +26,24 @@ function formatPrice(price, operacion) {
 let mapaComarca = null;
 let mapaFicha = null;
 
-function zonaPorBarrio(barrio) {
-  if (typeof ZONAS === "undefined") return null;
-  return ZONAS.find((z) => z.id === barrio) || null;
-}
-
 function populateBarrios() {
-  const barrios = [...new Set(properties.map((p) => p.barrio))].sort((a, b) => a.localeCompare(b, "es"));
   const select = document.getElementById("filterBarrio");
+  if (!select) return;
+  const fromZonas = (typeof zonasTodas === "function" ? zonasTodas() : ZONAS).map((z) => z.id);
+  const fromList = properties.map((p) => p.barrio).filter(Boolean);
+  const seen = new Set();
+  const barrios = [];
+  fromZonas.concat(fromList).forEach((barrio) => {
+    if (!barrio || seen.has(barrio)) return;
+    seen.add(barrio);
+    barrios.push(barrio);
+  });
   barrios.forEach((barrio) => {
     const opt = document.createElement("option");
     opt.value = barrio;
-    opt.textContent = barrio;
+    const z = typeof zonaPorBarrio === "function" ? zonaPorBarrio(barrio) : null;
+    const cerca = z && typeof zonaCercaNombre === "function" ? zonaCercaNombre(z) : "";
+    opt.textContent = cerca ? barrio + " · cerca de " + cerca : barrio;
     select.appendChild(opt);
   });
   renderBarrioChips();
@@ -50,12 +57,14 @@ function renderBarrioChips() {
 }
 
 function readFiltersFromForm() {
+  const novedad = currentFilters.novedad || "";
   currentFilters = {
     operacion: document.getElementById("filterOperacion").value,
     tipo: document.getElementById("filterTipo").value,
     barrio: document.getElementById("filterBarrio").value,
     ambientes: document.getElementById("filterAmbientes").value,
-    precio: document.getElementById("filterPrecio").value
+    precio: document.getElementById("filterPrecio").value,
+    novedad
   };
 }
 
@@ -92,6 +101,7 @@ function clearFilters() {
   document.getElementById("filterAmbientes").value = "";
   document.getElementById("filterPrecio").value = "";
   document.getElementById("sortSelect").value = "destacados";
+  currentFilters.novedad = "";
   applyFilters();
 }
 
@@ -118,16 +128,21 @@ function detalleHref(id) {
 
 function renderZoneCards() {
   const host = document.getElementById("zoneCards");
-  if (!host || typeof ZONAS === "undefined") return;
+  const zonas = typeof zonasTodas === "function" ? zonasTodas() : (typeof ZONAS === "undefined" ? [] : ZONAS);
+  if (!host || !zonas.length) return;
   const allBtn = document.getElementById("zoneAll");
   if (allBtn) allBtn.classList.toggle("is-quiet", !currentFilters.barrio);
-  host.innerHTML = ZONAS.filter((z) => z.id).map((z) => `
+  host.innerHTML = zonas.filter((z) => z.id).map((z) => {
+    const cerca = typeof zonaCercaNombre === "function" ? zonaCercaNombre(z) : "";
+    const foto = typeof zonaFotoDe === "function" ? zonaFotoDe(z) : (z.foto || "img/lago.jpg");
+    return `
     <button type="button" class="zone-pick ${currentFilters.barrio === z.id ? "active" : ""}" data-zona="${esc(z.id)}" aria-pressed="${currentFilters.barrio === z.id ? "true" : "false"}">
-      <img src="${esc(z.foto)}" alt="${esc(z.nombre)}">
+      <img src="${esc(foto)}" alt="${esc(z.nombre)}">
       <span>${esc(z.nombre)}</span>
-      <small>${esc(z.texto)}</small>
-    </button>
-  `).join("");
+      ${cerca ? `<em class="zone-cerca">Cerca de ${esc(cerca)}</em>` : ""}
+      <small>${esc(z.texto || "")}</small>
+    </button>`;
+  }).join("");
 }
 
 function tilesOsm(map) {
@@ -139,12 +154,13 @@ function tilesOsm(map) {
 
 function pintarMapaComarca() {
   const el = document.getElementById("mapaComarca");
-  if (!el || el.closest("[hidden]") || typeof L === "undefined" || typeof ZONAS === "undefined") return;
+  const list = typeof zonasTodas === "function" ? zonasTodas() : (typeof ZONAS === "undefined" ? [] : ZONAS);
+  if (!el || el.closest("[hidden]") || typeof L === "undefined" || !list.length) return;
   if (mapaComarca) {
     mapaComarca.remove();
     mapaComarca = null;
   }
-  const zonas = ZONAS.filter((z) => z.id);
+  const zonas = list.filter((z) => z.id).map((z) => typeof zonaConCoords === "function" ? zonaConCoords(z) : z);
   mapaComarca = L.map(el, { scrollWheelZoom: false }).setView([-41.35, -71.38], 9);
   tilesOsm(mapaComarca);
   zonas.forEach((z) => {
@@ -159,8 +175,8 @@ function pintarMapaComarca() {
     marker.bindTooltip(z.nombre, { permanent: true, direction: "top", className: "zona-tip", offset: [0, -6] });
     marker.on("click", () => selectZona(z.id, true));
   });
-  const activa = zonaPorBarrio(currentFilters.barrio);
-  if (activa) mapaComarca.setView([activa.lat, activa.lng], activa.id === "El Bolsón" ? 11 : 12);
+  const activa = typeof zonaPorBarrio === "function" ? zonaPorBarrio(currentFilters.barrio) : null;
+  if (activa) mapaComarca.setView([activa.lat, activa.lng], activa.id === "El Bolsón" || activa.parentId === "El Bolsón" ? 11 : 12);
   else mapaComarca.fitBounds(zonas.map((z) => [z.lat, z.lng]), { padding: [28, 28] });
   window.setTimeout(() => mapaComarca && mapaComarca.invalidateSize(), 80);
 }
@@ -202,6 +218,8 @@ function filterProperties() {
     if (currentFilters.operacion && p.operacion !== currentFilters.operacion) return false;
     if (currentFilters.tipo && p.tipo !== currentFilters.tipo) return false;
     if (currentFilters.barrio && p.barrio !== currentFilters.barrio) return false;
+    if (currentFilters.novedad === "nuevo" && !p.nuevo) return false;
+    if (currentFilters.novedad === "baja" && !p.bajoPrecio) return false;
     if (currentFilters.ambientes) {
       const amb = Number(currentFilters.ambientes);
       if (amb === 4 && p.ambientes < 4) return false;
@@ -309,7 +327,7 @@ function renderProperties() {
         <div class="body">
           <div class="type-location">${esc(tipoLabel(p.tipo))}</div>
           <h3><a href="${esc(detalleHref(p.id))}">${esc(p.titulo)}</a></h3>
-          <div class="location">Zona ${esc(p.barrio)}</div>
+          <div class="location">${esc(zonaPublicaTexto(p.barrio))}</div>
           ${htmlPrecioVitrina(p)}
           ${p.expensas ? `<div class="expenses">+ Expensas: ${esc(money(p.expensas))}</div>` : ""}
           <div class="specs">
@@ -325,7 +343,47 @@ function renderProperties() {
     `;
   }).join("") + (shownCount < filtered.length ? '<div id="listSentinel" class="list-sentinel" aria-hidden="true"></div>' : "");
   watchListEnd();
+  renderNovedadChips();
   renderRecientes();
+  renderBajas();
+}
+
+function zonaPublicaTexto(barrio) {
+  const z = typeof zonaPorBarrio === "function" ? zonaPorBarrio(barrio) : null;
+  const cerca = z && typeof zonaCercaNombre === "function" ? zonaCercaNombre(z) : "";
+  return cerca ? "Zona " + barrio + " · cerca de " + cerca : "Zona " + barrio;
+}
+
+function htmlNovedadCard(p) {
+  const portada = (p.imagenes || [])[0] || fotoPorTipo(p.tipo);
+  return `
+      <a class="recientes-card${p.nuevo ? " is-nueva" : ""}${p.bajoPrecio ? " is-baja" : ""}" href="${esc(detalleHref(p.id))}">
+        <span class="recientes-card-media">
+          <img src="${esc(portada)}" alt="">
+          ${htmlAvisoFlags(p)}
+        </span>
+        <strong>${esc(p.titulo)}</strong>
+        ${htmlPrecioVitrina(p)}
+        <span class="recientes-card-zona">${esc(zonaPublicaTexto(p.barrio))}</span>
+      </a>`;
+}
+
+function renderNovedadChips() {
+  const host = document.getElementById("novedadChips");
+  if (!host) return;
+  const visibles = properties.filter((p) => p.status === "disponible" || p.status === "reservada");
+  const nNuevo = visibles.filter((p) => p.nuevo).length;
+  const nBaja = visibles.filter((p) => p.bajoPrecio).length;
+  if (!nNuevo && !nBaja) {
+    host.innerHTML = "";
+    host.hidden = true;
+    return;
+  }
+  host.hidden = false;
+  host.innerHTML = `
+    ${nNuevo ? `<button type="button" class="${currentFilters.novedad === "nuevo" ? "is-on" : ""}" data-novedad="nuevo">Recién publicadas</button>` : ""}
+    ${nBaja ? `<button type="button" class="${currentFilters.novedad === "baja" ? "is-on" : ""}" data-novedad="baja">Bajaron de precio</button>` : ""}
+  `;
 }
 
 function renderRecientes() {
@@ -335,19 +393,17 @@ function renderRecientes() {
   const visibles = properties.filter((p) => p.status === "disponible" || p.status === "reservada");
   const list = recientesDe(visibles, 4);
   host.hidden = list.length === 0;
-  track.innerHTML = list.map((p) => {
-    const portada = (p.imagenes || [])[0] || fotoPorTipo(p.tipo);
-    return `
-      <a class="recientes-card${p.nuevo ? " is-nueva" : ""}${p.bajoPrecio ? " is-baja" : ""}" href="${esc(detalleHref(p.id))}">
-        <span class="recientes-card-media">
-          <img src="${esc(portada)}" alt="">
-          ${htmlAvisoFlags(p)}
-        </span>
-        <strong>${esc(p.titulo)}</strong>
-        ${htmlPrecioVitrina(p)}
-        <span class="recientes-card-zona">${esc(p.barrio)}</span>
-      </a>`;
-  }).join("");
+  track.innerHTML = list.map(htmlNovedadCard).join("");
+}
+
+function renderBajas() {
+  const host = document.getElementById("bajas");
+  const track = document.getElementById("bajasTrack");
+  if (!host || !track) return;
+  const visibles = properties.filter((p) => p.status === "disponible" || p.status === "reservada");
+  const list = typeof bajasDe === "function" ? bajasDe(visibles, 4) : visibles.filter((p) => p.bajoPrecio).slice(0, 4);
+  host.hidden = list.length === 0;
+  track.innerHTML = list.map(htmlNovedadCard).join("");
 }
 
 function showFichaToast(message) {
@@ -384,7 +440,7 @@ function openModal(id) {
     </div>
     ${htmlLikeButton(p)}
     <h2 id="modalTitle">${esc(p.titulo)}</h2>
-    <div class="location">Zona ${esc(p.barrio)}</div>
+    <div class="location">${esc(zonaPublicaTexto(p.barrio))}</div>
 
     <div class="price-box">
       ${htmlPrecioVitrina(p)}
@@ -518,6 +574,15 @@ document.getElementById("btnVerMas")?.addEventListener("click", loadMoreListings
 document.getElementById("zoneAll")?.addEventListener("click", () => selectZona("", true));
 ["filterOperacion", "filterTipo", "filterBarrio", "filterAmbientes", "filterPrecio", "sortSelect"].forEach((id) => {
   document.getElementById(id).addEventListener("change", applyFilters);
+});
+
+document.getElementById("novedadChips")?.addEventListener("click", (event) => {
+  const btn = event.target.closest("[data-novedad]");
+  if (!btn) return;
+  currentFilters.novedad = currentFilters.novedad === btn.dataset.novedad ? "" : btn.dataset.novedad;
+  resetListingWindow();
+  renderNovedadChips();
+  renderProperties();
 });
 
 document.getElementById("zoneCards")?.addEventListener("click", (event) => {

@@ -74,6 +74,136 @@ const ZONAS = [
   { id: "El Bolsón", nombre: "El Bolsón", foto: "img/zona-bolson.jpg", texto: "Valle al sur. Unas dos horas por la ruta 40.", lat: -41.966, lng: -71.533 }
 ];
 
+const ZONAS_KEY = "inmobiliaria-demo-zonas-v1";
+const BARILOCHE_LAT = -41.1335;
+const BARILOCHE_LNG = -71.3103;
+
+function zonaNombreId(nombre) {
+  return String(nombre || "").trim().replace(/\s+/g, " ").slice(0, 60);
+}
+
+function loadZonasCustom() {
+  try {
+    const raw = JSON.parse(localStorage.getItem(ZONAS_KEY) || "[]");
+    if (!Array.isArray(raw)) return [];
+    return raw.filter((z) => z && zonaNombreId(z.id || z.nombre)).map((z) => {
+      const id = zonaNombreId(z.id || z.nombre);
+      const parentId = zonaNombreId(z.parentId || z.relacionada || "");
+      return {
+        id,
+        nombre: zonaNombreId(z.nombre) || id,
+        texto: String(z.texto || "").trim().slice(0, 160),
+        foto: z.foto || "",
+        parentId,
+        custom: true
+      };
+    });
+  } catch {
+    return [];
+  }
+}
+
+function saveZonasCustom(list) {
+  const payload = (list || []).filter((z) => z && z.custom && z.id).map((z) => ({
+    id: z.id,
+    nombre: z.nombre,
+    texto: z.texto || "",
+    foto: z.foto || "",
+    parentId: z.parentId || ""
+  }));
+  localStorage.setItem(ZONAS_KEY, JSON.stringify(payload));
+}
+
+function zonasTodas() {
+  const seen = new Set(ZONAS.map((z) => z.id.toLowerCase()));
+  const extras = loadZonasCustom().filter((z) => {
+    const key = z.id.toLowerCase();
+    if (seen.has(key)) return false;
+    seen.add(key);
+    return true;
+  });
+  return ZONAS.concat(extras);
+}
+
+function zonaBasePorId(id) {
+  if (!id) return null;
+  return zonasTodas().find((z) => z.id === id) || null;
+}
+
+function zonaConCoords(zona) {
+  if (!zona) return { lat: BARILOCHE_LAT, lng: BARILOCHE_LNG, nombre: "", id: "" };
+  if (Number(zona.lat) && Number(zona.lng)) return zona;
+  if (zona.parentId) {
+    const parent = zonaBasePorId(zona.parentId);
+    if (parent && Number(parent.lat) && Number(parent.lng)) {
+      return { ...zona, lat: parent.lat, lng: parent.lng, foto: zona.foto || parent.foto };
+    }
+  }
+  return { ...zona, lat: BARILOCHE_LAT, lng: BARILOCHE_LNG };
+}
+
+function zonaPorBarrio(barrio) {
+  const found = zonaBasePorId(barrio);
+  if (!found) return null;
+  const parent = found.parentId ? zonaBasePorId(found.parentId) : null;
+  return zonaConCoords({
+    ...found,
+    foto: found.foto || parent?.foto || "img/lago.jpg"
+  });
+}
+
+function zonaRegionDe(barrio) {
+  const z = zonaPorBarrio(barrio) || { id: barrio, parentId: "" };
+  if (z.id === "El Bolsón" || z.parentId === "El Bolsón") return "El Bolsón";
+  return "Bariloche";
+}
+
+function zonaCercaNombre(zona) {
+  const id = zona?.parentId;
+  if (!id) return "";
+  const parent = zonaBasePorId(id);
+  return parent?.nombre || id;
+}
+
+function zonaFotoDe(zona) {
+  if (zona?.foto) return zona.foto;
+  if (zona?.parentId) {
+    const parent = zonaBasePorId(zona.parentId);
+    if (parent?.foto) return parent.foto;
+  }
+  return "img/lago.jpg";
+}
+
+function agregarZonaCustom(input) {
+  const nombre = zonaNombreId(input?.nombre);
+  if (!nombre) return { ok: false, error: "Indique el nombre de la localidad o zona." };
+  const all = zonasTodas();
+  if (all.some((z) => z.id.toLowerCase() === nombre.toLowerCase())) {
+    return { ok: false, error: "Esa zona ya está en la lista." };
+  }
+  const parentId = zonaNombreId(input?.parentId || "");
+  if (parentId && !all.some((z) => z.id === parentId)) {
+    return { ok: false, error: "La zona relacionada no está en la comarca." };
+  }
+  const parent = parentId ? zonaBasePorId(parentId) : null;
+  const next = {
+    id: nombre,
+    nombre,
+    texto: String(input?.texto || "").trim().slice(0, 160) || "Localidad de la comarca cargada por el estudio.",
+    parentId,
+    foto: parent?.foto || "img/lago.jpg",
+    custom: true
+  };
+  saveZonasCustom(loadZonasCustom().concat(next));
+  return { ok: true, zona: next };
+}
+
+function quitarZonaCustom(id) {
+  if (ZONAS.some((z) => z.id === id)) return false;
+  saveZonasCustom(loadZonasCustom().filter((z) => z.id !== id));
+  return true;
+}
+
 function fotoPorTipo(tipo) {
   if (tipo === "casa") return FOTOS.casaPiedra;
   if (tipo === "cabana") return FOTOS.cabanaBosque;
@@ -898,6 +1028,7 @@ const COLA_KEY = "inmobiliaria-demo-cola-v1";
 const USERS_KEY = "inmobiliaria-demo-usuarios-v1";
 const SESSION_KEY = "inmobiliaria-demo-sesion-v1";
 const VITRINA_KEY = "inmobiliaria-demo-vitrina-v1";
+const VITRINA_EJEMPLOS_KEY = "inmobiliaria-demo-vitrina-ejemplos-v1";
 const DEMO_WA_PHONE = "5492915757934";
 
 const STAFF_ROLES = [
@@ -1569,6 +1700,87 @@ function recientesDe(list, n) {
   }).slice(0, n || 4);
 }
 
+function bajasDe(list, n) {
+  const pool = (list || []).filter((p) => p.bajoPrecio);
+  return pool.slice(0, n || 4);
+}
+
+function loadEjemplosState() {
+  try {
+    const raw = localStorage.getItem(VITRINA_EJEMPLOS_KEY);
+    if (!raw) return { baja: false, nuevo: false };
+    if (raw === "1" || raw === "true") return { baja: true, nuevo: true };
+    const parsed = JSON.parse(raw);
+    if (parsed && typeof parsed === "object") {
+      return { baja: Boolean(parsed.baja), nuevo: Boolean(parsed.nuevo) };
+    }
+  } catch {
+    /* catálogo viejo sin bandera */
+  }
+  return { baja: false, nuevo: false };
+}
+
+function saveEjemplosState(state) {
+  localStorage.setItem(VITRINA_EJEMPLOS_KEY, JSON.stringify({
+    baja: Boolean(state.baja),
+    nuevo: Boolean(state.nuevo)
+  }));
+}
+
+function precioAnteriorEjemplo(precio) {
+  const n = Number(precio) || 0;
+  if (n <= 0) return 0;
+  const prev = Math.round((n * 1.12) / 1000) * 1000;
+  return prev > n ? prev : n + Math.max(4000, Math.round(n * 0.1));
+}
+
+function migrateVitrinaEjemplos(items) {
+  if (!Array.isArray(items) || !items.length) return items;
+  const state = loadEjemplosState();
+  let changed = false;
+
+  const hasBaja = items.some((p) => p.bajoPrecio && Number(p.precioAnterior) > Number(p.precio || 0));
+  if (!hasBaja && !state.baja) {
+    const ventas = items.filter((p) => p.operacion === "venta" && Number(p.precio) > 0);
+    ventas.slice(0, 2).forEach((p) => {
+      p.bajoPrecio = true;
+      p.precioAnterior = precioAnteriorEjemplo(p.precio);
+      p.history = [{
+        when: "hoy",
+        text: "Precio de ejemplo bajado. La vitrina muestra “Bajó de precio”. No se inventó un descuento grande."
+      }, ...(p.history || [])];
+    });
+    state.baja = true;
+    changed = true;
+  } else if (hasBaja) {
+    state.baja = true;
+  }
+
+  const hasNuevo = items.some((p) => p.nuevo);
+  if (!hasNuevo && !state.nuevo) {
+    const visibles = items.filter((p) => p.status === "disponible" || p.status === "reservada");
+    const pool = (visibles.length ? visibles : items).slice();
+    pool.sort((a, b) => Number(b.ingresada || 0) - Number(a.ingresada || 0));
+    pool.slice(0, 4).forEach((p) => {
+      p.nuevo = true;
+    });
+    state.nuevo = true;
+    changed = true;
+  } else if (hasNuevo) {
+    state.nuevo = true;
+  }
+
+  saveEjemplosState(state);
+  if (changed) {
+    try {
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(items));
+    } catch {
+      /* cuota de esta demo */
+    }
+  }
+  return items;
+}
+
 function htmlPublicBadges(p) {
   const bits = [
     `<span class="badge ${esc(p.operacion)}">${esc(opLabel(p.operacion))}</span>`
@@ -1615,9 +1827,17 @@ function load() {
   if (!raw) {
     const data = seed();
     localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
+    saveEjemplosState({ baja: true, nuevo: true });
     return data;
   }
-  return JSON.parse(raw);
+  let data;
+  try {
+    data = JSON.parse(raw);
+  } catch {
+    data = seed();
+  }
+  if (!Array.isArray(data)) data = seed();
+  return migrateVitrinaEjemplos(data);
 }
 
 function save(items) {

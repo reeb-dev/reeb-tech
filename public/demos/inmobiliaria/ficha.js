@@ -45,9 +45,9 @@ function pintarMapaFicha(p) {
     mapaFicha = null;
   }
   const z = (typeof zonaPorBarrio === "function" ? zonaPorBarrio(p.barrio) : null)
-    || (typeof ZONAS !== "undefined" ? ZONAS.find((item) => item.id === p.barrio) : null)
     || { lat: -41.1335, lng: -71.3103, nombre: p.barrio };
-  mapaFicha = L.map(el, { scrollWheelZoom: false }).setView([z.lat, z.lng], p.barrio === "El Bolsón" ? 12 : 13);
+  const zoom = (z.id === "El Bolsón" || z.parentId === "El Bolsón") ? 12 : 13;
+  mapaFicha = L.map(el, { scrollWheelZoom: false }).setView([z.lat, z.lng], zoom);
   if (typeof tilesOsm === "function") tilesOsm(mapaFicha);
   else L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", { attribution: "&copy; OpenStreetMap" }).addTo(mapaFicha);
   L.marker([z.lat, z.lng]).addTo(mapaFicha).bindPopup(esc(p.barrio) + " · zona aproximada");
@@ -87,6 +87,8 @@ function renderFicha(p) {
   const esDepto = p.tipo === "departamento";
   const amenities = p.amenities || [];
   const volver = listadoHref(zonaVolver);
+  const zona = typeof zonaPorBarrio === "function" ? zonaPorBarrio(p.barrio) : null;
+  const cerca = zona && typeof zonaCercaNombre === "function" ? zonaCercaNombre(zona) : "";
   document.title = p.titulo;
 
   root.innerHTML = `
@@ -114,7 +116,7 @@ function renderFicha(p) {
           <div class="ficha-badges">
             ${htmlPublicBadges(p)}
           </div>
-          <p class="ficha-zona">${esc(tipoLabel(p.tipo))} · Zona ${esc(p.barrio)}</p>
+          <p class="ficha-zona">${esc(tipoLabel(p.tipo))} · Zona ${esc(p.barrio)}${cerca ? " · cerca de " + esc(cerca) : ""}</p>
           <h1 class="ficha-titulo">${esc(p.titulo)}</h1>
           ${htmlPrecioVitrina(p)}
           ${p.expensas ? `<p class="ficha-expensas">+ Expensas: ${esc(money(p.expensas))}</p>` : ""}
@@ -213,11 +215,6 @@ function formatPrice(price, operacion) {
     return "USD " + Number(price).toLocaleString("es-AR");
   }
   return "$ " + Number(price).toLocaleString("es-AR") + "/mes";
-}
-
-function zonaPorBarrio(barrio) {
-  if (typeof ZONAS === "undefined") return null;
-  return ZONAS.find((z) => z.id === barrio) || null;
 }
 
 const items = load();
