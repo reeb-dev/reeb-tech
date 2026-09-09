@@ -312,7 +312,7 @@ function renderProperties() {
     ].filter(Boolean).join(" ");
     return `
       <article class="property-card ${cardMods}" data-id="${esc(p.id)}">
-        <div class="image${(p.bajoPrecio || p.nuevo) ? " has-aviso-flags" : ""}">
+        <div class="image">
           <a class="card-cover" href="${esc(detalleHref(p.id))}">
             <img src="${esc(portada)}" alt="${esc(p.titulo)}">
             <div class="badges">

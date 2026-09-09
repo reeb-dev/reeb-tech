@@ -811,7 +811,7 @@ function htmlDifusionPublicar(editable) {
           <p class="difusion-grupo-lead">Elija la ficha y marque destinos conectados. El sitio propio ya está en la vitrina.</p>
         </div>
       </header>
-      <form class="difusion-publicar-form" id="difusion-publicar-form">
+      <form class="difusion-publicar-form form-shell" id="difusion-publicar-form">
         <div class="nh-field">
           <label for="pub-item">Aviso</label>
           <select id="pub-item" name="item" required>
@@ -838,7 +838,7 @@ function htmlDifusionPublicar(editable) {
               </label>`).join("") || "<p class=\"cola-vacia\">Ninguna conectada</p>"}
           </fieldset>
         </div>
-        <div class="difusion-toolbar">
+        <div class="difusion-toolbar form-actions">
           <button class="btn-panel" type="submit">Publicar marcados</button>
           <button class="ghost" type="button" data-panel-nav="cartera">Abrir en cartera</button>
         </div>
@@ -867,7 +867,7 @@ function renderDifusion() {
         </div>
       </header>
       ${editable && destinosCola.length ? `
-        <form class="cola-alta" id="cola-alta">
+        <form class="cola-alta form-shell" id="cola-alta">
           <div class="nh-field">
             <label for="cola-item">Aviso</label>
             <select id="cola-item" name="item">
@@ -1795,7 +1795,7 @@ function renderVitrinaGestor() {
           </div>
           ${toggle}
         </header>
-        <form data-vitrina-form="${esc(sec.id)}" class="vitrina-section-form">
+        <form data-vitrina-form="${esc(sec.id)}" class="vitrina-section-form form-shell">
           ${fields}
           <div class="form-actions">${save}</div>
         </form>
@@ -1973,8 +1973,14 @@ function paintUsuarioAlta() {
   const nota = document.getElementById("usuario-alta-nota");
   const puede = canManageUsers();
   if (alta) {
-    alta.hidden = !puede;
-    alta.setAttribute("aria-hidden", puede ? "false" : "true");
+    if (puede) {
+      alta.hidden = false;
+      alta.removeAttribute("hidden");
+      alta.setAttribute("aria-hidden", "false");
+    } else {
+      alta.hidden = true;
+      alta.setAttribute("aria-hidden", "true");
+    }
     alta.querySelectorAll("input, select, button").forEach((el) => {
       el.disabled = !puede;
     });

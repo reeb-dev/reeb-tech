@@ -1110,18 +1110,14 @@ textarea:focus {
   box-shadow: none;
 }
 
-.aviso-flag.is-baja,
 .aviso-flag.is-nueva {
-  background: rgba(44, 36, 31, 0.78);
-  color: #fffdf9;
+  background: #f3d7c8;
+  color: var(--clay-deep);
 }
 
-.property-card .image.has-aviso-flags .barrio-pill {
-  display: none;
-}
-
-.property-card .image.has-aviso-flags .aviso-flags {
-  bottom: 14px;
+.aviso-flag.is-baja {
+  background: #27573a;
+  color: #f4f6f3;
 }
 
 .ficha-stage .aviso-flags {
@@ -1189,10 +1185,14 @@ textarea:focus {
   color: var(--ink);
 }
 
-.precio-nota.is-baja,
 .precio-nota.is-nueva {
-  background: rgba(44, 36, 31, 0.08);
-  color: var(--ink);
+  background: #f3d7c8;
+  color: var(--clay-deep);
+}
+
+.precio-nota.is-baja {
+  background: #e5f1e8;
+  color: #27573a;
 }
 
 .property-card.is-baja,
@@ -1975,28 +1975,62 @@ footer {
 .demo-contacto .demo-contacto-lead { color: var(--muted); }
 
 .demo-contacto form {
+  display: grid;
+  gap: 14px;
   background: var(--card);
   border: 1px solid var(--line);
-  border-radius: 22px;
-  padding: 20px;
-  box-shadow: var(--shadow);
+  border-radius: 18px;
+  padding: 18px 18px 16px;
+  box-shadow: none;
 }
 
-.demo-contacto label { color: var(--ink); font-weight: 600; }
+.demo-contacto label {
+  display: grid;
+  gap: 6px;
+  margin: 0;
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--clay-deep);
+}
 
 .demo-contacto input,
 .demo-contacto textarea {
-  border: 1px solid var(--line);
-  border-radius: 12px;
-  background: #fff;
+  width: 100%;
+  min-height: 44px;
+  padding: 10px 16px;
+  border: 1px solid #c9b8a8;
+  border-radius: 999px;
+  background: #fffdf9;
   color: var(--ink);
+  font: inherit;
+  box-shadow: none;
+}
+
+.demo-contacto textarea {
+  min-height: 120px;
+  border-radius: 18px;
+  resize: vertical;
+}
+
+.demo-contacto input:focus,
+.demo-contacto textarea:focus {
+  outline: none;
+  border-color: var(--clay);
+  box-shadow: 0 0 0 3px rgba(77, 109, 130, 0.22);
 }
 
 .demo-contacto button[type="submit"] {
+  justify-self: start;
   background: var(--clay);
   color: #fff;
+  border: 0;
   border-radius: 999px;
-  font-family: inherit;
+  padding: 10px 16px;
+  min-height: 44px;
+  font: inherit;
+  cursor: pointer;
 }
 
 .demo-contacto button[type="submit"]:hover { background: var(--clay-deep); }
@@ -2328,11 +2362,6 @@ footer {
   align-items: center;
 }
 
-.difusion-publicar-form {
-  display: grid;
-  gap: 16px;
-}
-
 .publish-grid {
   display: grid;
   grid-template-columns: 1fr 1fr;
@@ -2415,14 +2444,6 @@ footer {
 .destino-row small { color: var(--muted); font-size: 12px; }
 .destino-row.is-off { opacity: 0.5; }
 
-.cola-alta {
-  display: grid;
-  grid-template-columns: 1.4fr 1fr auto;
-  gap: 12px 14px;
-  margin: 0 0 16px;
-  align-items: end;
-}
-
 .cola-alta .nh-field { margin: 0; }
 .cola-alta-action {
   display: flex;
@@ -2459,19 +2480,13 @@ footer {
 
 .difusion-share-grid {
   display: grid;
-  gap: 14px;
+  grid-template-columns: minmax(0, 0.9fr) minmax(0, 1.1fr);
+  gap: 14px 16px;
   margin-bottom: 14px;
 }
 
 .difusion-share-text-field textarea {
   min-height: 110px;
-  border: 1px solid #c9b8a8;
-  border-radius: 14px;
-  background: var(--paper);
-  padding: 12px 14px;
-  font: inherit;
-  line-height: 1.45;
-  resize: vertical;
 }
 
 .difusion-acciones {
@@ -2512,11 +2527,12 @@ footer {
   padding: 0 22px;
 }
 
+/* Altas sueltas del panel: mismo bloque claro que Usuarios */
 .usuario-alta,
 .zona-alta,
+.cola-alta,
 .cola-alta.form-shell {
   display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
   gap: 14px 16px;
   margin: 0 0 16px;
   align-items: start;
@@ -2524,6 +2540,31 @@ footer {
   border: 1px solid var(--line);
   border-radius: 18px;
   padding: 18px 18px 16px;
+}
+
+.usuario-alta,
+.zona-alta {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.cola-alta,
+.cola-alta.form-shell {
+  grid-template-columns: 1.4fr 1fr auto;
+  align-items: end;
+}
+
+.difusion-publicar-form,
+.vitrina-section-form,
+.nh-login-form.form-shell {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 14px 16px;
+  margin: 0 0 12px;
+  align-items: start;
+}
+
+body.nh-rol-titular .usuario-alta:not([hidden]) {
+  display: grid !important;
 }
 
 .usuario-alta[hidden] {
@@ -2546,8 +2587,7 @@ footer {
 .zona-alta .nh-form-error { grid-column: 1 / -1; margin: 0; }
 
 .usuario-alta .form-actions,
-.zona-alta .form-actions,
-.cola-alta .form-actions {
+.zona-alta .form-actions {
   grid-column: 1 / -1;
   margin-top: 2px;
 }
@@ -3342,12 +3382,20 @@ tbody tr:hover { background: #fff8f2; }
 .nh-field textarea,
 .form-shell input,
 .form-shell select,
-.form-shell textarea {
+.form-shell textarea,
+.vitrina-section-form input,
+.vitrina-section-form textarea,
+.difusion-publicar-form input,
+.difusion-publicar-form select,
+.difusion-publicar-form textarea,
+.difusion-share-grid input,
+.difusion-share-grid select,
+.difusion-share-grid textarea {
   width: 100%;
   min-height: 44px;
-  padding: 10px 12px;
+  padding: 10px 16px;
   border: 1px solid #c9b8a8;
-  border-radius: 14px;
+  border-radius: 999px;
   background: #fffdf9;
   color: var(--ink);
   font: inherit;
@@ -3356,14 +3404,42 @@ tbody tr:hover { background: #fff8f2; }
 }
 
 .nh-field textarea,
-.form-shell textarea { min-height: 120px; resize: vertical; }
+.form-shell textarea,
+.vitrina-section-form textarea,
+.difusion-publicar-form textarea,
+.difusion-share-grid textarea {
+  min-height: 120px;
+  border-radius: 18px;
+  resize: vertical;
+}
+
+.nh-field select,
+.form-shell select,
+.difusion-publicar-form select,
+.difusion-share-grid select {
+  appearance: none;
+  background-image:
+    linear-gradient(45deg, transparent 50%, var(--clay-deep) 50%),
+    linear-gradient(135deg, var(--clay-deep) 50%, transparent 50%);
+  background-position:
+    calc(100% - 18px) calc(50% - 3px),
+    calc(100% - 12px) calc(50% - 3px);
+  background-size: 6px 6px, 6px 6px;
+  background-repeat: no-repeat;
+  padding-right: 36px;
+}
 
 .nh-field input:focus,
 .nh-field select:focus,
 .nh-field textarea:focus,
 .form-shell input:focus,
 .form-shell select:focus,
-.form-shell textarea:focus {
+.form-shell textarea:focus,
+.vitrina-section-form input:focus,
+.vitrina-section-form textarea:focus,
+.difusion-publicar-form select:focus,
+.difusion-share-grid select:focus,
+.difusion-share-grid textarea:focus {
   outline: none;
   border-color: var(--clay);
   box-shadow: 0 0 0 3px rgba(77, 109, 130, 0.22);
@@ -3818,6 +3894,7 @@ input, select, textarea {
   .zona-alta,
   .cola-alta,
   .cola-alta.form-shell,
+  .difusion-share-grid,
   .factura-grid { grid-template-columns: 1fr; }
   .form-actions--sticky {
     margin: 22px -14px 24px;
