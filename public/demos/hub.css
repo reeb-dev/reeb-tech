@@ -1329,6 +1329,17 @@ img { display: block; width: 100%; height: 100%; object-fit: cover; }
   letter-spacing: 0.08em;
 }
 
+.footer-visits {
+  margin-top: 8px;
+  font-size: 13px;
+  color: var(--muted);
+}
+
+.footer-visits span {
+  color: var(--gold);
+  font-weight: 650;
+}
+
 .footer a { color: var(--gold); }
 
 .footer a:hover { text-decoration: underline; }
