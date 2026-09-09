@@ -7,7 +7,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@560;640&family=Figtree:wght@400;500;600;700&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="styles.css">
+  <link rel="stylesheet" href="styles.css?v=bariloche12">
 </head>
 <body class="panel-page">
   <div class="app">
@@ -20,10 +20,12 @@
         <details class="mobile-menu">
           <summary>Menú</summary>
           <a href="index.html">Vitrina</a>
+          <a href="#difusion">Difusión</a>
           <a href="#contacto">Contacto</a>
         </details>
         <nav id="siteNav">
           <a href="index.html">Vitrina</a>
+          <a href="#difusion">Difusión</a>
         </nav>
         <button class="btn" id="open-create" type="button">Nueva propiedad</button>
       </div>
@@ -33,9 +35,18 @@
       <div>
         <p class="eyebrow">Datos de ejemplo</p>
         <h1>Cartera de propiedades</h1>
-        <p class="lead-panel">Visitas al anuncio y consultas se ven aquí, no en la vitrina.</p>
+        <p class="lead-panel">Cargue la propiedad una vez. La vitrina, Mercado Libre y las redes se manejan desde acá. Las visitas y consultas no se muestran en la vitrina.</p>
       </div>
     </div>
+
+    <section class="difusion" id="difusion">
+      <div class="difusion-head">
+        <p class="eyebrow">Una carga · varios destinos</p>
+        <h2>Dónde sale cada aviso</h2>
+        <p>Conecte las cuentas. Después, en cada ficha, elija si ese aviso va a la web, a un portal o a redes. Demo: no se envía nada afuera. En un sistema real, Mercado Libre y Zonaprop van por API desde el servidor. El aviso pago de cada portal se contrata aparte.</p>
+      </div>
+      <div class="cuentas" id="cuentas"></div>
+    </section>
 
     <div class="stats" id="stats"></div>
 
@@ -89,9 +100,9 @@
     <div class="panel-contact wrap" id="contacto"></div>
   </div>
 
-  <script src="data.js"></script>
-  <script src="panel.js"></script>
+  <script src="data.js?v=bariloche12"></script>
+  <script src="panel.js?v=bariloche12"></script>
   <script src="../contacto.js" data-phone="5492915757934" data-text="Hola, quiero consultar por una propiedad en Bariloche" data-subject="Consulta demo — Estudio Nahuel Huapi" data-title="Consultar una propiedad" data-place="panel"></script>
-  <link rel="stylesheet" href="styles.css">
+  <link rel="stylesheet" href="styles.css?v=bariloche12">
 </body>
 </html>

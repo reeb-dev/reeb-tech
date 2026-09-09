@@ -879,7 +879,99 @@ function seed() {
 }
 
 const STORAGE_KEY = "inmobiliaria-demo-v9";
+const CUENTAS_KEY = "inmobiliaria-demo-cuentas-v1";
 const DEMO_WA_PHONE = "5492915757934";
+
+const DESTINOS = [
+  {
+    id: "web",
+    nombre: "Sitio propio",
+    tipo: "api",
+    fijo: true,
+    beneficio: "La vitrina toma el catálogo de este panel. No hay aviso pago."
+  },
+  {
+    id: "ml",
+    nombre: "Mercado Libre",
+    tipo: "api",
+    beneficio: "Se envía por la API de inmuebles. Hace falta el paquete de ML."
+  },
+  {
+    id: "zonaprop",
+    nombre: "Zonaprop",
+    tipo: "api",
+    beneficio: "Conexión tipo OpenNavent. El abono del portal es aparte."
+  },
+  {
+    id: "argenprop",
+    nombre: "Argenprop",
+    tipo: "api",
+    beneficio: "En un sistema real suele ir por un CRM homologado o un acuerdo con el portal."
+  },
+  {
+    id: "instagram",
+    nombre: "Instagram",
+    tipo: "red",
+    beneficio: "Arma el texto y el enlace a la ficha. No hay API de avisos como en ML."
+  },
+  {
+    id: "facebook",
+    nombre: "Facebook",
+    tipo: "red",
+    beneficio: "Texto listo para grupos o Marketplace. En vivienda, Meta suele pedir perfil personal."
+  },
+  {
+    id: "whatsapp",
+    nombre: "WhatsApp",
+    tipo: "red",
+    beneficio: "Comparte la ficha con el mensaje ya armado."
+  }
+];
+
+function defaultCuentas() {
+  return {
+    web: { connected: true },
+    ml: { connected: false },
+    zonaprop: { connected: false },
+    argenprop: { connected: false },
+    instagram: { connected: false },
+    facebook: { connected: false },
+    whatsapp: { connected: true }
+  };
+}
+
+function loadCuentas() {
+  const raw = localStorage.getItem(CUENTAS_KEY);
+  if (!raw) {
+    const data = defaultCuentas();
+    localStorage.setItem(CUENTAS_KEY, JSON.stringify(data));
+    return data;
+  }
+  return { ...defaultCuentas(), ...JSON.parse(raw) };
+}
+
+function saveCuentas(cuentas) {
+  localStorage.setItem(CUENTAS_KEY, JSON.stringify(cuentas));
+}
+
+function portalesDe(item) {
+  return {
+    web: true,
+    ml: false,
+    zonaprop: false,
+    argenprop: false,
+    instagram: false,
+    facebook: false,
+    whatsapp: false,
+    ...(item.portales || {})
+  };
+}
+
+function textoRed(item) {
+  const precio = item.operacion === "venta" ? money(item.precio, true) : money(item.precio) + " /mes";
+  const ficha = "propiedad.html?id=" + item.id;
+  return item.titulo + "\n" + opLabel(item.operacion) + " · " + item.barrio + "\n" + precio + "\n" + ficha;
+}
 
 function load() {
   const raw = localStorage.getItem(STORAGE_KEY);

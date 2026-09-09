@@ -1,4 +1,5 @@
 let items = load();
+let cuentas = loadCuentas();
 let selected = items[0]?.id || "";
 let filter = "todos";
 let searchTerm = "";
@@ -44,6 +45,7 @@ document.getElementById("create").addEventListener("submit", (event) => {
     status: "disponible",
     cliente: null,
     visitas: [],
+    portales: { web: true, ml: false, zonaprop: false, argenprop: false, instagram: false, facebook: false, whatsapp: false },
     history: [{ when: "hoy", text: "Propiedad agregada a la cartera." }]
   };
   items = [item, ...items];
@@ -68,7 +70,54 @@ function visible() {
   return result;
 }
 
+function destinoConectado(id) {
+  const dest = DESTINOS.find((d) => d.id === id);
+  if (dest?.fijo) return true;
+  return Boolean(cuentas[id]?.connected);
+}
+
+function renderCuentas() {
+  const host = document.getElementById("cuentas");
+  if (!host) return;
+  host.innerHTML = DESTINOS.map((dest) => {
+    const on = destinoConectado(dest.id);
+    const publicados = items.filter((item) => portalesDe(item)[dest.id]).length;
+    const accion = dest.fijo
+      ? `<span class="cuenta-estado on">Siempre activa</span>`
+      : `<button type="button" class="ghost cuenta-btn" data-cuenta="${esc(dest.id)}">${on ? "Desconectar" : "Conectar (demo)"}</button>`;
+    return `
+      <article class="cuenta ${on ? "is-on" : ""}">
+        <p class="cuenta-tipo">${dest.tipo === "api" ? "API" : "Red"}</p>
+        <h3>${esc(dest.nombre)}</h3>
+        <p>${esc(dest.beneficio)}</p>
+        <p class="cuenta-meta">${on ? publicados + " aviso" + (publicados === 1 ? "" : "s") + " en este destino" : "Sin conectar"}</p>
+        ${accion}
+      </article>`;
+  }).join("");
+
+  host.querySelectorAll("[data-cuenta]").forEach((btn) => {
+    btn.addEventListener("click", () => {
+      const id = btn.dataset.cuenta;
+      const dest = DESTINOS.find((d) => d.id === id);
+      if (!dest || dest.fijo) return;
+      const next = !destinoConectado(id);
+      cuentas = { ...cuentas, [id]: { connected: next } };
+      saveCuentas(cuentas);
+      if (!next) {
+        items = items.map((item) => ({
+          ...item,
+          portales: { ...portalesDe(item), [id]: false }
+        }));
+        save(items);
+      }
+      showToast(next ? dest.nombre + " conectada (demo)" : dest.nombre + " desconectada");
+      render();
+    });
+  });
+}
+
 function render() {
+  renderCuentas();
   const disponibles = items.filter((i) => i.status === "disponible").length;
   const reservadas = items.filter((i) => i.status === "reservada").length;
   const alquiladas = items.filter((i) => i.status === "alquilada").length;
@@ -145,6 +194,27 @@ function render() {
     <div class="metric-box">
       <div><span>Visitas al anuncio</span><strong>${Number(item.vistas || 0)}</strong></div>
       <div><span>Consultas</span><strong>${Number(item.consultas || 0)}</strong></div>
+    </div>
+    <div class="difusion-ficha">
+      <h4>Publicar este aviso</h4>
+      <p>Elija destinos. La web ya toma la ficha. Portales y redes solo si la cuenta de arriba está conectada.</p>
+      ${DESTINOS.map((dest) => {
+        const on = dest.fijo ? true : Boolean(portalesDe(item)[dest.id]);
+        const lista = destinoConectado(dest.id);
+        const disabled = dest.fijo || !lista;
+        return `
+          <label class="destino-row ${disabled && !dest.fijo ? "is-off" : ""}">
+            <input type="checkbox" data-portal="${esc(dest.id)}" ${on ? "checked" : ""} ${disabled ? "disabled" : ""}>
+            <span>
+              <strong>${esc(dest.nombre)}</strong>
+              <small>${dest.fijo ? "Siempre en la vitrina" : lista ? (dest.tipo === "red" ? "Texto y enlace listos" : "Listo para enviar (demo)") : "Conecte la cuenta arriba"}</small>
+            </span>
+          </label>`;
+      }).join("")}
+      <div class="difusion-acciones">
+        <button class="ghost" type="button" id="copiar-aviso">Copiar texto para redes</button>
+        <a class="ghost" id="wa-aviso" href="${esc("https://wa.me/?text=" + encodeURIComponent(textoRed(item)))}" target="_blank" rel="noopener">Enviar por WhatsApp</a>
+      </div>
     </div>
     
     ${item.factura ? `
@@ -246,6 +316,35 @@ function render() {
     save(items);
     showToast("Factura emitida");
     render();
+  });
+
+  detail.querySelectorAll("[data-portal]").forEach((input) => {
+    input.addEventListener("change", () => {
+      const id = input.dataset.portal;
+      const dest = DESTINOS.find((d) => d.id === id);
+      if (!dest || dest.fijo || !destinoConectado(id)) {
+        input.checked = Boolean(portalesDe(item)[id]);
+        return;
+      }
+      item.portales = { ...portalesDe(item), [id]: input.checked };
+      item.history = [{
+        when: "hoy",
+        text: input.checked ? "Publicado en " + dest.nombre + " (demo)." : "Sacado de " + dest.nombre + "."
+      }, ...(item.history || [])];
+      save(items);
+      showToast(input.checked ? "Publicado en " + dest.nombre + " (demo)" : "Sacado de " + dest.nombre);
+      render();
+    });
+  });
+
+  detail.querySelector("#copiar-aviso")?.addEventListener("click", async () => {
+    const texto = textoRed(item);
+    try {
+      await navigator.clipboard.writeText(texto);
+      showToast("Texto copiado");
+    } catch {
+      showToast("No se pudo copiar. Seleccione el texto a mano.");
+    }
   });
 
   detail.querySelector("#edit").addEventListener("submit", (event) => {
