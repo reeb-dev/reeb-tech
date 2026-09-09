@@ -1,18 +1,23 @@
 let items = load();
 let cuentas = loadCuentas();
+let cola = loadCola();
 let staff = loadUsers();
 let session = null;
 let selected = items[0]?.id || "";
 let filter = "todos";
 let searchTerm = "";
 let createDraftFotos = [];
+let currentView = "resumen";
+let loadingTimer = 0;
 const MAX_FOTOS = 6;
+const PANEL_VIEWS = ["resumen", "cartera", "vitrina", "difusion", "usuarios", "contacto"];
 
 document.getElementById("open-create").addEventListener("click", () => {
   if (session?.rol === "agenda") {
     showToast("La agenda no carga propiedades. Eso lo hace un agente o el titular.");
     return;
   }
+  showPanelView("cartera", { instant: true });
   document.getElementById("create").classList.toggle("open");
 });
 
@@ -266,48 +271,307 @@ function destinoConectado(id) {
   return Boolean(cuentas[id]?.connected);
 }
 
-function renderCuentas() {
-  const host = document.getElementById("cuentas");
+function canEditDifusion() {
+  return session?.rol === "titular" || session?.rol === "agente";
+}
+
+function cuentaDe(id) {
+  return cuentas[id] || { connected: false, lastAction: "Sin conectar", lastAt: "" };
+}
+
+function setCuentaAccion(id, connected, text) {
+  const prev = cuentaDe(id);
+  cuentas = {
+    ...cuentas,
+    [id]: {
+      ...prev,
+      connected,
+      lastAction: text,
+      lastAt: ahoraDemo()
+    }
+  };
+  saveCuentas(cuentas);
+}
+
+function avisosEnDestino(destId) {
+  return items.filter((item) => portalesDe(item)[destId]).length;
+}
+
+function htmlCuenta(dest) {
+  const on = destinoConectado(dest.id);
+  const publicados = avisosEnDestino(dest.id);
+  const meta = cuentaDe(dest.id);
+  const last = meta.lastAction
+    ? `Última acción: ${esc(meta.lastAction)}${meta.lastAt ? " · " + esc(meta.lastAt) : ""}`
+    : "Sin movimientos todavía.";
+  const editable = canEditDifusion();
+  const accion = dest.fijo
+    ? `<span class="cuenta-estado on">Siempre activa</span>`
+    : `<button type="button" class="ghost cuenta-btn" data-cuenta="${esc(dest.id)}" ${editable ? "" : "disabled"}>${on ? "Desconectar" : "Conectar (demo)"}</button>`;
+  return `
+    <article class="cuenta ${on ? "is-on" : ""}">
+      <p class="cuenta-tipo">${esc(destTipoLabel(dest))}</p>
+      <h3>${esc(dest.nombre)}</h3>
+      <p>${esc(dest.beneficio)}</p>
+      <p class="cuenta-meta">${on ? publicados + " aviso" + (publicados === 1 ? "" : "s") + " de la cartera en este destino" : "Sin conectar"}</p>
+      <p class="cuenta-accion">${last}</p>
+      ${accion}
+    </article>`;
+}
+
+function filasCola() {
+  const filas = [];
+  items.forEach((item) => {
+    DESTINOS.forEach((dest) => {
+      if (dest.fijo) return;
+      const key = colaClave(item.id, dest.id);
+      const saved = cola[key];
+      const publicadoFlag = Boolean(portalesDe(item)[dest.id]);
+      if (!saved && !publicadoFlag) return;
+      let estado = saved?.estado;
+      if (!estado) estado = publicadoFlag ? "publicado" : "listo";
+      filas.push({
+        key,
+        item,
+        dest,
+        estado,
+        when: saved?.when || (publicadoFlag ? "en cartera" : "")
+      });
+    });
+  });
+  return filas;
+}
+
+function setColaEstado(itemId, destId, estado) {
+  if (!canEditDifusion()) return;
+  const dest = DESTINOS.find((d) => d.id === destId);
+  const item = items.find((i) => i.id === itemId);
+  if (!dest || !item || dest.fijo) return;
+  if (!COLA_ESTADOS.some((e) => e.id === estado)) return;
+  if (!destinoConectado(destId) && estado !== "listo") {
+    showToast("Conecte la cuenta de " + dest.nombre + " antes de programar o publicar.");
+    return;
+  }
+  cola = {
+    ...cola,
+    [colaClave(itemId, destId)]: { estado, when: ahoraDemo() }
+  };
+  saveCola(cola);
+  const nextOn = estado === "publicado";
+  items = items.map((row) => row.id !== itemId ? row : {
+    ...row,
+    portales: { ...portalesDe(row), [destId]: nextOn },
+    history: [{
+      when: "hoy",
+      text: nextOn
+        ? dest.nombre + " marcado como publicado (demo). No se envió nada afuera."
+        : dest.nombre + " quedó en " + colaEstadoLabel(estado) + " (demo)."
+    }, ...(row.history || [])]
+  });
+  save(items);
+  setCuentaAccion(destId, true, "Aviso " + item.codigo + ": " + colaEstadoLabel(estado).toLowerCase() + " (demo).");
+  showToast("Cola actualizada. Nada se publicó afuera.");
+  renderDifusion();
+  if (currentView === "cartera") render();
+}
+
+function quitarDeCola(itemId, destId) {
+  if (!canEditDifusion()) return;
+  const dest = DESTINOS.find((d) => d.id === destId);
+  if (!dest || dest.fijo) return;
+  const next = { ...cola };
+  delete next[colaClave(itemId, destId)];
+  cola = next;
+  saveCola(cola);
+  items = items.map((row) => row.id !== itemId ? row : {
+    ...row,
+    portales: { ...portalesDe(row), [destId]: false }
+  });
+  save(items);
+  showToast("Salida de la cola. El aviso sigue en la cartera.");
+  renderDifusion();
+}
+
+function agregarACola(itemId, destId) {
+  if (!canEditDifusion()) return;
+  const dest = DESTINOS.find((d) => d.id === destId);
+  const item = items.find((i) => i.id === itemId);
+  if (!dest || !item || dest.fijo) return;
+  if (!destinoConectado(destId)) {
+    showToast("Conecte primero la cuenta de " + dest.nombre + ".");
+    return;
+  }
+  const key = colaClave(itemId, destId);
+  if (cola[key] || portalesDe(item)[destId]) {
+    showToast("Ese aviso ya está en este destino.");
+    return;
+  }
+  cola = { ...cola, [key]: { estado: "listo", when: ahoraDemo() } };
+  saveCola(cola);
+  setCuentaAccion(destId, true, "Aviso " + item.codigo + " agregado a la cola (demo).");
+  showToast("Aviso en cola como listo. No se envió nada afuera.");
+  renderDifusion();
+}
+
+function htmlGrupoCuentas(grupo, titulo, texto) {
+  const destinos = destinosPorGrupo(grupo);
+  return `
+    <section class="difusion-grupo">
+      <div class="difusion-grupo-head">
+        <h2>${esc(titulo)}</h2>
+        <p>${esc(texto)}</p>
+      </div>
+      <div class="cuentas">${destinos.map(htmlCuenta).join("")}</div>
+    </section>`;
+}
+
+function renderDifusion() {
+  const host = document.getElementById("difusion-desk");
   if (!host) return;
-  host.innerHTML = DESTINOS.map((dest) => {
-    const on = destinoConectado(dest.id);
-    const publicados = items.filter((item) => portalesDe(item)[dest.id]).length;
-    const accion = dest.fijo
-      ? `<span class="cuenta-estado on">Siempre activa</span>`
-      : `<button type="button" class="ghost cuenta-btn" data-cuenta="${esc(dest.id)}">${on ? "Desconectar" : "Conectar (demo)"}</button>`;
-    return `
-      <article class="cuenta ${on ? "is-on" : ""}">
-        <p class="cuenta-tipo">${dest.tipo === "api" ? "API" : "Red"}</p>
-        <h3>${esc(dest.nombre)}</h3>
-        <p>${esc(dest.beneficio)}</p>
-        <p class="cuenta-meta">${on ? publicados + " aviso" + (publicados === 1 ? "" : "s") + " en este destino" : "Sin conectar"}</p>
-        ${accion}
-      </article>`;
-  }).join("");
+  const editable = canEditDifusion();
+  const filas = filasCola();
+  const destinosCola = DESTINOS.filter((d) => !d.fijo && destinoConectado(d.id));
+  const shareItem = items.find((i) => i.id === selected) || items[0];
+  const shareText = shareItem ? textoRed(shareItem) : "";
+  host.innerHTML = `
+    ${htmlGrupoCuentas("sitio", "Sitios y portales", "Vitrina propia y portales de inmuebles de esta demo. Conectar no envía el aviso: es una marca de ejemplo.")}
+    ${htmlGrupoCuentas("red", "Redes sociales", "Instagram, Facebook y WhatsApp. Acá se arma el texto; usted lo pega o lo envía a mano. No hay publicación automática.")}
+    <section class="difusion-cola">
+      <div class="difusion-grupo-head">
+        <h2>Cola de publicación</h2>
+        <p>Sitio propio: ${items.length} propiedades de esta cartera salen en la vitrina. Abajo, portales y redes. Estados de ejemplo: listo, programado o publicado. No hay alcance ni seguidores inventados. Publicado, en esta demo, solo marca el aviso: no sale afuera.</p>
+      </div>
+      ${editable && destinosCola.length ? `
+        <form class="cola-alta" id="cola-alta">
+          <select name="item" aria-label="Propiedad">
+            ${items.map((item) => `<option value="${esc(item.id)}" ${item.id === selected ? "selected" : ""}>${esc(item.codigo)} · ${esc(item.titulo)}</option>`).join("")}
+          </select>
+          <select name="dest" aria-label="Destino">
+            ${destinosCola.map((d) => `<option value="${esc(d.id)}">${esc(d.nombre)}</option>`).join("")}
+          </select>
+          <button class="btn-panel" type="submit">Agregar a la cola</button>
+        </form>` : editable ? `<p class="cola-vacia">Conecte un portal o una red para armar la cola.</p>` : `<p class="cola-vacia">La agenda puede ver la cola. Un agente o el titular la arma.</p>`}
+      <div class="table-scroll">
+        <table class="cola-tabla">
+          <thead>
+            <tr>
+              <th>Aviso</th>
+              <th>Destino</th>
+              <th>Estado</th>
+              <th>Cuándo</th>
+              <th></th>
+            </tr>
+          </thead>
+          <tbody>
+            ${filas.length ? filas.map((fila) => `
+              <tr>
+                <td>${esc(fila.item.codigo)}<br><small>${esc(fila.item.titulo)}</small></td>
+                <td>${esc(fila.dest.nombre)}<br><small>${esc(destTipoLabel(fila.dest))}</small></td>
+                <td>
+                  ${fila.dest.fijo || !editable
+                    ? `<span class="tag cola-${esc(fila.estado)}">${esc(colaEstadoLabel(fila.estado))}</span>`
+                    : `<select data-cola-estado="${esc(fila.item.id)}" data-dest="${esc(fila.dest.id)}" aria-label="Estado">
+                        ${COLA_ESTADOS.map((e) => `<option value="${esc(e.id)}" ${fila.estado === e.id ? "selected" : ""}>${esc(e.label)}</option>`).join("")}
+                      </select>`}
+                </td>
+                <td>${esc(fila.when || "—")}</td>
+                <td>${fila.dest.fijo || !editable ? "" : `<button type="button" class="ghost" data-cola-quitar="${esc(fila.item.id)}" data-dest="${esc(fila.dest.id)}">Sacar</button>`}</td>
+              </tr>`).join("") : `<tr><td colspan="5">No hay avisos en cola todavía. En la vitrina el sitio propio ya muestra la cartera.</td></tr>`}
+          </tbody>
+        </table>
+      </div>
+    </section>
+    <section class="difusion-share">
+      <div class="difusion-grupo-head">
+        <h2>Texto para redes</h2>
+        <p>El mismo texto de la ficha. Cópielo o ábralo en WhatsApp. No se publica solo.</p>
+      </div>
+      <label>Aviso de la cartera
+        <select id="difusion-share-item">
+          ${items.map((item) => `<option value="${esc(item.id)}" ${shareItem && item.id === shareItem.id ? "selected" : ""}>${esc(item.codigo)} · ${esc(item.titulo)}</option>`).join("")}
+        </select>
+      </label>
+      <textarea id="difusion-share-text" rows="5" readonly>${esc(shareText)}</textarea>
+      <div class="difusion-acciones">
+        <button class="btn-panel" type="button" id="difusion-copiar" ${shareItem ? "" : "disabled"}>Copiar texto</button>
+        <a class="ghost" id="difusion-wa" ${shareItem ? `href="${esc("https://wa.me/?text=" + encodeURIComponent(shareText))}"` : ""} target="_blank" rel="noopener">Abrir WhatsApp</a>
+        <button class="ghost" type="button" data-panel-nav="cartera">Ver ficha en cartera</button>
+      </div>
+    </section>`;
 
   host.querySelectorAll("[data-cuenta]").forEach((btn) => {
     btn.addEventListener("click", () => {
+      if (!canEditDifusion()) return;
       const id = btn.dataset.cuenta;
       const dest = DESTINOS.find((d) => d.id === id);
       if (!dest || dest.fijo) return;
       const next = !destinoConectado(id);
-      cuentas = { ...cuentas, [id]: { connected: next } };
-      saveCuentas(cuentas);
+      setCuentaAccion(
+        id,
+        next,
+        next ? "Cuenta conectada (demo). No se envió nada afuera." : "Cuenta desconectada. Los avisos de este destino se apagaron."
+      );
       if (!next) {
         items = items.map((item) => ({
           ...item,
           portales: { ...portalesDe(item), [id]: false }
         }));
         save(items);
+        const nextCola = { ...cola };
+        Object.keys(nextCola).forEach((key) => {
+          if (key.endsWith(":" + id)) delete nextCola[key];
+        });
+        cola = nextCola;
+        saveCola(cola);
       }
       showToast(next ? dest.nombre + " conectada (demo)" : dest.nombre + " desconectada");
-      render();
+      renderDifusion();
     });
+  });
+
+  host.querySelector("#cola-alta")?.addEventListener("submit", (event) => {
+    event.preventDefault();
+    const data = new FormData(event.target);
+    agregarACola(String(data.get("item") || ""), String(data.get("dest") || ""));
+  });
+
+  host.querySelectorAll("[data-cola-estado]").forEach((select) => {
+    select.addEventListener("change", () => {
+      setColaEstado(select.dataset.colaEstado, select.dataset.dest, select.value);
+    });
+  });
+
+  host.querySelectorAll("[data-cola-quitar]").forEach((btn) => {
+    btn.addEventListener("click", () => quitarDeCola(btn.dataset.colaQuitar, btn.dataset.dest));
+  });
+
+  host.querySelector("#difusion-share-item")?.addEventListener("change", (event) => {
+    selected = event.target.value;
+    renderDifusion();
+  });
+
+  host.querySelector("#difusion-copiar")?.addEventListener("click", async () => {
+    const item = items.find((i) => i.id === selected) || items[0];
+    if (!item) return;
+    try {
+      await navigator.clipboard.writeText(textoRed(item));
+      showToast("Texto copiado");
+    } catch {
+      showToast("No se pudo copiar. Seleccione el texto a mano.");
+    }
+  });
+
+  host.querySelector("[data-panel-nav='cartera']")?.addEventListener("click", () => {
+    showPanelView("cartera");
   });
 }
 
+function renderCuentas() {
+  renderDifusion();
+}
+
 function render() {
-  renderCuentas();
+  if (currentView === "difusion") renderDifusion();
   const disponibles = items.filter((i) => i.status === "disponible").length;
   const reservadas = items.filter((i) => i.status === "reservada").length;
   const alquiladas = items.filter((i) => i.status === "alquilada").length;
@@ -361,7 +625,7 @@ function render() {
   const item = items.find((i) => i.id === selected);
   const detail = document.getElementById("detail");
   if (!item) {
-    detail.innerHTML = "<p>Elegí una propiedad del listado.</p>";
+    detail.innerHTML = "<p>Elija una propiedad del listado.</p>";
     return;
   }
 
@@ -389,8 +653,9 @@ function render() {
     </div>
     <div class="difusion-ficha">
       <h4>Publicar este aviso</h4>
-      <p>Elija destinos. La web ya toma la ficha. Portales y redes solo si la cuenta de arriba está conectada.</p>
-      ${DESTINOS.map((dest) => {
+      <p>Elija destinos. El sitio propio siempre toma la ficha. Portales y redes solo si la cuenta está conectada en Difusión. Demo: no se envía nada afuera.</p>
+      <p class="difusion-ficha-grupo">Sitios y portales</p>
+      ${DESTINOS.filter((d) => d.grupo !== "red").map((dest) => {
         const on = dest.fijo ? true : Boolean(portalesDe(item)[dest.id]);
         const lista = destinoConectado(dest.id);
         const disabled = dest.fijo || !lista;
@@ -399,7 +664,21 @@ function render() {
             <input type="checkbox" data-portal="${esc(dest.id)}" ${on ? "checked" : ""} ${disabled ? "disabled" : ""}>
             <span>
               <strong>${esc(dest.nombre)}</strong>
-              <small>${dest.fijo ? "Siempre en la vitrina" : lista ? (dest.tipo === "red" ? "Texto y enlace listos" : "Listo para enviar (demo)") : "Conecte la cuenta arriba"}</small>
+              <small>${dest.fijo ? "Siempre en la vitrina" : lista ? "Listo para enviar (demo)" : "Conecte la cuenta en Difusión"}</small>
+            </span>
+          </label>`;
+      }).join("")}
+      <p class="difusion-ficha-grupo">Redes sociales</p>
+      ${DESTINOS.filter((d) => d.grupo === "red").map((dest) => {
+        const on = Boolean(portalesDe(item)[dest.id]);
+        const lista = destinoConectado(dest.id);
+        const disabled = !lista;
+        return `
+          <label class="destino-row ${disabled ? "is-off" : ""}">
+            <input type="checkbox" data-portal="${esc(dest.id)}" ${on ? "checked" : ""} ${disabled ? "disabled" : ""}>
+            <span>
+              <strong>${esc(dest.nombre)}</strong>
+              <small>${lista ? "Texto y enlace listos. No se publica solo." : "Conecte la cuenta en Difusión"}</small>
             </span>
           </label>`;
       }).join("")}
@@ -545,10 +824,19 @@ function render() {
       item.portales = { ...portalesDe(item), [id]: input.checked };
       item.history = [{
         when: "hoy",
-        text: input.checked ? "Publicado en " + dest.nombre + " (demo)." : "Sacado de " + dest.nombre + "."
+        text: input.checked ? "Marcado para " + dest.nombre + " (demo). No se envió nada afuera." : "Sacado de " + dest.nombre + "."
       }, ...(item.history || [])];
       save(items);
-      showToast(input.checked ? "Publicado en " + dest.nombre + " (demo)" : "Sacado de " + dest.nombre);
+      if (input.checked) {
+        cola = { ...cola, [colaClave(item.id, id)]: { estado: "publicado", when: ahoraDemo() } };
+      } else {
+        const nextCola = { ...cola };
+        delete nextCola[colaClave(item.id, id)];
+        cola = nextCola;
+      }
+      saveCola(cola);
+      setCuentaAccion(id, true, "Aviso " + item.codigo + (input.checked ? " publicado (demo)." : " sacado de este destino."));
+      showToast(input.checked ? "Marcado para " + dest.nombre + " (demo)" : "Sacado de " + dest.nombre);
       render();
     });
   });
@@ -633,6 +921,184 @@ function showToast(message) {
   setTimeout(() => { toast.classList.remove("show"); setTimeout(() => toast.remove(), 300); }, 3000);
 }
 
+function canEditVitrina() {
+  return session?.rol === "titular" || session?.rol === "agente";
+}
+
+function hidePanelLoading() {
+  const overlay = document.getElementById("nh-loading");
+  if (overlay) overlay.hidden = true;
+  document.body.classList.remove("nh-booting");
+}
+
+function showPanelLoading(title, lead, done, ms) {
+  const overlay = document.getElementById("nh-loading");
+  const titleEl = document.getElementById("nh-loading-title");
+  const leadEl = document.getElementById("nh-loading-lead");
+  if (titleEl) titleEl.textContent = title || "Cargando el panel…";
+  if (leadEl) leadEl.textContent = lead || "Un momento.";
+  if (overlay) overlay.hidden = false;
+  document.body.classList.add("nh-booting");
+  window.clearTimeout(loadingTimer);
+  loadingTimer = window.setTimeout(() => {
+    hidePanelLoading();
+    if (typeof done === "function") done();
+  }, ms || 900);
+}
+
+function viewFromHash() {
+  const id = (location.hash || "").replace("#", "");
+  if (id === "view-contacto") return "contacto";
+  return PANEL_VIEWS.includes(id) ? id : "";
+}
+
+function paintPanelNav(active) {
+  document.querySelectorAll("[data-panel-nav]").forEach((el) => {
+    const on = el.getAttribute("data-panel-nav") === active;
+    el.classList.toggle("is-on", on);
+    if (on) el.setAttribute("aria-current", "page");
+    else el.removeAttribute("aria-current");
+  });
+}
+
+function showPanelView(id, opts) {
+  const next = PANEL_VIEWS.includes(id) ? id : "resumen";
+  const go = () => {
+    currentView = next;
+    document.querySelectorAll("[data-panel-view]").forEach((el) => {
+      el.hidden = el.getAttribute("data-panel-view") !== next;
+    });
+    paintPanelNav(next);
+    if (next === "resumen") renderResumen();
+    if (next === "cartera") render();
+    if (next === "vitrina") renderVitrinaGestor();
+    if (next === "difusion") renderCuentas();
+    if (next === "usuarios") renderUsuarios();
+    const hash = "#" + next;
+    if (location.hash !== hash) history.replaceState(null, "", hash);
+    document.querySelector(".mobile-menu")?.removeAttribute("open");
+  };
+  if (opts?.instant || next === currentView) {
+    go();
+    return;
+  }
+  showPanelLoading("Cargando la sección…", "Cambiando de área del panel.", go, 520);
+}
+
+function wirePanelNav() {
+  document.querySelectorAll("[data-panel-nav]").forEach((el) => {
+    el.addEventListener("click", () => {
+      showPanelView(el.getAttribute("data-panel-nav"));
+    });
+  });
+}
+
+function renderResumen() {
+  const host = document.getElementById("resumen-grid");
+  if (!host) return;
+  const disponibles = items.filter((i) => i.status === "disponible").length;
+  const visitas = items.reduce((sum, i) => sum + Number(i.vistas || 0), 0);
+  const consultas = items.reduce((sum, i) => sum + Number(i.consultas || 0), 0);
+  const activos = staff.filter((u) => u.activo !== false).length;
+  const page = loadVitrinaPage();
+  const visibles = VITRINA_SECTIONS.filter((s) => !s.alwaysOn && page.visible[s.id] !== false).length;
+  const totalSec = VITRINA_SECTIONS.filter((s) => !s.alwaysOn).length;
+  host.innerHTML = `
+    <button type="button" class="resumen-card" data-go="cartera">
+      <span>Cartera</span>
+      <strong>${items.length}</strong>
+      <small>propiedades en este navegador</small>
+    </button>
+    <button type="button" class="resumen-card" data-go="cartera">
+      <span>Disponibles</span>
+      <strong>${disponibles}</strong>
+      <small>listas para la vitrina</small>
+    </button>
+    <button type="button" class="resumen-card" data-go="cartera">
+      <span>Visitas al aviso</span>
+      <strong>${visitas}</strong>
+      <small>solo se ven en el panel</small>
+    </button>
+    <button type="button" class="resumen-card" data-go="cartera">
+      <span>Consultas</span>
+      <strong>${consultas}</strong>
+      <small>solo se ven en el panel</small>
+    </button>
+    <button type="button" class="resumen-card" data-go="usuarios">
+      <span>Usuarios activos</span>
+      <strong>${activos}</strong>
+      <small>de ${staff.length} cuentas del estudio</small>
+    </button>
+    <button type="button" class="resumen-card" data-go="vitrina">
+      <span>Vitrina visible</span>
+      <strong>${visibles}/${totalSec}</strong>
+      <small>bloques públicos encendidos</small>
+    </button>`;
+  host.querySelectorAll("[data-go]").forEach((btn) => {
+    btn.addEventListener("click", () => showPanelView(btn.dataset.go));
+  });
+}
+
+function renderVitrinaGestor() {
+  const host = document.getElementById("vitrina-gestor");
+  if (!host) return;
+  const page = loadVitrinaPage();
+  const editable = canEditVitrina();
+  host.innerHTML = VITRINA_SECTIONS.map((sec) => {
+    const on = sec.alwaysOn ? true : page.visible[sec.id] !== false;
+    const fields = (sec.fields || []).map((field) => {
+      const val = vitrinaCopyAt(page.copy, field.path);
+      const control = field.kind === "area"
+        ? `<textarea name="${esc(field.path)}" rows="3" ${editable ? "" : "disabled"}>${esc(val || "")}</textarea>`
+        : `<input name="${esc(field.path)}" value="${esc(val || "")}" ${editable ? "" : "disabled"}>`;
+      return `<label>${esc(field.label)}${control}</label>`;
+    }).join("");
+    const toggle = sec.alwaysOn
+      ? `<p class="vitrina-always">Siempre visible en la vitrina.</p>`
+      : `<label class="vitrina-toggle"><input type="checkbox" data-vitrina-visible="${esc(sec.id)}" ${on ? "checked" : ""} ${editable ? "" : "disabled"}> Mostrar en la vitrina</label>`;
+    const save = editable
+      ? `<button class="btn-panel" type="submit">Guardar esta sección</button>`
+      : `<p class="vitrina-readonly">Solo titular o agente publican u ocultan la vitrina. Usted puede leer los textos.</p>`;
+    return `
+      <article class="vitrina-block ${on ? "is-on" : "is-off"}">
+        <header>
+          <div>
+            <h3>${esc(sec.label)}</h3>
+            <p>${esc(sec.hint)}</p>
+          </div>
+          ${toggle}
+        </header>
+        <form data-vitrina-form="${esc(sec.id)}">
+          ${fields}
+          ${save}
+        </form>
+      </article>`;
+  }).join("");
+  host.querySelectorAll("[data-vitrina-visible]").forEach((input) => {
+    input.addEventListener("change", () => {
+      if (!canEditVitrina()) return;
+      const next = loadVitrinaPage();
+      next.visible[input.dataset.vitrinaVisible] = input.checked;
+      saveVitrinaPage(next);
+      showToast(input.checked ? "Esa sección vuelve a verse en la vitrina." : "Esa sección queda oculta en la vitrina.");
+      renderVitrinaGestor();
+      renderResumen();
+    });
+  });
+  host.querySelectorAll("[data-vitrina-form]").forEach((form) => {
+    form.addEventListener("submit", (event) => {
+      event.preventDefault();
+      if (!canEditVitrina()) return;
+      const next = loadVitrinaPage();
+      form.querySelectorAll("input[name], textarea[name]").forEach((field) => {
+        setVitrinaCopyAt(next.copy, field.name, field.value);
+      });
+      saveVitrinaPage(next);
+      showToast("Textos guardados. Ábralos en la vitrina pública.");
+    });
+  });
+}
+
 function wireNav() {
   const toggle = document.getElementById("navToggle");
   const nav = document.getElementById("siteNav");
@@ -645,16 +1111,22 @@ function wireNav() {
 }
 
 wireNav();
+wirePanelNav();
 bootPanel();
 
 function bootPanel() {
   if (!session) {
+    hidePanelLoading();
     showStaffLogin();
     return;
   }
   applySessionChrome();
   renderUsuarios();
+  renderCuentas();
+  renderVitrinaGestor();
+  renderResumen();
   render();
+  showPanelView(viewFromHash() || "resumen", { instant: true });
 }
 
 function applySessionChrome() {
@@ -671,9 +1143,12 @@ function applySessionChrome() {
     box.innerHTML = `<span>${esc(session.nombre)} · ${esc(roleLabel(session.rol))}</span><button type="button" class="ghost">Salir</button>`;
     box.querySelector("button").addEventListener("click", () => {
       session = null;
+      currentView = "resumen";
+      hidePanelLoading();
       clearStaffSession();
       document.body.classList.remove("nh-authed", "nh-rol-titular", "nh-rol-agente", "nh-rol-agenda");
       box.remove();
+      history.replaceState(null, "", location.pathname + location.search);
       showStaffLogin();
     });
     nav.appendChild(box);
@@ -740,23 +1215,65 @@ function showStaffLogin() {
 function enterStaff(user) {
   session = user;
   saveStaffSession(user);
-  bootPanel();
+  document.getElementById("nh-login").hidden = true;
+  showPanelLoading(
+    "Cargando el panel…",
+    "Abriendo la cartera y las secciones de la vitrina.",
+    () => bootPanel(),
+    900
+  );
 }
 
 function renderUsuarios() {
   const host = document.getElementById("usuario-rows");
   if (!host) return;
-  host.innerHTML = staff.map((u) => `
+  const titular = session?.rol === "titular";
+  host.innerHTML = staff.map((u) => {
+    const rolSelect = titular
+      ? `<select data-rol="${esc(u.id)}" aria-label="Rol de ${esc(u.nombre)}">
+          ${STAFF_ROLES.map((r) => `<option value="${esc(r.id)}" ${u.rol === r.id ? "selected" : ""}>${esc(r.label)}</option>`).join("")}
+        </select>`
+      : esc(roleLabel(u.rol));
+    const estado = u.activo === false ? "Pausado" : "Activo";
+    const actions = titular
+      ? `<button type="button" class="ghost" data-toggle="${esc(u.id)}">${u.activo === false ? "Activar" : "Pausar"}</button>`
+      : "Solo lectura";
+    return `
     <tr>
       <td>${esc(u.nombre)}</td>
       <td><code>${esc(u.user)}</code></td>
-      <td>${esc(roleLabel(u.rol))}</td>
-      <td>${u.activo === false ? "Pausado" : "Activo"}</td>
-      <td>${session?.rol === "titular" ? `<button type="button" class="ghost" data-toggle="${esc(u.id)}">${u.activo === false ? "Activar" : "Pausar"}</button>` : ""}</td>
-    </tr>`).join("");
+      <td>${rolSelect}</td>
+      <td><span class="tag ${u.activo === false ? "reservada" : "disponible"}">${estado}</span></td>
+      <td>${actions}</td>
+    </tr>`;
+  }).join("");
   host.querySelectorAll("[data-toggle]").forEach((btn) => {
     btn.addEventListener("click", () => toggleStaff(btn.dataset.toggle));
   });
+  host.querySelectorAll("[data-rol]").forEach((select) => {
+    select.addEventListener("change", () => changeStaffRole(select.dataset.rol, select.value));
+  });
+}
+
+function changeStaffRole(id, rol) {
+  if (session?.rol !== "titular") return;
+  if (!STAFF_ROLES.some((r) => r.id === rol)) return;
+  const user = staff.find((u) => u.id === id);
+  if (!user) return;
+  const titularesActivos = staff.filter((u) => u.rol === "titular" && u.activo !== false);
+  if (user.rol === "titular" && rol !== "titular" && user.activo !== false && titularesActivos.length < 2) {
+    showToast("Tiene que quedar al menos un titular activo.");
+    renderUsuarios();
+    return;
+  }
+  user.rol = rol;
+  saveUsers(staff);
+  if (user.user === session.user) {
+    session = user;
+    applySessionChrome();
+  }
+  showToast("Rol actualizado.");
+  renderUsuarios();
 }
 
 function toggleStaff(id) {

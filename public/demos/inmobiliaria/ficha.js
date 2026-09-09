@@ -224,3 +224,5 @@ document.addEventListener("keydown", (event) => {
   if (event.key === "ArrowRight") pasoFoto(1);
   if (event.key === "ArrowLeft") pasoFoto(-1);
 });
+
+if (typeof applyVitrinaPage === "function") applyVitrinaPage();

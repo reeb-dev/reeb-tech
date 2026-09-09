@@ -880,8 +880,10 @@ function seed() {
 
 const STORAGE_KEY = "inmobiliaria-demo-v9";
 const CUENTAS_KEY = "inmobiliaria-demo-cuentas-v1";
+const COLA_KEY = "inmobiliaria-demo-cola-v1";
 const USERS_KEY = "inmobiliaria-demo-usuarios-v1";
 const SESSION_KEY = "inmobiliaria-demo-sesion-v1";
+const VITRINA_KEY = "inmobiliaria-demo-vitrina-v1";
 const DEMO_WA_PHONE = "5492915757934";
 
 const STAFF_ROLES = [
@@ -947,11 +949,318 @@ function roleLabel(rol) {
   return STAFF_ROLES.find((r) => r.id === rol)?.label || rol;
 }
 
+function defaultVitrinaPage() {
+  return {
+    visible: {
+      hero: true,
+      zonas: true,
+      propiedades: true,
+      lugares: true,
+      mudarse: true,
+      estudio: true,
+      contacto: true,
+      pie: true,
+      agentes: true
+    },
+    copy: {
+      marca: {
+        nombre: "Estudio Nahuel Huapi",
+        tagline: "Casas en Bariloche"
+      },
+      hero: {
+        kicker: "San Carlos de Bariloche · lago Nahuel Huapi",
+        title: "Casas de piedra y madera frente al lago",
+        lead: "Venta o alquiler permanente en Bariloche y el sur cercano. No es estadía de hotel. El paisaje es el lago, los cerros y el bosque."
+      },
+      zonas: {
+        kicker: "La comarca",
+        title: "Elija una zona",
+        lead: "Toque un recuadro para ver solo esas propiedades. El pin marca el barrio, no la parcela.",
+        allBtn: "Ver todas las zonas",
+        mapaNote: "Toque un nombre para filtrar esa zona."
+      },
+      propiedades: {
+        verMas: "Ver más"
+      },
+      lugares: {
+        kicker: "Lugares",
+        title: "Una tira para ubicarse",
+        slides: [
+          { title: "Centro Cívico", text: "El Centro Cívico abre la costanera y el lago. Si se muda al Centro, camina hasta Mitre y al agua.", cta: "Ver propiedades del Centro" },
+          { title: "Lago Nahuel Huapi", text: "El lago es el paisaje de la ciudad: costa, cerros y nieve en las cumbres. No todas las casas dan al agua; mire la ficha.", cta: "" },
+          { title: "Circuito Chico", text: "Recorre costa, bosque y cerro hacia el oeste. En invierno conviene auto y mirar cómo se llega a la casa.", cta: "Ver propiedades del Circuito Chico" },
+          { title: "Llao Llao", text: "Queda al oeste, entre el lago y la península. Las casas de esa zona suelen mirar al agua o al bosque.", cta: "Ver propiedades de Llao Llao" },
+          { title: "Cerro Catedral", text: "Es el cerro de invierno, al suroeste del centro. Si vive cerca, la nieve es parte del año, no una visita.", cta: "" },
+          { title: "Colonia Suiza", text: "Está entre árboles, sobre el oeste. Es más quieto que Mitre en temporada.", cta: "Ver propiedades de Colonia Suiza" },
+          { title: "Puerto Pañuelo", text: "Es la bahía del oeste, cerca de Llao Llao. Desde ahí se mira el lago; para vivir, fíjese el acceso en invierno.", cta: "Ver propiedades de Llao Llao" },
+          { title: "Dina Huapi", text: "Es un pueblo al este del lago, aparte del centro. El ritmo es más tranquilo.", cta: "Ver propiedades de Dina Huapi" }
+        ]
+      },
+      mudarse: {
+        kicker: "Mudarse",
+        title: "Qué implica vivir acá",
+        lead: "No hay una promesa de plusvalía ni de alquiler turístico. Estas fichas son para quien busca casa, cabaña o lote para vivir de forma permanente, o como segunda vivienda.",
+        cards: [
+          { title: "El lago queda cerca", text: "En el Centro se camina hasta la costanera. En Llao Llao, Circuito Chico o Dina Huapi la vista al agua puede ser parte del lote. Mire la ficha: no todas dan al lago." },
+          { title: "El invierno se vive adentro", text: "Nieve y frío son normales. Conviene hogar a leña, radiadores o losa radiante, y cochera si no quiere dejar el auto a la intemperie." },
+          { title: "El ritmo es otro", text: "Melipal, Colonia Suiza y El Bolsón son más quietos que Mitre en temporada. El Centro tiene comercios a la vuelta. El Bolsón está a unas dos horas por la ruta 40." },
+          { title: "Permanente o segunda casa", text: "La mayoría de estas fichas son para vivir el año. Si la casa sirve también de segunda vivienda, lo dice el texto. No ofrecemos rentabilidad ni inversión segura." }
+        ]
+      },
+      estudio: {
+        kicker: "Para el estudio",
+        title: "Una carga, varios destinos",
+        lead: "El catálogo de esta web sale del panel. Desde ahí se puede conectar Mercado Libre y armar el aviso para Instagram, Facebook o WhatsApp. Zonaprop y Argenprop se suman si hay cuenta. Los avisos pagos de cada portal se contratan aparte.",
+        cta: "Ver difusión en el panel"
+      },
+      contacto: {
+        title: "Consultar una propiedad",
+        lead: "Escríbanos por WhatsApp o deje su consulta. El mensaje no sale a un servidor."
+      },
+      pie: {
+        line1: "¿Es agente inmobiliario? El panel lista la cartera, cambia estados, registra visitas y elige si el aviso va a la web, a Mercado Libre o a redes. Esos datos no se muestran acá.",
+        line2: "Estudio Nahuel Huapi · Bariloche · demo de producto · datos ficticios con fines ilustrativos. La venta se muestra en dólares y el alquiler permanente en pesos."
+      }
+    }
+  };
+}
+
+const VITRINA_SECTIONS = [
+  {
+    id: "marca",
+    label: "Encabezado",
+    hint: "Nombre del estudio en la barra. Esta barra no se oculta: el visitante necesita el menú.",
+    alwaysOn: true,
+    fields: [
+      { path: "marca.nombre", label: "Nombre", kind: "text" },
+      { path: "marca.tagline", label: "Línea chica", kind: "text" }
+    ]
+  },
+  {
+    id: "hero",
+    label: "Portada y búsqueda",
+    hint: "El título de entrada y los filtros. Si la oculta, el visitante no ve esa portada.",
+    fields: [
+      { path: "hero.kicker", label: "Antetítulo", kind: "text" },
+      { path: "hero.title", label: "Título", kind: "text" },
+      { path: "hero.lead", label: "Texto", kind: "area" }
+    ]
+  },
+  {
+    id: "zonas",
+    label: "Zonas",
+    hint: "La comarca, el mapa y los recuadros. Los nombres de barrio salen de la cartera, no de este texto.",
+    nav: "zonas",
+    fields: [
+      { path: "zonas.kicker", label: "Antetítulo", kind: "text" },
+      { path: "zonas.title", label: "Título", kind: "text" },
+      { path: "zonas.lead", label: "Texto", kind: "area" },
+      { path: "zonas.allBtn", label: "Botón de todas las zonas", kind: "text" },
+      { path: "zonas.mapaNote", label: "Nota del mapa", kind: "text" }
+    ]
+  },
+  {
+    id: "propiedades",
+    label: "Listado de propiedades",
+    hint: "El catálogo público. Las fichas se editan en Cartera.",
+    nav: "propiedades",
+    fields: [
+      { path: "propiedades.verMas", label: "Botón Ver más", kind: "text" }
+    ]
+  },
+  {
+    id: "lugares",
+    label: "Lugares",
+    hint: "La tira de fotos para ubicarse. Cada lámina ya está en la vitrina.",
+    nav: "lugares",
+    fields: [
+      { path: "lugares.kicker", label: "Antetítulo", kind: "text" },
+      { path: "lugares.title", label: "Título", kind: "text" },
+      { path: "lugares.slides.0.title", label: "Lámina 1 · título", kind: "text" },
+      { path: "lugares.slides.0.text", label: "Lámina 1 · texto", kind: "area" },
+      { path: "lugares.slides.0.cta", label: "Lámina 1 · botón", kind: "text" },
+      { path: "lugares.slides.1.title", label: "Lámina 2 · título", kind: "text" },
+      { path: "lugares.slides.1.text", label: "Lámina 2 · texto", kind: "area" },
+      { path: "lugares.slides.2.title", label: "Lámina 3 · título", kind: "text" },
+      { path: "lugares.slides.2.text", label: "Lámina 3 · texto", kind: "area" },
+      { path: "lugares.slides.2.cta", label: "Lámina 3 · botón", kind: "text" },
+      { path: "lugares.slides.3.title", label: "Lámina 4 · título", kind: "text" },
+      { path: "lugares.slides.3.text", label: "Lámina 4 · texto", kind: "area" },
+      { path: "lugares.slides.3.cta", label: "Lámina 4 · botón", kind: "text" },
+      { path: "lugares.slides.4.title", label: "Lámina 5 · título", kind: "text" },
+      { path: "lugares.slides.4.text", label: "Lámina 5 · texto", kind: "area" },
+      { path: "lugares.slides.5.title", label: "Lámina 6 · título", kind: "text" },
+      { path: "lugares.slides.5.text", label: "Lámina 6 · texto", kind: "area" },
+      { path: "lugares.slides.5.cta", label: "Lámina 6 · botón", kind: "text" },
+      { path: "lugares.slides.6.title", label: "Lámina 7 · título", kind: "text" },
+      { path: "lugares.slides.6.text", label: "Lámina 7 · texto", kind: "area" },
+      { path: "lugares.slides.6.cta", label: "Lámina 7 · botón", kind: "text" },
+      { path: "lugares.slides.7.title", label: "Lámina 8 · título", kind: "text" },
+      { path: "lugares.slides.7.text", label: "Lámina 8 · texto", kind: "area" },
+      { path: "lugares.slides.7.cta", label: "Lámina 8 · botón", kind: "text" }
+    ]
+  },
+  {
+    id: "mudarse",
+    label: "Mudarse",
+    hint: "Qué implica vivir en Bariloche. Cuatro recuadros que ya están en la página.",
+    fields: [
+      { path: "mudarse.kicker", label: "Antetítulo", kind: "text" },
+      { path: "mudarse.title", label: "Título", kind: "text" },
+      { path: "mudarse.lead", label: "Texto", kind: "area" },
+      { path: "mudarse.cards.0.title", label: "Recuadro 1 · título", kind: "text" },
+      { path: "mudarse.cards.0.text", label: "Recuadro 1 · texto", kind: "area" },
+      { path: "mudarse.cards.1.title", label: "Recuadro 2 · título", kind: "text" },
+      { path: "mudarse.cards.1.text", label: "Recuadro 2 · texto", kind: "area" },
+      { path: "mudarse.cards.2.title", label: "Recuadro 3 · título", kind: "text" },
+      { path: "mudarse.cards.2.text", label: "Recuadro 3 · texto", kind: "area" },
+      { path: "mudarse.cards.3.title", label: "Recuadro 4 · título", kind: "text" },
+      { path: "mudarse.cards.3.text", label: "Recuadro 4 · texto", kind: "area" }
+    ]
+  },
+  {
+    id: "estudio",
+    label: "Para el estudio",
+    hint: "El recuadro que explica la carga única y la difusión.",
+    fields: [
+      { path: "estudio.kicker", label: "Antetítulo", kind: "text" },
+      { path: "estudio.title", label: "Título", kind: "text" },
+      { path: "estudio.lead", label: "Texto", kind: "area" },
+      { path: "estudio.cta", label: "Botón al panel", kind: "text" }
+    ]
+  },
+  {
+    id: "contacto",
+    label: "Contacto",
+    hint: "Formulario y WhatsApp de la vitrina. No es un servidor real.",
+    nav: "contacto",
+    fields: [
+      { path: "contacto.title", label: "Título", kind: "text" },
+      { path: "contacto.lead", label: "Texto", kind: "area" }
+    ]
+  },
+  {
+    id: "pie",
+    label: "Pie de página",
+    hint: "Las dos líneas del final de la vitrina.",
+    fields: [
+      { path: "pie.line1", label: "Primera línea", kind: "area" },
+      { path: "pie.line2", label: "Segunda línea", kind: "area" }
+    ]
+  },
+  {
+    id: "agentes",
+    label: "Acceso para agentes",
+    hint: "El enlace «Para agentes» del menú público. El panel sigue existiendo; solo deja de verse en la vitrina.",
+    fields: []
+  }
+];
+
+function mergeVitrinaCopy(base, extra) {
+  if (Array.isArray(base)) {
+    return base.map((item, i) => (extra && extra[i] != null ? mergeVitrinaCopy(item, extra[i]) : item));
+  }
+  if (base && typeof base === "object") {
+    const out = { ...base };
+    Object.keys(base).forEach((key) => {
+      if (!extra || extra[key] === undefined) return;
+      out[key] = typeof base[key] === "object" && base[key] !== null
+        ? mergeVitrinaCopy(base[key], extra[key])
+        : extra[key];
+    });
+    return out;
+  }
+  return extra === undefined ? base : extra;
+}
+
+function loadVitrinaPage() {
+  const base = defaultVitrinaPage();
+  try {
+    const raw = localStorage.getItem(VITRINA_KEY);
+    if (!raw) return base;
+    const parsed = JSON.parse(raw);
+    if (!parsed || typeof parsed !== "object") return base;
+    return {
+      visible: { ...base.visible, ...(parsed.visible || {}) },
+      copy: mergeVitrinaCopy(base.copy, parsed.copy || {})
+    };
+  } catch (e) {
+    return base;
+  }
+}
+
+function saveVitrinaPage(page) {
+  localStorage.setItem(VITRINA_KEY, JSON.stringify(page));
+}
+
+function vitrinaCopyAt(copy, path) {
+  return String(path || "").split(".").reduce((acc, key) => {
+    if (acc == null) return undefined;
+    return acc[key];
+  }, copy);
+}
+
+function setVitrinaCopyAt(copy, path, value) {
+  const keys = String(path || "").split(".");
+  let cur = copy;
+  for (let i = 0; i < keys.length - 1; i += 1) {
+    const key = keys[i];
+    const next = keys[i + 1];
+    const nextIsIndex = String(Number(next)) === next;
+    if (cur[key] == null || typeof cur[key] !== "object") {
+      cur[key] = nextIsIndex ? [] : {};
+    }
+    cur = cur[key];
+  }
+  cur[keys[keys.length - 1]] = value;
+}
+
+function applyVitrinaPage() {
+  if (typeof document === "undefined") return loadVitrinaPage();
+  const page = loadVitrinaPage();
+  document.querySelectorAll("[data-nh-section]").forEach((el) => {
+    const id = el.getAttribute("data-nh-section");
+    const on = page.visible[id] !== false;
+    el.hidden = !on;
+  });
+  document.querySelectorAll("[data-nh-nav]").forEach((el) => {
+    const id = el.getAttribute("data-nh-nav");
+    const on = page.visible[id] !== false;
+    el.hidden = !on;
+  });
+  document.querySelectorAll("[data-nh-copy]").forEach((el) => {
+    const path = el.getAttribute("data-nh-copy");
+    const val = vitrinaCopyAt(page.copy, path);
+    if (val == null) return;
+    const text = String(val);
+    if (el.id === "btnVerMas") {
+      el.textContent = text || "Ver más";
+      return;
+    }
+    if (el.matches("a, button") && !text.trim()) {
+      el.hidden = true;
+      return;
+    }
+    el.hidden = false;
+    el.textContent = text;
+  });
+  const contactTitle = vitrinaCopyAt(page.copy, "contacto.title");
+  const contactLead = vitrinaCopyAt(page.copy, "contacto.lead");
+  const contactH2 = document.querySelector("#contacto h2, #demo-contacto h2");
+  if (contactH2 && contactTitle) contactH2.textContent = contactTitle;
+  const contactP = document.querySelector("#contacto .demo-contacto-lead");
+  if (contactP && contactLead) contactP.textContent = contactLead;
+  const wa = document.getElementById("wa-float");
+  if (wa) wa.hidden = page.visible.contacto === false;
+  return page;
+}
+
 const DESTINOS = [
   {
     id: "web",
     nombre: "Sitio propio",
     tipo: "api",
+    grupo: "sitio",
     fijo: true,
     beneficio: "La vitrina toma el catálogo de este panel. No hay aviso pago."
   },
@@ -959,64 +1268,122 @@ const DESTINOS = [
     id: "ml",
     nombre: "Mercado Libre",
     tipo: "api",
+    grupo: "sitio",
     beneficio: "Se envía por la API de inmuebles. Hace falta el paquete de ML."
   },
   {
     id: "zonaprop",
     nombre: "Zonaprop",
     tipo: "api",
+    grupo: "sitio",
     beneficio: "Conexión tipo OpenNavent. El abono del portal es aparte."
   },
   {
     id: "argenprop",
     nombre: "Argenprop",
     tipo: "api",
+    grupo: "sitio",
     beneficio: "En un sistema real suele ir por un CRM homologado o un acuerdo con el portal."
   },
   {
     id: "instagram",
     nombre: "Instagram",
     tipo: "red",
+    grupo: "red",
     beneficio: "Arma el texto y el enlace a la ficha. No hay API de avisos como en ML."
   },
   {
     id: "facebook",
     nombre: "Facebook",
     tipo: "red",
+    grupo: "red",
     beneficio: "Texto listo para grupos o Marketplace. En vivienda, Meta suele pedir perfil personal."
   },
   {
     id: "whatsapp",
     nombre: "WhatsApp",
     tipo: "red",
+    grupo: "red",
     beneficio: "Comparte la ficha con el mensaje ya armado."
   }
 ];
 
+const COLA_ESTADOS = [
+  { id: "listo", label: "Listo" },
+  { id: "programado", label: "Programado" },
+  { id: "publicado", label: "Publicado" }
+];
+
+function destinosPorGrupo(grupo) {
+  return DESTINOS.filter((d) => (d.grupo || (d.tipo === "red" ? "red" : "sitio")) === grupo);
+}
+
+function destTipoLabel(dest) {
+  if (dest.fijo || dest.id === "web") return "Sitio";
+  if (dest.tipo === "red") return "Red";
+  return "Portal";
+}
+
+function colaEstadoLabel(id) {
+  return COLA_ESTADOS.find((e) => e.id === id)?.label || id;
+}
+
+function ahoraDemo() {
+  return new Date().toLocaleString("es-AR", { day: "numeric", month: "short", hour: "2-digit", minute: "2-digit" });
+}
+
 function defaultCuentas() {
   return {
-    web: { connected: true },
-    ml: { connected: false },
-    zonaprop: { connected: false },
-    argenprop: { connected: false },
-    instagram: { connected: false },
-    facebook: { connected: false },
-    whatsapp: { connected: true }
+    web: { connected: true, lastAction: "La vitrina toma el catálogo.", lastAt: "siempre" },
+    ml: { connected: false, lastAction: "Sin conectar", lastAt: "" },
+    zonaprop: { connected: false, lastAction: "Sin conectar", lastAt: "" },
+    argenprop: { connected: false, lastAction: "Sin conectar", lastAt: "" },
+    instagram: { connected: false, lastAction: "Sin conectar", lastAt: "" },
+    facebook: { connected: false, lastAction: "Sin conectar", lastAt: "" },
+    whatsapp: { connected: true, lastAction: "Cuenta de muestra conectada.", lastAt: "demo" }
   };
 }
 
 function loadCuentas() {
+  const base = defaultCuentas();
   const raw = localStorage.getItem(CUENTAS_KEY);
   if (!raw) {
-    const data = defaultCuentas();
-    localStorage.setItem(CUENTAS_KEY, JSON.stringify(data));
-    return data;
+    localStorage.setItem(CUENTAS_KEY, JSON.stringify(base));
+    return base;
   }
-  return { ...defaultCuentas(), ...JSON.parse(raw) };
+  try {
+    const parsed = JSON.parse(raw) || {};
+    const out = {};
+    Object.keys(base).forEach((id) => {
+      out[id] = { ...base[id], ...(parsed[id] || {}) };
+    });
+    return out;
+  } catch (e) {
+    return base;
+  }
 }
 
 function saveCuentas(cuentas) {
   localStorage.setItem(CUENTAS_KEY, JSON.stringify(cuentas));
+}
+
+function loadCola() {
+  try {
+    const raw = localStorage.getItem(COLA_KEY);
+    if (!raw) return {};
+    const parsed = JSON.parse(raw);
+    return parsed && typeof parsed === "object" ? parsed : {};
+  } catch (e) {
+    return {};
+  }
+}
+
+function saveCola(cola) {
+  localStorage.setItem(COLA_KEY, JSON.stringify(cola));
+}
+
+function colaClave(itemId, destId) {
+  return String(itemId) + ":" + String(destId);
 }
 
 function portalesDe(item) {

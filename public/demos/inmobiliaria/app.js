@@ -139,7 +139,7 @@ function tilesOsm(map) {
 
 function pintarMapaComarca() {
   const el = document.getElementById("mapaComarca");
-  if (!el || typeof L === "undefined" || typeof ZONAS === "undefined") return;
+  if (!el || el.closest("[hidden]") || typeof L === "undefined" || typeof ZONAS === "undefined") return;
   if (mapaComarca) {
     mapaComarca.remove();
     mapaComarca = null;
@@ -636,6 +636,7 @@ function ajustarContacto() {
   if (labels[0]) labels[0].childNodes[0].textContent = "Su nombre";
 }
 
+applyVitrinaPage();
 wireNav();
 wireLugares();
 populateBarrios();
@@ -657,4 +658,7 @@ function aplicarZonaDesdeUrl() {
     }, 40);
   }
 }
-window.addEventListener("load", ajustarContacto);
+window.addEventListener("load", () => {
+  ajustarContacto();
+  applyVitrinaPage();
+});
