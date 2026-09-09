@@ -1150,7 +1150,16 @@ textarea:focus {
 .ficha-aside .precio-vitrina { margin: 12px 0 14px; }
 .ficha-aside .precio-vitrina .price {
   font-size: 1.65rem;
-  color: var(--clay-deep);
+  color: #f4efe6;
+}
+
+.ficha-aside .price-was {
+  color: rgba(251, 250, 247, 0.68);
+}
+
+.ficha-aside .precio-nota.is-baja {
+  background: #dce8e0;
+  color: #1f3d2c;
 }
 
 .price-was {
@@ -2212,6 +2221,10 @@ footer {
 
 .cuenta-cap.is-no span {
   color: #7a4a3a;
+}
+
+.cuenta-cap.is-cost span {
+  color: #1f5c66;
 }
 
 .cuenta-cap ul {

@@ -534,12 +534,13 @@ function visible() {
   return result;
 }
 
-function htmlCuentaCapList(label, value, isNo) {
+function htmlCuentaCapList(label, value, extraClass) {
   if (value == null || value === "") return "";
   const items = Array.isArray(value) ? value : String(value).split(/\s*[·•]\s*|\n+/).map((s) => s.trim()).filter(Boolean);
   if (!items.length) return "";
+  const cls = extraClass ? ` ${extraClass}` : "";
   const lis = items.map((t) => `<li>${esc(t)}</li>`).join("");
-  return `<div class="cuenta-cap${isNo ? " is-no" : ""}"><span>${esc(label)}</span><ul>${lis}</ul></div>`;
+  return `<div class="cuenta-cap${cls}"><span>${esc(label)}</span><ul>${lis}</ul></div>`;
 }
 
 function destinoConectado(id) {
@@ -581,8 +582,9 @@ function htmlCuenta(dest) {
   const accion = dest.fijo
     ? `<span class="cuenta-estado on">Siempre en la vitrina</span>`
     : `<button type="button" class="cuenta-btn ${on ? "is-ghost" : "is-primary"}" data-cuenta="${esc(dest.id)}" ${editable ? "" : "disabled"}>${on ? "Desconectar" : "Conectar"}</button>`;
-  const si = htmlCuentaCapList("Qué sí", dest.si, false);
-  const no = htmlCuentaCapList("Qué no", dest.no, true);
+  const si = htmlCuentaCapList("Qué sí", dest.si);
+  const no = htmlCuentaCapList("Qué no", dest.no, "is-no");
+  const costos = htmlCuentaCapList("Costos", dest.costos, "is-cost");
   return `
     <article class="cuenta ${on ? "is-on" : ""}">
       <header class="cuenta-head">
@@ -594,7 +596,7 @@ function htmlCuenta(dest) {
         <span class="cuenta-badge ${on ? "is-on" : ""}">${on ? "Conectado" : "Libre"}</span>
       </header>
       <p class="cuenta-beneficio">${esc(dest.beneficio)}</p>
-      <div class="cuenta-caps" aria-label="Alcance real frente a esta demo">${si}${no}</div>
+      <div class="cuenta-caps" aria-label="Alcance, límites y costos frente a esta demo">${si}${no}${costos}</div>
       <p class="cuenta-meta">${on
         ? (publicados + " aviso" + (publicados === 1 ? "" : "s") + " en cartera")
         : "Sin avisos marcados"}</p>
