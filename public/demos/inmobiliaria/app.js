@@ -56,8 +56,21 @@ function readFiltersFromForm() {
   };
 }
 
+function markFilterFields() {
+  document.querySelectorAll(".search-box .field").forEach((field) => {
+    const control = field.querySelector("select, input");
+    field.classList.toggle("is-set", Boolean(control && control.value));
+  });
+  const extra = document.getElementById("moreFilters");
+  if (extra) {
+    const hasExtra = Boolean(currentFilters.ambientes || currentFilters.precio);
+    extra.classList.toggle("has-extra", hasExtra);
+  }
+}
+
 function applyFilters() {
   readFiltersFromForm();
+  markFilterFields();
   renderBarrioChips();
   renderZoneCards();
   renderProperties();
@@ -487,6 +500,57 @@ document.getElementById("modalContent").addEventListener("submit", (event) => {
   showFichaToast("Consulta enviada (demo)");
 });
 
+function wireLugares() {
+  const track = document.getElementById("lugarTrack");
+  const viewport = document.getElementById("lugarViewport");
+  const dots = document.getElementById("lugarDots");
+  if (!track || !viewport || !dots) return;
+  const slides = [...track.children];
+  let index = 0;
+  let startX = 0;
+  let dragging = false;
+
+  slides.forEach((slide, i) => {
+    const btn = document.createElement("button");
+    btn.type = "button";
+    btn.setAttribute("aria-label", "Ir a " + (slide.querySelector("h3")?.textContent || "lugar"));
+    btn.addEventListener("click", () => go(i));
+    dots.appendChild(btn);
+  });
+
+  function go(next) {
+    index = (next + slides.length) % slides.length;
+    track.style.transform = "translateX(" + (-index * 100) + "%)";
+    dots.querySelectorAll("button").forEach((btn, i) => {
+      btn.setAttribute("aria-selected", i === index ? "true" : "false");
+    });
+  }
+
+  document.getElementById("lugarPrev")?.addEventListener("click", () => go(index - 1));
+  document.getElementById("lugarNext")?.addEventListener("click", () => go(index + 1));
+  track.addEventListener("click", (event) => {
+    const link = event.target.closest("[data-zona]");
+    if (!link) return;
+    selectZona(link.dataset.zona, true);
+  });
+
+  viewport.addEventListener("pointerdown", (event) => {
+    if (event.target.closest("button")) return;
+    dragging = true;
+    startX = event.clientX;
+  });
+  viewport.addEventListener("pointerup", (event) => {
+    if (!dragging) return;
+    dragging = false;
+    const delta = event.clientX - startX;
+    if (delta > 40) go(index - 1);
+    else if (delta < -40) go(index + 1);
+  });
+  viewport.addEventListener("pointercancel", () => { dragging = false; });
+
+  go(0);
+}
+
 function wireNav() {
   const toggle = document.getElementById("navToggle");
   const nav = document.getElementById("siteNav");
@@ -523,7 +587,9 @@ function ajustarContacto() {
 }
 
 wireNav();
+wireLugares();
 populateBarrios();
 renderProperties();
+markFilterFields();
 pintarMapaComarca();
 window.addEventListener("load", ajustarContacto);
