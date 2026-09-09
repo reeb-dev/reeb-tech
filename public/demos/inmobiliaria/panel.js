@@ -20,7 +20,7 @@ document.getElementById("create").addEventListener("submit", (event) => {
     operacion: String(data.get("operacion") || "alquiler"),
     direccion: String(data.get("direccion") || ""),
     barrio: String(data.get("barrio") || ""),
-    zona: "Sierra de la Ventana",
+    zona: "Bariloche",
     ambientes: Number(data.get("ambientes") || 0),
     dormitorios: 0,
     banos: 1,

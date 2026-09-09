@@ -168,11 +168,11 @@ function renderProperties() {
           <div class="price">${formatPrice(p.precio, p.operacion)}</div>
           ${p.expensas ? `<div class="expenses">+ Expensas: ${esc(money(p.expensas))}</div>` : ""}
           <div class="specs">
-            <span>${p.superficie} m²</span>
+            <span>${p.cubierta ? p.cubierta + " m² cub." : p.superficie + " m²"}</span>
+            ${p.tipo === "terreno" ? `<span>${p.superficie} m² de lote</span>` : ""}
             ${p.dormitorios > 0 ? `<span>${p.dormitorios} dorm.</span>` : ""}
-            ${p.ambientes > 0 ? `<span>${p.ambientes} amb.</span>` : ""}
-            ${p.banos > 0 ? `<span>${p.banos} baño${p.banos > 1 ? "s" : ""}</span>` : ""}
-            ${p.cochera ? "<span>Cochera</span>" : ""}
+            ${p.vista ? `<span>${esc(p.vista)}</span>` : ""}
+            ${p.calefaccion ? `<span>${esc(p.calefaccion)}</span>` : ""}
           </div>
         </div>
       </article>
@@ -228,26 +228,35 @@ function openModal(id) {
 
     <div class="modal-specs">
       <div class="spec">
-        <div class="icon">m²</div>
+        <div class="icon">lote</div>
         <div class="value">${p.superficie}</div>
-        <div class="label">m² totales</div>
+        <div class="label">m² de terreno</div>
       </div>
       <div class="spec">
         <div class="icon">cub.</div>
-        <div class="value">${p.cubierta || p.superficie}</div>
+        <div class="value">${p.cubierta || "—"}</div>
         <div class="label">m² cubiertos</div>
-      </div>
-      <div class="spec">
-        <div class="icon">amb.</div>
-        <div class="value">${p.ambientes || "—"}</div>
-        <div class="label">Ambientes</div>
       </div>
       <div class="spec">
         <div class="icon">dorm.</div>
         <div class="value">${p.dormitorios || "—"}</div>
         <div class="label">Dormitorios</div>
       </div>
+      <div class="spec">
+        <div class="icon">baño</div>
+        <div class="value">${p.banos || "—"}</div>
+        <div class="label">Baños</div>
+      </div>
     </div>
+
+    <dl class="ficha-facts">
+      <div><dt>Operación</dt><dd>${esc(opLabel(p.operacion))}</dd></div>
+      <div><dt>Estado</dt><dd>${esc(label(p.status))}</dd></div>
+      <div><dt>Vista</dt><dd>${esc(p.vista || "—")}</dd></div>
+      <div><dt>Calefacción</dt><dd>${esc(p.calefaccion || "—")}</dd></div>
+      <div><dt>Servicios</dt><dd>${esc(p.servicios || "—")}</dd></div>
+      <div><dt>Precio</dt><dd>${formatPrice(p.precio, p.operacion)}${p.operacion === "venta" ? " · venta en dólares" : " · alquiler permanente en pesos"}</dd></div>
+    </dl>
 
     <div class="modal-description">
       <h4>Descripción</h4>

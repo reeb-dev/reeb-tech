@@ -317,6 +317,65 @@ textarea:focus {
   font-weight: 650;
 }
 
+.comarca {
+  padding: 12px 0 8px;
+}
+
+.comarca-lead {
+  margin: 0 0 18px;
+  max-width: 42rem;
+  color: var(--muted);
+  font-size: 1.05rem;
+}
+
+.zone-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 14px;
+}
+
+.zone-grid article {
+  background: var(--card);
+  border: 1px solid var(--line);
+  border-radius: 18px;
+  padding: 16px 16px 18px;
+}
+
+.zone-grid h3 {
+  margin: 0 0 6px;
+  font-size: 1.35rem;
+}
+
+.zone-grid p {
+  margin: 0;
+  color: #3d4842;
+  font-size: 0.95rem;
+}
+
+.ficha-facts {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+  margin: 0 0 20px;
+}
+
+.ficha-facts div {
+  background: var(--sand);
+  border-radius: 14px;
+  padding: 12px 14px;
+}
+
+.ficha-facts dt {
+  font-size: 12px;
+  color: var(--muted);
+  font-weight: 650;
+}
+
+.ficha-facts dd {
+  margin: 4px 0 0;
+  font-weight: 600;
+}
+
 /* Results */
 .results-header {
   display: flex;
@@ -1182,7 +1241,9 @@ input, select, textarea {
   .top nav button.btn { width: 100%; }
 
   .search-row,
-  .properties-grid { grid-template-columns: 1fr; }
+  .properties-grid,
+  .zone-grid,
+  .ficha-facts { grid-template-columns: 1fr; }
 
   .search-actions { flex-direction: column; }
   .search-btn { width: 100%; }
