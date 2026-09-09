@@ -318,7 +318,6 @@ function renderProperties() {
             <div class="badges">
               ${htmlPublicBadges(p)}
             </div>
-            ${htmlAvisoFlags(p)}
             <span class="barrio-pill">${esc(p.barrio)}</span>
             ${fotos.length > 1 ? `<div class="gallery-count">${fotos.length} fotos</div>` : ""}
           </a>
@@ -360,7 +359,6 @@ function htmlNovedadCard(p) {
       <a class="recientes-card${p.nuevo ? " is-nueva" : ""}${p.bajoPrecio ? " is-baja" : ""}" href="${esc(detalleHref(p.id))}">
         <span class="recientes-card-media">
           <img src="${esc(portada)}" alt="">
-          ${htmlAvisoFlags(p)}
         </span>
         <strong>${esc(p.titulo)}</strong>
         ${htmlPrecioVitrina(p)}

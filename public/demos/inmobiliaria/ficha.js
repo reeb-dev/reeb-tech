@@ -101,7 +101,6 @@ function renderFicha(p) {
             <button class="ficha-arrow prev" type="button" id="prevImage" aria-label="Foto anterior">‹</button>
             <button class="ficha-arrow next" type="button" id="nextImage" aria-label="Foto siguiente">›</button>
           ` : ""}
-          ${htmlAvisoFlags(p)}
           ${htmlLikeButton(p)}
           <div class="ficha-counter" id="fichaCounter">1 / ${fotos.length}</div>
         </div>
