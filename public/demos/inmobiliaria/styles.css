@@ -3876,6 +3876,11 @@ input, select, textarea {
 
 .amount { text-align: right; font-variant-numeric: tabular-nums; }
 
+.arca-section .form-actions {
+  margin-top: 16px;
+  justify-content: flex-end;
+}
+
 .arca-section h4,
 .factura-box h4 { margin: 0 0 8px; font-size: 14px; }
 
