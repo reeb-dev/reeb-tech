@@ -138,7 +138,7 @@ function renderProperties() {
     grid.innerHTML = `
       <div class="no-results">
         <h3>No encontramos propiedades</h3>
-        <p>Probá otro barrio, tipo o rango de precio.</p>
+        <p>Pruebe otra zona, tipo o rango de precio.</p>
       </div>
     `;
     return;
@@ -295,7 +295,7 @@ function openModal(id) {
 
     <div class="modal-contact">
       <div>
-        <h4>¿Te interesa esta propiedad?</h4>
+        <h4>¿Le interesa esta propiedad?</h4>
         <p>Consulta de ejemplo. El mensaje no sale a un servidor.</p>
       </div>
       <div class="btns">

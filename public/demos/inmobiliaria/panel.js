@@ -20,7 +20,7 @@ document.getElementById("create").addEventListener("submit", (event) => {
     operacion: String(data.get("operacion") || "alquiler"),
     direccion: String(data.get("direccion") || ""),
     barrio: String(data.get("barrio") || ""),
-    zona: "CABA",
+    zona: "Sierra de la Ventana",
     ambientes: Number(data.get("ambientes") || 0),
     dormitorios: 0,
     banos: 1,
@@ -80,7 +80,7 @@ function render() {
     <button type="button" data-filter="reservada" class="${filter === "reservada" ? "on" : ""}"><strong>${reservadas}</strong>reservadas</button>
     <button type="button" data-filter="alquilada" class="${filter === "alquilada" ? "on" : ""}"><strong>${alquiladas}</strong>alquiladas</button>
     <button type="button" data-filter="vendida" class="${filter === "vendida" ? "on" : ""}"><strong>${vendidas}</strong>vendidas</button>
-    <input class="panel-search" type="text" id="search" placeholder="Buscar barrio o dirección" value="${esc(searchTerm)}" aria-label="Buscar">
+    <input class="panel-search" type="text" id="search" placeholder="Buscar zona o dirección" value="${esc(searchTerm)}" aria-label="Buscar">
   `;
   
   document.getElementById("search").addEventListener("input", (e) => {
@@ -135,7 +135,7 @@ function render() {
     <p>${esc(item.direccion)}</p>
     <img class="detail-photo" src="${esc(foto)}" alt="${esc(item.titulo)}">
     <div class="meta">
-      <div><span>Barrio</span>${esc(item.barrio)}</div>
+      <div><span>Zona</span>${esc(item.barrio)}</div>
       <div><span>Precio</span>${esc(precioStr)}</div>
       <div><span>Superficie</span>${item.superficie} m²</div>
       <div><span>Ambientes</span>${item.ambientes || "—"}</div>
@@ -194,7 +194,7 @@ function render() {
         </select>
       </label>
       <label>Dirección<input name="direccion" value="${esc(item.direccion)}"></label>
-      <label>Barrio<input name="barrio" value="${esc(item.barrio)}"></label>
+      <label>Zona<input name="barrio" value="${esc(item.barrio)}"></label>
       <label>Ambientes<input name="ambientes" type="number" value="${item.ambientes}"></label>
       <label>Superficie m²<input name="superficie" type="number" value="${item.superficie}"></label>
       <label>Precio<input name="precio" type="number" value="${item.precio}"></label>
