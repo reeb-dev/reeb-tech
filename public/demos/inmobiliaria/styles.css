@@ -518,7 +518,7 @@ textarea:focus {
 .lugares { padding: 8px 0 18px; }
 
 .lugares.is-strip .lugar-slide img { height: 168px; }
-.lugares.is-strip .lugar-caption { padding: 16px 16px 12px; }
+.lugares.is-strip .lugar-caption { padding: 16px 72px 12px; }
 .lugares.is-strip .lugar-caption p { display: none; }
 .lugares.is-strip .lugar-caption h3 { font-size: 1.35rem; margin: 0; }
 .lugares.is-strip .lugar-nav { top: 50%; transform: translateY(-50%); }
@@ -557,7 +557,7 @@ textarea:focus {
   left: 0;
   right: 0;
   bottom: 0;
-  padding: 28px 22px 18px;
+  padding: 28px 72px 18px;
   color: #fffdf9;
   background: linear-gradient(180deg, rgba(24, 32, 28, 0) 0%, rgba(24, 32, 28, 0.82) 58%);
 }
@@ -620,8 +620,9 @@ textarea:focus {
 .lugar-dots {
   display: flex;
   justify-content: center;
-  gap: 8px;
-  margin-top: 12px;
+  align-items: center;
+  gap: 10px;
+  margin-top: 14px;
 }
 
 .lugar-dots button {
@@ -632,6 +633,7 @@ textarea:focus {
   border-radius: 999px;
   background: #c9b8a8;
   cursor: pointer;
+  flex-shrink: 0;
 }
 
 .lugar-dots button[aria-selected="true"] {
@@ -2098,7 +2100,7 @@ footer {
   border-radius: 18px;
   padding: 16px;
   display: grid;
-  grid-template-rows: auto 1fr auto auto auto;
+  grid-template-rows: auto auto auto 1fr auto auto;
   gap: 10px;
   min-height: 100%;
 }
@@ -2179,11 +2181,37 @@ footer {
   font-size: 13px;
   color: var(--muted);
   line-height: 1.45;
-  display: -webkit-box;
-  -webkit-line-clamp: 3;
-  -webkit-box-orient: vertical;
-  overflow: hidden;
-  min-height: 3.9em;
+}
+
+.cuenta-caps {
+  display: grid;
+  gap: 6px;
+  margin: 0;
+  padding: 8px 10px;
+  border-radius: 12px;
+  background: rgba(44, 36, 31, 0.035);
+  border: 1px solid rgba(44, 36, 31, 0.06);
+}
+
+.cuenta-cap {
+  margin: 0;
+  font-size: 12px;
+  line-height: 1.4;
+  color: var(--ink);
+}
+
+.cuenta-cap span {
+  display: inline-block;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: #27573a;
+  margin-right: 6px;
+}
+
+.cuenta-cap.is-no span {
+  color: #7a4a3a;
 }
 
 .cuenta-meta {
@@ -3904,7 +3932,8 @@ input, select, textarea {
   .hero-photo img,
   .lugar-slide img { height: 240px; }
   .lugar-nav { top: 36%; }
-  .lugar-caption { padding: 18px 14px 12px; }
+  .lugar-caption { padding: 18px 58px 12px; }
+  .lugares.is-strip .lugar-caption { padding: 14px 58px 10px; }
   .lugar-caption p { font-size: 0.92rem; }
   .hero-copy h1 { font-size: 2rem; }
   .search-primary { grid-template-columns: 1fr 1fr; }

@@ -573,6 +573,8 @@ function htmlCuenta(dest) {
   const accion = dest.fijo
     ? `<span class="cuenta-estado on">Siempre en la vitrina</span>`
     : `<button type="button" class="cuenta-btn ${on ? "is-ghost" : "is-primary"}" data-cuenta="${esc(dest.id)}" ${editable ? "" : "disabled"}>${on ? "Desconectar" : "Conectar"}</button>`;
+  const si = dest.si ? `<p class="cuenta-cap"><span>Qué sí</span> ${esc(dest.si)}</p>` : "";
+  const no = dest.no ? `<p class="cuenta-cap is-no"><span>Qué no</span> ${esc(dest.no)}</p>` : "";
   return `
     <article class="cuenta ${on ? "is-on" : ""}">
       <header class="cuenta-head">
@@ -584,6 +586,7 @@ function htmlCuenta(dest) {
         <span class="cuenta-badge ${on ? "is-on" : ""}">${on ? "Conectado" : "Libre"}</span>
       </header>
       <p class="cuenta-beneficio">${esc(dest.beneficio)}</p>
+      <div class="cuenta-caps" aria-label="Alcance real frente a esta demo">${si}${no}</div>
       <p class="cuenta-meta">${on
         ? (publicados + " aviso" + (publicados === 1 ? "" : "s") + " en cartera")
         : "Sin avisos marcados"}</p>
@@ -763,7 +766,7 @@ function htmlDifusionResumen(editable) {
           <p class="difusion-paso">Resumen</p>
           <h2>Estado de la difusión</h2>
         </div>
-        <p class="difusion-aviso-demo">Demo: no se envía nada a portales ni redes. Solo quedan marcas en este navegador.</p>
+        <p class="difusion-aviso-demo">Demo: no se llama a APIs reales. Solo quedan marcas en este navegador (localStorage).</p>
       </header>
       <div class="difusion-resumen-grid">
         <article><span>Vitrina</span><strong>${items.length}</strong><small>avisos</small></article>
@@ -856,8 +859,8 @@ function renderDifusion() {
   const shareText = shareItem ? textoRed(shareItem) : "";
   host.innerHTML = `
     ${htmlDifusionResumen(editable)}
-    ${htmlGrupoCuentas("sitio", "Sitios y portales", "Vitrina y portales de Argentina. Conectar solo marca la cuenta en esta demo.", "1")}
-    ${htmlGrupoCuentas("red", "Redes sociales", "Instagram, Facebook, Marketplace, WhatsApp y TikTok. El texto se copia a mano.", "2")}
+    ${htmlGrupoCuentas("sitio", "Sitios y portales", "Vitrina y portales de Argentina. Cada tarjeta aclara API, feed, CRM o carga a mano. Conectar solo marca la cuenta aquí.", "1")}
+    ${htmlGrupoCuentas("red", "Redes sociales", "Instagram, Facebook, Marketplace, WhatsApp y TikTok. En producto real hay APIs de contenido o partners; acá el texto se copia a mano.", "2")}
     ${htmlDifusionPublicar(editable)}
     <section class="difusion-panel" id="difusion-cola">
       <header class="difusion-grupo-head">
