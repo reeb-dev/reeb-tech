@@ -173,8 +173,59 @@ function wireFotoEditor(root, item, persist) {
   });
 }
 
+function roleIs(...roles) {
+  return roles.includes(session?.rol);
+}
+
+function canManageUsers() {
+  return roleIs("titular");
+}
+
+/** Alta / edición de fichas y zonas: titular, agente, comercial. Administración edita fichas existentes. */
 function canEditCartera() {
-  return session?.rol === "titular" || session?.rol === "agente";
+  return roleIs("titular", "agente", "comercial", "administracion");
+}
+
+function canCreateCartera() {
+  return roleIs("titular", "agente", "comercial");
+}
+
+function canDeleteCartera() {
+  return roleIs("titular", "agente", "comercial");
+}
+
+function canEditZonas() {
+  return roleIs("titular", "agente", "comercial");
+}
+
+function canEditDifusion() {
+  return roleIs("titular", "agente", "comercial", "marketing");
+}
+
+function canEditVitrina() {
+  return roleIs("titular", "agente", "marketing");
+}
+
+function canEmitArca() {
+  return roleIs("titular", "agente", "comercial", "administracion");
+}
+
+function denyCarteraMsg(accion) {
+  const rol = session?.rol;
+  if (rol === "agenda") {
+    return accion === "eliminar"
+      ? "La agenda no elimina fichas."
+      : "La agenda no carga propiedades. Eso lo hace un agente, comercial o el titular.";
+  }
+  if (rol === "marketing") {
+    return "Marketing no carga ni borra avisos. Use Difusión o el gestor de la vitrina.";
+  }
+  if (rol === "administracion") {
+    return accion === "eliminar"
+      ? "Administración no elimina fichas. Puede editar la cartera y emitir ARCA de ejemplo."
+      : "Administración puede editar fichas existentes y emitir ARCA, pero no da de alta avisos nuevos.";
+  }
+  return "Su rol no permite esa acción en esta demo.";
 }
 
 function blankItem() {
@@ -315,29 +366,33 @@ function htmlDestinoFila(dest, item, readonly) {
 function htmlPublishBlock(item, isCreate, readonly) {
   if (isCreate) {
     return `
-      <div class="difusion-ficha" id="bloque-publicar">
-        <h4>Publicar este aviso</h4>
-        <p>Guarde la propiedad primero. El sitio propio toma la ficha apenas exista en la cartera. Después podrá marcar portales y redes. Demo: no se envía nada afuera.</p>
-      </div>`;
+      <section class="nh-form-section difusion-ficha" id="bloque-publicar">
+        <h3>Publicación</h3>
+        <p class="lead-mini">Guarde la propiedad primero. El sitio propio toma la ficha apenas exista en la cartera. Después podrá marcar portales y redes. Demo: no se envía nada afuera.</p>
+      </section>`;
   }
   return `
-    <div class="difusion-ficha" id="bloque-publicar">
-      <h4>Publicar este aviso</h4>
-      <p>Elija destinos conectados y toque Publicar este aviso. El sitio propio siempre queda en la vitrina. Portales y redes solo si la cuenta está conectada en Difusión. Demo: no se envía nada afuera.</p>
+    <section class="nh-form-section difusion-ficha" id="bloque-publicar">
+      <h3>Publicación</h3>
+      <p class="lead-mini">Elija destinos conectados y toque Publicar este aviso. El sitio propio siempre queda en la vitrina. Portales y redes solo si la cuenta está conectada en Difusión. Demo: no se envía nada afuera.</p>
       <p class="difusion-ficha-grupo">Sitios y portales</p>
-      ${destinosPorGrupo("sitio").map((dest) => htmlDestinoFila(dest, item, readonly)).join("")}
+      <div class="destino-list">
+        ${destinosPorGrupo("sitio").map((dest) => htmlDestinoFila(dest, item, readonly)).join("")}
+      </div>
       <p class="difusion-ficha-grupo">Redes sociales</p>
-      ${destinosPorGrupo("red").map((dest) => htmlDestinoFila(dest, item, readonly)).join("")}
-      <div class="difusion-acciones">
+      <div class="destino-list">
+        ${destinosPorGrupo("red").map((dest) => htmlDestinoFila(dest, item, readonly)).join("")}
+      </div>
+      <div class="form-actions difusion-acciones">
         ${readonly ? "" : `<button class="btn-panel" type="button" id="publicar-aviso">Publicar este aviso</button>`}
         <button class="ghost" type="button" id="copiar-aviso">Copiar texto para redes</button>
         <a class="ghost" id="wa-aviso" href="${esc("https://wa.me/?text=" + encodeURIComponent(textoRed(item)))}" target="_blank" rel="noopener">Enviar por WhatsApp</a>
       </div>
-    </div>`;
+    </section>`;
 }
 
 function publicarAviso(item, destIds) {
-  if (!canEditCartera() || !item?.id) return;
+  if (!canEditDifusion() || !item?.id) return;
   const destinos = destIds
     .map((id) => DESTINOS.find((d) => d.id === id))
     .filter(Boolean)
@@ -407,8 +462,8 @@ function openCarteraEditor(id, opts) {
 }
 
 function openCarteraCreate() {
-  if (session?.rol === "agenda") {
-    showToast("La agenda no carga propiedades. Eso lo hace un agente o el titular.");
+  if (!canCreateCartera()) {
+    showToast(denyCarteraMsg("crear"));
     return;
   }
   const paint = () => {
@@ -425,8 +480,8 @@ function openCarteraCreate() {
 }
 
 function guardarAlta(item) {
-  if (!canEditCartera()) {
-    showToast("La agenda no carga propiedades. Eso lo hace un agente o el titular.");
+  if (!canCreateCartera()) {
+    showToast(denyCarteraMsg("crear"));
     return;
   }
   if (!item.codigo || !item.titulo) {
@@ -478,10 +533,6 @@ function destinoConectado(id) {
   const dest = DESTINOS.find((d) => d.id === id);
   if (dest?.fijo) return true;
   return Boolean(cuentas[id]?.connected);
-}
-
-function canEditDifusion() {
-  return session?.rol === "titular" || session?.rol === "agente";
 }
 
 function cuentaDe(id) {
@@ -657,7 +708,7 @@ function renderDifusion() {
         <p>Sitio propio: ${items.length} propiedades de esta cartera salen en la vitrina. Abajo, portales y redes. Estados de ejemplo: listo, programado o publicado. No hay alcance ni seguidores inventados. Publicado, en esta demo, solo marca el aviso: no sale afuera.</p>
       </div>
       ${editable && destinosCola.length ? `
-        <form class="cola-alta" id="cola-alta">
+        <form class="cola-alta form-shell" id="cola-alta">
           <div class="nh-field">
             <label for="cola-item">Aviso</label>
             <select id="cola-item" name="item">
@@ -670,7 +721,9 @@ function renderDifusion() {
               ${destinosCola.map((d) => `<option value="${esc(d.id)}">${esc(d.nombre)}</option>`).join("")}
             </select>
           </div>
-          <button class="btn-panel" type="submit">Agregar a la cola</button>
+          <div class="form-actions">
+            <button class="btn-panel" type="submit">Agregar a la cola</button>
+          </div>
         </form>` : editable ? `<p class="cola-vacia">Conecte un portal o una red para armar la cola.</p>` : `<p class="cola-vacia">La agenda puede ver la cola. Un agente o el titular la arma.</p>`}
       <div class="table-scroll">
         <table class="cola-tabla">
@@ -892,10 +945,18 @@ function paintCarteraEditor() {
     return;
   }
 
-  const readonly = !canEditCartera();
-  const dis = readonly ? "disabled" : "";
+  const formReadonly = !canEditCartera();
+  const publishReadonly = !canEditDifusion();
+  const dis = formReadonly ? "disabled" : "";
   const fotos = (item.imagenes || []).filter(Boolean);
   const precioStr = item.operacion === "venta" ? money(item.precio, true) : money(item.precio) + " /mes";
+  const readonlyHint = formReadonly
+    ? (session?.rol === "marketing"
+      ? `<p class="editor-readonly">Marketing no edita la ficha. Puede marcar destinos en Difusión y textos de la vitrina.</p>`
+      : session?.rol === "agenda"
+        ? `<p class="editor-readonly">La agenda puede ver la ficha. Un agente, comercial o el titular la edita o la publica.</p>`
+        : `<p class="editor-readonly">Su rol puede ver esta ficha en solo lectura.</p>`)
+    : "";
 
   detail.innerHTML = `
     <div class="editor-head">
@@ -906,8 +967,8 @@ function paintCarteraEditor() {
       </div>
       <button type="button" class="ghost" id="volver-listado">Volver al listado</button>
     </div>
-    ${readonly ? `<p class="editor-readonly">La agenda puede ver la ficha. Un agente o el titular la edita o la publica.</p>` : ""}
-    ${htmlGaleria(fotos, readonly)}
+    ${readonlyHint}
+    ${htmlGaleria(fotos, formReadonly)}
     ${isCreate ? "" : `
     <div class="metric-box">
       <div><span>Visitas en la web</span><strong>${Number(item.vistas || 0)}</strong><small>Aperturas de esta ficha en la vitrina. Solo se ven en el panel.</small></div>
@@ -970,58 +1031,61 @@ function paintCarteraEditor() {
           ${nhField("edit-descripcion", "Texto de la ficha", `<textarea id="edit-descripcion" name="descripcion" rows="6" ${dis}>${esc(item.descripcion || "")}</textarea>`, "editor-span")}
         </div>
       </section>
-      <div class="editor-block">
+      <section class="nh-form-section">
         <h3>Características</h3>
         <p class="lead-mini">Salen como etiquetas en la ficha pública.</p>
-        <div class="edit-amenities">
+        <div class="edit-amenities check-wrap">
           ${AMENITIES.map((a) => `
             <label class="nh-check">
               <input type="checkbox" name="amenity" value="${esc(a.id)}" ${(item.amenities || []).includes(a.id) ? "checked" : ""} ${dis}>
-              ${esc(a.label)}
+              <span>${esc(a.label)}</span>
             </label>`).join("")}
         </div>
-        <div class="edit-flags">
-          <label class="nh-check"><input type="checkbox" name="destacado" ${item.destacado ? "checked" : ""} ${dis}> Destacar en la vitrina</label>
-          <label class="nh-check"><input type="checkbox" name="nuevo" ${item.nuevo ? "checked" : ""} ${dis}> Mostrar como nueva publicación</label>
+        <div class="edit-flags check-wrap">
+          <label class="nh-check"><input type="checkbox" name="destacado" ${item.destacado ? "checked" : ""} ${dis}> <span>Destacar en la vitrina</span></label>
+          <label class="nh-check"><input type="checkbox" name="nuevo" ${item.nuevo ? "checked" : ""} ${dis}> <span>Mostrar como nueva publicación</span></label>
         </div>
         <p class="lead-mini">Puede destacar varias. “Nueva publicación” sale en la tira de recién publicadas y con el sello en la vitrina. Bajar el precio al guardar marca “Bajó de precio” en la web; subirlo lo quita.</p>
-      </div>
-      ${readonly ? "" : `
-      <div class="actions">
+      </section>
+      ${formReadonly ? "" : `
+      <div class="form-actions form-actions--sticky actions">
         <button class="btn-panel" type="submit">${isCreate ? "Agregar a la cartera" : "Guardar en vitrina"}</button>
-        ${isCreate ? "" : `<button class="ghost" type="button" id="remove">Eliminar</button>`}
+        <button class="ghost" type="button" id="cancelar-edicion">Cancelar</button>
+        ${isCreate || !canDeleteCartera() ? "" : `<button class="ghost ghost-danger" type="button" id="remove">Eliminar</button>`}
       </div>`}
     </form>
-    <div class="editor-block">
-      ${htmlPublishBlock(item, isCreate, readonly)}
-    </div>
+    ${htmlPublishBlock(item, isCreate, publishReadonly)}
     ${isCreate || item.factura ? (item.factura ? `
-      <div class="factura-box">
-        <h4>Operación facturada</h4>
-        <div><strong>Tipo:</strong> ${esc(compLabel(item.factura.tipo))}</div>
-        <div><strong>Número:</strong> ${esc(item.factura.numero)}</div>
-        <div><strong>Total:</strong> ${item.factura.total > 100000 ? money(item.factura.total, true) : money(item.factura.total)}</div>
-        <div><strong>CAE:</strong> <span class="cae">${esc(item.factura.cae)}</span></div>
-        <div><strong>Vto CAE:</strong> ${esc(item.factura.vto)}</div>
-      </div>
-    ` : "") : (readonly ? "" : `
-      <div class="arca-section">
-        <h4>Facturación ARCA</h4>
-        ${nhField("arca-cuit", "CUIT del cliente", `<input id="arca-cuit" inputmode="numeric" autocomplete="off">`)}
-        ${nhField("arca-tipo", "Tipo de comprobante", `<select id="arca-tipo">
-            ${COMPROBANTES.map((c) => `<option value="${c.id}">${esc(c.label)}</option>`).join("")}
-          </select>`)}
-        ${nhField("arca-concepto", "Concepto", `<select id="arca-concepto">
-            <option value="alquiler">Alquiler mensual</option>
-            <option value="comision">Comisión de venta</option>
-            <option value="reserva">Reserva</option>
-            <option value="expensas">Expensas</option>
-          </select>`)}
-        <button class="btn-panel" type="button" id="emitir-factura">
-          Emitir factura (simulado)
-        </button>
+      <section class="nh-form-section factura-box">
+        <h3>Operación facturada</h3>
+        <div class="factura-grid">
+          <div><span>Tipo</span><strong>${esc(compLabel(item.factura.tipo))}</strong></div>
+          <div><span>Número</span><strong>${esc(item.factura.numero)}</strong></div>
+          <div><span>Total</span><strong>${item.factura.total > 100000 ? money(item.factura.total, true) : money(item.factura.total)}</strong></div>
+          <div><span>CAE</span><strong class="cae">${esc(item.factura.cae)}</strong></div>
+          <div><span>Vto CAE</span><strong>${esc(item.factura.vto)}</strong></div>
+        </div>
+      </section>
+    ` : "") : (!canEmitArca() ? "" : `
+      <section class="nh-form-section arca-section">
+        <h3>Facturación ARCA</h3>
         <p class="lead-mini">Demo: genera un CAE de ejemplo. En un sistema real se conecta a ARCA.</p>
-      </div>
+        <div class="editor-grid">
+          ${nhField("arca-cuit", "CUIT del cliente", `<input id="arca-cuit" inputmode="numeric" autocomplete="off">`)}
+          ${nhField("arca-tipo", "Tipo de comprobante", `<select id="arca-tipo">
+              ${COMPROBANTES.map((c) => `<option value="${c.id}">${esc(c.label)}</option>`).join("")}
+            </select>`)}
+          ${nhField("arca-concepto", "Concepto", `<select id="arca-concepto">
+              <option value="alquiler">Alquiler mensual</option>
+              <option value="comision">Comisión de venta</option>
+              <option value="reserva">Reserva</option>
+              <option value="expensas">Expensas</option>
+            </select>`)}
+        </div>
+        <div class="form-actions">
+          <button class="btn-panel" type="button" id="emitir-factura">Emitir factura (simulado)</button>
+        </div>
+      </section>
     `)}
     ${!isCreate && (item.visitas || []).length ? `
       <div class="visitas">
@@ -1045,11 +1109,15 @@ function paintCarteraEditor() {
     showCarteraList();
     render();
   });
+  detail.querySelector("#cancelar-edicion")?.addEventListener("click", () => {
+    showCarteraList();
+    render();
+  });
 
   wireFotoEditor(detail, item, isCreate ? false : true);
 
   detail.querySelector("#emitir-factura")?.addEventListener("click", () => {
-    if (!canEditCartera()) return;
+    if (!canEmitArca()) return;
     const tipo = detail.querySelector("#arca-tipo").value;
     const cuit = detail.querySelector("#arca-cuit").value;
     const concepto = detail.querySelector("#arca-concepto").value;
@@ -1117,8 +1185,8 @@ function paintCarteraEditor() {
   });
 
   detail.querySelector("#remove")?.addEventListener("click", () => {
-    if (session?.rol === "agenda") {
-      showToast("La agenda no elimina fichas.");
+    if (!canDeleteCartera()) {
+      showToast(denyCarteraMsg("eliminar"));
       return;
     }
     if (!confirm("¿Eliminar esta propiedad? Esta acción no se puede deshacer.")) return;
@@ -1145,10 +1213,6 @@ function showToast(message) {
   document.body.appendChild(toast);
   setTimeout(() => toast.classList.add("show"), 10);
   setTimeout(() => { toast.classList.remove("show"); setTimeout(() => toast.remove(), 300); }, Math.min(5600, 2800 + message.length * 18));
-}
-
-function canEditVitrina() {
-  return session?.rol === "titular" || session?.rol === "agente";
 }
 
 function hidePanelLoading() {
@@ -1410,14 +1474,14 @@ function renderResumen() {
 function renderZonas() {
   const host = document.getElementById("zonas-desk");
   if (!host) return;
-  const editable = canEditCartera();
+  const editable = canEditZonas();
   const list = typeof zonasTodas === "function" ? zonasTodas() : ZONAS;
   const parentOpts = `<option value="">Ninguna · pin general de Bariloche</option>` + list.map((z) =>
     `<option value="${esc(z.id)}">${esc(z.nombre)}</option>`
   ).join("");
   host.innerHTML = `
     ${editable ? `
-    <form class="zona-alta" id="zona-alta">
+    <form class="zona-alta form-shell" id="zona-alta">
       <div class="nh-field">
         <label for="zona-nombre">Nombre</label>
         <input id="zona-nombre" name="nombre" required maxlength="60" placeholder="Villa Catedral">
@@ -1431,7 +1495,9 @@ function renderZonas() {
         <select id="zona-parent" name="parentId">${parentOpts}</select>
       </div>
       <p class="nh-form-error" id="zona-alta-error" role="alert"></p>
-      <button class="btn-panel" type="submit">Agregar zona</button>
+      <div class="form-actions">
+        <button class="btn-panel" type="submit">Agregar zona</button>
+      </div>
     </form>` : `<p class="cola-vacia">La agenda puede ver las zonas. Un agente o el titular carga una localidad nueva.</p>`}
     <div class="table-scroll">
       <table class="cartera-tabla">
@@ -1464,8 +1530,8 @@ function renderZonas() {
 
   host.querySelector("#zona-alta")?.addEventListener("submit", (event) => {
     event.preventDefault();
-    if (!canEditCartera()) {
-      showToast("La agenda no carga zonas. Eso lo hace un agente o el titular.");
+    if (!canEditZonas()) {
+      showToast("Su rol no carga zonas. Eso lo hace un agente, comercial o el titular.");
       return;
     }
     const data = new FormData(event.target);
@@ -1488,7 +1554,7 @@ function renderZonas() {
 
   host.querySelectorAll("[data-zona-quitar]").forEach((btn) => {
     btn.addEventListener("click", () => {
-      if (!canEditCartera()) return;
+      if (!canEditZonas()) return;
       if (!quitarZonaCustom(btn.dataset.zonaQuitar)) {
         showToast("Las zonas de la comarca no se quitan.");
         return;
@@ -1519,7 +1585,7 @@ function renderVitrinaGestor() {
       : `<label class="vitrina-toggle"><input type="checkbox" data-vitrina-visible="${esc(sec.id)}" ${on ? "checked" : ""} ${editable ? "" : "disabled"}> Mostrar en la vitrina</label>`;
     const save = editable
       ? `<button class="btn-panel" type="submit">Guardar esta sección</button>`
-      : `<p class="vitrina-readonly">Solo titular o agente publican u ocultan la vitrina. Usted puede leer los textos.</p>`;
+      : `<p class="vitrina-readonly">Solo titular, agente o marketing publican u ocultan la vitrina. Usted puede leer los textos.</p>`;
     return `
       <article class="vitrina-block ${on ? "is-on" : "is-off"}">
         <header>
@@ -1529,9 +1595,9 @@ function renderVitrinaGestor() {
           </div>
           ${toggle}
         </header>
-        <form data-vitrina-form="${esc(sec.id)}">
+        <form data-vitrina-form="${esc(sec.id)}" class="vitrina-section-form">
           ${fields}
-          ${save}
+          <div class="form-actions">${save}</div>
         </form>
       </article>`;
   }).join("");
@@ -1594,9 +1660,9 @@ function bootPanel() {
 function applySessionChrome() {
   document.body.classList.add("nh-authed");
   document.getElementById("nh-login").hidden = true;
-  document.body.classList.toggle("nh-rol-titular", session.rol === "titular");
-  document.body.classList.toggle("nh-rol-agente", session.rol === "agente");
-  document.body.classList.toggle("nh-rol-agenda", session.rol === "agenda");
+  ["titular", "agente", "comercial", "marketing", "administracion", "agenda"].forEach((rol) => {
+    document.body.classList.toggle("nh-rol-" + rol, session.rol === rol);
+  });
   const nav = document.getElementById("siteNav");
   nav?.querySelector(".nh-session")?.remove();
   if (nav) {
@@ -1608,7 +1674,15 @@ function applySessionChrome() {
       currentView = "resumen";
       hidePanelLoading();
       clearStaffSession();
-      document.body.classList.remove("nh-authed", "nh-rol-titular", "nh-rol-agente", "nh-rol-agenda");
+      document.body.classList.remove(
+        "nh-authed",
+        "nh-rol-titular",
+        "nh-rol-agente",
+        "nh-rol-comercial",
+        "nh-rol-marketing",
+        "nh-rol-administracion",
+        "nh-rol-agenda"
+      );
       box.remove();
       history.replaceState(null, "", location.pathname + location.search);
       showStaffLogin();
@@ -1616,7 +1690,13 @@ function applySessionChrome() {
     nav.appendChild(box);
   }
   const alta = document.getElementById("usuario-alta");
-  if (alta) alta.hidden = session.rol !== "titular";
+  if (alta) alta.hidden = !canManageUsers();
+  const rolSelect = document.getElementById("alta-rol");
+  if (rolSelect && STAFF_ROLES) {
+    rolSelect.innerHTML = STAFF_ROLES.map((r) =>
+      `<option value="${esc(r.id)}">${esc(r.label)}</option>`
+    ).join("");
+  }
 }
 
 function placedLoginUser() {
@@ -1689,7 +1769,7 @@ function enterStaff(user) {
 function renderUsuarios() {
   const host = document.getElementById("usuario-rows");
   if (!host) return;
-  const titular = session?.rol === "titular";
+  const titular = canManageUsers();
   host.innerHTML = staff.map((u) => {
     const rolSelect = titular
       ? `<select data-rol="${esc(u.id)}" aria-label="Rol de ${esc(u.nombre)}">
@@ -1718,7 +1798,7 @@ function renderUsuarios() {
 }
 
 function changeStaffRole(id, rol) {
-  if (session?.rol !== "titular") return;
+  if (!canManageUsers()) return;
   if (!STAFF_ROLES.some((r) => r.id === rol)) return;
   const user = staff.find((u) => u.id === id);
   if (!user) return;
@@ -1739,7 +1819,7 @@ function changeStaffRole(id, rol) {
 }
 
 function toggleStaff(id) {
-  if (session?.rol !== "titular") return;
+  if (!canManageUsers()) return;
   const user = staff.find((u) => u.id === id);
   if (!user) return;
   if (user.user === session.user) {
@@ -1759,7 +1839,7 @@ function toggleStaff(id) {
 
 document.getElementById("usuario-alta")?.addEventListener("submit", (event) => {
   event.preventDefault();
-  if (session?.rol !== "titular") return;
+  if (!canManageUsers()) return;
   const data = new FormData(event.target);
   const err = document.getElementById("usuario-alta-error");
   const user = String(data.get("user") || "").trim().toLowerCase().replace(/[^a-z0-9._-]/g, "");
@@ -1767,6 +1847,10 @@ document.getElementById("usuario-alta")?.addEventListener("submit", (event) => {
   const rol = String(data.get("rol") || "agente");
   const pass = String(data.get("pass") || "demo").trim() || "demo";
   event.target.querySelectorAll(".is-invalid").forEach((el) => el.classList.remove("is-invalid"));
+  if (!STAFF_ROLES.some((r) => r.id === rol)) {
+    if (err) err.textContent = "Elija un rol válido.";
+    return;
+  }
   if (!user || !nombre) {
     if (!nombre) event.target.nombre.classList.add("is-invalid");
     if (!user) event.target.user.classList.add("is-invalid");
@@ -1785,6 +1869,7 @@ document.getElementById("usuario-alta")?.addEventListener("submit", (event) => {
   saveUsers(staff);
   event.target.reset();
   event.target.pass.value = "demo";
+  if (event.target.rol) event.target.rol.value = "agente";
   showToast("Usuario agregado. Puede entrar con clave " + pass + ".");
   renderUsuarios();
 });

@@ -33,7 +33,26 @@ const AMENITIES = [
   { id: "jardin", label: "Jardín", icon: "·" },
   { id: "lena", label: "Hogar a leña", icon: "·" },
   { id: "quincho", label: "Quincho", icon: "·" },
-  { id: "baulera", label: "Baulera", icon: "·" }
+  { id: "baulera", label: "Baulera", icon: "·" },
+  { id: "seguridad", label: "Seguridad", icon: "·" },
+  { id: "ascensor", label: "Ascensor", icon: "·" },
+  { id: "amoblado", label: "Amoblado", icon: "·" },
+  { id: "apto_credito", label: "Apto crédito", icon: "·" },
+  { id: "apto_profesional", label: "Apto profesional", icon: "·" },
+  { id: "mascotas", label: "Acepta mascotas", icon: "·" },
+  { id: "pileta_climatizada", label: "Pileta climatizada", icon: "·" },
+  { id: "spa", label: "Spa", icon: "·" },
+  { id: "gimnasio", label: "Gimnasio", icon: "·" },
+  { id: "sum", label: "SUM", icon: "·" },
+  { id: "laundry", label: "Laundry", icon: "·" },
+  { id: "vista_lago", label: "Vista al lago", icon: "·" },
+  { id: "vista_cerro", label: "Vista al cerro", icon: "·" },
+  { id: "calefaccion_central", label: "Calefacción central", icon: "·" },
+  { id: "gas_natural", label: "Gas natural", icon: "·" },
+  { id: "agua_corriente", label: "Agua corriente", icon: "·" },
+  { id: "cloacas", label: "Cloacas", icon: "·" },
+  { id: "fibra_optica", label: "Fibra óptica", icon: "·" },
+  { id: "acceso_nieve", label: "Acceso con nieve", icon: "·" }
 ];
 
 const FOTOS = {
@@ -267,7 +286,7 @@ function seed() {
       calefaccion: "Hogar a leña y radiadores a gas",
       vista: "Lago Nahuel Huapi",
       servicios: "Luz, gas de red, agua corriente, cloacas",
-      amenities: ["lena", "parrilla", "jardin", "cochera"],
+      amenities: ["lena", "parrilla", "jardin", "cochera", "vista_lago", "gas_natural", "agua_corriente", "cloacas", "acceso_nieve", "apto_credito"],
       descripcion: "Casa de piedra y madera sobre el Circuito Chico, techo a dos aguas. Living con hogar, tres dormitorios y jardín hacia el lago Nahuel Huapi. Cochera cubierta. Venta de vivienda, no estadía.",
       imagenes: ["img/zona-circuito.jpg", "img/hero-lago.jpg"],
       destacado: true,
@@ -302,7 +321,7 @@ function seed() {
       calefaccion: "Salamandra a leña y calefactores a gas",
       vista: "Bosque de pinos",
       servicios: "Luz, gas envasado, agua de red",
-      amenities: ["lena", "parrilla", "jardin"],
+      amenities: ["lena", "parrilla", "jardin", "mascotas", "fibra_optica", "vista_cerro", "agua_corriente"],
       descripcion: "Cabaña de pino en Melipal, para vivir todo el año. Dos dormitorios, cocina-comedor y deck. El contrato es de alquiler permanente, no por noche. A minutos del centro en colectivo o auto.",
       imagenes: ["img/cabana-bosque.jpg", "img/zona-melipal.jpg"],
       destacado: true,
@@ -863,7 +882,7 @@ function seed() {
       ambientes: 3, dormitorios: 2, banos: 1, superficie: 78, cubierta: 72, precio: 168000,
       antiguedad: 22, orientacion: "Norte", piso: "2°", calefaccion: "Radiadores a gas",
       vista: "Calle arbolada y cerro a lo lejos", servicios: "Luz, gas de red, agua, cloacas",
-      amenities: ["balcon"], descripcion: "Departamento en venta en el Centro, a pocas cuadras del Centro Cívico. Dos dormitorios, balcón y radiadores. No publicamos la parcela exacta.",
+      amenities: ["balcon", "ascensor", "seguridad", "baulera", "calefaccion_central", "gas_natural", "apto_profesional"], descripcion: "Departamento en venta en el Centro, a pocas cuadras del Centro Cívico. Dos dormitorios, balcón y radiadores. No publicamos la parcela exacta.",
       imagenes: ["img/depto-cocina.jpg", "img/zona-centro.jpg"]
     }),
     ficha({
@@ -872,7 +891,7 @@ function seed() {
       ambientes: 2, dormitorios: 1, banos: 1, superficie: 54, cubierta: 48, precio: 142000,
       antiguedad: 16, orientacion: "Oeste", piso: "4°", calefaccion: "Radiadores a gas",
       vista: "Lago Nahuel Huapi", servicios: "Luz, gas de red, agua, cloacas",
-      amenities: ["balcon"], descripcion: "Venta de un ambiente amplio con dormitorio, balcón hacia el lago y calefacción por radiadores. El pin de la ficha es la zona, no el edificio.",
+      amenities: ["balcon", "vista_lago", "ascensor", "laundry", "sum", "seguridad", "fibra_optica"], descripcion: "Venta de un ambiente amplio con dormitorio, balcón hacia el lago y calefacción por radiadores. El pin de la ficha es la zona, no el edificio.",
       imagenes: ["img/lugar-lago.jpg", "img/depto-living.jpg"]
     }),
     ficha({
@@ -1022,10 +1041,10 @@ function seed() {
   ];
 }
 
-const STORAGE_KEY = "inmobiliaria-demo-v9";
+const STORAGE_KEY = "inmobiliaria-demo-v10";
 const CUENTAS_KEY = "inmobiliaria-demo-cuentas-v1";
 const COLA_KEY = "inmobiliaria-demo-cola-v1";
-const USERS_KEY = "inmobiliaria-demo-usuarios-v1";
+const USERS_KEY = "inmobiliaria-demo-usuarios-v2";
 const SESSION_KEY = "inmobiliaria-demo-sesion-v1";
 const VITRINA_KEY = "inmobiliaria-demo-vitrina-v1";
 const VITRINA_EJEMPLOS_KEY = "inmobiliaria-demo-vitrina-ejemplos-v1";
@@ -1034,6 +1053,9 @@ const DEMO_WA_PHONE = "5492915757934";
 const STAFF_ROLES = [
   { id: "titular", label: "Titular" },
   { id: "agente", label: "Agente" },
+  { id: "comercial", label: "Comercial" },
+  { id: "marketing", label: "Marketing" },
+  { id: "administracion", label: "Administración" },
   { id: "agenda", label: "Agenda" }
 ];
 
@@ -1041,8 +1063,19 @@ function defaultUsers() {
   return [
     { id: "u-titular", user: "milena", pass: "demo", nombre: "Milena Huapi", rol: "titular", activo: true },
     { id: "u-agente", user: "nahuel", pass: "demo", nombre: "Nahuel Lagos", rol: "agente", activo: true },
+    { id: "u-comercial", user: "sofia", pass: "demo", nombre: "Sofía Roca", rol: "comercial", activo: true },
+    { id: "u-marketing", user: "diego", pass: "demo", nombre: "Diego Nieves", rol: "marketing", activo: true },
+    { id: "u-admin", user: "carmen", pass: "demo", nombre: "Carmen Lagos", rol: "administracion", activo: true },
     { id: "u-agenda", user: "agenda", pass: "demo", nombre: "Laura Visitas", rol: "agenda", activo: true }
   ];
+}
+
+function mergeStaffUsers(list) {
+  const byUser = new Map((list || []).filter((u) => u && u.user).map((u) => [String(u.user).toLowerCase(), u]));
+  defaultUsers().forEach((seed) => {
+    if (!byUser.has(seed.user)) byUser.set(seed.user, seed);
+  });
+  return Array.from(byUser.values());
 }
 
 function loadUsers() {
@@ -1059,7 +1092,9 @@ function loadUsers() {
       localStorage.setItem(USERS_KEY, JSON.stringify(data));
       return data;
     }
-    return parsed;
+    const merged = mergeStaffUsers(parsed);
+    if (merged.length !== parsed.length) localStorage.setItem(USERS_KEY, JSON.stringify(merged));
+    return merged;
   } catch (e) {
     return defaultUsers();
   }
