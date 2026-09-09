@@ -7,7 +7,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@560;640&family=Figtree:wght@400;500;600;700&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="styles.css?v=bariloche20">
+  <link rel="stylesheet" href="styles.css?v=bariloche22">
   <style>
     body.panel-page:not(.nh-authed) .app { display: none !important; }
   </style>
@@ -24,8 +24,14 @@
         <button type="button" data-user="agenda"><strong>Laura Visitas</strong><span>Agenda · usuario agenda</span></button>
       </div>
       <form class="nh-login-form" id="nh-login-form" novalidate>
-        <label>Usuario<input name="user" value="milena" autocomplete="username" spellcheck="false"></label>
-        <label>Clave<input name="pass" type="password" value="demo" autocomplete="current-password"></label>
+        <div class="nh-field">
+          <label for="nh-login-user">Usuario</label>
+          <input id="nh-login-user" name="user" value="milena" autocomplete="username" spellcheck="false">
+        </div>
+        <div class="nh-field">
+          <label for="nh-login-pass">Clave</label>
+          <input id="nh-login-pass" name="pass" type="password" value="demo" autocomplete="current-password">
+        </div>
         <p class="nh-login-error" role="alert"></p>
       </form>
       <button class="btn-panel nh-login-enter" type="submit" form="nh-login-form" id="nh-login-enter">Ingresar al panel</button>
@@ -141,14 +147,27 @@
         <p>Solo el personal del estudio entra acá. El titular da de alta, pausa o cambia el rol. Agenda y agente pueden ver la lista. Cuentas de muestra: <strong>milena</strong>, <strong>nahuel</strong> y <strong>agenda</strong>. La clave es <strong>demo</strong>. No hay servidor.</p>
       </div>
       <form class="usuario-alta" id="usuario-alta">
-        <input name="nombre" placeholder="Nombre" required>
-        <input name="user" placeholder="Usuario" required autocomplete="off" spellcheck="false">
-        <select name="rol">
-          <option value="agente">Agente</option>
-          <option value="agenda">Agenda</option>
-          <option value="titular">Titular</option>
-        </select>
-        <input name="pass" placeholder="Clave (demo)" value="demo" autocomplete="off">
+        <div class="nh-field">
+          <label for="alta-nombre">Nombre</label>
+          <input id="alta-nombre" name="nombre" required autocomplete="name">
+        </div>
+        <div class="nh-field">
+          <label for="alta-user">Usuario</label>
+          <input id="alta-user" name="user" required autocomplete="off" spellcheck="false">
+        </div>
+        <div class="nh-field">
+          <label for="alta-rol">Rol</label>
+          <select id="alta-rol" name="rol">
+            <option value="agente">Agente</option>
+            <option value="agenda">Agenda</option>
+            <option value="titular">Titular</option>
+          </select>
+        </div>
+        <div class="nh-field">
+          <label for="alta-pass">Clave</label>
+          <input id="alta-pass" name="pass" value="demo" autocomplete="off">
+        </div>
+        <p class="nh-form-error" id="usuario-alta-error" role="alert"></p>
         <button class="btn-panel" type="submit">Agregar usuario</button>
       </form>
       <div class="table-scroll">
@@ -179,9 +198,9 @@
     </section>
   </div>
 
-  <script src="data.js?v=bariloche20"></script>
-  <script src="panel.js?v=bariloche20"></script>
-  <script src="../contacto.js" data-phone="5492915757934" data-text="Hola, quiero consultar por una propiedad en Bariloche" data-subject="Consulta demo — Estudio Nahuel Huapi" data-title="Consultar una propiedad" data-place="panel"></script>
-  <link rel="stylesheet" href="styles.css?v=bariloche20">
+  <script src="data.js?v=bariloche22"></script>
+  <script src="panel.js?v=bariloche22"></script>
+  <script src="../contacto.js?v=bariloche22" data-phone="5492915757934" data-text="Hola, quiero consultar por una propiedad en Bariloche" data-subject="Consulta demo — Estudio Nahuel Huapi" data-title="Consultar una propiedad" data-place="panel" data-tone="usted"></script>
+  <link rel="stylesheet" href="styles.css?v=bariloche22">
 </body>
 </html>

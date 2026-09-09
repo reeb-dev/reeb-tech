@@ -287,28 +287,30 @@ function renderProperties() {
   grid.innerHTML = visible.map((p) => {
     const fotos = p.imagenes || [];
     const portada = fotos[0] || fotoPorTipo(p.tipo);
-    const precioWas = p.bajoPrecio && p.precioAnterior
-      ? `<div class="price-was">${esc(formatPrice(p.precioAnterior, p.operacion))}</div>`
-      : "";
+    const cardMods = [
+      p.destacado ? "is-destacada" : "",
+      p.bajoPrecio ? "is-baja" : "",
+      p.nuevo ? "is-nueva" : ""
+    ].filter(Boolean).join(" ");
     return `
-      <article class="property-card${p.destacado ? " is-destacada" : ""}" data-id="${esc(p.id)}">
+      <article class="property-card ${cardMods}" data-id="${esc(p.id)}">
         <div class="image">
           <a class="card-cover" href="${esc(detalleHref(p.id))}">
             <img src="${esc(portada)}" alt="${esc(p.titulo)}">
             <div class="badges">
               ${htmlPublicBadges(p)}
             </div>
+            ${htmlAvisoFlags(p)}
             <span class="barrio-pill">${esc(p.barrio)}</span>
             ${fotos.length > 1 ? `<div class="gallery-count">${fotos.length} fotos</div>` : ""}
           </a>
-          <button class="favorite ${favorites.has(p.id) ? "on" : ""}" type="button" data-fav="${esc(p.id)}" aria-label="Favorito">${favorites.has(p.id) ? "♥" : "♡"}</button>
+          ${htmlLikeButton(p)}
         </div>
         <div class="body">
           <div class="type-location">${esc(tipoLabel(p.tipo))}</div>
           <h3><a href="${esc(detalleHref(p.id))}">${esc(p.titulo)}</a></h3>
           <div class="location">Zona ${esc(p.barrio)}</div>
-          ${precioWas}
-          <div class="price">${formatPrice(p.precio, p.operacion)}</div>
+          ${htmlPrecioVitrina(p)}
           ${p.expensas ? `<div class="expenses">+ Expensas: ${esc(money(p.expensas))}</div>` : ""}
           <div class="specs">
             <span>${p.cubierta ? p.cubierta + " m² cub." : p.superficie + " m²"}</span>
@@ -336,11 +338,14 @@ function renderRecientes() {
   track.innerHTML = list.map((p) => {
     const portada = (p.imagenes || [])[0] || fotoPorTipo(p.tipo);
     return `
-      <a class="recientes-card" href="${esc(detalleHref(p.id))}">
-        <img src="${esc(portada)}" alt="">
-        <span class="recientes-card-badges">${htmlPublicBadges(p)}</span>
+      <a class="recientes-card${p.nuevo ? " is-nueva" : ""}${p.bajoPrecio ? " is-baja" : ""}" href="${esc(detalleHref(p.id))}">
+        <span class="recientes-card-media">
+          <img src="${esc(portada)}" alt="">
+          ${htmlAvisoFlags(p)}
+        </span>
         <strong>${esc(p.titulo)}</strong>
-        <span>${esc(p.barrio)} · ${esc(formatPrice(p.precio, p.operacion))}</span>
+        ${htmlPrecioVitrina(p)}
+        <span class="recientes-card-zona">${esc(p.barrio)}</span>
       </a>`;
   }).join("");
 }
@@ -360,7 +365,7 @@ function openModal(id) {
 
   const isNewOpen = countedViewId !== id;
   currentProperty = found;
-  currentImageIndex = 0;
+  if (isNewOpen) currentImageIndex = 0;
 
   if (isNewOpen) {
     countedViewId = id;
@@ -377,12 +382,12 @@ function openModal(id) {
     <div class="badges">
       ${htmlPublicBadges(p)}
     </div>
+    ${htmlLikeButton(p)}
     <h2 id="modalTitle">${esc(p.titulo)}</h2>
     <div class="location">Zona ${esc(p.barrio)}</div>
 
     <div class="price-box">
-      ${p.bajoPrecio && p.precioAnterior ? `<div class="price-was">${esc(formatPrice(p.precioAnterior, p.operacion))}</div>` : ""}
-      <div class="price">${formatPrice(p.precio, p.operacion)}</div>
+      ${htmlPrecioVitrina(p)}
       ${p.expensas ? `<div class="expenses">+ Expensas: ${esc(money(p.expensas))}</div>` : ""}
     </div>
 
@@ -441,10 +446,22 @@ function openModal(id) {
         <a class="btn-ficha-wa" data-consulta="wa" href="${esc(propertyWaUrl(p))}" target="_blank" rel="noopener">Escribir por WhatsApp</a>
       </div>
       <form class="modal-consulta" id="modalConsulta" novalidate>
-        <input name="nombre" autocomplete="name" placeholder="Su nombre">
-        <input name="email" type="email" autocomplete="email" required placeholder="su-correo@ejemplo.com">
-        <input name="telefono" type="tel" autocomplete="tel" placeholder="294 442-0000">
-        <textarea name="mensaje" required placeholder="Cuéntenos qué le interesa de esta ficha"></textarea>
+        <div class="nh-field">
+          <label for="modal-nombre">Nombre</label>
+          <input id="modal-nombre" name="nombre" autocomplete="name">
+        </div>
+        <div class="nh-field">
+          <label for="modal-email">Correo</label>
+          <input id="modal-email" name="email" type="email" autocomplete="email" required>
+        </div>
+        <div class="nh-field">
+          <label for="modal-tel">Teléfono</label>
+          <input id="modal-tel" name="telefono" type="tel" autocomplete="tel">
+        </div>
+        <div class="nh-field">
+          <label for="modal-msg">Mensaje</label>
+          <textarea id="modal-msg" name="mensaje" required rows="4"></textarea>
+        </div>
         <button type="submit">Enviar consulta</button>
       </form>
     </div>
@@ -521,11 +538,13 @@ document.getElementById("catalog").addEventListener("click", (event) => {
   const fav = event.target.closest("[data-fav]");
   if (fav) {
     event.stopPropagation();
-    const id = fav.dataset.fav;
-    if (favorites.has(id)) favorites.delete(id);
-    else favorites.add(id);
-    saveFavoritoIds([...favorites]);
+    toggleListingLike(properties, fav.dataset.fav);
+    favorites.clear();
+    loadFavoritoIds().forEach((id) => favorites.add(id));
+    const next = properties.find((p) => p.id === fav.dataset.fav);
+    if (currentProperty && next && currentProperty.id === next.id) currentProperty = next;
     renderProperties();
+    if (document.getElementById("modal")?.classList.contains("open") && currentProperty) openModal(currentProperty.id);
     return;
   }
   if (event.target.closest("a")) return;
@@ -554,6 +573,16 @@ document.getElementById("modal").addEventListener("click", (e) => {
 });
 
 document.getElementById("modalContent").addEventListener("click", (event) => {
+  const fav = event.target.closest("[data-fav]");
+  if (fav && currentProperty) {
+    toggleListingLike(properties, fav.dataset.fav);
+    favorites.clear();
+    loadFavoritoIds().forEach((id) => favorites.add(id));
+    const next = properties.find((p) => p.id === fav.dataset.fav);
+    if (next) currentProperty = next;
+    openModal(currentProperty.id);
+    return;
+  }
   const action = event.target.closest("[data-consulta]");
   if (!action || !currentProperty) return;
   recordListingConsulta(properties, currentProperty.id);

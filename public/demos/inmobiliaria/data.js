@@ -100,8 +100,11 @@ function ficha(extra) {
     status: "disponible",
     destacado: false,
     nuevo: false,
+    bajoPrecio: false,
+    precioAnterior: 0,
     vistas: 0,
     consultas: 0,
+    likes: 0,
     cliente: null,
     visitas: [],
     history: [],
@@ -138,6 +141,7 @@ function seed() {
       descripcion: "Casa de piedra y madera sobre el Circuito Chico, techo a dos aguas. Living con hogar, tres dormitorios y jardín hacia el lago Nahuel Huapi. Cochera cubierta. Venta de vivienda, no estadía.",
       imagenes: ["img/zona-circuito.jpg", "img/hero-lago.jpg"],
       destacado: true,
+      likes: 4,
       vistas: 16,
       consultas: 3,
       diasPublicada: 18,
@@ -172,6 +176,7 @@ function seed() {
       descripcion: "Cabaña de pino en Melipal, para vivir todo el año. Dos dormitorios, cocina-comedor y deck. El contrato es de alquiler permanente, no por noche. A minutos del centro en colectivo o auto.",
       imagenes: ["img/cabana-bosque.jpg", "img/zona-melipal.jpg"],
       destacado: true,
+      likes: 3,
       vistas: 11,
       consultas: 2,
       diasPublicada: 12,
@@ -202,6 +207,7 @@ function seed() {
       descripcion: "Lote en Llao Llao, sin edificación, frente abierto al lago Nahuel Huapi. Pendiente suave, bosque en el fondo. La ficha no incluye proyecto de obra ni aprobación municipal.",
       imagenes: ["img/zona-llao.jpg", "img/hero-lago.jpg"],
       nuevo: true,
+      likes: 2,
       vistas: 9,
       consultas: 1,
       diasPublicada: 6,
@@ -262,6 +268,9 @@ function seed() {
       descripcion: "Casa de madera y techo a dos aguas en Colonia Suiza, sobre el Circuito Chico. Tres dormitorios, quincho y cochera. Entorno de bosque, más quieto que el centro. Venta.",
       imagenes: ["img/zona-colonia.jpg", "img/cabana-bosque.jpg"],
       destacado: true,
+      bajoPrecio: true,
+      precioAnterior: 355000,
+      likes: 5,
       vistas: 14,
       consultas: 2,
       diasPublicada: 28,
@@ -324,6 +333,7 @@ function seed() {
       imagenes: ["img/hero-lago.jpg", "img/zona-llao.jpg"],
       destacado: true,
       nuevo: true,
+      likes: 6,
       vistas: 21,
       consultas: 4,
       diasPublicada: 8,
@@ -354,6 +364,10 @@ function seed() {
       amenities: ["balcon", "baulera"],
       descripcion: "Departamento de dos dormitorios en el Centro, piso alto, ventana al Cerro Otto. Cocina separada y balcón. Hay baulera. Venta. Las expensas las paga quien vive.",
       imagenes: ["img/depto-living.jpg", "img/zona-circuito.jpg"],
+      nuevo: true,
+      bajoPrecio: true,
+      precioAnterior: 198000,
+      likes: 2,
       vistas: 6,
       consultas: 1,
       diasPublicada: 11,
@@ -1490,8 +1504,39 @@ function esFavorito(id) {
   return loadFavoritoIds().includes(String(id));
 }
 
+function likesDe(item) {
+  return Math.max(0, Number(item?.likes || 0));
+}
+
 function favoritosDe(item) {
-  return esFavorito(item?.id) ? 1 : 0;
+  return likesDe(item);
+}
+
+function toggleListingLike(list, id) {
+  const item = (list || []).find((p) => String(p.id) === String(id));
+  if (!item) return null;
+  const key = String(id);
+  const ids = loadFavoritoIds();
+  const liked = ids.includes(key);
+  if (liked) {
+    item.likes = Math.max(0, likesDe(item) - 1);
+    saveFavoritoIds(ids.filter((x) => x !== key));
+  } else {
+    item.likes = likesDe(item) + 1;
+    saveFavoritoIds([...ids, key]);
+  }
+  save(list);
+  return item;
+}
+
+function htmlLikeButton(p) {
+  const on = esFavorito(p.id);
+  const n = likesDe(p);
+  const gente = n === 1 ? "1 persona" : n + " personas";
+  return `<button class="favorite ${on ? "on" : ""}" type="button" data-fav="${esc(p.id)}" aria-pressed="${on ? "true" : "false"}" aria-label="${on ? "Quitar me gusta" : "Marcar me gusta"}. ${gente}">
+    <span class="favorite-icon" aria-hidden="true">${on ? "♥" : "♡"}</span>
+    <span class="favorite-count">${n}</span>
+  </button>`;
 }
 
 function visitasPresencialesDe(item) {
@@ -1499,7 +1544,7 @@ function visitasPresencialesDe(item) {
 }
 
 function interaccionesDe(item) {
-  return Number(item?.consultas || 0) + favoritosDe(item) + visitasPresencialesDe(item);
+  return Number(item?.consultas || 0) + likesDe(item) + visitasPresencialesDe(item);
 }
 
 function aplicarBajaPrecio(item, nextPrecio) {
@@ -1529,10 +1574,34 @@ function htmlPublicBadges(p) {
     `<span class="badge ${esc(p.operacion)}">${esc(opLabel(p.operacion))}</span>`
   ];
   if (p.destacado) bits.push('<span class="badge destacado">Destacado</span>');
-  if (p.nuevo) bits.push('<span class="badge nuevo">Nuevo</span>');
-  if (p.bajoPrecio) bits.push('<span class="badge bajo-precio">Bajó de precio</span>');
   if (p.status === "reservada") bits.push('<span class="badge reservada">Reservada</span>');
   return bits.join("");
+}
+
+function htmlAvisoFlags(p) {
+  const bits = [];
+  if (p.bajoPrecio) bits.push('<span class="aviso-flag is-baja">Bajó de precio</span>');
+  if (p.nuevo) bits.push('<span class="aviso-flag is-nueva">Nueva publicación</span>');
+  return bits.length ? `<div class="aviso-flags">${bits.join("")}</div>` : "";
+}
+
+function precioPublicoTexto(p, anterior) {
+  const n = Number(anterior ? p.precioAnterior : p.precio);
+  if (p.operacion === "venta") return money(n, true);
+  return money(n) + "/mes";
+}
+
+function htmlPrecioVitrina(p) {
+  const was = p.bajoPrecio && p.precioAnterior
+    ? `<span class="price-was">${esc(precioPublicoTexto(p, true))}</span>`
+    : "";
+  const notes = [];
+  if (p.bajoPrecio) notes.push('<span class="precio-nota is-baja">Bajó de precio</span>');
+  if (p.nuevo) notes.push('<span class="precio-nota is-nueva">Nueva publicación</span>');
+  return `<div class="precio-vitrina">
+    <div class="precio-vitrina-row">${was}<strong class="price">${esc(precioPublicoTexto(p, false))}</strong></div>
+    ${notes.length ? `<div class="precio-vitrina-notas">${notes.join("")}</div>` : ""}
+  </div>`;
 }
 
 function textoRed(item) {

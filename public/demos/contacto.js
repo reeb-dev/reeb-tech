@@ -49,21 +49,27 @@
   section.className = "demo-contacto";
   if (place === "hub") section.classList.add("wrap", "is-hub");
 
-  var lead = place === "panel"
+  var tone = script.getAttribute("data-tone") || "";
+  var leadAttr = script.getAttribute("data-lead");
+  var formal = place === "hub" || place === "panel" || tone === "usted";
+
+  var lead = leadAttr || (place === "panel"
     ? "Canal de ejemplo para un mensaje del cliente. No sale a un servidor."
     : place === "hub"
       ? "Si necesita un sistema parecido al de su rubro, escríbanos por WhatsApp, correo o este formulario. Respondemos a su consulta."
-      : "Dejá un mensaje o escribí por WhatsApp.";
+      : formal
+        ? "Deje un mensaje o escriba por WhatsApp."
+        : "Dejá un mensaje o escribí por WhatsApp.");
 
   var fields = place === "hub"
     ? '<label for="hub-nombre">Su nombre<input id="hub-nombre" name="nombre" autocomplete="name" placeholder="Nombre y apellido"></label>' +
       '<label for="hub-email">Su correo<input id="hub-email" name="email" type="email" autocomplete="email" required placeholder="su-correo@ejemplo.com"></label>' +
       '<label for="hub-tel">Su teléfono <span class="demo-contacto-opt">(opcional)</span><input id="hub-tel" name="telefono" type="tel" autocomplete="tel" inputmode="tel" placeholder="291 575-7934"></label>' +
       '<label for="hub-msg">En qué podemos ayudarle<textarea id="hub-msg" name="mensaje" required rows="5" placeholder="Cuéntenos su rubro y qué necesita: kiosco, hotel, taller…"></textarea></label>'
-    : '<label>Nombre<input name="nombre" autocomplete="name" placeholder="Nombre"></label>' +
-      '<label>Email<input name="email" type="email" autocomplete="email" required placeholder="correo@ejemplo.com"></label>' +
-      '<label>Teléfono<input name="telefono" type="tel" autocomplete="tel" placeholder="11 4000-1234"></label>' +
-      '<label>Mensaje<textarea name="mensaje" required placeholder="Contanos qué necesitás"></textarea></label>';
+    : '<label for="demo-nombre">Nombre<input id="demo-nombre" name="nombre" autocomplete="name" placeholder="' + (formal ? "Su nombre" : "Nombre") + '"></label>' +
+      '<label for="demo-email">Correo<input id="demo-email" name="email" type="email" autocomplete="email" required placeholder="' + (formal ? "su-correo@ejemplo.com" : "correo@ejemplo.com") + '"></label>' +
+      '<label for="demo-tel">Teléfono<input id="demo-tel" name="telefono" type="tel" autocomplete="tel" placeholder="' + (formal ? "294 442-0000" : "11 4000-1234") + '"></label>' +
+      '<label for="demo-msg">Mensaje<textarea id="demo-msg" name="mensaje" required placeholder="' + (formal ? "Cuéntenos su consulta" : "Contanos qué necesitás") + '"></textarea></label>';
 
   var afterForm = place === "hub"
     ? '<p class="demo-contacto-hint">Al enviar se abre su correo con el mensaje listo. No hay servidor: es el canal de consulta.</p>'
@@ -107,11 +113,11 @@
     var nombre = String(data.get("nombre") || "").trim();
     var telefono = String(data.get("telefono") || "").trim();
     if (!email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
-      error.textContent = place === "hub" ? "Ingrese un correo válido." : "Ingresá un email válido.";
+      error.textContent = formal ? "Ingrese un correo válido." : "Ingresá un email válido.";
       return;
     }
     if (!mensaje) {
-      error.textContent = place === "hub" ? "El mensaje no puede quedar vacío." : "El mensaje no puede estar vacío.";
+      error.textContent = formal ? "El mensaje no puede quedar vacío." : "El mensaje no puede estar vacío.";
       return;
     }
     error.textContent = "";

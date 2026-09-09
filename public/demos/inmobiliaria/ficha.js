@@ -89,8 +89,6 @@ function renderFicha(p) {
   const volver = listadoHref(zonaVolver);
   document.title = p.titulo;
 
-  const precio = formatPrice(p.precio, p.operacion);
-
   root.innerHTML = `
     <p class="ficha-back"><a href="${esc(volver)}">← Volver al listado</a></p>
     <article class="ficha-sheet">
@@ -101,6 +99,8 @@ function renderFicha(p) {
             <button class="ficha-arrow prev" type="button" id="prevImage" aria-label="Foto anterior">‹</button>
             <button class="ficha-arrow next" type="button" id="nextImage" aria-label="Foto siguiente">›</button>
           ` : ""}
+          ${htmlAvisoFlags(p)}
+          ${htmlLikeButton(p)}
           <div class="ficha-counter" id="fichaCounter">1 / ${fotos.length}</div>
         </div>
         ${fotos.length > 1 ? `
@@ -116,8 +116,7 @@ function renderFicha(p) {
           </div>
           <p class="ficha-zona">${esc(tipoLabel(p.tipo))} · Zona ${esc(p.barrio)}</p>
           <h1 class="ficha-titulo">${esc(p.titulo)}</h1>
-          ${p.bajoPrecio && p.precioAnterior ? `<p class="price-was">${esc(formatPrice(p.precioAnterior, p.operacion))}</p>` : ""}
-          <p class="ficha-precio">${esc(precio)}</p>
+          ${htmlPrecioVitrina(p)}
           ${p.expensas ? `<p class="ficha-expensas">+ Expensas: ${esc(money(p.expensas))}</p>` : ""}
 
           <div class="ficha-datos">
@@ -155,7 +154,8 @@ function renderFicha(p) {
           <p class="ficha-aside-kicker">Consulta</p>
           <h2>¿Le interesa esta propiedad?</h2>
           <p>Escríbanos por WhatsApp. Es el camino más directo.</p>
-          <p class="ficha-aside-precio">${esc(precio)}</p>
+          ${htmlPrecioVitrina(p)}
+          ${htmlLikeButton(p)}
           <a class="ficha-wa" href="${esc(propertyWaUrl(p))}" target="_blank" rel="noopener">Escribir por WhatsApp</a>
           <a class="ficha-aside-back" href="${esc(volver)}">Volver al listado</a>
         </aside>
@@ -176,6 +176,15 @@ function renderFicha(p) {
   pintarMapaFicha(p);
   document.querySelector(".ficha-wa")?.addEventListener("click", () => {
     recordListingConsulta(items, p.id);
+  });
+  document.querySelectorAll("[data-fav]").forEach((btn) => {
+    btn.addEventListener("click", () => {
+      toggleListingLike(items, p.id);
+      const idx = fotoIndex;
+      renderFicha(p);
+      fotoIndex = idx;
+      pintarGaleria();
+    });
   });
 }
 

@@ -86,10 +86,18 @@ function zonaOptions(selected) {
   return extra + ZONAS.map((z) => `<option value="${esc(z.id)}" ${selected === z.id ? "selected" : ""}>${esc(z.nombre)}</option>`).join("");
 }
 
+function nhField(id, label, control, span) {
+  return `<div class="nh-field${span ? " " + span : ""}">
+    <label for="${id}">${label}</label>
+    ${control}
+  </div>`;
+}
+
 function htmlGaleria(fotos, readonly) {
   return `
-    <div class="foto-editor">
-      <p class="eyebrow">Fotos de la vitrina</p>
+    <div class="foto-editor nh-form-section">
+      <h3>Fotos</h3>
+      <p class="lead-mini">La primera es la portada del aviso. Hasta ${MAX_FOTOS} fotos; salen en la galería de la ficha.</p>
       <div class="foto-thumbs">
         ${fotos.map((src, i) => `
           <figure class="foto-thumb ${i === 0 ? "is-portada" : ""}">
@@ -102,8 +110,10 @@ function htmlGaleria(fotos, readonly) {
             </div>`}
           </figure>`).join("")}
       </div>
-      ${readonly ? "" : `<label class="foto-cargar">Cargar fotos<input type="file" accept="image/*" multiple data-add-fotos></label>`}
-      <p class="create-fotos-hint">La primera es la portada del aviso. Hasta ${MAX_FOTOS} fotos; salen en la galería de la ficha.</p>
+      ${readonly ? "" : `<label class="foto-cargar" for="add-fotos">
+        <span class="foto-cargar-btn">Elegir fotos</span>
+        <input id="add-fotos" type="file" accept="image/*" multiple data-add-fotos>
+      </label>`}
     </div>`;
 }
 
@@ -195,6 +205,7 @@ function blankItem() {
     ingresada: 0,
     vistas: 0,
     consultas: 0,
+    likes: 0,
     diasPublicada: 0,
     precioM2Zona: 0,
     status: "disponible",
@@ -285,7 +296,9 @@ function htmlDestinoFila(dest, item, readonly) {
   return `
     <label class="destino-row ${!lista && !dest.fijo ? "is-off" : ""}">
       <span class="cuenta-mark destino-row-mark" data-dest="${esc(dest.id)}" aria-hidden="true">${esc(destMarca(dest))}</span>
-      <input type="checkbox" data-pub-dest="${esc(dest.id)}" ${on ? "checked" : ""} ${disabled ? "disabled" : ""}>
+      <span class="destino-check">
+        <input type="checkbox" data-pub-dest="${esc(dest.id)}" ${on ? "checked" : ""} ${disabled ? "disabled" : ""}>
+      </span>
       <span>
         <strong>${esc(dest.nombre)} <em class="destino-estado ${st.on ? "" : "is-off"}">${esc(st.label)}</em></strong>
         <small>${esc(hint)}</small>
@@ -633,12 +646,18 @@ function renderDifusion() {
       </div>
       ${editable && destinosCola.length ? `
         <form class="cola-alta" id="cola-alta">
-          <select name="item" aria-label="Propiedad">
-            ${items.map((item) => `<option value="${esc(item.id)}" ${item.id === selected ? "selected" : ""}>${esc(item.codigo)} · ${esc(item.titulo)}</option>`).join("")}
-          </select>
-          <select name="dest" aria-label="Destino">
-            ${destinosCola.map((d) => `<option value="${esc(d.id)}">${esc(d.nombre)}</option>`).join("")}
-          </select>
+          <div class="nh-field">
+            <label for="cola-item">Aviso</label>
+            <select id="cola-item" name="item">
+              ${items.map((item) => `<option value="${esc(item.id)}" ${item.id === selected ? "selected" : ""}>${esc(item.codigo)} · ${esc(item.titulo)}</option>`).join("")}
+            </select>
+          </div>
+          <div class="nh-field">
+            <label for="cola-dest">Destino</label>
+            <select id="cola-dest" name="dest">
+              ${destinosCola.map((d) => `<option value="${esc(d.id)}">${esc(d.nombre)}</option>`).join("")}
+            </select>
+          </div>
           <button class="btn-panel" type="submit">Agregar a la cola</button>
         </form>` : editable ? `<p class="cola-vacia">Conecte un portal o una red para armar la cola.</p>` : `<p class="cola-vacia">La agenda puede ver la cola. Un agente o el titular la arma.</p>`}
       <div class="table-scroll">
@@ -676,12 +695,16 @@ function renderDifusion() {
         <h2>Texto para redes</h2>
         <p>El mismo texto de la ficha. Cópielo o ábralo en WhatsApp. No se publica solo.</p>
       </div>
-      <label>Aviso de la cartera
+      <div class="nh-field">
+        <label for="difusion-share-item">Aviso de la cartera</label>
         <select id="difusion-share-item">
           ${items.map((item) => `<option value="${esc(item.id)}" ${shareItem && item.id === shareItem.id ? "selected" : ""}>${esc(item.codigo)} · ${esc(item.titulo)}</option>`).join("")}
         </select>
-      </label>
-      <textarea id="difusion-share-text" rows="5" readonly>${esc(shareText)}</textarea>
+      </div>
+      <div class="nh-field">
+        <label for="difusion-share-text">Texto</label>
+        <textarea id="difusion-share-text" rows="5" readonly>${esc(shareText)}</textarea>
+      </div>
       <div class="difusion-acciones">
         <button class="btn-panel" type="button" id="difusion-copiar" ${shareItem ? "" : "disabled"}>Copiar texto</button>
         <a class="ghost" id="difusion-wa" ${shareItem ? `href="${esc("https://wa.me/?text=" + encodeURIComponent(shareText))}"` : ""} target="_blank" rel="noopener">Abrir WhatsApp</a>
@@ -877,62 +900,79 @@ function paintCarteraEditor() {
     <div class="metric-box">
       <div><span>Visitas en la web</span><strong>${Number(item.vistas || 0)}</strong><small>Aperturas de esta ficha en la vitrina. Solo se ven en el panel.</small></div>
       <div><span>Consultas</span><strong>${Number(item.consultas || 0)}</strong><small>WhatsApp o formulario de esta propiedad.</small></div>
-      <div><span>Favorito</span><strong>${favoritosDe(item)}</strong><small>Marcado en este navegador (0 o 1). No es un recuento de personas.</small></div>
+      <div><span>Les gusta</span><strong>${likesDe(item)}</strong><small>Marcas de me gusta en este navegador. Demo: no hay servidor ni recuento de personas reales.</small></div>
       <div><span>Visitas presenciales</span><strong>${visitasPresencialesDe(item)}</strong><small>Agenda cargada en esta ficha.</small></div>
-      <div><span>Interacciones</span><strong>${interaccionesDe(item)}</strong><small>Consultas + favorito + visitas presenciales. No hay tráfico inventado.</small></div>
+      <div><span>Interacciones</span><strong>${interaccionesDe(item)}</strong><small>Consultas + les gusta + visitas presenciales. No hay tráfico inventado.</small></div>
     </div>
     ${item.bajoPrecio ? `<p class="editor-precio-nota">Este aviso muestra “Bajó de precio” en la vitrina${item.precioAnterior ? " (antes " + esc(item.operacion === "venta" ? money(item.precioAnterior, true) : money(item.precioAnterior)) + ")" : ""}. Si sube el precio y guarda, se quita.</p>` : ""}`}
-    <form id="edit">
-      <div class="editor-grid">
-        <label>Código<input name="codigo" value="${esc(item.codigo)}" required ${dis}></label>
-        <label class="editor-span-2">Título<input name="titulo" value="${esc(item.titulo)}" required ${dis}></label>
-        <label>Tipo
-          <select name="tipo" ${dis}>
+    <form id="edit" class="ficha-form" novalidate>
+      <p class="nh-form-error" id="edit-error" role="alert"></p>
+      <section class="nh-form-section">
+        <h3>Datos del aviso</h3>
+        <div class="editor-grid">
+          ${nhField("edit-codigo", "Código", `<input id="edit-codigo" name="codigo" value="${esc(item.codigo)}" required ${dis}>`)}
+          ${nhField("edit-titulo", "Título", `<input id="edit-titulo" name="titulo" value="${esc(item.titulo)}" required ${dis}>`, "editor-span-2")}
+          ${nhField("edit-tipo", "Tipo", `<select id="edit-tipo" name="tipo" ${dis}>
             ${TIPOS.map((t) => `<option value="${t.id}" ${item.tipo === t.id ? "selected" : ""}>${esc(t.label)}</option>`).join("")}
-          </select>
-        </label>
-        <label>Operación
-          <select name="operacion" ${dis}>
+          </select>`)}
+          ${nhField("edit-operacion", "Operación", `<select id="edit-operacion" name="operacion" ${dis}>
             ${OPERACIONES.map((o) => `<option value="${o.id}" ${item.operacion === o.id ? "selected" : ""}>${esc(o.label)}</option>`).join("")}
-          </select>
-        </label>
-        <label>Estado
-          <select name="status" ${dis}>
+          </select>`)}
+          ${nhField("edit-status", "Estado", `<select id="edit-status" name="status" ${dis}>
             ${STATUSES.map((s) => `<option value="${s.id}" ${item.status === s.id ? "selected" : ""}>${esc(s.label)}</option>`).join("")}
-          </select>
-        </label>
-        <label class="editor-span">Dirección<input name="direccion" value="${esc(item.direccion)}" ${dis}></label>
-        <label>Zona
-          <select name="barrio" ${dis}>${zonaOptions(item.barrio)}</select>
-        </label>
-        <label>Ambientes<input name="ambientes" type="number" value="${item.ambientes || 0}" ${dis}></label>
-        <label>Dormitorios<input name="dormitorios" type="number" value="${item.dormitorios || 0}" ${dis}></label>
-        <label>Baños<input name="banos" type="number" value="${item.banos || 0}" ${dis}></label>
-        <label>m² cubiertos<input name="cubierta" type="number" value="${item.cubierta || 0}" ${dis}></label>
-        <label>m² de lote<input name="superficie" type="number" value="${item.superficie || 0}" ${dis}></label>
-        <label>Piso<input name="piso" value="${esc(item.piso || "")}" ${dis}></label>
-        <label>Vista<input name="vista" value="${esc(item.vista || "")}" ${dis}></label>
-        <label>Calefacción<input name="calefaccion" value="${esc(item.calefaccion || "")}" ${dis}></label>
-        <label>Servicios<input name="servicios" value="${esc(item.servicios || "")}" ${dis}></label>
-        <label>Precio<input name="precio" type="number" value="${item.precio || 0}" required ${dis}></label>
-        <label>Expensas<input name="expensas" type="number" value="${item.expensas || 0}" ${dis}></label>
-        <label class="editor-span">Descripción de la ficha<textarea name="descripcion" rows="5" ${dis}>${esc(item.descripcion || "")}</textarea></label>
-      </div>
+          </select>`)}
+        </div>
+      </section>
+      <section class="nh-form-section">
+        <h3>Ubicación</h3>
+        <div class="editor-grid">
+          ${nhField("edit-direccion", "Dirección", `<input id="edit-direccion" name="direccion" value="${esc(item.direccion)}" ${dis}>`, "editor-span")}
+          ${nhField("edit-barrio", "Zona", `<select id="edit-barrio" name="barrio" ${dis}>${zonaOptions(item.barrio)}</select>`)}
+        </div>
+      </section>
+      <section class="nh-form-section">
+        <h3>Superficie y ambientes</h3>
+        <div class="editor-grid">
+          ${nhField("edit-ambientes", "Ambientes", `<input id="edit-ambientes" name="ambientes" type="number" min="0" step="1" value="${item.ambientes || 0}" ${dis}>`)}
+          ${nhField("edit-dormitorios", "Dormitorios", `<input id="edit-dormitorios" name="dormitorios" type="number" min="0" step="1" value="${item.dormitorios || 0}" ${dis}>`)}
+          ${nhField("edit-banos", "Baños", `<input id="edit-banos" name="banos" type="number" min="0" step="1" value="${item.banos || 0}" ${dis}>`)}
+          ${nhField("edit-cubierta", "m² cubiertos", `<input id="edit-cubierta" name="cubierta" type="number" min="0" step="1" value="${item.cubierta || 0}" ${dis}>`)}
+          ${nhField("edit-superficie", "m² de lote", `<input id="edit-superficie" name="superficie" type="number" min="0" step="1" value="${item.superficie || 0}" ${dis}>`)}
+          ${nhField("edit-piso", "Piso", `<input id="edit-piso" name="piso" value="${esc(item.piso || "")}" ${dis}>`)}
+          ${nhField("edit-vista", "Vista", `<input id="edit-vista" name="vista" value="${esc(item.vista || "")}" ${dis}>`)}
+          ${nhField("edit-calefaccion", "Calefacción", `<input id="edit-calefaccion" name="calefaccion" value="${esc(item.calefaccion || "")}" ${dis}>`)}
+          ${nhField("edit-servicios", "Servicios", `<input id="edit-servicios" name="servicios" value="${esc(item.servicios || "")}" ${dis}>`)}
+        </div>
+      </section>
+      <section class="nh-form-section">
+        <h3>Precios</h3>
+        <p class="lead-mini">La venta se muestra en dólares y el alquiler permanente en pesos. Si baja el precio al guardar, la vitrina muestra “Bajó de precio”.</p>
+        <div class="editor-grid">
+          ${nhField("edit-precio", "Precio", `<input id="edit-precio" name="precio" type="number" min="0" step="1" value="${item.precio || 0}" required ${dis}>`)}
+          ${nhField("edit-expensas", "Expensas", `<input id="edit-expensas" name="expensas" type="number" min="0" step="1" value="${item.expensas || 0}" ${dis}>`)}
+        </div>
+      </section>
+      <section class="nh-form-section">
+        <h3>Descripción</h3>
+        <div class="editor-grid">
+          ${nhField("edit-descripcion", "Texto de la ficha", `<textarea id="edit-descripcion" name="descripcion" rows="6" ${dis}>${esc(item.descripcion || "")}</textarea>`, "editor-span")}
+        </div>
+      </section>
       <div class="editor-block">
         <h3>Características</h3>
         <p class="lead-mini">Salen como etiquetas en la ficha pública.</p>
         <div class="edit-amenities">
           ${AMENITIES.map((a) => `
-            <label>
+            <label class="nh-check">
               <input type="checkbox" name="amenity" value="${esc(a.id)}" ${(item.amenities || []).includes(a.id) ? "checked" : ""} ${dis}>
               ${esc(a.label)}
             </label>`).join("")}
         </div>
         <div class="edit-flags">
-          <label><input type="checkbox" name="destacado" ${item.destacado ? "checked" : ""} ${dis}> Destacar en la vitrina</label>
-          <label><input type="checkbox" name="nuevo" ${item.nuevo ? "checked" : ""} ${dis}> Mostrar como reciente</label>
+          <label class="nh-check"><input type="checkbox" name="destacado" ${item.destacado ? "checked" : ""} ${dis}> Destacar en la vitrina</label>
+          <label class="nh-check"><input type="checkbox" name="nuevo" ${item.nuevo ? "checked" : ""} ${dis}> Mostrar como nueva publicación</label>
         </div>
-        <p class="lead-mini">Puede destacar varias. “Reciente” sale en la tira de últimas ingresadas y con el sello Nuevo. Bajar el precio al guardar marca “Bajó de precio” en la web; subirlo lo quita.</p>
+        <p class="lead-mini">Puede destacar varias. “Nueva publicación” sale en la tira de recién publicadas y con el sello en la vitrina. Bajar el precio al guardar marca “Bajó de precio” en la web; subirlo lo quita.</p>
       </div>
       ${readonly ? "" : `
       <div class="actions">
@@ -955,24 +995,20 @@ function paintCarteraEditor() {
     ` : "") : (readonly ? "" : `
       <div class="arca-section">
         <h4>Facturación ARCA</h4>
-        <label>CUIT cliente<input id="arca-cuit" placeholder="20-12345678-9"></label>
-        <label>Tipo comprobante
-          <select id="arca-tipo">
+        ${nhField("arca-cuit", "CUIT del cliente", `<input id="arca-cuit" inputmode="numeric" autocomplete="off">`)}
+        ${nhField("arca-tipo", "Tipo de comprobante", `<select id="arca-tipo">
             ${COMPROBANTES.map((c) => `<option value="${c.id}">${esc(c.label)}</option>`).join("")}
-          </select>
-        </label>
-        <label>Concepto
-          <select id="arca-concepto">
+          </select>`)}
+        ${nhField("arca-concepto", "Concepto", `<select id="arca-concepto">
             <option value="alquiler">Alquiler mensual</option>
             <option value="comision">Comisión de venta</option>
             <option value="reserva">Reserva</option>
             <option value="expensas">Expensas</option>
-          </select>
-        </label>
-        <button class="btn-panel" type="button" id="emitir-factura" style="margin-top:10px;">
+          </select>`)}
+        <button class="btn-panel" type="button" id="emitir-factura">
           Emitir factura (simulado)
         </button>
-        <p style="font-size:11px;color:#64748b;margin-top:8px;">Demo: genera CAE simulado. En producción se conecta a ARCA/AFIP.</p>
+        <p class="lead-mini">Demo: genera un CAE de ejemplo. En un sistema real se conecta a ARCA.</p>
       </div>
     `)}
     ${!isCreate && (item.visitas || []).length ? `
@@ -1038,9 +1074,20 @@ function paintCarteraEditor() {
   detail.querySelector("#edit")?.addEventListener("submit", (event) => {
     event.preventDefault();
     if (!canEditCartera()) return;
+    const form = event.target;
+    const err = form.querySelector("#edit-error");
+    form.querySelectorAll(".is-invalid").forEach((el) => el.classList.remove("is-invalid"));
+    const invalid = [...form.querySelectorAll(":invalid")];
+    if (invalid.length) {
+      invalid.forEach((el) => el.classList.add("is-invalid"));
+      if (err) err.textContent = "Complete código, título y precio.";
+      invalid[0].focus();
+      return;
+    }
+    if (err) err.textContent = "";
     const prevStatus = item.status;
     const prevPrecio = Number(item.precio || 0);
-    applyFormToItem(event.target, item);
+    applyFormToItem(form, item);
     if (isCreate) {
       guardarAlta(item);
       return;
@@ -1289,7 +1336,7 @@ function renderResumen() {
             <li>
               <button type="button" data-ficha="${esc(row.id)}">
                 <strong>${esc(row.codigo)} · ${esc(row.titulo)}</strong>
-                <span>${Number(row.consultas || 0)} consultas · ${favoritosDe(row)} favorito · ${visitasPresencialesDe(row)} presenciales</span>
+                <span>${Number(row.consultas || 0)} consultas · ${likesDe(row)} les gusta · ${visitasPresencialesDe(row)} presenciales</span>
               </button>
             </li>`).join("")}
         </ul>
@@ -1352,12 +1399,13 @@ function renderVitrinaGestor() {
   const editable = canEditVitrina();
   host.innerHTML = VITRINA_SECTIONS.map((sec) => {
     const on = sec.alwaysOn ? true : page.visible[sec.id] !== false;
-    const fields = (sec.fields || []).map((field) => {
+    const fields = (sec.fields || []).map((field, i) => {
       const val = vitrinaCopyAt(page.copy, field.path);
+      const fid = "vit-" + sec.id + "-" + i;
       const control = field.kind === "area"
-        ? `<textarea name="${esc(field.path)}" rows="3" ${editable ? "" : "disabled"}>${esc(val || "")}</textarea>`
-        : `<input name="${esc(field.path)}" value="${esc(val || "")}" ${editable ? "" : "disabled"}>`;
-      return `<label>${esc(field.label)}${control}</label>`;
+        ? `<textarea id="${fid}" name="${esc(field.path)}" rows="3" ${editable ? "" : "disabled"}>${esc(val || "")}</textarea>`
+        : `<input id="${fid}" name="${esc(field.path)}" value="${esc(val || "")}" ${editable ? "" : "disabled"}>`;
+      return nhField(fid, field.label, control);
     }).join("");
     const toggle = sec.alwaysOn
       ? `<p class="vitrina-always">Siempre visible en la vitrina.</p>`
@@ -1605,18 +1653,26 @@ document.getElementById("usuario-alta")?.addEventListener("submit", (event) => {
   event.preventDefault();
   if (session?.rol !== "titular") return;
   const data = new FormData(event.target);
+  const err = document.getElementById("usuario-alta-error");
   const user = String(data.get("user") || "").trim().toLowerCase().replace(/[^a-z0-9._-]/g, "");
   const nombre = String(data.get("nombre") || "").trim();
   const rol = String(data.get("rol") || "agente");
   const pass = String(data.get("pass") || "demo").trim() || "demo";
+  event.target.querySelectorAll(".is-invalid").forEach((el) => el.classList.remove("is-invalid"));
   if (!user || !nombre) {
-    showToast("Indique nombre y usuario.");
+    if (!nombre) event.target.nombre.classList.add("is-invalid");
+    if (!user) event.target.user.classList.add("is-invalid");
+    if (err) err.textContent = "Complete nombre y usuario.";
+    (nombre ? event.target.user : event.target.nombre).focus();
     return;
   }
   if (staff.some((u) => u.user === user)) {
-    showToast("Ese usuario ya existe.");
+    event.target.user.classList.add("is-invalid");
+    if (err) err.textContent = "Ese usuario ya existe.";
+    event.target.user.focus();
     return;
   }
+  if (err) err.textContent = "";
   staff = [{ id: crypto.randomUUID(), user, pass, nombre, rol, activo: true }, ...staff];
   saveUsers(staff);
   event.target.reset();
