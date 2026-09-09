@@ -376,25 +376,21 @@ function htmlPublishBlock(item, isCreate, readonly) {
   return `
     <section class="nh-form-section difusion-ficha" id="bloque-publicar">
       <h3>Publicación en otras páginas y redes</h3>
-      <p class="lead-mini">Marque destinos <strong>ya conectados</strong> en Difusión y toque publicar. Sitio propio: siempre en la vitrina. Hoy hay ${sitiosOn} sitios/portales y ${redesOn} redes listas. Demo: no se envía nada afuera.</p>
+      <p class="lead-mini">Marque destinos ya conectados en Difusión. Sitio propio: siempre en la vitrina. Hoy hay ${sitiosOn} sitios/portales y ${redesOn} redes listas. Demo: no se envía nada afuera.</p>
       <div class="publish-grid">
-        <div class="publish-col">
-          <p class="difusion-ficha-grupo">Sitios y portales</p>
-          <div class="destino-list">
-            ${destinosPorGrupo("sitio").map((dest) => htmlDestinoFila(dest, item, readonly)).join("")}
-          </div>
-        </div>
-        <div class="publish-col">
-          <p class="difusion-ficha-grupo">Redes sociales</p>
-          <div class="destino-list">
-            ${destinosPorGrupo("red").map((dest) => htmlDestinoFila(dest, item, readonly)).join("")}
-          </div>
-        </div>
+        <fieldset class="publish-set">
+          <legend>Sitios y portales</legend>
+          ${destinosPorGrupo("sitio").map((dest) => htmlDestinoFila(dest, item, readonly)).join("")}
+        </fieldset>
+        <fieldset class="publish-set">
+          <legend>Redes sociales</legend>
+          ${destinosPorGrupo("red").map((dest) => htmlDestinoFila(dest, item, readonly)).join("")}
+        </fieldset>
       </div>
-      <div class="form-actions difusion-acciones">
+      <div class="difusion-toolbar">
         ${readonly ? "" : `<button class="btn-panel" type="button" id="publicar-aviso">Publicar este aviso</button>`}
-        <button class="ghost" type="button" id="copiar-aviso">Copiar texto para redes</button>
-        <a class="ghost" id="wa-aviso" href="${esc("https://wa.me/?text=" + encodeURIComponent(textoRed(item)))}" target="_blank" rel="noopener">Enviar por WhatsApp</a>
+        <button class="ghost" type="button" id="copiar-aviso">Copiar texto</button>
+        <a class="ghost" id="wa-aviso" href="${esc("https://wa.me/?text=" + encodeURIComponent(textoRed(item)))}" target="_blank" rel="noopener">WhatsApp</a>
         <button class="ghost" type="button" data-go-difusion>Abrir Difusión</button>
       </div>
     </section>`;
@@ -571,12 +567,12 @@ function htmlCuenta(dest) {
   const publicados = avisosEnDestino(dest.id);
   const meta = cuentaDe(dest.id);
   const last = meta.lastAction
-    ? `${esc(meta.lastAction)}${meta.lastAt ? " · " + esc(meta.lastAt) : ""}`
-    : "Sin movimientos todavía.";
+    ? `${meta.lastAction}${meta.lastAt ? " · " + meta.lastAt : ""}`
+    : "Sin movimientos.";
   const editable = canEditDifusion();
   const accion = dest.fijo
     ? `<span class="cuenta-estado on">Siempre en la vitrina</span>`
-    : `<button type="button" class="${on ? "ghost" : "btn-panel"} cuenta-btn" data-cuenta="${esc(dest.id)}" ${editable ? "" : "disabled"}>${on ? "Desconectar" : "Conectar"}</button>`;
+    : `<button type="button" class="cuenta-btn ${on ? "is-ghost" : "is-primary"}" data-cuenta="${esc(dest.id)}" ${editable ? "" : "disabled"}>${on ? "Desconectar" : "Conectar"}</button>`;
   return `
     <article class="cuenta ${on ? "is-on" : ""}">
       <header class="cuenta-head">
@@ -585,13 +581,13 @@ function htmlCuenta(dest) {
           <p class="cuenta-tipo">${esc(destTipoLabel(dest))}</p>
           <h3>${esc(dest.nombre)}</h3>
         </div>
-        <span class="cuenta-badge ${on ? "is-on" : ""}">${on ? "Conectado" : "Sin conectar"}</span>
+        <span class="cuenta-badge ${on ? "is-on" : ""}">${on ? "Conectado" : "Libre"}</span>
       </header>
-      <p>${esc(dest.beneficio)}</p>
+      <p class="cuenta-beneficio">${esc(dest.beneficio)}</p>
       <p class="cuenta-meta">${on
-        ? (publicados + " aviso" + (publicados === 1 ? "" : "s") + " marcado" + (publicados === 1 ? "" : "s") + " en la cartera")
-        : "Conecte para poder marcar avisos acá."}</p>
-      <p class="cuenta-accion"><span>Última acción</span>${last}</p>
+        ? (publicados + " aviso" + (publicados === 1 ? "" : "s") + " en cartera")
+        : "Sin avisos marcados"}</p>
+      <p class="cuenta-accion" title="${esc(last)}">${esc(last)}</p>
       <footer class="cuenta-foot">${accion}</footer>
     </article>`;
 }
@@ -741,11 +737,13 @@ function htmlGrupoCuentas(grupo, titulo, texto, paso) {
   const conectados = destinos.filter((d) => destinoConectado(d.id)).length;
   return `
     <section class="difusion-grupo" id="difusion-${esc(grupo)}">
-      <div class="difusion-grupo-head">
-        <p class="difusion-paso">Paso ${paso}</p>
-        <h2>${esc(titulo)}</h2>
-        <p>${esc(texto)} <strong>${conectados} de ${destinos.length}</strong> conectados.</p>
-      </div>
+      <header class="difusion-grupo-head">
+        <div>
+          <p class="difusion-paso">${esc(paso)}. ${esc(titulo)}</p>
+          <p class="difusion-grupo-lead">${esc(texto)}</p>
+        </div>
+        <p class="difusion-grupo-count"><strong>${conectados}</strong> / ${destinos.length} conectados</p>
+      </header>
       <div class="cuentas">${destinos.map(htmlCuenta).join("")}</div>
     </section>`;
 }
@@ -760,86 +758,89 @@ function htmlDifusionResumen(editable) {
   const publicados = filas.filter((f) => f.estado === "publicado").length;
   return `
     <section class="difusion-resumen" aria-label="Resumen de difusión">
+      <header class="difusion-resumen-head">
+        <div>
+          <p class="difusion-paso">Resumen</p>
+          <h2>Estado de la difusión</h2>
+        </div>
+        <p class="difusion-aviso-demo">Demo: no se envía nada a portales ni redes. Solo quedan marcas en este navegador.</p>
+      </header>
       <div class="difusion-resumen-grid">
-        <article><span>Sitio propio</span><strong>${items.length}</strong><small>avisos en la vitrina</small></article>
-        <article><span>Portales</span><strong>${sitiosOn}/${sitios.length}</strong><small>cuentas conectadas</small></article>
-        <article><span>Redes</span><strong>${redesOn}/${redes.length}</strong><small>cuentas conectadas</small></article>
-        <article><span>Cola</span><strong>${listos}</strong><small>listos · ${publicados} publicados</small></article>
+        <article><span>Vitrina</span><strong>${items.length}</strong><small>avisos</small></article>
+        <article><span>Portales</span><strong>${sitiosOn}</strong><small>de ${sitios.length}</small></article>
+        <article><span>Redes</span><strong>${redesOn}</strong><small>de ${redes.length}</small></article>
+        <article><span>Cola</span><strong>${listos}</strong><small>${publicados} publicados</small></article>
       </div>
       ${editable ? `
-      <div class="form-actions difusion-resumen-acciones">
+      <div class="difusion-toolbar">
         <button type="button" class="btn-panel" data-difusion-scroll="difusion-publicar">Publicar un aviso</button>
         <button type="button" class="ghost" data-conectar-redes>Conectar redes de muestra</button>
-        <button type="button" class="ghost" data-publicar-listos ${listos ? "" : "disabled"}>Publicar los listos (${listos})</button>
-      </div>` : `<p class="cola-vacia">Con su rol puede ver la difusión. Quien administra las cuentas marca y publica.</p>`}
-      <p class="difusion-aviso-demo">Demo honesta: conectar o publicar solo deja marcas en este navegador. No hay envío a Mercado Libre, Zonaprop ni redes.</p>
+        <button type="button" class="ghost" data-publicar-listos ${listos ? "" : "disabled"}>Publicar listos (${listos})</button>
+      </div>` : `<p class="cola-vacia">Con su rol solo puede ver. Quien administra las cuentas publica.</p>`}
     </section>`;
 }
 
 function htmlDifusionPublicar(editable) {
   const destinosOk = DESTINOS.filter((d) => !d.fijo && destinoConectado(d.id));
   const shareItem = items.find((i) => i.id === selected) || items[0];
+  const sitiosOk = destinosPorGrupo("sitio").filter((d) => !d.fijo && destinoConectado(d.id));
+  const redesOk = destinosPorGrupo("red").filter((d) => destinoConectado(d.id));
   if (!editable) {
     return `
-      <section class="difusion-publicar" id="difusion-publicar">
-        <div class="difusion-grupo-head">
-          <p class="difusion-paso">Paso 3</p>
-          <h2>Publicar un aviso</h2>
-          <p>Solo lectura con su rol. Un titular, agente, comercial o marketing puede marcar destinos.</p>
-        </div>
+      <section class="difusion-panel" id="difusion-publicar">
+        <header class="difusion-grupo-head">
+          <p class="difusion-paso">3. Publicar un aviso</p>
+          <p class="difusion-grupo-lead">Solo lectura con su rol.</p>
+        </header>
       </section>`;
   }
   if (!destinosOk.length) {
     return `
-      <section class="difusion-publicar" id="difusion-publicar">
-        <div class="difusion-grupo-head">
-          <p class="difusion-paso">Paso 3</p>
-          <h2>Publicar un aviso</h2>
-          <p>Todavía no hay portales ni redes conectados. Use “Conectar redes de muestra” o conecte un portal arriba.</p>
-        </div>
+      <section class="difusion-panel" id="difusion-publicar">
+        <header class="difusion-grupo-head">
+          <p class="difusion-paso">3. Publicar un aviso</p>
+          <p class="difusion-grupo-lead">Conecte un portal o use “Conectar redes de muestra” arriba.</p>
+        </header>
       </section>`;
   }
   return `
-    <section class="difusion-publicar" id="difusion-publicar">
-      <div class="difusion-grupo-head">
-        <p class="difusion-paso">Paso 3</p>
-        <h2>Publicar un aviso</h2>
-        <p>Elija la ficha, marque portales y redes conectados, y publique. El sitio propio ya está en la vitrina. No se envía nada afuera.</p>
-      </div>
-      <form class="difusion-publicar-form form-shell" id="difusion-publicar-form">
+    <section class="difusion-panel" id="difusion-publicar">
+      <header class="difusion-grupo-head">
+        <div>
+          <p class="difusion-paso">3. Publicar un aviso</p>
+          <p class="difusion-grupo-lead">Elija la ficha y marque destinos conectados. El sitio propio ya está en la vitrina.</p>
+        </div>
+      </header>
+      <form class="difusion-publicar-form" id="difusion-publicar-form">
         <div class="nh-field">
-          <label for="pub-item">Aviso de la cartera</label>
+          <label for="pub-item">Aviso</label>
           <select id="pub-item" name="item" required>
             ${items.map((item) => `<option value="${esc(item.id)}" ${shareItem && item.id === shareItem.id ? "selected" : ""}>${esc(item.codigo)} · ${esc(item.titulo)}</option>`).join("")}
           </select>
         </div>
         <div class="publish-grid">
-          <div class="publish-col">
-            <p class="difusion-ficha-grupo">Portales conectados</p>
-            <div class="destino-list">
-              ${destinosPorGrupo("sitio").filter((d) => !d.fijo && destinoConectado(d.id)).map((dest) => `
-                <label class="destino-row">
-                  <span class="cuenta-mark destino-row-mark" data-dest="${esc(dest.id)}" aria-hidden="true">${esc(destMarca(dest))}</span>
-                  <span class="destino-check"><input type="checkbox" name="dest" value="${esc(dest.id)}"></span>
-                  <span><strong>${esc(dest.nombre)}</strong><small>${esc(destTipoLabel(dest))}</small></span>
-                </label>`).join("") || "<p class=\"cola-vacia\">Ningún portal conectado.</p>"}
-            </div>
-          </div>
-          <div class="publish-col">
-            <p class="difusion-ficha-grupo">Redes conectadas</p>
-            <div class="destino-list">
-              ${destinosPorGrupo("red").filter((d) => destinoConectado(d.id)).map((dest) => `
-                <label class="destino-row">
-                  <span class="cuenta-mark destino-row-mark" data-dest="${esc(dest.id)}" aria-hidden="true">${esc(destMarca(dest))}</span>
-                  <span class="destino-check"><input type="checkbox" name="dest" value="${esc(dest.id)}" checked></span>
-                  <span><strong>${esc(dest.nombre)}</strong><small>${esc(destTipoLabel(dest))}</small></span>
-                </label>`).join("") || "<p class=\"cola-vacia\">Ninguna red conectada.</p>"}
-            </div>
-          </div>
+          <fieldset class="publish-set">
+            <legend>Portales</legend>
+            ${sitiosOk.map((dest) => `
+              <label class="destino-row">
+                <span class="cuenta-mark destino-row-mark" data-dest="${esc(dest.id)}" aria-hidden="true">${esc(destMarca(dest))}</span>
+                <span class="destino-check"><input type="checkbox" name="dest" value="${esc(dest.id)}"></span>
+                <span class="destino-copy"><strong>${esc(dest.nombre)}</strong></span>
+              </label>`).join("") || "<p class=\"cola-vacia\">Ninguno conectado</p>"}
+          </fieldset>
+          <fieldset class="publish-set">
+            <legend>Redes</legend>
+            ${redesOk.map((dest) => `
+              <label class="destino-row">
+                <span class="cuenta-mark destino-row-mark" data-dest="${esc(dest.id)}" aria-hidden="true">${esc(destMarca(dest))}</span>
+                <span class="destino-check"><input type="checkbox" name="dest" value="${esc(dest.id)}" checked></span>
+                <span class="destino-copy"><strong>${esc(dest.nombre)}</strong></span>
+              </label>`).join("") || "<p class=\"cola-vacia\">Ninguna conectada</p>"}
+          </fieldset>
         </div>
-        <div class="form-actions">
-          <button class="btn-panel" type="submit">Publicar en los destinos marcados</button>
-          <button class="ghost" type="button" data-panel-nav="cartera">Abrir ficha en cartera</button>
+        <div class="difusion-toolbar">
+          <button class="btn-panel" type="submit">Publicar marcados</button>
+          <button class="ghost" type="button" data-panel-nav="cartera">Abrir en cartera</button>
         </div>
       </form>
     </section>`;
@@ -855,17 +856,18 @@ function renderDifusion() {
   const shareText = shareItem ? textoRed(shareItem) : "";
   host.innerHTML = `
     ${htmlDifusionResumen(editable)}
-    ${htmlGrupoCuentas("sitio", "Sitios y portales", "Vitrina propia y portales de inmuebles de Argentina. Conectar no envía el aviso: es una marca de ejemplo.", "1")}
-    ${htmlGrupoCuentas("red", "Redes sociales", "Instagram, Facebook (página), Marketplace, WhatsApp y TikTok. Acá se arma el texto; usted lo pega o lo envía a mano.", "2")}
+    ${htmlGrupoCuentas("sitio", "Sitios y portales", "Vitrina y portales de Argentina. Conectar solo marca la cuenta en esta demo.", "1")}
+    ${htmlGrupoCuentas("red", "Redes sociales", "Instagram, Facebook, Marketplace, WhatsApp y TikTok. El texto se copia a mano.", "2")}
     ${htmlDifusionPublicar(editable)}
-    <section class="difusion-cola" id="difusion-cola">
-      <div class="difusion-grupo-head">
-        <p class="difusion-paso">Paso 4</p>
-        <h2>Cola de publicación</h2>
-        <p>Seguimiento de portales y redes. Estados: listo, programado o publicado. Publicado, en esta demo, solo marca el aviso.</p>
-      </div>
+    <section class="difusion-panel" id="difusion-cola">
+      <header class="difusion-grupo-head">
+        <div>
+          <p class="difusion-paso">4. Cola de publicación</p>
+          <p class="difusion-grupo-lead">Estados de ejemplo: listo, programado o publicado. Publicado solo marca el aviso.</p>
+        </div>
+      </header>
       ${editable && destinosCola.length ? `
-        <form class="cola-alta form-shell" id="cola-alta">
+        <form class="cola-alta" id="cola-alta">
           <div class="nh-field">
             <label for="cola-item">Aviso</label>
             <select id="cola-item" name="item">
@@ -878,10 +880,10 @@ function renderDifusion() {
               ${destinosCola.map((d) => `<option value="${esc(d.id)}">${esc(d.nombre)}</option>`).join("")}
             </select>
           </div>
-          <div class="form-actions">
-            <button class="btn-panel" type="submit">Agregar a la cola</button>
+          <div class="cola-alta-action">
+            <button class="btn-panel" type="submit">Agregar</button>
           </div>
-        </form>` : editable ? `<p class="cola-vacia">Conecte un portal o una red para armar la cola.</p>` : `<p class="cola-vacia">La agenda puede ver la cola. Un agente o el titular la arma.</p>`}
+        </form>` : editable ? `<p class="cola-vacia">Conecte un portal o una red para armar la cola.</p>` : `<p class="cola-vacia">Solo lectura con su rol.</p>`}
       <div class="table-scroll">
         <table class="cola-tabla">
           <thead>
@@ -896,47 +898,50 @@ function renderDifusion() {
           <tbody>
             ${filas.length ? filas.map((fila) => `
               <tr>
-                <td>${esc(fila.item.codigo)}<br><small>${esc(fila.item.titulo)}</small></td>
+                <td><strong>${esc(fila.item.codigo)}</strong><br><small>${esc(fila.item.titulo)}</small></td>
                 <td>
                   <span class="cola-dest-cell">
                     <span class="cuenta-mark destino-row-mark" data-dest="${esc(fila.dest.id)}" aria-hidden="true">${esc(destMarca(fila.dest))}</span>
-                    <span>${esc(fila.dest.nombre)}<br><small>${esc(destTipoLabel(fila.dest))}</small></span>
+                    <span>${esc(fila.dest.nombre)}</span>
                   </span>
                 </td>
                 <td>
                   ${fila.dest.fijo || !editable
                     ? `<span class="tag cola-${esc(fila.estado)}">${esc(colaEstadoLabel(fila.estado))}</span>`
-                    : `<select data-cola-estado="${esc(fila.item.id)}" data-dest="${esc(fila.dest.id)}" aria-label="Estado">
+                    : `<select class="cola-estado" data-cola-estado="${esc(fila.item.id)}" data-dest="${esc(fila.dest.id)}" aria-label="Estado">
                         ${COLA_ESTADOS.map((e) => `<option value="${esc(e.id)}" ${fila.estado === e.id ? "selected" : ""}>${esc(e.label)}</option>`).join("")}
                       </select>`}
                 </td>
                 <td>${esc(fila.when || "—")}</td>
                 <td>${fila.dest.fijo || !editable ? "" : `<button type="button" class="ghost" data-cola-quitar="${esc(fila.item.id)}" data-dest="${esc(fila.dest.id)}">Sacar</button>`}</td>
-              </tr>`).join("") : `<tr><td colspan="5">No hay avisos en cola todavía. En la vitrina el sitio propio ya muestra la cartera.</td></tr>`}
+              </tr>`).join("") : `<tr><td colspan="5">La cola está vacía. El sitio propio ya muestra la cartera.</td></tr>`}
           </tbody>
         </table>
       </div>
     </section>
-    <section class="difusion-share" id="difusion-share">
-      <div class="difusion-grupo-head">
-        <p class="difusion-paso">Paso 5</p>
-        <h2>Texto para redes y otras páginas</h2>
-        <p>El mismo texto de la ficha para Instagram, Facebook, WhatsApp u otra página. Cópielo o ábralo en WhatsApp. No se publica solo.</p>
+    <section class="difusion-panel" id="difusion-share">
+      <header class="difusion-grupo-head">
+        <div>
+          <p class="difusion-paso">5. Texto para redes</p>
+          <p class="difusion-grupo-lead">Copie el texto o ábralo en WhatsApp. No se publica solo.</p>
+        </div>
+      </header>
+      <div class="difusion-share-grid">
+        <div class="nh-field">
+          <label for="difusion-share-item">Aviso</label>
+          <select id="difusion-share-item">
+            ${items.map((item) => `<option value="${esc(item.id)}" ${shareItem && item.id === shareItem.id ? "selected" : ""}>${esc(item.codigo)} · ${esc(item.titulo)}</option>`).join("")}
+          </select>
+        </div>
+        <div class="nh-field difusion-share-text-field">
+          <label for="difusion-share-text">Texto</label>
+          <textarea id="difusion-share-text" rows="4" readonly>${esc(shareText)}</textarea>
+        </div>
       </div>
-      <div class="nh-field">
-        <label for="difusion-share-item">Aviso de la cartera</label>
-        <select id="difusion-share-item">
-          ${items.map((item) => `<option value="${esc(item.id)}" ${shareItem && item.id === shareItem.id ? "selected" : ""}>${esc(item.codigo)} · ${esc(item.titulo)}</option>`).join("")}
-        </select>
-      </div>
-      <div class="nh-field">
-        <label for="difusion-share-text">Texto listo para pegar</label>
-        <textarea id="difusion-share-text" rows="5" readonly>${esc(shareText)}</textarea>
-      </div>
-      <div class="difusion-acciones form-actions">
+      <div class="difusion-toolbar">
         <button class="btn-panel" type="button" id="difusion-copiar" ${shareItem ? "" : "disabled"}>Copiar texto</button>
-        <a class="ghost" id="difusion-wa" ${shareItem ? `href="${esc("https://wa.me/?text=" + encodeURIComponent(shareText))}"` : ""} target="_blank" rel="noopener">Abrir WhatsApp</a>
-        <button class="ghost" type="button" data-panel-nav="cartera">Ver ficha en cartera</button>
+        <a class="ghost" id="difusion-wa" ${shareItem ? `href="${esc("https://wa.me/?text=" + encodeURIComponent(shareText))}"` : ""} target="_blank" rel="noopener">WhatsApp</a>
+        <button class="ghost" type="button" data-panel-nav="cartera">Ver en cartera</button>
       </div>
     </section>`;
 
