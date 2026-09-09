@@ -1444,8 +1444,16 @@ const DESTINOS = [
     fijo: true,
     marca: "SP",
     beneficio: "Su vitrina pública toma el catálogo de este panel. No hay aviso pago de portal.",
-    si: "Publicar y actualizar propiedades en su sitio desde el panel.",
-    no: "No reemplaza portales pagos ni redes. Esta demo solo guarda en su navegador."
+    si: [
+      "Publicar y actualizar propiedades en su vitrina desde este panel.",
+      "Que el catálogo público refleje lo que edite en Cartera.",
+      "Consultas y reacciones de ejemplo quedan en este navegador."
+    ],
+    no: [
+      "No reemplaza portales pagos ni redes sociales.",
+      "Esta demo no tiene servidor: solo guarda en su navegador (localStorage).",
+      "No sincroniza sola con Mercado Libre, Zonaprop u otros portales."
+    ]
   },
   {
     id: "ml",
@@ -1454,8 +1462,16 @@ const DESTINOS = [
     grupo: "sitio",
     marca: "ML",
     beneficio: "Producto real: API oficial de Inmuebles (publicar y sincronizar avisos).",
-    si: "Crear, editar y pausar avisos; app de desarrollador, OAuth y paquete/plan de publicación.",
-    no: "Sin abono o permisos el aviso no queda online. Demo: no llama a la API; solo marca local."
+    si: [
+      "Crear, editar y pausar avisos de inmuebles con la API oficial.",
+      "App de desarrollador, OAuth y tipo de publicación según su plan/paquete.",
+      "Validar el aviso antes de publicarlo (herramienta de validación de ítems)."
+    ],
+    no: [
+      "Sin abono, paquete o permisos el aviso no queda online.",
+      "Hay atributos, ubicación y fotos obligatorios según la categoría.",
+      "Esta demo no llama a la API: solo marca el aviso en localStorage."
+    ]
   },
   {
     id: "zonaprop",
@@ -1464,8 +1480,16 @@ const DESTINOS = [
     grupo: "sitio",
     marca: "ZP",
     beneficio: "Producto real: OpenNavent (API del grupo Navent) con credenciales de partner.",
-    si: "Alta, baja y modificación de avisos; contactos si el portal lo habilita. Abono aparte.",
-    no: "Hace falta ser integrador homologado. Demo: no llama a Navent; solo localStorage."
+    si: [
+      "Alta, baja y modificación de avisos con OpenNavent (integrador homologado).",
+      "Consultar planes o cupos de publicación del portal.",
+      "Leer mensajes o contactos si el portal y el acuerdo lo habilitan."
+    ],
+    no: [
+      "Hace falta ser partner/integrador homologado; no se conecta “solo”.",
+      "El abono del portal se gestiona aparte con Zonaprop/Navent.",
+      "Esta demo no llama a Navent: solo marca en localStorage."
+    ]
   },
   {
     id: "argenprop",
@@ -1474,8 +1498,16 @@ const DESTINOS = [
     grupo: "sitio",
     marca: "AP",
     beneficio: "No hay API pública abierta; suele ir por CRM homologado o acuerdo comercial.",
-    si: "Con credenciales de partner, un CRM puede publicar y consumir puntos del abono.",
-    no: "No se conecta solo desde cualquier sistema. Demo: solo marca en este navegador."
+    si: [
+      "Publicar o actualizar avisos desde un CRM homologado con credenciales del portal.",
+      "Consumir puntos del abono al posicionar avisos (según el acuerdo comercial).",
+      "Carga también desde Argenprop Gestión u otro CRM acordado con el portal."
+    ],
+    no: [
+      "No hay API pública abierta para conectar desde cualquier sistema.",
+      "Sin abono o puntos el aviso no se posiciona como usted espera.",
+      "Esta demo solo marca en este navegador; no publica en Argenprop."
+    ]
   },
   {
     id: "properati",
@@ -1484,8 +1516,15 @@ const DESTINOS = [
     grupo: "sitio",
     marca: "PR",
     beneficio: "No hay API pública documentada de avisos para terceros.",
-    si: "Carga a mano en el portal o por acuerdo comercial / CRM partner.",
-    no: "No hay API pública de avisos. Demo: solo marca local; no envía nada."
+    si: [
+      "Carga a mano en el portal.",
+      "Publicación por acuerdo comercial o CRM que ya tenga feed/API con Properati."
+    ],
+    no: [
+      "No hay API pública documentada de avisos para terceros.",
+      "Conectar acá no envía nada a Properati.",
+      "Esta demo solo marca local; no hay publicación real."
+    ]
   },
   {
     id: "buscainmueble",
@@ -1494,8 +1533,15 @@ const DESTINOS = [
     grupo: "sitio",
     marca: "BI",
     beneficio: "Suele llegar por red Clarín/Argenprop o carga acordada; sin API pública de avisos.",
-    si: "Publicación vía abono o red del grupo, o carga a mano.",
-    no: "No hay API pública de avisos. Demo: conectar no publica afuera."
+    si: [
+      "Publicación vía abono o red del grupo Clarín/Argenprop.",
+      "Carga a mano en el portal cuando el acuerdo lo permite."
+    ],
+    no: [
+      "No hay API pública de avisos para terceros.",
+      "Conectar en esta demo no publica afuera.",
+      "Solo queda una marca en localStorage."
+    ]
   },
   {
     id: "icasas",
@@ -1504,8 +1550,15 @@ const DESTINOS = [
     grupo: "sitio",
     marca: "IC",
     beneficio: "No hay API pública de avisos; los CRM suelen usar feed o acuerdo con el portal.",
-    si: "Carga a mano o por feed / acuerdo comercial.",
-    no: "No hay API pública de avisos. Demo: solo localStorage."
+    si: [
+      "Carga a mano en el portal.",
+      "Publicación por feed o acuerdo comercial / CRM partner (el portal toma los datos)."
+    ],
+    no: [
+      "No hay API pública de avisos para conectar desde cualquier sistema.",
+      "El ritmo de publicación lo define el portal (p. ej. lectura de feed).",
+      "Esta demo solo usa localStorage; no envía avisos."
+    ]
   },
   {
     id: "google",
@@ -1514,8 +1567,16 @@ const DESTINOS = [
     grupo: "sitio",
     marca: "G",
     beneficio: "Google Business Profile es la ficha del estudio, no un portal de inmuebles.",
-    si: "Datos del negocio, reseñas y posts locales (API de Business Profile, con verificación).",
-    no: "No hay API de avisos de propiedades como en Mercado Libre. Demo: arma texto; usted lo carga."
+    si: [
+      "Actualizar datos de la ficha del estudio (ubicación, horarios, contacto).",
+      "Leer reseñas y responderlas con la API de Business Profile.",
+      "Crear posts locales (novedad, evento u oferta) con verificación y acceso aprobado."
+    ],
+    no: [
+      "No hay API de avisos de propiedades como en Mercado Libre o Zonaprop.",
+      "La API exige verificación/aprobación de Google; sin eso no hay cuota útil.",
+      "Esta demo arma texto de ejemplo; usted lo carga a mano en Google."
+    ]
   },
   {
     id: "instagram",
@@ -1524,8 +1585,16 @@ const DESTINOS = [
     grupo: "red",
     marca: "IG",
     beneficio: "Graph API puede publicar en cuenta profesional; no es un listado de inmuebles.",
-    si: "Posts orgánicos (foto/carrusel/reel) o anuncios pagos, con app y permisos de Meta.",
-    no: "No es un portal de avisos; hay cupos y revisión. Demo: arma el texto para pegar a mano."
+    si: [
+      "Publicar foto, carrusel o Reel en cuenta profesional (Business o Creator).",
+      "Flujo de Graph: crear contenedor de media y luego publicarlo.",
+      "Anuncios pagos aparte, con app de Meta y permisos revisados."
+    ],
+    no: [
+      "No es un portal ni un listado de inmuebles.",
+      "Hay cupo diario de publicaciones por API; hace falta app y permisos.",
+      "No aplica a cuentas personales. Esta demo solo arma el texto para pegar a mano."
+    ]
   },
   {
     id: "facebook",
@@ -1534,8 +1603,15 @@ const DESTINOS = [
     grupo: "red",
     marca: "FB",
     beneficio: "Pages API permite publicar en la Página del estudio.",
-    si: "Posts de texto, enlace o imagen en la Página (token y roles de administrador).",
-    no: "No publica avisos de vivienda en Marketplace. Demo: solo texto local; no publica solo."
+    si: [
+      "Publicar texto, enlace o imagen en la Página del estudio.",
+      "Usar token y rol de administrador de esa Página."
+    ],
+    no: [
+      "No publica avisos de vivienda en Facebook Marketplace.",
+      "No reemplaza un portal inmobiliario.",
+      "Esta demo solo guarda texto local; no publica sola en Facebook."
+    ]
   },
   {
     id: "fbmarket",
@@ -1544,8 +1620,15 @@ const DESTINOS = [
     grupo: "red",
     marca: "MK",
     beneficio: "No hay API pública abierta para avisos de vivienda; solo partners de Meta.",
-    si: "Carga manual (a menudo perfil personal) o programa partner restringido.",
-    no: "La Página sola no alcanza. Demo: solo marca el aviso en este navegador."
+    si: [
+      "Carga manual (a menudo desde el perfil personal).",
+      "Partners de Meta: Item/Seller API o catálogo de vivienda tras admisión al programa."
+    ],
+    no: [
+      "No hay API pública abierta para avisos de vivienda.",
+      "Tener Página no alcanza para publicar housing por API.",
+      "Esta demo solo marca el aviso en este navegador."
+    ]
   },
   {
     id: "whatsapp",
@@ -1554,8 +1637,16 @@ const DESTINOS = [
     grupo: "red",
     marca: "WA",
     beneficio: "Comparte la ficha por mensaje; la API Business es para chats, no un portal de avisos.",
-    si: "Enlace wa.me o Cloud API (plantillas y mensajes; catálogo e-commerce si aplica).",
-    no: "No publica en portales inmobiliarios. Demo: arma el mensaje; no envía a un servidor."
+    si: [
+      "Abrir un chat con enlace wa.me y el texto de la ficha.",
+      "Cloud API: enviar mensajes y plantillas aprobadas (cuenta Business).",
+      "Catálogo de productos e-commerce si su negocio lo usa (comercio, no portal de inmuebles)."
+    ],
+    no: [
+      "No publica en Mercado Libre, Zonaprop ni otros portales.",
+      "El catálogo de WhatsApp no es un listado inmobiliario estándar.",
+      "Esta demo arma el mensaje; no lo envía a un servidor."
+    ]
   },
   {
     id: "tiktok",
@@ -1564,8 +1655,16 @@ const DESTINOS = [
     grupo: "red",
     marca: "TT",
     beneficio: "Content Posting API puede subir video tras auditoría de la app; no es un portal.",
-    si: "Video o borrador con consentimiento del creador y app auditada por TikTok.",
-    no: "Sin auditoría el video queda privado; no hay API de avisos. Demo: arma texto para pegar."
+    si: [
+      "Subir video o borrador con consentimiento del creador (Content Posting API).",
+      "App registrada en TikTok for Developers y scopes aprobados (upload / publish).",
+      "Tras auditoría de la app, publicación directa con menos restricciones de visibilidad."
+    ],
+    no: [
+      "Sin auditoría el contenido suele quedar privado y con cupos estrictos.",
+      "No hay API de avisos inmobiliarios.",
+      "Esta demo arma texto para pegar; no sube video a TikTok."
+    ]
   }
 ];
 

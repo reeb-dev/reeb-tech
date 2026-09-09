@@ -2201,17 +2201,32 @@ footer {
 }
 
 .cuenta-cap span {
-  display: inline-block;
+  display: block;
   font-size: 10px;
   font-weight: 700;
   letter-spacing: 0.06em;
   text-transform: uppercase;
   color: #27573a;
-  margin-right: 6px;
+  margin: 0 0 4px;
 }
 
 .cuenta-cap.is-no span {
   color: #7a4a3a;
+}
+
+.cuenta-cap ul {
+  margin: 0;
+  padding: 0 0 0 1.1em;
+  list-style: disc;
+}
+
+.cuenta-cap li {
+  margin: 0 0 3px;
+  padding: 0;
+}
+
+.cuenta-cap li:last-child {
+  margin-bottom: 0;
 }
 
 .cuenta-meta {

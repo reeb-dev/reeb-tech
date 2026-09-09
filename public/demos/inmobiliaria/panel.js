@@ -534,6 +534,14 @@ function visible() {
   return result;
 }
 
+function htmlCuentaCapList(label, value, isNo) {
+  if (value == null || value === "") return "";
+  const items = Array.isArray(value) ? value : String(value).split(/\s*[·•]\s*|\n+/).map((s) => s.trim()).filter(Boolean);
+  if (!items.length) return "";
+  const lis = items.map((t) => `<li>${esc(t)}</li>`).join("");
+  return `<div class="cuenta-cap${isNo ? " is-no" : ""}"><span>${esc(label)}</span><ul>${lis}</ul></div>`;
+}
+
 function destinoConectado(id) {
   const dest = DESTINOS.find((d) => d.id === id);
   if (dest?.fijo) return true;
@@ -573,8 +581,8 @@ function htmlCuenta(dest) {
   const accion = dest.fijo
     ? `<span class="cuenta-estado on">Siempre en la vitrina</span>`
     : `<button type="button" class="cuenta-btn ${on ? "is-ghost" : "is-primary"}" data-cuenta="${esc(dest.id)}" ${editable ? "" : "disabled"}>${on ? "Desconectar" : "Conectar"}</button>`;
-  const si = dest.si ? `<p class="cuenta-cap"><span>Qué sí</span> ${esc(dest.si)}</p>` : "";
-  const no = dest.no ? `<p class="cuenta-cap is-no"><span>Qué no</span> ${esc(dest.no)}</p>` : "";
+  const si = htmlCuentaCapList("Qué sí", dest.si, false);
+  const no = htmlCuentaCapList("Qué no", dest.no, true);
   return `
     <article class="cuenta ${on ? "is-on" : ""}">
       <header class="cuenta-head">
@@ -766,7 +774,7 @@ function htmlDifusionResumen(editable) {
           <p class="difusion-paso">Resumen</p>
           <h2>Estado de la difusión</h2>
         </div>
-        <p class="difusion-aviso-demo">Demo: no se llama a APIs reales. Solo quedan marcas en este navegador (localStorage).</p>
+        <p class="difusion-aviso-demo">API real ≠ esta demo. Acá no se llama a portales ni redes: solo marcas en su navegador (localStorage).</p>
       </header>
       <div class="difusion-resumen-grid">
         <article><span>Vitrina</span><strong>${items.length}</strong><small>avisos</small></article>
