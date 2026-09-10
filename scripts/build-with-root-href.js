@@ -16,7 +16,7 @@ const ROOT = path.join(__dirname, '..');
 const OUT = path.join(ROOT, 'dist', 'manuelreeb', 'browser');
 const CV_DIR = path.join(OUT, 'cv');
 
-const PUBLIC_TOP_DIRS = new Set(['demos', 'docs', 'media', 'tech']);
+const PUBLIC_TOP_DIRS = new Set(['demos', 'docs', 'media', 'tech', 'brand']);
 const PUBLIC_TOP_FILES = new Set([
   'CNAME',
   'robots.txt',
@@ -44,7 +44,8 @@ const PUBLIC_TOP_FILES = new Set([
   'unnamed.webp',
 ]);
 
-const HUB_FAVICON_VERSION = 'hub33';
+/** Cache-bust token for icon links (change when replacing mark art). */
+const HUB_FAVICON_VERSION = '20260910c';
 
 const DEMOS_REDIRECT_HTML = `<!DOCTYPE html>
 <html lang="es">
@@ -55,10 +56,10 @@ const DEMOS_REDIRECT_HTML = `<!DOCTYPE html>
   <meta name="description" content="El catálogo de páginas web por rubro está en la raíz del sitio.">
   <link rel="canonical" href="https://webconreeb.com/">
   <meta property="og:url" content="https://webconreeb.com/">
-  <link rel="icon" href="/favicon.svg?v=${HUB_FAVICON_VERSION}" type="image/svg+xml">
-  <link rel="icon" href="/favicon-32.png?v=${HUB_FAVICON_VERSION}" type="image/png" sizes="32x32">
-  <link rel="shortcut icon" href="/favicon.ico?v=${HUB_FAVICON_VERSION}">
-  <link rel="apple-touch-icon" href="/apple-touch-icon.png?v=${HUB_FAVICON_VERSION}" sizes="180x180">
+  <link rel="icon" href="/brand/reeb-mark.svg?v=${HUB_FAVICON_VERSION}" type="image/svg+xml">
+  <link rel="icon" href="/brand/reeb-mark-32.png?v=${HUB_FAVICON_VERSION}" type="image/png" sizes="32x32">
+  <link rel="shortcut icon" href="/brand/reeb-mark.ico?v=${HUB_FAVICON_VERSION}">
+  <link rel="apple-touch-icon" href="/brand/reeb-mark-180.png?v=${HUB_FAVICON_VERSION}" sizes="180x180">
   <meta http-equiv="refresh" content="0; url=/">
   <script>location.replace('/' + (location.hash || '') + (location.search || ''));</script>
 </head>
@@ -70,16 +71,70 @@ const DEMOS_REDIRECT_HTML = `<!DOCTYPE html>
 </html>
 `;
 
-/** Hub R oro/ember icons that must win at site root (never Angular defaults). */
-const HUB_ROOT_ICONS = [
-  'favicon.ico',
-  'favicon.svg',
-  'favicon-hub.svg',
-  'favicon-16.png',
-  'favicon-32.png',
-  'apple-touch-icon.png',
-  'apple-touch-icon-hub.png',
-];
+/** Hub R oro/ember — source of truth for every published favicon.ico / svg. */
+const BRAND_MARK_ICO = path.join('brand', 'reeb-mark.ico');
+const BRAND_MARK_SVG = path.join('brand', 'reeb-mark.svg');
+
+function forceHubFaviconsEverywhere(publicDir) {
+  const markIco = path.join(publicDir, BRAND_MARK_ICO);
+  const markSvg = path.join(publicDir, BRAND_MARK_SVG);
+  if (!fs.existsSync(markIco) || !fs.existsSync(markSvg)) {
+    console.error('Missing hub brand mark icons under public/brand/');
+    process.exit(1);
+  }
+
+  // Always overwrite root publish icons AFTER ng build (never leave Angular defaults).
+  const rootCopies = [
+    [markIco, path.join(OUT, 'favicon.ico')],
+    [markSvg, path.join(OUT, 'favicon.svg')],
+    [markSvg, path.join(OUT, 'favicon-hub.svg')],
+    [path.join(publicDir, 'brand', 'reeb-mark-16.png'), path.join(OUT, 'favicon-16.png')],
+    [path.join(publicDir, 'brand', 'reeb-mark-32.png'), path.join(OUT, 'favicon-32.png')],
+    [path.join(publicDir, 'brand', 'reeb-mark-180.png'), path.join(OUT, 'apple-touch-icon.png')],
+    [path.join(publicDir, 'brand', 'reeb-mark-180.png'), path.join(OUT, 'apple-touch-icon-hub.png')],
+  ];
+  for (const [src, dest] of rootCopies) {
+    if (!fs.existsSync(src)) continue;
+    fs.mkdirSync(path.dirname(dest), { recursive: true });
+    fs.copyFileSync(src, dest);
+  }
+
+  // Ensure /brand/* exists in publish output (Angular assets usually copy it; re-copy to be sure).
+  const brandOut = path.join(OUT, 'brand');
+  fs.mkdirSync(brandOut, { recursive: true });
+  for (const name of fs.readdirSync(path.join(publicDir, 'brand'))) {
+    fs.copyFileSync(path.join(publicDir, 'brand', name), path.join(brandOut, name));
+  }
+
+  // Overwrite every favicon.ico under the publish tree (root, demos, nested).
+  function walk(dir) {
+    for (const ent of fs.readdirSync(dir, { withFileTypes: true })) {
+      const full = path.join(dir, ent.name);
+      if (ent.isDirectory()) {
+        if (ent.name === 'cv') continue; // CV uses brand links, not a local ico
+        walk(full);
+      } else if (ent.name === 'favicon.ico' || ent.name === 'favicon.svg') {
+        fs.copyFileSync(ent.name.endsWith('.svg') ? markSvg : markIco, full);
+      }
+    }
+  }
+  walk(OUT);
+
+  // CV must not ship an Angular favicon.ico
+  for (const name of ['favicon.ico', 'favicon.svg', 'favicon-16.png', 'favicon-32.png', 'favicon-hub.svg']) {
+    const cvIcon = path.join(CV_DIR, name);
+    if (fs.existsSync(cvIcon)) fs.rmSync(cvIcon, { force: true });
+  }
+
+  const rootIco = path.join(OUT, 'favicon.ico');
+  const bytes = fs.statSync(rootIco).size;
+  // Classic Angular CLI favicon is ~15086 bytes; refuse to ship that.
+  if (bytes > 12000 && bytes < 16000) {
+    console.error('Refusing to publish: root favicon.ico looks like Angular default (' + bytes + ' bytes)');
+    process.exit(1);
+  }
+  console.log('Hub favicons forced: /favicon.ico (' + bytes + ' B) + /brand/reeb-mark.*');
+}
 
 function remapBaseHref(args) {
   const out = [...args];
@@ -134,39 +189,7 @@ function preparePublishLayout() {
   fs.copyFileSync(hubSource, path.join(OUT, 'index.html'));
   fs.writeFileSync(path.join(OUT, 'demos', 'index.html'), DEMOS_REDIRECT_HTML, 'utf8');
 
-  // After ng build + CV move: force hub favicons at publish root (and demos mirror).
-  // Prevents any Angular/public race from leaving a stale /favicon.ico at /.
-  const publicDir = path.join(ROOT, 'public');
-  for (const name of HUB_ROOT_ICONS) {
-    const src = path.join(publicDir, name);
-    if (!fs.existsSync(src)) continue;
-    fs.copyFileSync(src, path.join(OUT, name));
-  }
-  // Root apple-touch must be hub (oro/ember), not CV parchment.
-  const hubTouch = path.join(publicDir, 'apple-touch-icon-hub.png');
-  if (fs.existsSync(hubTouch)) {
-    fs.copyFileSync(hubTouch, path.join(OUT, 'apple-touch-icon.png'));
-  }
-  const demosDir = path.join(OUT, 'demos');
-  if (fs.existsSync(demosDir)) {
-    for (const name of ['favicon.ico', 'favicon.svg', 'favicon-16.png', 'favicon-32.png', 'favicon.png', 'apple-touch-icon.png']) {
-      const srcName = name === 'favicon.png' ? 'favicon-32.png' : name === 'apple-touch-icon.png' ? 'apple-touch-icon-hub.png' : name;
-      const src = path.join(publicDir, srcName === 'apple-touch-icon-hub.png' ? 'apple-touch-icon-hub.png' : srcName);
-      const alt = path.join(publicDir, name);
-      const from = fs.existsSync(src) ? src : alt;
-      if (fs.existsSync(from)) {
-        fs.copyFileSync(from, path.join(demosDir, name));
-      }
-    }
-  }
-
-  // Drop any accidental Angular favicon left under /cv/ so it cannot be confused with root.
-  for (const name of ['favicon.ico', 'favicon.svg', 'favicon-16.png', 'favicon-32.png', 'favicon-hub.svg']) {
-    const cvIcon = path.join(CV_DIR, name);
-    if (fs.existsSync(cvIcon)) {
-      fs.rmSync(cvIcon, { force: true });
-    }
-  }
+  forceHubFaviconsEverywhere(path.join(ROOT, 'public'));
 
   console.log('Pages layout: / = hub catalog; /demos/ → /; Angular CV at /cv/; hub favicons forced at root.');
 }
