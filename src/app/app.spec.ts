@@ -25,16 +25,16 @@ describe('App', () => {
     const fixture = TestBed.createComponent(AppComponent);
     await fixture.whenStable();
     const compiled = fixture.nativeElement as HTMLElement;
-    const catalog = compiled.querySelector('#demos a[href="/demos/"]');
+    const catalog = compiled.querySelector('#demos a[href="/"]');
     expect(catalog).toBeTruthy();
-    expect(compiled.querySelector('nav a[href="/demos/"]')?.textContent).toMatch(
-      /Ejemplos de sistemas|Business demos/
+    expect(compiled.querySelector('nav a[href="/"]')?.textContent).toMatch(
+      /Ejemplos de sistemas|System examples/
     );
     expect(compiled.querySelector('#demos')?.textContent).toMatch(/comercios|shops/i);
     expect(compiled.querySelector('#demos')?.textContent).toMatch(/conviene tener una web|website is worth it/i);
     expect(compiled.querySelector('#demos')?.textContent).toMatch(/aplicaciones móviles|Mobile apps as well/i);
     expect(compiled.querySelector('#demos #precios')).toBeNull();
-    expect(compiled.querySelector('#demos a[href="/demos/#precios"]')).toBeTruthy();
+    expect(compiled.querySelector('#demos a[href="/#precios"]')).toBeTruthy();
   });
 
   it('should explain demo systems with an honest capability table', async () => {
@@ -50,8 +50,8 @@ describe('App', () => {
     expect(sistemas?.textContent).toMatch(/expedientes no salen|Case files do not go/i);
     expect(sistemas?.textContent).toMatch(/Visitas: las ve el panel|Viewings: the panel sees them/);
     expect(sistemas?.textContent).toMatch(/precios en pesos|prices in Argentine pesos/);
-    expect(sistemas?.querySelector('a[href="/demos/#sistemas"]')).toBeTruthy();
-    expect(sistemas?.querySelector('a[href="/demos/#precios"]')).toBeTruthy();
+    expect(sistemas?.querySelector('a[href="/#sistemas"]')).toBeTruthy();
+    expect(sistemas?.querySelector('a[href="/#precios"]')).toBeTruthy();
     expect(compiled.querySelector('#demos #precios')).toBeNull();
   });
 
@@ -61,9 +61,9 @@ describe('App', () => {
     const compiled = fixture.nativeElement as HTMLElement;
     const contact = compiled.querySelector('#contact');
     expect(contact).toBeTruthy();
-    const catalog = contact?.querySelector('a[href="/demos/"]');
+    const catalog = contact?.querySelector('a[href="/"]');
     expect(catalog).toBeTruthy();
-    expect(catalog?.textContent).toMatch(/Ver ejemplos de sistemas|See business demos/);
+    expect(catalog?.textContent).toMatch(/Ver ejemplos de sistemas|See system examples/);
     expect(contact?.querySelector('a[href="https://wa.me/5492915757934"]')).toBeTruthy();
     expect(contact?.textContent).toMatch(/\+54 9 2915 75-7934/);
     expect(contact?.querySelector('a[href="mailto:manuelreeb@icloud.com"]')).toBeTruthy();

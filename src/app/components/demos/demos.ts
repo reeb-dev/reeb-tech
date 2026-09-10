@@ -11,6 +11,6 @@ export class DemosComponent {
   constructor(public i18n: I18nService) {}
 
   demoHref(id: string): string {
-    return `${this.i18n.t().demos.hubUrl}${id}/`;
+    return `${this.i18n.t().demos.demosBaseUrl}${id}/`;
   }
 }

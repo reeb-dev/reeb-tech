@@ -130,6 +130,7 @@ export interface Dictionary {
     openPanel: string;
     viewCatalog: string;
     hubUrl: string;
+    demosBaseUrl: string;
     port: string;
     withArca: string;
     pricesHubCta: string;
@@ -421,23 +422,24 @@ export const translations: Record<Lang, Dictionary> = {
     },
     demos: {
       title: 'Sistemas a medida para oficios y comercios',
-      subtitle: 'Desarrollo a medida: sitios y paneles para kiosco, inmobiliaria, turismo, construcción y otros rubros. Las demos son ejemplos para clientes, no un producto de suscripción. Si su negocio se parece, contacte para un sistema equivalente.',
+      subtitle: 'Desarrollo a medida: sitios y paneles para kiosco, inmobiliaria, turismo, construcción y otros rubros. Los ejemplos son para clientes, no un producto de suscripción. Si su negocio se parece, contacte para un sistema equivalente.',
       whyTitle: 'Por qué conviene tener una web',
       whyBody: 'Quien busca el oficio puede encontrarlo. La oferta queda a la vista a cualquier hora y las consultas llegan más claras. Usted administra catálogo, turnos o comprobantes en un panel, no en un Excel suelto.',
       provechoTitle: 'Provecho concreto',
       provechoBody: 'Menos respuestas repetidas, un enlace profesional en lugar de fotos por chat, un canal que no depende de una red social, y constancia de pedidos o consultas. El sitio puede crecer con turnos o avisos cuando lo necesite.',
       mobileTitle: 'También aplicaciones móviles',
       mobileBody: 'Android nativo (Kotlin/Java), el mismo frente que en LinkedIn. Una app del negocio — turnos, catálogo, avisos — como complemento del sitio, a medida. No es un producto de tienda ni un recuento de descargas.',
-      viewDemo: 'Ver demo',
+      viewDemo: 'Ver ejemplo',
       openPanel: 'Panel',
       viewCatalog: 'Ver el catálogo de ejemplos',
-      hubUrl: '/demos/',
+      hubUrl: '/',
+      demosBaseUrl: '/demos/',
       port: 'Puerto',
       withArca: 'ARCA de ejemplo',
       pricesHubCta: 'Ver planes de referencia',
-      pricesHubHref: '/demos/#precios',
+      pricesHubHref: '/#precios',
       sistemasTitle: 'Qué puede hacer una web, según su rubro',
-      sistemasLead: 'Un kiosco de barrio, una inmobiliaria, un hospedaje en Sierra de la Ventana y un estudio jurídico no usan la misma web. Esta tabla no es una grilla de “todo incluido”: dice qué suele tener sentido en cada caso. Las demos son ejemplos. El trabajo es un desarrollo a medida, no un producto de suscripción.',
+      sistemasLead: 'Un kiosco de barrio, una inmobiliaria, un hospedaje en Sierra de la Ventana y un estudio jurídico no usan la misma web. Esta tabla no es una grilla de “todo incluido”: dice qué suele tener sentido en cada caso. Los ejemplos son de referencia. El trabajo es un desarrollo a medida, no un producto de suscripción.',
       sistemasTableTitle: 'Por función',
       sistemasTableLead: 'Cada fila es una capacidad real de un sitio o un panel. Las columnas son negocios distintos. “Si se cotiza” no significa que venga en el piso de los planes.',
       sistemasColCap: 'Función',
@@ -544,7 +546,7 @@ export const translations: Record<Lang, Dictionary> = {
           ],
         },
       ],
-      sistemasNote: 'Cobros en línea y ARCA se cotizan aparte; no están en el piso de Presencia ni de Negocio. En las demos, un kiosco muestra precios en pesos; un 0km o una propiedad pueden ir en dólares, como en el mercado local. Los paneles piden un usuario de ejemplo (clave demo); no es un acceso real.',
+      sistemasNote: 'Cobros en línea y ARCA se cotizan aparte; no están en el piso de Presencia ni de Negocio. En los ejemplos, un kiosco muestra precios en pesos; un 0km o una propiedad pueden ir en dólares, como en el mercado local. Los paneles piden un usuario de ejemplo (clave demo); no es un acceso real.',
       sistemasTradesTitle: 'Cada demo',
       sistemasTradesLead: 'Una o dos frases por rubro, más dónde se publica. No es un manual del panel.',
       sistemasTrades: [
@@ -571,7 +573,7 @@ export const translations: Record<Lang, Dictionary> = {
         { name: 'Framehaus', blurb: 'Modelos de vivienda steel frame y consulta. Las obras en taller están en el panel. Una carga: web, Instagram o WhatsApp.' },
       ],
       sistemasHubCta: 'Ver la tabla en el catálogo',
-      sistemasHubHref: '/demos/#sistemas',
+      sistemasHubHref: '/#sistemas',
       items: [
         {
           id: 'estudio',
@@ -928,7 +930,7 @@ export const translations: Record<Lang, Dictionary> = {
       stack: 'Stack',
       certificates: 'Certificates',
       about: 'About',
-      demos: 'Business demos',
+      demos: 'System examples',
       services: 'Services',
       themeLight: 'Switch to light mode',
       themeDark: 'Switch to dark mode',
@@ -1121,23 +1123,24 @@ export const translations: Record<Lang, Dictionary> = {
     },
     demos: {
       title: 'Custom systems for shops and trades',
-      subtitle: 'Custom development: websites and admin panels for kiosks, real estate, tourism, construction, and other trades. These demos are examples for clients, not a subscription product. If your business looks similar, get in touch for an equivalent system.',
+      subtitle: 'Custom development: websites and admin panels for kiosks, real estate, tourism, construction, and other trades. The examples are for clients, not a subscription product. If your business looks similar, get in touch for an equivalent system.',
       whyTitle: 'Why a website is worth it',
       whyBody: 'People looking for your trade can find you. Your offer stays visible at any hour, and inquiries arrive clearer. You manage catalog, appointments, or receipts in one panel — not a loose spreadsheet.',
       provechoTitle: 'Concrete payoff',
       provechoBody: 'Fewer repeated answers, a professional link instead of photos in chat, a channel that does not depend on a social network, and a record of orders or inquiries. The site can later add appointments or notices when you need them.',
       mobileTitle: 'Mobile apps as well',
       mobileBody: 'Native Android (Kotlin/Java), the same track as on LinkedIn. A business app — appointments, catalog, notices — as a complement to the website, built to order. Not a store product and not a download count.',
-      viewDemo: 'View demo',
+      viewDemo: 'View example',
       openPanel: 'Panel',
       viewCatalog: 'View the examples catalog',
-      hubUrl: '/demos/',
+      hubUrl: '/',
+      demosBaseUrl: '/demos/',
       port: 'Port',
       withArca: 'Sample ARCA billing',
       pricesHubCta: 'See reference plans',
-      pricesHubHref: '/demos/#precios',
+      pricesHubHref: '/#precios',
       sistemasTitle: 'What a website can do, by trade',
-      sistemasLead: 'A neighborhood kiosk, a real-estate office, lodging in Sierra de la Ventana, and a law firm do not use the same website. This table is not an “everything included” grid: it states what usually makes sense in each case. The demos are examples. The work is custom development, not a subscription product.',
+      sistemasLead: 'A neighborhood kiosk, a real-estate office, lodging in Sierra de la Ventana, and a law firm do not use the same website. This table is not an “everything included” grid: it states what usually makes sense in each case. The examples are for reference. The work is custom development, not a subscription product.',
       sistemasTableTitle: 'By capability',
       sistemasTableLead: 'Each row is a real capability of a site or a panel. The columns are different kinds of business. “If quoted” does not mean it is in the floor price of the plans.',
       sistemasColCap: 'Capability',
@@ -1244,7 +1247,7 @@ export const translations: Record<Lang, Dictionary> = {
           ],
         },
       ],
-      sistemasNote: 'Online collections and ARCA are quoted separately; they are not in the Presence or Business floor price. In the demos, a kiosk shows prices in pesos; a new car or a property may be listed in dollars, as in the local market. Panels ask for a sample user (password demo); it is not a real login.',
+      sistemasNote: 'Online collections and ARCA are quoted separately; they are not in the Presence or Business floor price. In the examples, a kiosk shows prices in pesos; a new car or a property may be listed in dollars, as in the local market. Panels ask for a sample user (password demo); it is not a real login.',
       sistemasTradesTitle: 'Each demo',
       sistemasTradesLead: 'One or two sentences per trade, plus where it is published. This is not a panel manual.',
       sistemasTrades: [
@@ -1271,7 +1274,7 @@ export const translations: Record<Lang, Dictionary> = {
         { name: 'Framehaus', blurb: 'Steel-frame housing models and an enquiry. Workshop jobs live in the panel. One load: website, Instagram, or WhatsApp.' },
       ],
       sistemasHubCta: 'See the table in the catalog',
-      sistemasHubHref: '/demos/#sistemas',
+      sistemasHubHref: '/#sistemas',
       items: [
         {
           id: 'estudio',
@@ -1593,7 +1596,7 @@ export const translations: Record<Lang, Dictionary> = {
       messagePlaceholder: 'Short note on the situation or the technical need...',
       send: 'Send email',
       orDirect: 'Also on WhatsApp or email',
-      viewDemos: 'See business demos',
+      viewDemos: 'See system examples',
       requiredName: 'Name is required.',
       invalidEmail: 'Enter a valid email.',
       requiredMessage: 'Message is required.',

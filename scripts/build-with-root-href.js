@@ -1,9 +1,10 @@
 #!/usr/bin/env node
 /**
  * Build for webconreeb.com:
+ * - Hub catalog at / (promoted from public/demos/index.html)
+ * - Individual demos stay at /demos/<rubro>/
+ * - /demos/ redirects to / (legacy catalog URL)
  * - Angular CV at /cv/ (base-href /cv/)
- * - Demos hub stays at /demos/ (from public/)
- * - Site root index.html redirects to /demos/ so the business home is the catalog
  *
  * Legacy: remap --base-href /reeb-tech/ or / to /cv/.
  */
@@ -31,6 +32,7 @@ const PUBLIC_TOP_FILES = new Set([
   'R@.png',
   'RR.png',
   'apple-touch-icon.png',
+  'apple-touch-icon-hub.png',
   'favicon.ico',
   'favicon-16.png',
   'favicon-32.png',
@@ -40,29 +42,24 @@ const PUBLIC_TOP_FILES = new Set([
   'unnamed.webp',
 ]);
 
-const REDIRECT_HTML = `<!DOCTYPE html>
+const DEMOS_REDIRECT_HTML = `<!DOCTYPE html>
 <html lang="es">
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Página web para su local — WhatsApp y panel | Web con REEB</title>
-  <meta name="description" content="Página web a medida para su comercio u oficio: vitrina para clientes, panel para el día a día y WhatsApp. Ejemplos por rubro. Desarrollo a medida, no suscripción.">
-  <link rel="canonical" href="https://webconreeb.com/demos/">
-  <meta property="og:type" content="website">
-  <meta property="og:url" content="https://webconreeb.com/demos/">
-  <meta property="og:title" content="Página web para su local — WhatsApp y panel | Web con REEB">
-  <meta property="og:description" content="Página web a medida para su comercio u oficio: vitrina para clientes, panel para el día a día y WhatsApp. Ejemplos por rubro.">
-  <meta property="og:image" content="https://webconreeb.com/og.png">
-  <link rel="icon" href="/demos/favicon.svg" type="image/svg+xml">
-  <link rel="icon" href="/demos/favicon-32.png" type="image/png" sizes="32x32">
+  <title>Ejemplos por rubro | Web con REEB</title>
+  <meta name="description" content="El catálogo de páginas web por rubro está en la raíz del sitio.">
+  <link rel="canonical" href="https://webconreeb.com/">
+  <meta property="og:url" content="https://webconreeb.com/">
+  <link rel="icon" href="/favicon-hub.svg" type="image/svg+xml">
+  <link rel="icon" href="/favicon-32.png" type="image/png" sizes="32x32">
   <link rel="shortcut icon" href="/favicon.ico">
-  <link rel="apple-touch-icon" href="/demos/apple-touch-icon.png" sizes="180x180">
-  <meta http-equiv="refresh" content="0; url=/demos/">
-  <script>location.replace('/demos/' + (location.hash || '') + (location.search || ''));</script>
+  <meta http-equiv="refresh" content="0; url=/">
+  <script>location.replace('/' + (location.hash || '') + (location.search || ''));</script>
 </head>
 <body>
   <p style="font-family: system-ui, sans-serif; padding: 2rem;">
-    <a href="/demos/">Ir al catálogo de ejemplos de sistemas</a>
+    <a href="/">Ir al catálogo de ejemplos por rubro</a>
   </p>
 </body>
 </html>
@@ -111,11 +108,16 @@ function preparePublishLayout() {
     fs.renameSync(from, to);
   }
 
-  // Assets the CV references with absolute root paths stay at OUT root (from public/).
-  // Favicons referenced from /cv/index.html with root-absolute hrefs also stay at root.
+  const hubSource = path.join(OUT, 'demos', 'index.html');
+  if (!fs.existsSync(hubSource)) {
+    console.error('Hub source missing:', hubSource);
+    process.exit(1);
+  }
 
-  fs.writeFileSync(path.join(OUT, 'index.html'), REDIRECT_HTML, 'utf8');
-  console.log('Pages layout: / → /demos/ redirect; Angular CV at /cv/; hub at /demos/.');
+  // Promote catalog to site root; keep vertical demos under /demos/<rubro>/.
+  fs.copyFileSync(hubSource, path.join(OUT, 'index.html'));
+  fs.writeFileSync(path.join(OUT, 'demos', 'index.html'), DEMOS_REDIRECT_HTML, 'utf8');
+  console.log('Pages layout: / = hub catalog; /demos/ → /; Angular CV at /cv/; vertical demos at /demos/<rubro>/.');
 }
 
 const args = remapBaseHref(process.argv.slice(2));

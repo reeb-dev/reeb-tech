@@ -6,14 +6,9 @@
     <priority>1.0</priority>
   </url>
   <url>
-    <loc>https://webconreeb.com/demos/</loc>
-    <changefreq>weekly</changefreq>
-    <priority>1.0</priority>
-  </url>
-  <url>
     <loc>https://webconreeb.com/cv/</loc>
     <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
+    <priority>0.5</priority>
   </url>
   <url>
     <loc>https://webconreeb.com/demos/restaurante/</loc>
@@ -122,16 +117,6 @@
   </url>
   <url>
     <loc>https://webconreeb.com/docs/</loc>
-    <changefreq>monthly</changefreq>
-    <priority>0.4</priority>
-  </url>
-  <url>
-    <loc>https://webconreeb.com/docs/guia-inicio.html</loc>
-    <changefreq>monthly</changefreq>
-    <priority>0.3</priority>
-  </url>
-  <url>
-    <loc>https://webconreeb.com/docs/guia-principiantes.html</loc>
     <changefreq>monthly</changefreq>
     <priority>0.3</priority>
   </url>
