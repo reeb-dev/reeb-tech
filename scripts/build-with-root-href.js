@@ -33,7 +33,9 @@ const PUBLIC_TOP_FILES = new Set([
   'RR.png',
   'apple-touch-icon.png',
   'apple-touch-icon-hub.png',
+  'apple-touch-icon-cv.png',
   'favicon.ico',
+  'favicon.svg',
   'favicon-16.png',
   'favicon-32.png',
   'favicon-hub.svg',
@@ -42,18 +44,21 @@ const PUBLIC_TOP_FILES = new Set([
   'unnamed.webp',
 ]);
 
+const HUB_FAVICON_VERSION = 'hub33';
+
 const DEMOS_REDIRECT_HTML = `<!DOCTYPE html>
 <html lang="es">
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Ejemplos por rubro | Web con REEB</title>
+  <title>Web con REEB · Ejemplos por rubro</title>
   <meta name="description" content="El catálogo de páginas web por rubro está en la raíz del sitio.">
   <link rel="canonical" href="https://webconreeb.com/">
   <meta property="og:url" content="https://webconreeb.com/">
-  <link rel="icon" href="/favicon-hub.svg" type="image/svg+xml">
-  <link rel="icon" href="/favicon-32.png" type="image/png" sizes="32x32">
-  <link rel="shortcut icon" href="/favicon.ico">
+  <link rel="icon" href="/favicon.svg?v=${HUB_FAVICON_VERSION}" type="image/svg+xml">
+  <link rel="icon" href="/favicon-32.png?v=${HUB_FAVICON_VERSION}" type="image/png" sizes="32x32">
+  <link rel="shortcut icon" href="/favicon.ico?v=${HUB_FAVICON_VERSION}">
+  <link rel="apple-touch-icon" href="/apple-touch-icon.png?v=${HUB_FAVICON_VERSION}" sizes="180x180">
   <meta http-equiv="refresh" content="0; url=/">
   <script>location.replace('/' + (location.hash || '') + (location.search || ''));</script>
 </head>
@@ -64,6 +69,17 @@ const DEMOS_REDIRECT_HTML = `<!DOCTYPE html>
 </body>
 </html>
 `;
+
+/** Hub R oro/ember icons that must win at site root (never Angular defaults). */
+const HUB_ROOT_ICONS = [
+  'favicon.ico',
+  'favicon.svg',
+  'favicon-hub.svg',
+  'favicon-16.png',
+  'favicon-32.png',
+  'apple-touch-icon.png',
+  'apple-touch-icon-hub.png',
+];
 
 function remapBaseHref(args) {
   const out = [...args];
@@ -117,7 +133,42 @@ function preparePublishLayout() {
   // Promote catalog to site root; keep vertical demos under /demos/<rubro>/.
   fs.copyFileSync(hubSource, path.join(OUT, 'index.html'));
   fs.writeFileSync(path.join(OUT, 'demos', 'index.html'), DEMOS_REDIRECT_HTML, 'utf8');
-  console.log('Pages layout: / = hub catalog; /demos/ → /; Angular CV at /cv/; vertical demos at /demos/<rubro>/.');
+
+  // After ng build + CV move: force hub favicons at publish root (and demos mirror).
+  // Prevents any Angular/public race from leaving a stale /favicon.ico at /.
+  const publicDir = path.join(ROOT, 'public');
+  for (const name of HUB_ROOT_ICONS) {
+    const src = path.join(publicDir, name);
+    if (!fs.existsSync(src)) continue;
+    fs.copyFileSync(src, path.join(OUT, name));
+  }
+  // Root apple-touch must be hub (oro/ember), not CV parchment.
+  const hubTouch = path.join(publicDir, 'apple-touch-icon-hub.png');
+  if (fs.existsSync(hubTouch)) {
+    fs.copyFileSync(hubTouch, path.join(OUT, 'apple-touch-icon.png'));
+  }
+  const demosDir = path.join(OUT, 'demos');
+  if (fs.existsSync(demosDir)) {
+    for (const name of ['favicon.ico', 'favicon.svg', 'favicon-16.png', 'favicon-32.png', 'favicon.png', 'apple-touch-icon.png']) {
+      const srcName = name === 'favicon.png' ? 'favicon-32.png' : name === 'apple-touch-icon.png' ? 'apple-touch-icon-hub.png' : name;
+      const src = path.join(publicDir, srcName === 'apple-touch-icon-hub.png' ? 'apple-touch-icon-hub.png' : srcName);
+      const alt = path.join(publicDir, name);
+      const from = fs.existsSync(src) ? src : alt;
+      if (fs.existsSync(from)) {
+        fs.copyFileSync(from, path.join(demosDir, name));
+      }
+    }
+  }
+
+  // Drop any accidental Angular favicon left under /cv/ so it cannot be confused with root.
+  for (const name of ['favicon.ico', 'favicon.svg', 'favicon-16.png', 'favicon-32.png', 'favicon-hub.svg']) {
+    const cvIcon = path.join(CV_DIR, name);
+    if (fs.existsSync(cvIcon)) {
+      fs.rmSync(cvIcon, { force: true });
+    }
+  }
+
+  console.log('Pages layout: / = hub catalog; /demos/ → /; Angular CV at /cv/; hub favicons forced at root.');
 }
 
 const args = remapBaseHref(process.argv.slice(2));
