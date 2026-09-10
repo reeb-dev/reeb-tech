@@ -200,18 +200,18 @@ export interface Dictionary {
 const companiesMeta = {
   bp4: {
     name: 'BP4 · Fiserv',
-    logo: 'bp4.png',
-    logoExtra: 'fiserv.svg',
+    logo: '/bp4.png',
+    logoExtra: '/fiserv.svg',
     initials: 'BP4',
     current: true as const,
   },
   indra: {
     name: 'Indra',
-    logo: 'screenshot-2025-02-05-130401.png',
+    logo: '/screenshot-2025-02-05-130401.png',
     initials: 'IN',
     logoWell: 'indra' as const,
   },
-  siskit: { name: 'Siskit', logo: 'siskit.png', initials: 'SK', logoWell: 'siskit' as const },
+  siskit: { name: 'Siskit', logo: '/siskit.png', initials: 'SK', logoWell: 'siskit' as const },
 };
 
 export const translations: Record<Lang, Dictionary> = {
@@ -350,22 +350,22 @@ export const translations: Record<Lang, Dictionary> = {
       categories: [
         {
           name: 'Mobile',
-          icon: 'tech/android.svg',
+          icon: '/tech/android.svg',
           technologies: ['Android nativo', 'Kotlin', 'Java', 'Jetpack Compose', 'MVVM / MVP', 'Material Design'],
         },
         {
           name: 'Frontend',
-          icon: 'tech/angular.svg',
+          icon: '/tech/angular.svg',
           technologies: ['Angular', 'TypeScript', 'JavaScript', 'RxJS', 'Tailwind CSS', 'Ionic'],
         },
         {
           name: 'Backend',
-          icon: 'tech/springboot.svg',
+          icon: '/tech/springboot.svg',
           technologies: ['Java', 'Spring Boot', 'APIs REST', 'JWT', 'Node.js', 'Laravel', 'PostgreSQL', 'Oracle'],
         },
         {
           name: 'Calidad e infra',
-          icon: 'tech/docker.svg',
+          icon: '/tech/docker.svg',
           technologies: ['JUnit', 'Mockito', 'Karma / Jasmine', 'Git', 'Docker', 'CI/CD', 'Scrum'],
         },
       ],
@@ -431,11 +431,11 @@ export const translations: Record<Lang, Dictionary> = {
       viewDemo: 'Ver demo',
       openPanel: 'Panel',
       viewCatalog: 'Ver el catálogo de ejemplos',
-      hubUrl: 'demos/',
+      hubUrl: '/demos/',
       port: 'Puerto',
       withArca: 'ARCA de ejemplo',
       pricesHubCta: 'Ver planes de referencia',
-      pricesHubHref: 'demos/#precios',
+      pricesHubHref: '/demos/#precios',
       sistemasTitle: 'Qué puede hacer una web, según su rubro',
       sistemasLead: 'Un kiosco de barrio, una inmobiliaria, un hospedaje en Sierra de la Ventana y un estudio jurídico no usan la misma web. Esta tabla no es una grilla de “todo incluido”: dice qué suele tener sentido en cada caso. Las demos son ejemplos. El trabajo es un desarrollo a medida, no un producto de suscripción.',
       sistemasTableTitle: 'Por función',
@@ -571,7 +571,7 @@ export const translations: Record<Lang, Dictionary> = {
         { name: 'Framehaus', blurb: 'Modelos de vivienda steel frame y consulta. Las obras en taller están en el panel. Una carga: web, Instagram o WhatsApp.' },
       ],
       sistemasHubCta: 'Ver la tabla en el catálogo',
-      sistemasHubHref: 'demos/#sistemas',
+      sistemasHubHref: '/demos/#sistemas',
       items: [
         {
           id: 'estudio',
@@ -1050,22 +1050,22 @@ export const translations: Record<Lang, Dictionary> = {
       categories: [
         {
           name: 'Mobile',
-          icon: 'tech/android.svg',
+          icon: '/tech/android.svg',
           technologies: ['Native Android', 'Kotlin', 'Java', 'Jetpack Compose', 'MVVM / MVP', 'Material Design'],
         },
         {
           name: 'Frontend',
-          icon: 'tech/angular.svg',
+          icon: '/tech/angular.svg',
           technologies: ['Angular', 'TypeScript', 'JavaScript', 'RxJS', 'Tailwind CSS', 'Ionic'],
         },
         {
           name: 'Backend',
-          icon: 'tech/springboot.svg',
+          icon: '/tech/springboot.svg',
           technologies: ['Java', 'Spring Boot', 'REST APIs', 'JWT', 'Node.js', 'Laravel', 'PostgreSQL', 'Oracle'],
         },
         {
           name: 'Quality & infra',
-          icon: 'tech/docker.svg',
+          icon: '/tech/docker.svg',
           technologies: ['JUnit', 'Mockito', 'Karma / Jasmine', 'Git', 'Docker', 'CI/CD', 'Scrum'],
         },
       ],
@@ -1131,11 +1131,11 @@ export const translations: Record<Lang, Dictionary> = {
       viewDemo: 'View demo',
       openPanel: 'Panel',
       viewCatalog: 'View the examples catalog',
-      hubUrl: 'demos/',
+      hubUrl: '/demos/',
       port: 'Port',
       withArca: 'Sample ARCA billing',
       pricesHubCta: 'See reference plans',
-      pricesHubHref: 'demos/#precios',
+      pricesHubHref: '/demos/#precios',
       sistemasTitle: 'What a website can do, by trade',
       sistemasLead: 'A neighborhood kiosk, a real-estate office, lodging in Sierra de la Ventana, and a law firm do not use the same website. This table is not an “everything included” grid: it states what usually makes sense in each case. The demos are examples. The work is custom development, not a subscription product.',
       sistemasTableTitle: 'By capability',
@@ -1271,7 +1271,7 @@ export const translations: Record<Lang, Dictionary> = {
         { name: 'Framehaus', blurb: 'Steel-frame housing models and an enquiry. Workshop jobs live in the panel. One load: website, Instagram, or WhatsApp.' },
       ],
       sistemasHubCta: 'See the table in the catalog',
-      sistemasHubHref: 'demos/#sistemas',
+      sistemasHubHref: '/demos/#sistemas',
       items: [
         {
           id: 'estudio',

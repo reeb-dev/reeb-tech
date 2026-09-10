@@ -5,8 +5,8 @@
     "ng": "ng",
     "start": "ng serve",
     "build": "node scripts/build-with-root-href.js",
-    "build:prod": "ng build --configuration production --base-href /",
-    "deploy": "ng build --configuration production --base-href / && npx angular-cli-ghpages --dir=dist/manuelreeb/browser",
+    "build:prod": "node scripts/build-with-root-href.js --configuration production",
+    "deploy": "node scripts/build-with-root-href.js --configuration production && npx angular-cli-ghpages --dir=dist/manuelreeb/browser",
     "watch": "ng build --watch --configuration development",
     "test": "ng test"
   },
