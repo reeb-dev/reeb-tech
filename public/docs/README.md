@@ -12,10 +12,10 @@ Si lo vas a **mandar por mail**, usá la nota corta: [LEEME-PARA-ENVIAR.md](LEEM
 
 En GitHub Pages (no el blob del repo):
 
-- Hub: https://reeb-dev.github.io/reeb-tech/docs/guia-inicio.html
-- Primera vez: https://reeb-dev.github.io/reeb-tech/docs/guia-principiantes.html
-- Fichas legacy / nuevo: https://reeb-dev.github.io/reeb-tech/docs/casos-practicos-legacy-y-nuevos.html
-- Manual: https://reeb-dev.github.io/reeb-tech/docs/guia-agentes-reglas-y-modelos.html
+- Hub: https://webconreeb.com/docs/guia-inicio.html
+- Primera vez: https://webconreeb.com/docs/guia-principiantes.html
+- Fichas legacy / nuevo: https://webconreeb.com/docs/casos-practicos-legacy-y-nuevos.html
+- Manual: https://webconreeb.com/docs/guia-agentes-reglas-y-modelos.html
 
 Los `.md` en Pages suelen bajarse o verse como texto crudo. Usá los HTML.
 

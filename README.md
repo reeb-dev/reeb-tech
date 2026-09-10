@@ -2,7 +2,7 @@
 
 Sitio de Manuel Reeb: Senior Software Engineer (Android · Java/Spring · Angular).
 
-Live: [reeb-dev.github.io/reeb-tech](https://reeb-dev.github.io/reeb-tech/)
+Live: [webconreeb.com](https://webconreeb.com/) (también redirige desde [reeb-dev.github.io/reeb-tech](https://reeb-dev.github.io/reeb-tech/) cuando el DNS está activo)
 
 Español e inglés: toggle **ES / EN** en el nav. Se guarda en `localStorage`; si el navegador está en inglés, arranca en EN.
 
@@ -13,7 +13,7 @@ Angular, TypeScript, Tailwind CSS. Deploy automático a GitHub Pages en cada pus
 ```bash
 npm install
 npm start          # http://localhost:4200
-npm run build -- --configuration production --base-href /reeb-tech/
+npm run build -- --configuration production --base-href /
 ```
 
 ## Contenido
