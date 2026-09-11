@@ -1443,21 +1443,21 @@ const DESTINOS = [
     grupo: "sitio",
     fijo: true,
     marca: "SP",
-    beneficio: "Su vitrina pública toma el catálogo de este panel. No hay aviso pago de portal.",
+    beneficio: "Su página pública toma el catálogo de este panel. No hay aviso pago de portal.",
     si: [
-      "Publicar y actualizar propiedades en su vitrina desde este panel.",
+      "Publicar y actualizar propiedades en su página pública desde este panel.",
       "Que el catálogo público refleje lo que edite en Cartera.",
       "Consultas y reacciones de ejemplo quedan en este navegador."
     ],
     no: [
       "No reemplaza portales pagos ni redes sociales.",
-      "Esta demo no tiene servidor: solo guarda en su navegador (localStorage).",
+      "Este ejemplo no tiene servidor: solo guarda en su navegador (localStorage).",
       "No sincroniza sola con Mercado Libre, Zonaprop u otros portales."
     ],
     costos: [
-      "En producción: dominio, hosting y mantenimiento de su sitio (fuera de esta demo).",
-      "Publicar en esta vitrina de ejemplo: sin cargo.",
-      "Esta demo no cobra ni conecta servicios reales."
+      "En producción: dominio, hosting y mantenimiento de su sitio (fuera de este ejemplo).",
+      "Publicar en esta página pública de ejemplo: sin cargo.",
+      "Este ejemplo no cobra ni conecta servicios reales."
     ]
   },
   {
@@ -1475,12 +1475,12 @@ const DESTINOS = [
     no: [
       "Sin abono, paquete o permisos el aviso no queda online.",
       "Hay atributos, ubicación y fotos obligatorios según la categoría.",
-      "Esta demo no llama a la API: solo marca el aviso en localStorage."
+      "Este ejemplo no llama a la API: solo marca el aviso en localStorage."
     ],
     costos: [
       "Se cobra un paquete de publicación (cupos de avisos) y, aparte, paquetes de destaque opcionales.",
       "Los montos aparecen al contratar en su cuenta de inmobiliaria; no hay lista pública estable en ARS/USD para citar aquí — consultar precios vigentes.",
-      "Esta demo no cobra ni llama a la API de Mercado Libre."
+      "Este ejemplo no cobra ni llama a la API de Mercado Libre."
     ]
   },
   {
@@ -1498,12 +1498,12 @@ const DESTINOS = [
     no: [
       "Hace falta ser partner/integrador homologado; no se conecta “solo”.",
       "El abono del portal se gestiona aparte con Zonaprop/Navent.",
-      "Esta demo no llama a Navent: solo marca en localStorage."
+      "Este ejemplo no llama a Navent: solo marca en localStorage."
     ],
     costos: [
       "Planes de avisos (Simple, Destacado, Súper Destacado), packs y, en zonas de alta demanda, Zona Demand.",
       "Precios por “Comprar planes” o ejecutivo comercial: cotización comercial / según plan.",
-      "Esta demo no cobra ni conecta con Zonaprop/Navent."
+      "Este ejemplo no cobra ni conecta con Zonaprop/Navent."
     ]
   },
   {
@@ -1521,12 +1521,12 @@ const DESTINOS = [
     no: [
       "No hay API pública abierta para conectar desde cualquier sistema.",
       "Sin abono o puntos el aviso no se posiciona como usted espera.",
-      "Esta demo solo marca en este navegador; no publica en Argenprop."
+      "Este ejemplo solo marca en este navegador; no publica en Argenprop."
     ],
     costos: [
       "Abono mensual con puntos: usted reparte puntos entre avisos para posicionarlos.",
       "En su página de planes para inmobiliarias publican tiers en ARS + IVA (referencia pública, puede cambiar) — consultar precios vigentes.",
-      "Esta demo no cobra ni publica en Argenprop."
+      "Este ejemplo no cobra ni publica en Argenprop."
     ]
   },
   {
@@ -1543,12 +1543,12 @@ const DESTINOS = [
     no: [
       "No hay API pública documentada de avisos para terceros.",
       "Conectar acá no envía nada a Properati.",
-      "Esta demo solo marca local; no hay publicación real."
+      "Este ejemplo solo marca local; no hay publicación real."
     ],
     costos: [
       "Suele facturarse por suscripción Proppit (LIFULL Connect): un plan puede cubrir Properati y otros portales de la red.",
       "Cotización comercial / según plan en Proppit; no hay lista pública estable de montos.",
-      "Esta demo no cobra ni conecta con Properati."
+      "Este ejemplo no cobra ni conecta con Properati."
     ]
   },
   {
@@ -1564,13 +1564,13 @@ const DESTINOS = [
     ],
     no: [
       "No hay API pública de avisos para terceros.",
-      "Conectar en esta demo no publica afuera.",
+      "Conectar en este ejemplo no publica afuera.",
       "Solo queda una marca en localStorage."
     ],
     costos: [
       "Packs o abonos para inmobiliarias; a menudo en la red Clarín/Argenprop (a veces en el mismo acuerdo comercial).",
       "Cotización comercial / según plan — consultar al portal o a su comercial.",
-      "Esta demo no cobra ni publica afuera."
+      "Este ejemplo no cobra ni publica afuera."
     ]
   },
   {
@@ -1587,12 +1587,12 @@ const DESTINOS = [
     no: [
       "No hay API pública de avisos para conectar desde cualquier sistema.",
       "El ritmo de publicación lo define el portal (p. ej. lectura de feed).",
-      "Esta demo solo usa localStorage; no envía avisos."
+      "Este ejemplo solo usa localStorage; no envía avisos."
     ],
     costos: [
       "Publicación profesional vía plan Proppit / LIFULL (red que incluye Properati e Icasas, entre otros).",
       "Cotización comercial / según plan.",
-      "Esta demo no cobra ni envía avisos."
+      "Este ejemplo no cobra ni envía avisos."
     ]
   },
   {
@@ -1610,12 +1610,12 @@ const DESTINOS = [
     no: [
       "No hay API de avisos de propiedades como en Mercado Libre o Zonaprop.",
       "La API exige verificación/aprobación de Google; sin eso no hay cuota útil.",
-      "Esta demo arma texto de ejemplo; usted lo carga a mano en Google."
+      "Este ejemplo arma texto de muestra; usted lo carga a mano en Google."
     ],
     costos: [
       "Ficha de negocio y API de Business Profile: sin cargo de uso documentado (con aprobación de Google).",
       "Publicidad en Google Ads es aparte y se paga por campaña — consultar tarifas vigentes.",
-      "Esta demo no cobra ni conecta con Google."
+      "Este ejemplo no cobra ni conecta con Google."
     ]
   },
   {
@@ -1633,12 +1633,12 @@ const DESTINOS = [
     no: [
       "No es un portal ni un listado de inmuebles.",
       "Hay cupo diario de publicaciones por API; hace falta app y permisos.",
-      "No aplica a cuentas personales. Esta demo solo arma el texto para pegar a mano."
+      "No aplica a cuentas personales. Este ejemplo solo arma el texto para pegar a mano."
     ],
     costos: [
       "Publicar en orgánico con Graph API: Meta no cobra por llamada de la API.",
       "Anuncios pagos (Meta Ads): presupuesto aparte; consultar tarifas vigentes de anuncios.",
-      "Esta demo no cobra ni publica sola en Instagram."
+      "Este ejemplo no cobra ni publica sola en Instagram."
     ]
   },
   {
@@ -1655,12 +1655,12 @@ const DESTINOS = [
     no: [
       "No publica avisos de vivienda en Facebook Marketplace.",
       "No reemplaza un portal inmobiliario.",
-      "Esta demo solo guarda texto local; no publica sola en Facebook."
+      "Este ejemplo solo guarda texto local; no publica sola en Facebook."
     ],
     costos: [
       "Publicar en la Página (orgánico) con Pages API: sin cargo por llamada de Meta.",
       "Anuncios de la Página: presupuesto de Meta Ads aparte — cotización según campaña.",
-      "Esta demo no cobra ni publica sola en Facebook."
+      "Este ejemplo no cobra ni publica sola en Facebook."
     ]
   },
   {
@@ -1677,12 +1677,12 @@ const DESTINOS = [
     no: [
       "No hay API pública abierta para avisos de vivienda.",
       "Tener Página no alcanza para publicar housing por API.",
-      "Esta demo solo marca el aviso en este navegador."
+      "Este ejemplo solo marca el aviso en este navegador."
     ],
     costos: [
       "Avisos manuales de particulares suelen ir sin abono de portal; el alcance es el de Marketplace.",
       "API o partners de vivienda: acuerdo comercial con Meta; cotización comercial / según programa.",
-      "Esta demo no cobra ni conecta con Marketplace."
+      "Este ejemplo no cobra ni conecta con Marketplace."
     ]
   },
   {
@@ -1700,12 +1700,12 @@ const DESTINOS = [
     no: [
       "No publica en Mercado Libre, Zonaprop ni otros portales.",
       "El catálogo de WhatsApp no es un listado inmobiliario estándar.",
-      "Esta demo arma el mensaje; no lo envía a un servidor."
+      "Este ejemplo arma el mensaje; no lo envía a un servidor."
     ],
     costos: [
       "App WhatsApp Business (chat a mano): sin tarifa de API de Meta.",
       "Cloud API / plataforma Business: Meta cobra por mensaje entregado según categoría y país (p. ej. marketing vs utilidad); consultar tarifa vigente — a menudo en ARS.",
-      "Esta demo arma el texto; no envía mensajes ni cobra."
+      "Este ejemplo arma el texto; no envía mensajes ni cobra."
     ]
   },
   {
@@ -1723,12 +1723,12 @@ const DESTINOS = [
     no: [
       "Sin auditoría el contenido suele quedar privado y con cupos estrictos.",
       "No hay API de avisos inmobiliarios.",
-      "Esta demo arma texto para pegar; no sube video a TikTok."
+      "Este ejemplo arma texto para pegar; no sube video a TikTok."
     ],
     costos: [
       "Content Posting API: sin cargo por uso de la API; anuncios (TikTok Ads) se pagan aparte.",
       "Si usa publicidad: cotizar gasto publicitario según campaña — consultar tarifas vigentes.",
-      "Esta demo no sube video ni cobra."
+      "Este ejemplo no sube video ni cobra."
     ]
   }
 ];
@@ -1774,9 +1774,9 @@ function defaultCuentas() {
   const out = {};
   DESTINOS.forEach((d) => {
     if (d.fijo) {
-      out[d.id] = { connected: true, lastAction: "La vitrina toma el catálogo.", lastAt: "siempre" };
+      out[d.id] = { connected: true, lastAction: "La página pública toma el catálogo.", lastAt: "siempre" };
     } else if (d.id === "whatsapp") {
-      out[d.id] = { connected: true, lastAction: "Cuenta de muestra conectada.", lastAt: "demo" };
+      out[d.id] = { connected: true, lastAction: "Cuenta de muestra conectada.", lastAt: "ejemplo" };
     } else {
       out[d.id] = { connected: false, lastAction: "Sin conectar", lastAt: "" };
     }
@@ -1972,7 +1972,7 @@ function migrateVitrinaEjemplos(items) {
       p.precioAnterior = precioAnteriorEjemplo(p.precio);
       p.history = [{
         when: "hoy",
-        text: "Precio de ejemplo bajado. La vitrina muestra “Bajó de precio”. No se inventó un descuento grande."
+        text: "Precio de ejemplo bajado. La página pública muestra “Bajó de precio”. No se inventó un descuento grande."
       }, ...(p.history || [])];
     });
     state.baja = true;

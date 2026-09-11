@@ -29,7 +29,7 @@ function persistCartera() {
     save(items);
     return true;
   } catch {
-    showToast("Las fotos ocupan demasiado para esta demo. Quite alguna o use una más chica.");
+    showToast("Las fotos ocupan demasiado para este ejemplo. Quite alguna o use una más chica.");
     return false;
   }
 }
@@ -128,7 +128,7 @@ function aplicarFotos(item, next, persist) {
   const prevHistory = item.history;
   item.imagenes = next.length ? next : (persist === false ? [] : [fotoPorTipo(item.tipo)]);
   if (persist !== false) {
-    item.history = [{ when: "hoy", text: "Fotos de la vitrina actualizadas." }, ...(item.history || [])];
+    item.history = [{ when: "hoy", text: "Fotos de la página pública actualizadas." }, ...(item.history || [])];
     if (!persistCartera()) {
       item.imagenes = prev;
       item.history = prevHistory;
@@ -146,7 +146,7 @@ function wireFotoEditor(root, item, persist) {
     if (!extra.length) return;
     const next = [...(item.imagenes || []).filter(Boolean), ...extra].slice(0, MAX_FOTOS);
     if (aplicarFotos(item, next, persist)) {
-      showToast(persist === false ? "Fotos listas. Guarde para que salgan en la vitrina." : "Fotos actualizadas en la vitrina");
+      showToast(persist === false ? "Fotos listas. Guarde para que salgan en la página pública." : "Fotos actualizadas en la página pública");
       render();
     }
   });
@@ -166,7 +166,7 @@ function wireFotoEditor(root, item, persist) {
       const list = (item.imagenes || []).filter(Boolean).slice();
       const picked = list.splice(Number(btn.dataset.portada), 1)[0];
       if (aplicarFotos(item, [picked, ...list], persist)) {
-        showToast("Esa foto es la portada de la vitrina");
+        showToast("Esa foto es la portada de la página pública");
         render();
       }
     });
@@ -218,14 +218,14 @@ function denyCarteraMsg(accion) {
       : "La agenda no carga propiedades. Eso lo hace un agente, comercial o el titular.";
   }
   if (rol === "marketing") {
-    return "Marketing no carga ni borra avisos. Use Difusión o el gestor de la vitrina.";
+    return "Marketing no carga ni borra avisos. Use Difusión o el gestor de la página pública.";
   }
   if (rol === "administracion") {
     return accion === "eliminar"
       ? "Administración no elimina fichas. Puede editar la cartera y emitir ARCA de ejemplo."
       : "Administración puede editar fichas existentes y emitir ARCA, pero no da de alta avisos nuevos.";
   }
-  return "Su rol no permite esa acción en esta demo.";
+  return "Su rol no permite esa acción en este ejemplo.";
 }
 
 function blankItem() {
@@ -331,7 +331,7 @@ function htmlDestinosChips(item) {
 }
 
 function estadoDestino(dest, item) {
-  if (dest.fijo) return { label: "En vitrina", on: true };
+  if (dest.fijo) return { label: "En página pública", on: true };
   if (!destinoConectado(dest.id)) return { label: "No conectado", on: false };
   if (portalesDe(item)[dest.id]) {
     const label = dest.id === "ml" ? "En ML" : "En " + dest.nombre;
@@ -346,9 +346,9 @@ function htmlDestinoFila(dest, item, readonly) {
   const lista = destinoConectado(dest.id);
   const disabled = dest.fijo || !lista || readonly;
   const hint = dest.fijo
-    ? "Siempre en la vitrina"
+    ? "Siempre en la página pública"
     : lista
-      ? (dest.grupo === "red" ? "Texto y enlace listos. No se publica solo." : "Listo para marcar (demo)")
+      ? (dest.grupo === "red" ? "Texto y enlace listos. No se publica solo." : "Listo para marcar (ejemplo)")
       : "Conecte la cuenta en Difusión";
   return `
     <label class="destino-row ${!lista && !dest.fijo ? "is-off" : ""}">
@@ -368,7 +368,7 @@ function htmlPublishBlock(item, isCreate, readonly) {
     return `
       <section class="nh-form-section difusion-ficha" id="bloque-publicar">
         <h3>Publicación</h3>
-        <p class="lead-mini">Guarde la propiedad primero. El sitio propio toma la ficha apenas exista en la cartera. Después podrá marcar portales y redes. Demo: no se envía nada afuera.</p>
+        <p class="lead-mini">Guarde la propiedad primero. El sitio propio toma la ficha apenas exista en la cartera. Después podrá marcar portales y redes. Ejemplo: no se envía nada afuera.</p>
       </section>`;
   }
   const sitiosOn = destinosPorGrupo("sitio").filter((d) => d.fijo || destinoConectado(d.id)).length;
@@ -376,7 +376,7 @@ function htmlPublishBlock(item, isCreate, readonly) {
   return `
     <section class="nh-form-section difusion-ficha" id="bloque-publicar">
       <h3>Publicación en otras páginas y redes</h3>
-      <p class="lead-mini">Marque destinos ya conectados en Difusión. Sitio propio: siempre en la vitrina. Hoy hay ${sitiosOn} sitios/portales y ${redesOn} redes listas. Demo: no se envía nada afuera.</p>
+      <p class="lead-mini">Marque destinos ya conectados en Difusión. Sitio propio: siempre en la página pública. Hoy hay ${sitiosOn} sitios/portales y ${redesOn} redes listas. Ejemplo: no se envía nada afuera.</p>
       <div class="publish-grid">
         <fieldset class="publish-set">
           <legend>Sitios y portales</legend>
@@ -408,7 +408,7 @@ function publicarAviso(item, destIds) {
   }
   showPanelLoading(
     "Publicando el aviso…",
-    "Marcando destinos en esta demo. No se envía nada afuera.",
+    "Marcando destinos en este ejemplo. No se envía nada afuera.",
     () => {
       const nombres = [];
       destinos.forEach((dest) => {
@@ -416,15 +416,15 @@ function publicarAviso(item, destIds) {
         if (dest.fijo) return;
         item.portales = { ...portalesDe(item), [dest.id]: true };
         cola = { ...cola, [colaClave(item.id, dest.id)]: { estado: "publicado", when: ahoraDemo() } };
-        setCuentaAccion(dest.id, true, "Aviso " + item.codigo + " publicado (demo).");
+        setCuentaAccion(dest.id, true, "Aviso " + item.codigo + " publicado (ejemplo).");
       });
       item.history = [{
         when: "hoy",
-        text: "Marcado para " + nombres.join(", ") + " (demo). No se envió nada afuera."
+        text: "Marcado para " + nombres.join(", ") + " (ejemplo). No se envió nada afuera."
       }, ...(item.history || [])];
       saveCola(cola);
       persistCartera();
-      showToast("Marcado (demo) en: " + nombres.join(", ") + ". No se envió nada afuera.");
+      showToast("Marcado (ejemplo) en: " + nombres.join(", ") + ". No se envió nada afuera.");
       render();
       if (currentView === "difusion") renderDifusion();
     },
@@ -517,7 +517,7 @@ function guardarAlta(item) {
   }
   editorDraft = null;
   carteraMode = "edit";
-  showToast("Propiedad agregada. Ya sale en la vitrina.");
+  showToast("Propiedad agregada. Ya sale en la página pública.");
   render();
 }
 
@@ -580,7 +580,7 @@ function htmlCuenta(dest) {
     : "Sin movimientos.";
   const editable = canEditDifusion();
   const accion = dest.fijo
-    ? `<span class="cuenta-estado on">Siempre en la vitrina</span>`
+    ? `<span class="cuenta-estado on">Siempre en la página pública</span>`
     : `<button type="button" class="cuenta-btn ${on ? "is-ghost" : "is-primary"}" data-cuenta="${esc(dest.id)}" ${editable ? "" : "disabled"}>${on ? "Desconectar" : "Conectar"}</button>`;
   const si = htmlCuentaCapList("Qué sí", dest.si);
   const no = htmlCuentaCapList("Qué no", dest.no, "is-no");
@@ -596,7 +596,7 @@ function htmlCuenta(dest) {
         <span class="cuenta-badge ${on ? "is-on" : ""}">${on ? "Conectado" : "Libre"}</span>
       </header>
       <p class="cuenta-beneficio">${esc(dest.beneficio)}</p>
-      <div class="cuenta-caps" aria-label="Alcance, límites y costos frente a esta demo">${si}${no}${costos}</div>
+      <div class="cuenta-caps" aria-label="Alcance, límites y costos frente a este ejemplo">${si}${no}${costos}</div>
       <p class="cuenta-meta">${on
         ? (publicados + " aviso" + (publicados === 1 ? "" : "s") + " en cartera")
         : "Sin avisos marcados"}</p>
@@ -650,12 +650,12 @@ function setColaEstado(itemId, destId, estado) {
     history: [{
       when: "hoy",
       text: nextOn
-        ? dest.nombre + " marcado como publicado (demo). No se envió nada afuera."
-        : dest.nombre + " quedó en " + colaEstadoLabel(estado) + " (demo)."
+        ? dest.nombre + " marcado como publicado (ejemplo). No se envió nada afuera."
+        : dest.nombre + " quedó en " + colaEstadoLabel(estado) + " (ejemplo)."
     }, ...(row.history || [])]
   });
   save(items);
-  setCuentaAccion(destId, true, "Aviso " + item.codigo + ": " + colaEstadoLabel(estado).toLowerCase() + " (demo).");
+  setCuentaAccion(destId, true, "Aviso " + item.codigo + ": " + colaEstadoLabel(estado).toLowerCase() + " (ejemplo).");
   showToast("Cola actualizada. Nada se publicó afuera.");
   renderDifusion();
   if (currentView === "cartera") render();
@@ -694,7 +694,7 @@ function agregarACola(itemId, destId) {
   }
   cola = { ...cola, [key]: { estado: "listo", when: ahoraDemo() } };
   saveCola(cola);
-  setCuentaAccion(destId, true, "Aviso " + item.codigo + " agregado a la cola (demo).");
+  setCuentaAccion(destId, true, "Aviso " + item.codigo + " agregado a la cola (ejemplo).");
   showToast("Aviso en cola como listo. No se envió nada afuera.");
   renderDifusion();
 }
@@ -703,7 +703,7 @@ function conectarRedesMuestra() {
   if (!canEditDifusion()) return;
   ["instagram", "facebook", "fbmarket", "whatsapp", "tiktok"].forEach((id) => {
     if (!DESTINOS.some((d) => d.id === id)) return;
-    setCuentaAccion(id, true, "Conectada de muestra (demo). No se envió nada afuera.");
+    setCuentaAccion(id, true, "Conectada de muestra (ejemplo). No se envió nada afuera.");
   });
   showToast("Redes de muestra conectadas. Puede marcar avisos en Instagram, Facebook y WhatsApp.");
   renderDifusion();
@@ -718,7 +718,7 @@ function publicarListosCola() {
   }
   showPanelLoading(
     "Publicando la cola…",
-    "Marcando " + listos.length + " aviso" + (listos.length === 1 ? "" : "s") + " como publicados (demo).",
+    "Marcando " + listos.length + " aviso" + (listos.length === 1 ? "" : "s") + " como publicados (ejemplo).",
     () => {
       listos.forEach((fila) => {
         cola = {
@@ -730,10 +730,10 @@ function publicarListosCola() {
           portales: { ...portalesDe(row), [fila.dest.id]: true },
           history: [{
             when: "hoy",
-            text: fila.dest.nombre + " marcado como publicado desde la cola (demo)."
+            text: fila.dest.nombre + " marcado como publicado desde la cola (ejemplo)."
           }, ...(row.history || [])]
         });
-        setCuentaAccion(fila.dest.id, true, "Cola: " + fila.item.codigo + " publicado (demo).");
+        setCuentaAccion(fila.dest.id, true, "Cola: " + fila.item.codigo + " publicado (ejemplo).");
       });
       saveCola(cola);
       save(items);
@@ -776,10 +776,10 @@ function htmlDifusionResumen(editable) {
           <p class="difusion-paso">Resumen</p>
           <h2>Estado de la difusión</h2>
         </div>
-        <p class="difusion-aviso-demo">API real ≠ esta demo. Acá no se llama a portales ni redes: solo marcas en su navegador (localStorage).</p>
+        <p class="difusion-aviso-demo">API real ≠ este ejemplo. Acá no se llama a portales ni redes: solo marcas en su navegador (localStorage).</p>
       </header>
       <div class="difusion-resumen-grid">
-        <article><span>Vitrina</span><strong>${items.length}</strong><small>avisos</small></article>
+        <article><span>Página pública</span><strong>${items.length}</strong><small>avisos</small></article>
         <article><span>Portales</span><strong>${sitiosOn}</strong><small>de ${sitios.length}</small></article>
         <article><span>Redes</span><strong>${redesOn}</strong><small>de ${redes.length}</small></article>
         <article><span>Cola</span><strong>${listos}</strong><small>${publicados} publicados</small></article>
@@ -821,7 +821,7 @@ function htmlDifusionPublicar(editable) {
       <header class="difusion-grupo-head">
         <div>
           <p class="difusion-paso">3. Publicar un aviso</p>
-          <p class="difusion-grupo-lead">Elija la ficha y marque destinos conectados. El sitio propio ya está en la vitrina.</p>
+          <p class="difusion-grupo-lead">Elija la ficha y marque destinos conectados. El sitio propio ya está en la página pública.</p>
         </div>
       </header>
       <form class="difusion-publicar-form form-shell" id="difusion-publicar-form">
@@ -869,7 +869,7 @@ function renderDifusion() {
   const shareText = shareItem ? textoRed(shareItem) : "";
   host.innerHTML = `
     ${htmlDifusionResumen(editable)}
-    ${htmlGrupoCuentas("sitio", "Sitios y portales", "Vitrina y portales de Argentina. Cada tarjeta aclara API, feed, CRM o carga a mano. Conectar solo marca la cuenta aquí.", "1")}
+    ${htmlGrupoCuentas("sitio", "Sitios y portales", "Página pública y portales de Argentina. Cada tarjeta aclara API, feed, CRM o carga a mano. Conectar solo marca la cuenta aquí.", "1")}
     ${htmlGrupoCuentas("red", "Redes sociales", "Instagram, Facebook, Marketplace, WhatsApp y TikTok. En producto real hay APIs de contenido o partners; acá el texto se copia a mano.", "2")}
     ${htmlDifusionPublicar(editable)}
     <section class="difusion-panel" id="difusion-cola">
@@ -968,7 +968,7 @@ function renderDifusion() {
       setCuentaAccion(
         id,
         next,
-        next ? "Cuenta conectada (demo). No se envió nada afuera." : "Cuenta desconectada. Los avisos de este destino se apagaron."
+        next ? "Cuenta conectada (ejemplo). No se envió nada afuera." : "Cuenta desconectada. Los avisos de este destino se apagaron."
       );
       if (!next) {
         items = items.map((item) => ({
@@ -983,7 +983,7 @@ function renderDifusion() {
         cola = nextCola;
         saveCola(cola);
       }
-      showToast(next ? dest.nombre + " conectada (demo)" : dest.nombre + " desconectada");
+      showToast(next ? dest.nombre + " conectada (ejemplo)" : dest.nombre + " desconectada");
       renderDifusion();
     });
   });
@@ -1161,7 +1161,7 @@ function paintCarteraEditor() {
   const precioStr = item.operacion === "venta" ? money(item.precio, true) : money(item.precio) + " /mes";
   const readonlyHint = formReadonly
     ? (session?.rol === "marketing"
-      ? `<p class="editor-readonly">Marketing no edita la ficha. Puede marcar destinos en Difusión y textos de la vitrina.</p>`
+      ? `<p class="editor-readonly">Marketing no edita la ficha. Puede marcar destinos en Difusión y textos de la página pública.</p>`
       : session?.rol === "agenda"
         ? `<p class="editor-readonly">La agenda puede ver la ficha. Un agente, comercial o el titular la edita o la publica.</p>`
         : `<p class="editor-readonly">Su rol puede ver esta ficha en solo lectura.</p>`)
@@ -1172,7 +1172,7 @@ function paintCarteraEditor() {
       <div>
         <p class="eyebrow">${isCreate ? "Alta en cartera" : esc(opLabel(item.operacion)) + " · " + esc(tipoLabel(item.tipo))}</p>
         <h2>${isCreate ? "Nueva propiedad" : esc(item.titulo || "Ficha")}</h2>
-        <p>${isCreate ? "Complete la ficha. Al guardar, sale en la vitrina de este navegador." : esc(item.direccion || "Sin dirección") + " · " + precioStr}</p>
+        <p>${isCreate ? "Complete la ficha. Al guardar, sale en la página pública de este navegador." : esc(item.direccion || "Sin dirección") + " · " + precioStr}</p>
       </div>
       <button type="button" class="ghost" id="volver-listado">Volver al listado</button>
     </div>
@@ -1180,13 +1180,13 @@ function paintCarteraEditor() {
     ${htmlGaleria(fotos, formReadonly)}
     ${isCreate ? "" : `
     <div class="metric-box">
-      <div><span>Visitas en la web</span><strong>${Number(item.vistas || 0)}</strong><small>Aperturas de esta ficha en la vitrina. Solo se ven en el panel.</small></div>
+      <div><span>Visitas en la web</span><strong>${Number(item.vistas || 0)}</strong><small>Aperturas de esta ficha en la página pública. Solo se ven en el panel.</small></div>
       <div><span>Consultas</span><strong>${Number(item.consultas || 0)}</strong><small>WhatsApp o formulario de esta propiedad.</small></div>
-      <div><span>Les gusta</span><strong>${likesDe(item)}</strong><small>Marcas de me gusta en este navegador. Demo: no hay servidor ni recuento de personas reales.</small></div>
+      <div><span>Les gusta</span><strong>${likesDe(item)}</strong><small>Marcas de me gusta en este navegador. Ejemplo: no hay servidor ni recuento de personas reales.</small></div>
       <div><span>Visitas presenciales</span><strong>${visitasPresencialesDe(item)}</strong><small>Agenda cargada en esta ficha.</small></div>
       <div><span>Interacciones</span><strong>${interaccionesDe(item)}</strong><small>Consultas + les gusta + visitas presenciales. No hay tráfico inventado.</small></div>
     </div>
-    ${item.bajoPrecio ? `<p class="editor-precio-nota">Este aviso muestra “Bajó de precio” en la vitrina${item.precioAnterior ? " (antes " + esc(item.operacion === "venta" ? money(item.precioAnterior, true) : money(item.precioAnterior)) + ")" : ""}. Si sube el precio y guarda, se quita.</p>` : ""}`}
+    ${item.bajoPrecio ? `<p class="editor-precio-nota">Este aviso muestra “Bajó de precio” en la página pública${item.precioAnterior ? " (antes " + esc(item.operacion === "venta" ? money(item.precioAnterior, true) : money(item.precioAnterior)) + ")" : ""}. Si sube el precio y guarda, se quita.</p>` : ""}`}
     <form id="edit" class="ficha-form" novalidate>
       <p class="nh-form-error" id="edit-error" role="alert"></p>
       <section class="nh-form-section">
@@ -1228,7 +1228,7 @@ function paintCarteraEditor() {
       </section>
       <section class="nh-form-section">
         <h3>Precios</h3>
-        <p class="lead-mini">La venta se muestra en dólares y el alquiler permanente en pesos. Si baja el precio al guardar, la vitrina muestra “Bajó de precio”.</p>
+        <p class="lead-mini">La venta se muestra en dólares y el alquiler permanente en pesos. Si baja el precio al guardar, la página pública muestra “Bajó de precio”.</p>
         <div class="editor-grid">
           ${nhField("edit-precio", "Precio", `<input id="edit-precio" name="precio" type="number" min="0" step="1" value="${item.precio || 0}" required ${dis}>`)}
           ${nhField("edit-expensas", "Expensas", `<input id="edit-expensas" name="expensas" type="number" min="0" step="1" value="${item.expensas || 0}" ${dis}>`)}
@@ -1251,14 +1251,14 @@ function paintCarteraEditor() {
             </label>`).join("")}
         </div>
         <div class="edit-flags check-wrap">
-          <label class="nh-check"><input type="checkbox" name="destacado" ${item.destacado ? "checked" : ""} ${dis}> <span>Destacar en la vitrina</span></label>
+          <label class="nh-check"><input type="checkbox" name="destacado" ${item.destacado ? "checked" : ""} ${dis}> <span>Destacar en la página pública</span></label>
           <label class="nh-check"><input type="checkbox" name="nuevo" ${item.nuevo ? "checked" : ""} ${dis}> <span>Mostrar como nueva publicación</span></label>
         </div>
-        <p class="lead-mini">Puede destacar varias. “Nueva publicación” sale en la tira de recién publicadas y con el sello en la vitrina. Bajar el precio al guardar marca “Bajó de precio” en la web; subirlo lo quita.</p>
+        <p class="lead-mini">Puede destacar varias. “Nueva publicación” sale en la tira de recién publicadas y con el sello en la página pública. Bajar el precio al guardar marca “Bajó de precio” en la web; subirlo lo quita.</p>
       </section>
       ${formReadonly ? "" : `
       <div class="form-actions form-actions--sticky actions">
-        <button class="btn-panel" type="submit">${isCreate ? "Agregar a la cartera" : "Guardar en vitrina"}</button>
+        <button class="btn-panel" type="submit">${isCreate ? "Agregar a la cartera" : "Guardar en página pública"}</button>
         <button class="ghost" type="button" id="cancelar-edicion">Cancelar</button>
         ${isCreate || !canDeleteCartera() ? "" : `<button class="ghost ghost-danger" type="button" id="remove">Eliminar</button>`}
       </div>`}
@@ -1278,7 +1278,7 @@ function paintCarteraEditor() {
     ` : "") : (!canEmitArca() ? "" : `
       <section class="nh-form-section arca-section">
         <h3>Facturación ARCA</h3>
-        <p class="lead-mini">Demo: genera un CAE de ejemplo. En un sistema real se conecta a ARCA.</p>
+        <p class="lead-mini">Ejemplo: genera un CAE de muestra. En un sistema real se conecta a ARCA.</p>
         <div class="editor-grid">
           ${nhField("arca-cuit", "CUIT del cliente", `<input id="arca-cuit" inputmode="numeric" autocomplete="off">`)}
           ${nhField("arca-tipo", "Tipo de comprobante", `<select id="arca-tipo">
@@ -1388,12 +1388,12 @@ function paintCarteraEditor() {
     if (prevStatus !== item.status) {
       item.history = [{ when: "hoy", text: `Estado cambiado a: ${label(item.status)}.` }, ...(item.history || [])];
     } else if (item.precio < prevPrecio) {
-      item.history = [{ when: "hoy", text: "Precio bajado. La vitrina muestra “Bajó de precio”. No se inventó un descuento." }, ...(item.history || [])];
+      item.history = [{ when: "hoy", text: "Precio bajado. La página pública muestra “Bajó de precio”. No se inventó un descuento." }, ...(item.history || [])];
     } else {
-      item.history = [{ when: "hoy", text: "Ficha actualizada. La vitrina ya toma estos datos." }, ...(item.history || [])];
+      item.history = [{ when: "hoy", text: "Ficha actualizada. La página pública ya toma estos datos." }, ...(item.history || [])];
     }
     if (!persistCartera()) return;
-    showToast("Cambios guardados en la vitrina");
+    showToast("Cambios guardados en la página pública");
     render();
   });
 
@@ -1521,7 +1521,7 @@ function actividadReciente() {
   filasCola().forEach((fila) => {
     rows.push({
       when: fila.when || "",
-      text: fila.dest.nombre + ": " + colaEstadoLabel(fila.estado) + " (demo)",
+      text: fila.dest.nombre + ": " + colaEstadoLabel(fila.estado) + " (ejemplo)",
       codigo: fila.item.codigo,
       kind: "cola"
     });
@@ -1560,7 +1560,7 @@ function renderResumen() {
       <button type="button" class="resumen-card" data-go="cartera">
         <span>Disponibles</span>
         <strong>${disponibles}</strong>
-        <small>listas para la vitrina</small>
+        <small>listas para la página pública</small>
       </button>
       <button type="button" class="resumen-card" data-go="cartera">
         <span>Visitas al anuncio</span>
@@ -1575,12 +1575,12 @@ function renderResumen() {
       <button type="button" class="resumen-card" data-go="difusion">
         <span>Avisos en portales</span>
         <strong>${avisosPortales}</strong>
-        <small>marcados en portales o redes de esta demo</small>
+        <small>marcados en portales o redes de este ejemplo</small>
       </button>
       <button type="button" class="resumen-card" data-go="difusion">
         <span>Cuentas conectadas</span>
         <strong>${cuentasOn}</strong>
-        <small>de ${DESTINOS.length} destinos de esta demo</small>
+        <small>de ${DESTINOS.length} destinos de este ejemplo</small>
       </button>
     </div>
     <div class="resumen-split">
@@ -1591,16 +1591,16 @@ function renderResumen() {
           <li>
             <strong>${esc(row.codigo)} · ${esc(row.text)}</strong>
             <span>${esc(row.when || "sin fecha")}</span>
-          </li>`).join("")}</ul>` : `<p class="resumen-empty">Todavía no hay movimientos en esta demo.</p>`}
+          </li>`).join("")}</ul>` : `<p class="resumen-empty">Todavía no hay movimientos en este ejemplo.</p>`}
       </section>
       <section class="resumen-panel">
         <h2>Atajos</h2>
         <p>Entre a la sección que necesita. El menú de arriba sigue disponible.</p>
         <div class="resumen-shortcuts">
-          <button type="button" data-open-create><strong>Nueva propiedad</strong><small>Alta en la cartera. Sale en la vitrina de este navegador</small></button>
+          <button type="button" data-open-create><strong>Nueva propiedad</strong><small>Alta en la cartera. Sale en la página pública de este navegador</small></button>
           <button type="button" data-go="cartera"><strong>Ir a Cartera</strong><small>Editar avisos y publicar destinos</small></button>
           <button type="button" data-go="zonas"><strong>Ir a Zonas</strong><small>Localidades y zonas relacionadas de la comarca</small></button>
-          <button type="button" data-go="vitrina"><strong>Ir a Vitrina</strong><small>Textos y bloques de la web pública</small></button>
+          <button type="button" data-go="vitrina"><strong>Ir a página pública</strong><small>Textos y bloques de la web pública</small></button>
           <button type="button" data-go="difusion"><strong>Ir a Difusión</strong><small>Conectar portales y armar la cola</small></button>
           <button type="button" data-go="usuarios"><strong>Ir a Usuarios</strong><small>${staff.filter((u) => u.activo !== false).length} cuentas activas de ${staff.length}</small></button>
         </div>
@@ -1609,7 +1609,7 @@ function renderResumen() {
     <div class="resumen-split">
       <section class="resumen-panel">
         <h2>Más vistas en la web</h2>
-        <p>Aperturas de cada ficha en este navegador. No se muestran en la vitrina pública.</p>
+        <p>Aperturas de cada ficha en este navegador. No se muestran en la página pública.</p>
         <ul class="resumen-rank">
           ${topVistas.map((row) => `
             <li>
@@ -1636,7 +1636,7 @@ function renderResumen() {
     </div>
     <div class="resumen-split">
       <section class="resumen-panel">
-        <h2>Destacadas en la vitrina</h2>
+        <h2>Destacadas en la página pública</h2>
         <p>Puede destacar una o varias. El catálogo público las pone primero y con sello Destacado.</p>
         ${destacadas.length ? `<ul class="resumen-rank">${destacadas.map((row) => `
           <li>
@@ -1651,12 +1651,12 @@ function renderResumen() {
           <li>
             <button type="button" data-ficha="${esc(row.id)}">
               <strong>${esc(row.codigo)} · ${esc(row.titulo)}</strong>
-              <span>${row.nuevo ? "Reciente en vitrina" : "Alta reciente"}</span>
+              <span>${row.nuevo ? "Reciente en página pública" : "Alta reciente"}</span>
             </button>
           </li>`).join("")}</ul>` : `<p class="resumen-empty">Ningún aviso está marcado como reciente.</p>`}
       </section>
       <section class="resumen-panel">
-        <h2>Destinos de esta demo</h2>
+        <h2>Destinos de este ejemplo</h2>
         <p>Sitios, portales y redes. Conecte en Difusión. Nada se envía afuera.</p>
         <p class="difusion-ficha-grupo">Sitios y portales</p>
         <ul class="resumen-cuentas">
@@ -1761,7 +1761,7 @@ function renderZonas() {
     }
     if (err) err.textContent = "";
     event.target.reset();
-    showToast("Zona agregada. Ya aparece en la vitrina y en el alta de propiedades. No se inventaron avisos.");
+    showToast("Zona agregada. Ya aparece en la página pública y en el alta de propiedades. No se inventaron avisos.");
     renderZonas();
   });
 
@@ -1794,11 +1794,11 @@ function renderVitrinaGestor() {
       return nhField(fid, field.label, control);
     }).join("");
     const toggle = sec.alwaysOn
-      ? `<p class="vitrina-always">Siempre visible en la vitrina.</p>`
-      : `<label class="vitrina-toggle"><input type="checkbox" data-vitrina-visible="${esc(sec.id)}" ${on ? "checked" : ""} ${editable ? "" : "disabled"}> Mostrar en la vitrina</label>`;
+      ? `<p class="vitrina-always">Siempre visible en la página pública.</p>`
+      : `<label class="vitrina-toggle"><input type="checkbox" data-vitrina-visible="${esc(sec.id)}" ${on ? "checked" : ""} ${editable ? "" : "disabled"}> Mostrar en la página pública</label>`;
     const save = editable
       ? `<button class="btn-panel" type="submit">Guardar esta sección</button>`
-      : `<p class="vitrina-readonly">Solo titular, agente o marketing publican u ocultan la vitrina. Usted puede leer los textos.</p>`;
+      : `<p class="vitrina-readonly">Solo titular, agente o marketing publican u ocultan la página pública. Usted puede leer los textos.</p>`;
     return `
       <article class="vitrina-block ${on ? "is-on" : "is-off"}">
         <header>
@@ -1820,7 +1820,7 @@ function renderVitrinaGestor() {
       const next = loadVitrinaPage();
       next.visible[input.dataset.vitrinaVisible] = input.checked;
       saveVitrinaPage(next);
-      showToast(input.checked ? "Esa sección vuelve a verse en la vitrina." : "Esa sección queda oculta en la vitrina.");
+      showToast(input.checked ? "Esa sección vuelve a verse en la página pública." : "Esa sección queda oculta en la página pública.");
       renderVitrinaGestor();
       renderResumen();
     });
@@ -1834,7 +1834,7 @@ function renderVitrinaGestor() {
         setVitrinaCopyAt(next.copy, field.name, field.value);
       });
       saveVitrinaPage(next);
-      showToast("Textos guardados. Ábralos en la vitrina pública.");
+      showToast("Textos guardados. Ábralos en la página pública.");
     });
   });
 }
@@ -1975,7 +1975,7 @@ function enterStaff(user) {
   document.getElementById("nh-login").hidden = true;
   showPanelLoading(
     "Cargando el panel…",
-    "Abriendo la cartera y las secciones de la vitrina.",
+    "Abriendo la cartera y las secciones de la página pública.",
     () => bootPanel(),
     900
   );
@@ -2085,7 +2085,7 @@ document.getElementById("usuario-alta")?.addEventListener("submit", (event) => {
   const form = event.target;
   const err = document.getElementById("usuario-alta-error");
   if (!canManageUsers()) {
-    if (err) err.textContent = "Solo el titular puede agregar usuarios en esta demo.";
+    if (err) err.textContent = "Solo el titular puede agregar usuarios en este ejemplo.";
     showToast("Entre como milena (titular) para dar de alta cuentas.");
     return;
   }

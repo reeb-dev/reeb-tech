@@ -160,7 +160,7 @@ document.getElementById("form-reserva").addEventListener("submit", (event) => {
   event.target.reset();
   fillReservaSelect(libroId);
   renderCatalog();
-  toast("Reserva anotada (demo)");
+  toast("Reserva anotada (ejemplo)");
 });
 
 fillReservaSelect();

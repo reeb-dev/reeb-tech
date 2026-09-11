@@ -668,7 +668,7 @@ document.getElementById("modalContent").addEventListener("submit", (event) => {
   }
   recordListingConsulta(properties, currentProperty.id);
   form.reset();
-  showFichaToast("Consulta enviada (demo)");
+  showFichaToast("Consulta enviada (ejemplo)");
 });
 
 function wireLugares() {

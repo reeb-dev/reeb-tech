@@ -249,7 +249,7 @@ function procesarCompra(event) {
     <p style="margin:0 0 8px;"><strong>Pedido:</strong> ${esc(venta.id.slice(0, 8))}</p>
     ${copia.map((c) => `<p style="margin:0 0 4px;font-size:13px;">${esc(c.titulo)} × ${c.cantidad || 1}</p>`).join("")}
     <p style="margin:8px 0 0;"><strong>Total:</strong> ${money(venta.total)}</p>
-    <p style="margin:4px 0 0;font-size:12px;color:var(--muted);">Pagado con Billetera Feria (demo)</p>
+    <p style="margin:4px 0 0;font-size:12px;color:var(--muted);">Pagado con Billetera Feria (ejemplo)</p>
   `;
   document.getElementById("successOverlay").classList.add("show");
   document.body.style.overflow = "hidden";
@@ -261,7 +261,7 @@ function mostrarCompras() {
   const list = loadVentas();
   const el = document.getElementById("comprasList");
   if (!list.length) {
-    el.innerHTML = '<p style="color:var(--muted);">Todavía no hiciste compras en esta demo.</p>';
+    el.innerHTML = '<p style="color:var(--muted);">Todavía no hay compras en este ejemplo.</p>';
   } else {
     el.innerHTML = list.map((v) => `
       <div class="compra-card">

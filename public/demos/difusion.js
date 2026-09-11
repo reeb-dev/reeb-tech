@@ -7,11 +7,11 @@
   var base = script.src.replace(/difusion\.js(\?.*)?$/, "");
   var css = document.createElement("link");
   css.rel = "stylesheet";
-  css.href = base + "difusion.css?v=2";
+  css.href = base + "difusion.css?v=3";
   document.head.appendChild(css);
 
   var D = {
-    web: { id: "web", nombre: "Sitio propio", tipo: "api", fijo: true, beneficio: "La vitrina toma el catálogo o la oferta de este panel. No hay aviso pago." },
+    web: { id: "web", nombre: "Sitio propio", tipo: "api", fijo: true, beneficio: "La página pública toma el catálogo o la oferta de este panel. No hay aviso pago." },
     ml: { id: "ml", nombre: "Mercado Libre", tipo: "api", beneficio: "Se puede enviar por API. Hace falta el paquete de publicación en ML." },
     zonaprop: { id: "zonaprop", nombre: "Zonaprop", tipo: "api", beneficio: "Conexión tipo OpenNavent. El abono del portal es aparte." },
     argenprop: { id: "argenprop", nombre: "Argenprop", tipo: "api", beneficio: "En un sistema real suele ir por un CRM homologado o un acuerdo con el portal." },
@@ -105,14 +105,14 @@
     var extras = destinos.filter(function (d) { return d.id !== "web"; }).map(function (d) { return d.nombre; });
     var destinosTxt = lista(extras);
     var intro = place === "panel"
-      ? "Conecte las cuentas de " + destinosTxt + ". Demo: no se envía nada afuera. En un sistema real, un portal (si el rubro lo usa) va por API desde el servidor. El aviso pago de cada portal se contrata aparte."
+      ? "Conecte las cuentas de " + destinosTxt + ". Ejemplo: no se envía nada afuera. En un sistema real, un portal (si el rubro lo usa) va por API desde el servidor. El aviso pago de cada portal se contrata aparte."
       : "Se carga " + cfg.carga + " una vez en el panel. Esta web toma esa información. Desde ahí se arma el aviso para " + destinosTxt + ". Los avisos pagos se contratan aparte.";
 
     var cards = destinos.map(function (dest) {
       var connected = on(cuentas, dest.id, dest);
       var accion = dest.fijo
         ? '<span class="demo-cuenta-fijo">Siempre activa</span>'
-        : '<button type="button" data-cuenta="' + esc(dest.id) + '">' + (connected ? "Desconectar" : "Conectar (demo)") + "</button>";
+        : '<button type="button" data-cuenta="' + esc(dest.id) + '">' + (connected ? "Desconectar" : "Conectar (ejemplo)") + "</button>";
       return (
         '<article class="demo-cuenta' + (connected ? " is-on" : "") + '">' +
           '<p class="demo-cuenta-tipo">' + (dest.tipo === "api" ? "API / portal" : dest.id === "google" ? "Ficha" : "Red") + "</p>" +
