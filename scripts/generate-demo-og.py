@@ -11,13 +11,14 @@ ROOT = Path(__file__).resolve().parents[1]
 DEMOS = ROOT / "public" / "demos"
 W, H = 1200, 630
 BASE = "https://webconreeb.com"
-VERSION = "20260911b"
+VERSION = "20260911e"
 
 # Prefer these filenames when picking a cover photo
 PREFERRED = (
     "hero.jpg",
     "hero.jpeg",
     "hero.png",
+    "cover.jpg",
     "hero-deposito.jpg",
     "lugar-lago.jpg",
     "zona-centro.jpg",
@@ -30,8 +31,11 @@ BLURBS: dict[str, str] = {
     "automotores": "Ejemplo de página web para automotora: stock de vehículos y consulta por WhatsApp.",
     "biblioteca": "Ejemplo de catálogo web para biblioteca: préstamos y consulta.",
     "carpinteria": "Ejemplo de página web para carpintería: trabajos, presupuesto y WhatsApp.",
+    "comandas": "Ejemplo de sistema de comandas: salón, cocina, carta y cobro.",
     "comercio": "Ejemplo de página web para almacén: productos del día y WhatsApp.",
     "complejo": "Ejemplo de página web para complejo turístico: paquetes, predio y WhatsApp.",
+    "cotizaciones": "Ejemplo de sistema de cotizaciones: presupuesto, seña y WhatsApp.",
+    "cuentacorriente": "Ejemplo de cuenta corriente: saldos, extracto y recordatorios.",
     "estudio": "Ejemplo de página web para estudio jurídico o profesional: mesa de entradas y contacto.",
     "excursiones": "Ejemplo de página web para agencia de excursiones: tours y WhatsApp.",
     "facturacion": "Ejemplo de sistema de comprobantes A, B y NC.",
@@ -42,11 +46,13 @@ BLURBS: dict[str, str] = {
     "marketplace": "Ejemplo de feria barrial online: compra y venta entre vecinos.",
     "materiales": "Ejemplo de página web para corralón: materiales de obra y WhatsApp.",
     "peluqueria": "Ejemplo de página web para salón: servicios, turnos y WhatsApp.",
+    "reservas": "Ejemplo de sistema de reservas: unidades, calendario y seña.",
     "restaurante": "Ejemplo de página web para parrilla: carta y WhatsApp.",
     "rotiseria": "Ejemplo de página web para rotisería: carta, pedidos y WhatsApp.",
     "steelframe": "Ejemplo de página web para vivienda steel frame: obras y consulta.",
     "stockfacturacion": "Ejemplo de depósito: stock, facturación y panel.",
     "taller": "Ejemplo de página web para taller mecánico: servicios y WhatsApp.",
+    "turnos": "Ejemplo de agenda de turnos: panel, estados y pedidos por WhatsApp.",
 }
 
 
@@ -67,17 +73,23 @@ def load_font(size: int, bold: bool = False) -> ImageFont.FreeTypeFont | ImageFo
 
 def pick_cover(demo_dir: Path) -> Path | None:
     img_dir = demo_dir / "img"
-    if not img_dir.is_dir():
-        return None
-    files = {p.name.lower(): p for p in img_dir.iterdir() if p.suffix.lower() in {".jpg", ".jpeg", ".png", ".webp"}}
+    files: dict[str, Path] = {}
+    if img_dir.is_dir():
+        files = {p.name.lower(): p for p in img_dir.iterdir() if p.suffix.lower() in {".jpg", ".jpeg", ".png", ".webp"}}
     for name in PREFERRED:
         if name in files:
             return files[name]
     # Prefer wider landscape-looking names
     for key in sorted(files):
-        if "hero" in key or "lugar" in key or "zona" in key or "mirador" in key:
+        if "hero" in key or "lugar" in key or "zona" in key or "mirador" in key or "cover" in key:
             return files[key]
-    return next(iter(files.values())) if files else None
+    if files:
+        return next(iter(files.values()))
+    # Fallback: hub catalog photo for this rubro
+    hub = DEMOS / "hub-img" / f"{demo_dir.name}.jpg"
+    if hub.is_file():
+        return hub
+    return None
 
 
 def cover_canvas(src: Path | None) -> Image.Image:
@@ -227,8 +239,24 @@ def inject_meta(html: str, *, title: str, desc: str, url: str, image: str) -> st
     return cleaned
 
 
+def write_page_meta(
+    path: Path,
+    *,
+    slug: str,
+    url: str,
+    image: str,
+    force_desc: str | None = None,
+) -> str:
+    html = path.read_text(encoding="utf-8")
+    title = extract_title(html)
+    desc = force_desc if force_desc else extract_description(html, slug)
+    new_html = inject_meta(html, title=title, desc=desc, url=url, image=image)
+    path.write_text(new_html, encoding="utf-8")
+    return title
+
+
 def main() -> None:
-    skip = {"hub-img"}
+    skip = {"hub-img", "sistemas-ui"}
     for demo_dir in sorted(DEMOS.iterdir()):
         if not demo_dir.is_dir() or demo_dir.name in skip:
             continue
@@ -245,11 +273,37 @@ def main() -> None:
         out = demo_dir / "og.jpg"
         og.save(out, "JPEG", quality=86, optimize=True)
 
-        url = f"{BASE}/demos/{slug}/"
         image = f"{BASE}/demos/{slug}/og.jpg?v={VERSION}"
-        new_html = inject_meta(html, title=title, desc=desc, url=url, image=image)
-        index.write_text(new_html, encoding="utf-8")
-        print(f"OK {slug}: {out.relative_to(ROOT)} ← {cover.name if cover else 'solid'}")
+        write_page_meta(index, slug=slug, url=f"{BASE}/demos/{slug}/", image=image)
+
+        panel = demo_dir / "panel.html"
+        if panel.is_file():
+            panel_title = extract_title(panel.read_text(encoding="utf-8"))
+            write_page_meta(
+                panel,
+                slug=slug,
+                url=f"{BASE}/demos/{slug}/panel.html",
+                image=image,
+                force_desc=f"{panel_title}. Ejemplo a medida: gestione datos de ejemplo en el panel.",
+            )
+
+        prop = demo_dir / "propiedad.html"
+        if prop.is_file():
+            write_page_meta(
+                prop,
+                slug=slug,
+                url=f"{BASE}/demos/{slug}/propiedad.html",
+                image=image,
+                force_desc=desc,
+            )
+
+        extras = []
+        if panel.is_file():
+            extras.append("panel")
+        if prop.is_file():
+            extras.append("propiedad")
+        extra = f" + {', '.join(extras)}" if extras else ""
+        print(f"OK {slug}: og.jpg ← {cover.name if cover else 'solid'}{extra}")
 
 
 if __name__ == "__main__":
