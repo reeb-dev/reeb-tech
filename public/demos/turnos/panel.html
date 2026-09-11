@@ -5,16 +5,23 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Panel · Agenda de turnos</title>
   <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;600&family=Source+Sans+3:wght@400;600;700&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="../sistemas-ui/base.css?v=c2">
-  <link rel="stylesheet" href="styles.css">
+  <link rel="stylesheet" href="../sistemas-ui/base.css?v=c5">
+  <link rel="stylesheet" href="styles.css?v=c5">
 </head>
 <body class="panel-body">
   <script src="../login.js?v=2" data-rubro="turnos" data-place="panel"></script>
   <header class="band">
     <div class="band-inner">
-      <a class="brand" href="index.html"><strong>Agenda</strong><span>Panel de ejemplo</span></a>
+      <a class="brand" href="index.html"><strong>Agenda</strong><span>CRUD + WhatsApp</span></a>
       <nav>
         <a href="index.html">Qué es</a>
+        <div class="panel-tabs">
+          <button type="button" class="on" data-view="agenda">Agenda</button>
+          <button type="button" data-view="whatsapp">WhatsApp <span class="tab-badge" id="wa-badge" hidden>0</span></button>
+          <button type="button" data-view="clientes">Clientes</button>
+          <button type="button" data-view="servicios">Servicios</button>
+          <button type="button" data-view="equipo">Equipo</button>
+        </div>
         <button class="btn" id="open-create" type="button">Nuevo turno</button>
       </nav>
     </div>
@@ -23,54 +30,109 @@
   <div class="wrap">
     <div class="toolbar">
       <div>
-        <p class="kicker">Datos de ejemplo</p>
-        <h1>Turnos del día</h1>
+        <p class="kicker">Datos de ejemplo · se guardan en este navegador</p>
+        <h1 id="view-title">Agenda de turnos</h1>
       </div>
       <div class="toolbar-actions">
-        <button type="button" class="btn-ghost-nav" id="reset-sample" style="background:transparent;border:1px solid var(--line);color:var(--ink);padding:0.45rem 0.8rem;border-radius:8px;font-weight:600">Restablecer ejemplo</button>
+        <label class="search-box"><span class="visually-hidden">Buscar</span>
+          <input type="search" id="search" placeholder="Buscar…">
+        </label>
+        <button type="button" id="reset-sample" class="btn-soft">Restablecer</button>
       </div>
     </div>
-    <p class="hint-bar"><strong>Ejemplo en el navegador.</strong> Los cambios quedan en este equipo (localStorage). Clave de acceso: <strong>demo</strong>.</p>
-    <div class="thumb-row"><img src="img/servicio-1.jpg" alt=""><img src="img/servicio-2.jpg" alt=""><img src="img/equipo.jpg" alt=""></div>
-    <div class="stats" id="stats"></div>
-    <div class="filters-row" id="filters"></div>
-    <form class="create" id="create" hidden>
-      <label>Fecha<input name="fecha" type="date" required></label>
-      <label>Hora<input name="hora" type="time" required></label>
-      <label>Cliente<input name="cliente" required placeholder="Nombre"></label>
-      <label>Teléfono<input name="tel" placeholder="291…"></label>
-      <label>Profesional
-        <select name="profesional"></select>
-      </label>
-      <label>Servicio<input name="servicio" required placeholder="Corte, control…"></label>
-      <label class="full">Notas<input name="notas" placeholder="Opcional"></label>
-      <button type="submit">Guardar turno</button>
-    </form>
-    <div class="workspace">
-      <section class="list">
-        <div class="table-scroll">
+    <p class="hint-bar"><strong>Qué puede hacer aquí.</strong> Clave <strong>demo</strong>. Los cambios quedan en este navegador.</p>
+    <div class="can-do">
+      <span>Agendar / editar / borrar turnos</span>
+      <span>Clientes y servicios (CRUD)</span>
+      <span>Pedidos por WhatsApp → confirmar</span>
+      <span>Estados del día</span>
+    </div>
+
+    <div id="view-agenda">
+      <div class="stats" id="stats"></div>
+      <div class="filters-row" id="filters"></div>
+      <form class="create" id="create" hidden>
+        <input type="hidden" name="id" value="">
+        <label>Fecha<input name="fecha" type="date" required></label>
+        <label>Hora<input name="hora" type="time" required></label>
+        <label>Cliente<select name="clienteId" required></select></label>
+        <label>Profesional<select name="profesionalId" required></select></label>
+        <label>Servicio<select name="servicioId" required></select></label>
+        <label class="full">Notas<input name="notas" placeholder="Opcional"></label>
+        <button type="submit" id="create-submit">Guardar turno</button>
+        <button type="button" id="create-cancel" class="btn-soft" hidden>Cancelar edición</button>
+      </form>
+      <div class="workspace">
+        <section class="list"><div class="table-scroll">
           <table>
-            <thead>
-              <tr>
-                <th>Hora</th>
-                <th>Cliente</th>
-                <th>Servicio</th>
-                <th>Prof.</th>
-                <th>Estado</th>
-              </tr>
-            </thead>
+            <thead><tr><th>Hora</th><th>Cliente</th><th>Servicio</th><th>Prof.</th><th>Origen</th><th>Estado</th></tr></thead>
             <tbody id="rows"></tbody>
           </table>
-        </div>
-      </section>
-      <aside class="sheet" id="sheet"><p>Elija un turno de la lista.</p></aside>
+        </div></section>
+        <aside class="sheet" id="sheet"><p class="empty-sheet">Elija un turno.</p></aside>
+      </div>
+    </div>
+
+    <div id="view-whatsapp" class="panel-hidden">
+      <div class="stats" id="wa-stats"></div>
+      <div class="filters-row" id="wa-filters"></div>
+      <div class="wa-toolbar">
+        <button type="button" class="btn" id="simular-wa">Simular mensaje nuevo</button>
+        <p class="wa-note">En un sistema real estos pedidos llegan del número de WhatsApp del local. Acá puede confirmarlos y pasan a la agenda.</p>
+      </div>
+      <div class="workspace">
+        <section class="list"><div class="table-scroll">
+          <table>
+            <thead><tr><th>Recibido</th><th>De</th><th>Pedido</th><th>Sugerido</th><th>Estado</th></tr></thead>
+            <tbody id="wa-rows"></tbody>
+          </table>
+        </div></section>
+        <aside class="sheet" id="wa-sheet"><p class="empty-sheet">Elija un mensaje.</p></aside>
+      </div>
+    </div>
+
+    <div id="view-clientes" class="panel-hidden">
+      <form class="create" id="create-cliente">
+        <input type="hidden" name="id" value="">
+        <label>Nombre<input name="nombre" required></label>
+        <label>Teléfono<input name="tel"></label>
+        <label>Email<input name="email" type="email"></label>
+        <label class="full">Notas<input name="notas"></label>
+        <button type="submit" id="cliente-submit">Guardar cliente</button>
+        <button type="button" id="cliente-cancel" class="btn-soft" hidden>Cancelar</button>
+      </form>
+      <div class="cards-grid" id="clientes-grid"></div>
+    </div>
+
+    <div id="view-servicios" class="panel-hidden">
+      <form class="create" id="create-servicio">
+        <input type="hidden" name="id" value="">
+        <label>Nombre<input name="nombre" required></label>
+        <label>Minutos<input name="minutos" type="number" min="5" required></label>
+        <label>Precio<input name="precio" type="number" min="0" required></label>
+        <button type="submit" id="servicio-submit">Guardar servicio</button>
+        <button type="button" id="servicio-cancel" class="btn-soft" hidden>Cancelar</button>
+      </form>
+      <div class="cards-grid" id="servicios-grid"></div>
+    </div>
+
+    <div id="view-equipo" class="panel-hidden">
+      <form class="create" id="create-pro">
+        <input type="hidden" name="id" value="">
+        <label>Nombre<input name="nombre" required></label>
+        <label class="full">Rol / especialidad<input name="rol" required></label>
+        <button type="submit" id="pro-submit">Guardar profesional</button>
+        <button type="button" id="pro-cancel" class="btn-soft" hidden>Cancelar</button>
+      </form>
+      <div class="cards-grid" id="equipo-grid"></div>
     </div>
   </div>
 
+  <div id="toast" class="toast" role="status"></div>
   <div id="contacto"></div>
-  <footer class="wrap">Agenda · ejemplo · clave de acceso demo.</footer>
+  <footer class="wrap">Agenda · CRUD + pedidos WhatsApp · clave demo.</footer>
   <script src="data.js"></script>
   <script src="panel.js"></script>
-  <script src="../contacto.js" data-phone="5492915757934" data-text="Hola, quiero consultar por un sistema de turnos" data-subject="Consulta — Turnos" data-title="Consultar" data-place="panel"></script>
+  <script src="../contacto.js" data-phone="5492915757934" data-text="Hola, quiero consultar por un sistema de turnos con WhatsApp" data-subject="Consulta — Turnos" data-title="Consultar" data-place="panel"></script>
 </body>
 </html>

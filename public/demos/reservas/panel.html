@@ -5,49 +5,83 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Panel · Reservas</title>
   <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;600&family=Source+Sans+3:wght@400;600;700&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="../sistemas-ui/base.css?v=c2">
-  <link rel="stylesheet" href="styles.css">
+  <link rel="stylesheet" href="../sistemas-ui/base.css?v=c5">
+  <link rel="stylesheet" href="styles.css?v=c5">
 </head>
 <body class="panel-body">
   <script src="../login.js?v=2" data-rubro="reservas" data-place="panel"></script>
   <header class="band">
     <div class="band-inner">
-      <a class="brand" href="index.html"><strong>Reservas</strong><span>Panel de ejemplo</span></a>
+      <a class="brand" href="index.html"><strong>Reservas</strong><span>Unidades · calendario · seña</span></a>
       <nav>
         <a href="index.html">Qué es</a>
+        <div class="panel-tabs">
+          <button type="button" class="on" data-view="reservas">Reservas</button>
+          <button type="button" data-view="unidades">Unidades</button>
+          <button type="button" data-view="calendario">Calendario</button>
+        </div>
         <button class="btn" id="open-create" type="button">Nueva reserva</button>
       </nav>
     </div>
   </header>
   <div class="wrap">
-    <div class="toolbar"><div><p class="kicker">Datos de ejemplo</p><h1>Reservas</h1></div></div>
-    <p class="hint-bar"><strong>Ejemplo en el navegador.</strong> Clave de acceso: <strong>demo</strong>. <button type="button" id="reset-sample" style="margin-left:0.5rem;font:inherit;cursor:pointer;border:1px solid var(--line);background:#fff;border-radius:8px;padding:0.25rem 0.55rem">Restablecer ejemplo</button></p>
-    <div class="thumb-row"><img src="img/unidad-1.jpg" alt=""><img src="img/unidad-2.jpg" alt=""><img src="img/unidad-3.jpg" alt=""></div>
+    <div class="toolbar">
+      <div><p class="kicker">Datos de ejemplo · este navegador</p><h1 id="view-title">Reservas</h1></div>
+      <div class="toolbar-actions">
+        <label class="search-box"><span class="visually-hidden">Buscar</span><input type="search" id="search" placeholder="Buscar huésped…"></label>
+        <button type="button" id="reset-sample" class="btn-soft">Restablecer</button>
+      </div>
+    </div>
+    <p class="hint-bar"><strong>Qué puede hacer aquí.</strong> Clave <strong>demo</strong>.</p>
+    <div class="can-do">
+      <span>Crear / editar / borrar reservas</span>
+      <span>Check-in y check-out</span>
+      <span>Seña y estimado de estadía</span>
+      <span>Unidades con foto (CRUD)</span>
+      <span>Calendario de la semana</span>
+      <span>Texto para WhatsApp</span>
+    </div>
     <div class="stats" id="stats"></div>
     <div class="filters-row" id="filters"></div>
-
     <form class="create" id="create" hidden>
-      <label>Unidad
-        <select name="unidad"></select>
-      </label>
+      <input type="hidden" name="id" value="">
+      <label>Unidad<select name="unidadId"></select></label>
       <label>Huésped<input name="huesped" required></label>
+      <label>Teléfono<input name="tel"></label>
       <label>Desde<input name="desde" type="date" required></label>
       <label>Hasta<input name="hasta" type="date" required></label>
       <label>Seña<input name="sena" type="number" min="0" value="0"></label>
       <label class="full">Notas<input name="notas"></label>
-      <button type="submit">Guardar reserva</button>
+      <button type="submit" id="create-submit">Guardar reserva</button>
+      <button type="button" id="create-cancel" class="btn-soft" hidden>Cancelar</button>
     </form>
-    <div class="workspace">
-      <section class="list"><div class="table-scroll"><table>
-        <thead><tr><th>Unidad</th><th>Huésped</th><th>Fechas</th><th class="amount">Seña</th><th>Estado</th></tr></thead>
-        <tbody id="rows"></tbody>
-      </table></div></section>
-      <aside class="sheet" id="sheet"><p>Elija una reserva.</p></aside>
+    <div id="view-reservas">
+      <div class="workspace">
+        <section class="list"><div class="table-scroll"><table>
+          <thead><tr><th>Unidad</th><th>Huésped</th><th>Fechas</th><th class="amount">Seña</th><th>Estado</th></tr></thead>
+          <tbody id="rows"></tbody>
+        </table></div></section>
+        <aside class="sheet" id="sheet"><p class="empty-sheet">Elija una reserva.</p></aside>
+      </div>
     </div>
+    <div id="view-unidades" class="panel-hidden">
+      <form class="create" id="create-unidad">
+        <input type="hidden" name="id" value="">
+        <label>Nombre<input name="nombre" required></label>
+        <label>Cupo<input name="cupo" type="number" min="1" required></label>
+        <label>Precio/noche<input name="precioNoche" type="number" min="0" required></label>
+        <label class="full">Notas<input name="notas"></label>
+        <button type="submit" id="unidad-submit">Guardar unidad</button>
+        <button type="button" id="unidad-cancel" class="btn-soft" hidden>Cancelar</button>
+      </form>
+      <div class="cards-grid" id="unidades-grid"></div>
+    </div>
+    <div id="view-calendario" class="panel-hidden"><div class="calendar-strip" id="calendar"></div></div>
   </div>
+  <div id="toast" class="toast"></div>
   <div id="contacto"></div>
-  <footer class="wrap">Reservas · ejemplo · clave demo.</footer>
+  <footer class="wrap">Reservas · CRUD + calendario · clave demo.</footer>
   <script src="data.js"></script>
   <script src="panel.js"></script>
-  <script src="../contacto.js" data-phone="5492915757934" data-text="Hola, quiero consultar por un sistema de reservas" data-subject="Consulta — Reservas" data-title="Consultar" data-place="panel"></script>
+  <script src="../contacto.js" data-phone="5492915757934" data-text="Hola, quiero consultar por reservas" data-subject="Consulta — Reservas" data-title="Consultar" data-place="panel"></script>
 </body></html>
