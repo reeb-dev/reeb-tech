@@ -1,0 +1,97 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="icon" href="/favicon.ico?v=20260911fav" sizes="any">
+  <link rel="icon" href="/brand/reeb-mark-32.png?v=20260911fav" type="image/png" sizes="32x32">
+  <link rel="icon" href="/brand/reeb-mark-16.png?v=20260911fav" type="image/png" sizes="16x16">
+  <link rel="icon" href="/brand/reeb-mark.svg?v=20260911fav" type="image/svg+xml">
+  <link rel="shortcut icon" href="/favicon.ico?v=20260911fav">
+  <link rel="apple-touch-icon" href="/brand/reeb-mark-180.png?v=20260911fav" sizes="180x180">
+
+  <title>Panel · Pedidos para llevar</title>
+  <meta name="description" content="Panel · Pedidos para llevar. Ejemplo a medida: gestione datos de ejemplo en el panel.">
+  <meta name="robots" content="index, follow">
+  <link rel="canonical" href="https://webconreeb.com/demos/takeaway/panel.html">
+  <meta property="og:type" content="website">
+  <meta property="og:site_name" content="Web con REEB">
+  <meta property="og:url" content="https://webconreeb.com/demos/takeaway/panel.html">
+  <meta property="og:title" content="Panel · Pedidos para llevar">
+  <meta property="og:description" content="Panel · Pedidos para llevar. Ejemplo a medida: gestione datos de ejemplo en el panel.">
+  <meta property="og:image" content="https://webconreeb.com/demos/takeaway/og.jpg?v=20260911f">
+  <meta property="og:image:type" content="image/jpeg">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta property="og:image:alt" content="Panel · Pedidos para llevar">
+  <meta property="og:locale" content="es_AR">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Panel · Pedidos para llevar">
+  <meta name="twitter:description" content="Panel · Pedidos para llevar. Ejemplo a medida: gestione datos de ejemplo en el panel.">
+  <meta name="twitter:image" content="https://webconreeb.com/demos/takeaway/og.jpg?v=20260911f">
+
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;600&family=Source+Sans+3:wght@400;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../sistemas-ui/base.css?v=c6">
+  <link rel="stylesheet" href="styles.css?v=c5">
+</head>
+<body class="panel-body">
+  <script src="../login.js?v=2" data-rubro="takeaway" data-place="panel"></script>
+  <header class="band">
+    <div class="band-inner">
+      <a class="brand" href="index.html"><strong>Takeaway</strong><span>Cola · listo · entregado</span></a>
+      <nav>
+        <a href="index.html">Qué es</a>
+        <div class="panel-tabs"><button type="button" class="on" data-view="cola">Cola</button><button type="button" class="" data-view="carta">Carta</button></div>
+        <button class="btn" id="open-create" type="button">Nuevo pedido</button>
+      </nav>
+    </div>
+  </header>
+  <div class="wrap">
+    <div class="toolbar">
+      <div><p class="kicker">Datos de ejemplo · este navegador</p><h1 id="view-title">Pedidos para llevar</h1></div>
+      <div class="toolbar-actions">
+        <label class="search-box"><span class="visually-hidden">Buscar</span><input type="search" id="search" placeholder="Buscar…"></label>
+        <button type="button" id="reset-sample" class="btn-soft">Restablecer</button>
+      </div>
+    </div>
+    <p class="hint-bar"><strong>Qué puede hacer aquí.</strong> Clave de ejemplo: <strong>demo</strong>.</p>
+    <div class="can-do"><span>Tomar pedido</span><span>Estados de cola</span><span>Carta rápida CRUD</span><span>WhatsApp listo</span></div>
+    <div class="stats" id="stats"></div>
+    <div id="view-cola" data-panel-view="cola">
+      <form class="create" id="create" hidden>
+        <label>Cliente / retiro<input name="cliente" required></label>
+        <label>Teléfono<input name="tel" required></label>
+        <label>Ítem<select name="platoId" data-source="carta" required></select></label>
+        <label class="full">Nota<input name="nota" required></label>
+        <button type="submit">Guardar</button>
+      </form>
+      
+      <div class="workspace">
+        <section class="list"><div class="table-scroll"><table>
+          <thead><tr><th>Hora</th><th>Cliente</th><th>Pedido</th><th>Estado</th></tr></thead>
+          <tbody id="rows"></tbody>
+        </table></div></section>
+        <aside class="sheet" id="sheet"><p class="empty-sheet">Elija un registro.</p></aside>
+      </div>
+    </div>
+    
+    <div id="view-carta" data-panel-view="carta" class="panel-hidden">
+      
+      <form class="create" id="create-related" data-target="carta">
+        <label>Nombre<input name="nombre" required></label>
+        <label>Teléfono / dato<input name="tel"></label>
+        <label class="full">Extra (precio, rol, dirección…)<input name="extra"></label>
+        <button type="submit">Agregar</button>
+      </form>
+      <div class="cards-grid related-grid"></div>
+    </div>
+  </div>
+  <div id="toast" class="toast"></div>
+  <div id="contacto"></div>
+  <footer class="wrap">Pedidos para llevar · ejemplo de sistema · clave demo.</footer>
+  <script src="data.js"></script>
+  <script src="cfg.js"></script>
+  <script src="panel.js"></script>
+  <script src="../contacto.js" data-phone="5492915757934" data-text="Hola, quiero consultar por Pedidos para llevar" data-subject="Consulta — Pedidos para llevar" data-title="Consultar" data-place="panel"></script>
+</body>
+</html>

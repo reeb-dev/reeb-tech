@@ -15,6 +15,8 @@
 
 ## Learned Workspace Facts
 
+- Mapa de sistemas de gestión (rutas, conflictos y nuevos): `.cursor/SISTEMAS.md` (interno; no publicar ni enlazar en el hub ni en `public/`). Sistemas = paneles CRUD en `#sistemas-gestion`; rubros = páginas públicas bajo `/demos/<rubro>/`. No mezclar slugs (p. ej. `ordenes` ≠ `taller`, `takeaway` ≠ `comandas`).
+
 - Commercial domain is https://webconreeb.com: hub/catalog is the primary public site at `/`; Angular portfolio (“Sitio personal”) is at `/cv/`. Individual vertical examples stay under `/demos/<rubro>/`. WhatsApp/Open Graph: hub uses `og.jpg`, CV uses a separate `og-cv` image, and each vertical has its own matching `og.jpg` (do not reuse the CV portrait on commercial or rubro links). Repo remains `reeb-dev/reeb-tech` (Angular + Tailwind + static hub).
 - Static site hosts on GitHub Pages with custom domain (no separate server); deploy on push to `main` with `base-href` `/` for the apex domain (legacy `https://reeb-dev.github.io/reeb-tech/` may still resolve).
 - Bilingual copy lives in `src/app/i18n/content.ts`; the language toggle persists in `localStorage`.

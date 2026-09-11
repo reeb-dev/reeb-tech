@@ -257,10 +257,22 @@ img { display: block; width: 100%; height: 100%; object-fit: cover; }
 
 .sistemas-gestion {
   border-bottom: 1px solid var(--line);
-  padding: 0 36px 32px;
+  padding: 8px 36px 48px;
 }
 
 .sistemas-gestion .sistemas-gestion-list {
+  margin-top: 8px;
+  padding-left: 0;
+  padding-right: 0;
+  border-bottom: 0;
+}
+
+.sistemas-gestion > .sistemas-more {
+  margin-top: 20px;
+}
+
+.sistemas-gestion .sistemas-gestion-more {
+  padding: 8px 16px 20px;
   margin-top: 0;
 }
 
@@ -378,7 +390,7 @@ img { display: block; width: 100%; height: 100%; object-fit: cover; }
 }
 
 .who {
-  padding: 72px 36px;
+  padding: 72px 36px 64px;
   background:
     linear-gradient(165deg, #221810 0%, #141210 48%, #0f0d0b 100%);
   border-top: 1px solid rgba(227, 196, 138, 0.18);
@@ -389,9 +401,13 @@ img { display: block; width: 100%; height: 100%; object-fit: cover; }
   max-width: 1120px;
   margin: 0 auto;
   display: grid;
-  grid-template-columns: minmax(0, 1.25fr) minmax(260px, 0.75fr);
-  gap: 40px 48px;
+  grid-template-columns: minmax(0, 1.2fr) minmax(260px, 0.8fr);
+  gap: 36px 40px;
   align-items: start;
+}
+
+.who-offer {
+  min-width: 0;
 }
 
 .who h2 {
@@ -414,19 +430,23 @@ img { display: block; width: 100%; height: 100%; object-fit: cover; }
 .who-points {
   list-style: none;
   display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 12px;
-  margin-top: 28px;
+  grid-column: 1 / -1;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 16px;
+  margin-top: 8px;
+  align-items: stretch;
 }
 
 .who-points li {
   background: rgba(11, 10, 9, 0.55);
   border: 1px solid var(--line);
   border-left: 3px solid var(--ember);
-  padding: 16px 16px 16px 18px;
+  padding: 18px 18px 18px 20px;
   color: var(--ink);
   font-size: 15px;
   line-height: 1.45;
+  min-height: 112px;
+  box-sizing: border-box;
 }
 
 .who-points strong {
@@ -443,6 +463,7 @@ img { display: block; width: 100%; height: 100%; object-fit: cover; }
   border: 1px solid rgba(227, 196, 138, 0.28);
   box-shadow: 0 18px 40px rgba(0, 0, 0, 0.28);
   padding: 32px 28px 28px;
+  min-width: 0;
 }
 
 .who-mark {
@@ -525,19 +546,28 @@ img { display: block; width: 100%; height: 100%; object-fit: cover; }
 }
 
 .who-more {
-  margin: 0 36px 48px;
+  max-width: 1120px;
+  width: 100%;
+  margin: 48px auto 0;
   border: 1px solid var(--line);
   border-left: 3px solid var(--gold);
   background: var(--bg-2);
+  box-sizing: border-box;
 }
 
 .who-more summary {
   cursor: pointer;
   list-style: none;
-  padding: 16px 18px;
+  padding: 18px 22px;
   font-family: Fraunces, Georgia, serif;
   font-size: 22px;
   font-weight: 560;
+  line-height: 1.25;
+  border-bottom: 1px solid transparent;
+}
+
+.who-more[open] summary {
+  border-bottom-color: var(--line);
 }
 
 .who-more summary::-webkit-details-marker { display: none; }
@@ -557,9 +587,16 @@ img { display: block; width: 100%; height: 100%; object-fit: cover; }
 .who-more[open] summary::after { content: "Ocultar"; }
 
 .who-more .who-benefits {
-  margin-top: 0;
-  padding: 8px 18px 8px;
+  max-width: none;
+  margin: 0;
+  padding: 24px 22px 28px;
   border-top: 0;
+}
+
+.who-more .who-benefits + .who-benefits {
+  margin-top: 8px;
+  padding-top: 28px;
+  border-top: 1px solid var(--line);
 }
 
 .who-mail a {
@@ -661,12 +698,12 @@ img { display: block; width: 100%; height: 100%; object-fit: cover; }
   list-style: none;
   display: grid;
   grid-template-columns: repeat(3, minmax(0, 1fr));
-  gap: 16px 28px;
+  gap: 20px 32px;
 }
 
 .who-benefits-list li {
   font-size: 14px;
-  line-height: 1.45;
+  line-height: 1.5;
   color: var(--muted);
 }
 
@@ -695,6 +732,11 @@ img { display: block; width: 100%; height: 100%; object-fit: cover; }
   color: var(--muted);
   font-size: 14px;
   max-width: 62ch;
+}
+
+@media (max-width: 1100px) {
+  .who-inner { grid-template-columns: 1fr; gap: 28px; }
+  .who-points { grid-template-columns: 1fr 1fr; }
 }
 
 #destacados,
@@ -1516,9 +1558,12 @@ img { display: block; width: 100%; height: 100%; object-fit: cover; }
   .hero { min-height: 0; padding-top: 128px; padding-bottom: 32px; }
   .picks-wrap { padding-left: 20px; padding-right: 20px; }
   .catalog { grid-template-columns: 1fr; padding: 16px 20px 28px; gap: 14px; }
+  .sistemas-gestion { padding: 8px 20px 36px; }
+  .sistemas-gestion > .sistemas-more summary { font-size: 18px; padding: 14px 16px; }
+  .sistemas-gestion .sistemas-gestion-more { padding: 4px 10px 16px; }
   .catalog > .band,
   .catalog-miss { padding-left: 20px; padding-right: 20px; }
-  .who-more { margin-left: 20px; margin-right: 20px; }
+  .who-more { margin-left: auto; margin-right: auto; }
   .search { max-width: none; }
   .feat,
   .picks {
@@ -1535,16 +1580,24 @@ img { display: block; width: 100%; height: 100%; object-fit: cover; }
   .row-media { min-height: 120px; height: 120px; }
   .feat-copy { padding: 28px 20px 36px; }
   .row-copy { padding: 18px 16px 18px; }
+  .row-copy .ctas { flex-wrap: wrap; }
+  .row-copy .btn { flex: 1 1 auto; min-width: 0; text-align: center; }
   .pick,
   .pick:last-child { border: 1px solid var(--line); }
   .pick-copy { padding: 20px 18px 22px; }
   .who { padding-top: 48px; padding-bottom: 48px; }
-  .who-inner { grid-template-columns: 1fr; gap: 28px; }
-  .who-points { grid-template-columns: 1fr; }
+  .who-inner { grid-template-columns: 1fr; gap: 24px; }
+  .who-aside { padding: 24px 20px 22px; }
+  .who-points { grid-template-columns: 1fr; gap: 12px; margin-top: 0; }
+  .who-points li { min-height: 0; padding: 16px 16px 16px 18px; }
   .who h2 { max-width: none; }
+  .who-more { margin-top: 32px; }
+  .who-more summary { padding: 16px 18px; font-size: 20px; }
+  .who-more .who-benefits { padding: 20px 18px 24px; }
   .who-benefits { margin-top: 28px; padding-top: 28px; }
   .who-benefits-list,
-  .who-benefits-list-4 { grid-template-columns: 1fr; gap: 14px; }
+  .who-benefits-list-4 { grid-template-columns: 1fr; gap: 16px; }
+  .who-demos-list { grid-template-columns: 1fr; max-height: none; }
   #destacados,
   #quien,
   #sistemas,
@@ -1620,6 +1673,30 @@ img { display: block; width: 100%; height: 100%; object-fit: cover; }
 
   .price-extras { grid-template-columns: 1fr; }
   .price-explain { grid-template-columns: 1fr; }
-
   .who-demos-list { max-height: 200px; }
+}
+
+@media (max-width: 560px) {
+  .row,
+  .row.is-flip {
+    grid-template-columns: 1fr;
+  }
+  .row-media {
+    height: 160px;
+    min-height: 160px;
+  }
+  .nav-links {
+    flex-wrap: wrap;
+    row-gap: 8px;
+  }
+  .hero h1 {
+    font-size: clamp(28px, 9vw, 40px);
+  }
+  .filters {
+    gap: 6px;
+  }
+  .filter {
+    padding: 7px 11px;
+    font-size: 11px;
+  }
 }

@@ -511,7 +511,16 @@ tr[data-id]:hover td { background: color-mix(in srgb, var(--accent) 18%, #fff); 
   .hero-stage, .hero-stage img { min-height: 220px; }
 }
 @media (max-width: 560px) {
-  .gallery, .steps { grid-template-columns: 1fr; }
+  .create { grid-template-columns: 1fr !important; }
+  .search-box input { min-width: 0; width: 100%; }
+  .band-inner {
+    flex-wrap: wrap;
+    gap: 0.6rem;
+    min-height: 0;
+    padding-top: 0.7rem;
+    padding-bottom: 0.7rem;
+  }
+  .toast { left: 12px; right: 12px; bottom: 12px; }
 }
 
 

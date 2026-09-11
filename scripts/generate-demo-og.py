@@ -11,7 +11,7 @@ ROOT = Path(__file__).resolve().parents[1]
 DEMOS = ROOT / "public" / "demos"
 W, H = 1200, 630
 BASE = "https://webconreeb.com"
-VERSION = "20260911e"
+VERSION = "20260911f"
 
 # Prefer these filenames when picking a cover photo
 PREFERRED = (
@@ -53,6 +53,19 @@ BLURBS: dict[str, str] = {
     "stockfacturacion": "Ejemplo de depósito: stock, facturación y panel.",
     "taller": "Ejemplo de página web para taller mecánico: servicios y WhatsApp.",
     "turnos": "Ejemplo de agenda de turnos: panel, estados y pedidos por WhatsApp.",
+    "ordenes": "Ejemplo de órdenes de trabajo: ingreso, diagnóstico y estados.",
+    "stockalertas": "Ejemplo de stock con mínimos y alertas de reposición.",
+    "visitas": "Ejemplo de visitas técnicas a domicilio: ruta y check-in.",
+    "takeaway": "Ejemplo de pedidos para llevar: cola, listo y entregado.",
+    "cuotas": "Ejemplo de cobros en cuotas: plan, vencimientos y mora.",
+    "obra": "Ejemplo de presupuesto de obra: etapas y avance.",
+    "fichas": "Ejemplo de fichas (paciente o mascota) con historial.",
+    "flota": "Ejemplo de flota del local: service y vencimientos.",
+    "eventos": "Ejemplo de eventos y salón: fecha, seña y checklist.",
+    "abonos": "Ejemplo de abonos mensuales: altas y mora.",
+    "mayorista": "Ejemplo de pedidos mayoristas: lista, mínimo y despacho.",
+    "reparto": "Ejemplo de reparto: zonas, chofer y entrega.",
+    "contratos": "Ejemplo de contratos y alquileres: vencimientos y renovación.",
 }
 
 

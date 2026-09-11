@@ -105,7 +105,47 @@
     ],
     reservas: [
       { user: "elena", pass: "demo", nombre: "Elena Recepción", rol: "Recepción" }
-    ]
+    ],
+    ordenes: [
+      { user: "hector", pass: "demo", nombre: "Héctor OT", rol: "Taller" }
+    ],
+    stockalertas: [
+      { user: "nora", pass: "demo", nombre: "Nora Stock", rol: "Depósito" }
+    ],
+    visitas: [
+      { user: "diego", pass: "demo", nombre: "Diego Campo", rol: "Técnico" }
+    ],
+    takeaway: [
+      { user: "caja", pass: "demo", nombre: "Mostrador", rol: "Pedidos" }
+    ],
+    cuotas: [
+      { user: "raul", pass: "demo", nombre: "Raúl Cobros", rol: "Caja" }
+    ],
+    obra: [
+      { user: "martin", pass: "demo", nombre: "Martín Obra", rol: "Obra" }
+    ],
+    fichas: [
+      { user: "lucia", pass: "demo", nombre: "Lucía Fichas", rol: "Consultorio" }
+    ],
+    flota: [
+      { user: "pablo", pass: "demo", nombre: "Pablo Flota", rol: "Logística" }
+    ],
+    eventos: [
+      { user: "paula", pass: "demo", nombre: "Paula Eventos", rol: "Salón" }
+    ],
+    abonos: [
+      { user: "vale", pass: "demo", nombre: "Vale Abonos", rol: "Recepción" }
+    ],
+    mayorista: [
+      { user: "ana", pass: "demo", nombre: "Ana Mayorista", rol: "Ventas" }
+    ],
+    reparto: [
+      { user: "luis", pass: "demo", nombre: "Luis Reparto", rol: "Chofer" }
+    ],
+    contratos: [
+      { user: "mesa", pass: "demo", nombre: "Mesa Contratos", rol: "Admin" }
+    ],
+
   };
 
   var users = USERS[rubro];
