@@ -11,7 +11,7 @@ ROOT = Path(__file__).resolve().parents[1]
 DEMOS = ROOT / "public" / "demos"
 W, H = 1200, 630
 BASE = "https://webconreeb.com"
-VERSION = "20260911og"
+VERSION = "20260911b"
 
 # Prefer these filenames when picking a cover photo
 PREFERRED = (
@@ -34,7 +34,7 @@ BLURBS: dict[str, str] = {
     "complejo": "Ejemplo de página web para complejo turístico: paquetes, predio y WhatsApp.",
     "estudio": "Ejemplo de página web para estudio jurídico o profesional: mesa de entradas y contacto.",
     "excursiones": "Ejemplo de página web para agencia de excursiones: tours y WhatsApp.",
-    "facturacion": "Ejemplo de sistema de comprobantes A, B y NC (demo).",
+    "facturacion": "Ejemplo de sistema de comprobantes A, B y NC.",
     "hospedaje": "Ejemplo de página web para cabañas: disponibilidad y WhatsApp.",
     "inmobiliaria": "Ejemplo de inmobiliaria en Bariloche: casas, zonas y WhatsApp.",
     "kiosco": "Ejemplo de página web para kiosco: stock, fiado y WhatsApp.",

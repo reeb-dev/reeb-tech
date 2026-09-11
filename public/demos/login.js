@@ -88,6 +88,23 @@
     inmobiliaria: [
       { user: "nahuel", pass: "demo", nombre: "Nahuel Huapi", rol: "Agente" },
       { user: "agenda", pass: "demo", nombre: "Agenda", rol: "Visitas" }
+    ],
+    turnos: [
+      { user: "lucia", pass: "demo", nombre: "Lucía Agenda", rol: "Recepción" },
+      { user: "marco", pass: "demo", nombre: "Marco", rol: "Profesional" }
+    ],
+    cotizaciones: [
+      { user: "nora", pass: "demo", nombre: "Nora Méndez", rol: "Mostrador" }
+    ],
+    cuentacorriente: [
+      { user: "raul", pass: "demo", nombre: "Raúl Castro", rol: "Caja" }
+    ],
+    comandas: [
+      { user: "caja", pass: "demo", nombre: "Caja", rol: "Salón" },
+      { user: "cocina", pass: "demo", nombre: "Cocina", rol: "Preparación" }
+    ],
+    reservas: [
+      { user: "elena", pass: "demo", nombre: "Elena Recepción", rol: "Recepción" }
     ]
   };
 
@@ -182,7 +199,7 @@
           '<button type="submit">Entrar</button>' +
         "</form>" +
         '<p class="demo-login-hint">Demo: no hay servidor ni clave real. En un sistema a medida cada persona tiene la suya.</p>' +
-        '<p class="demo-login-hint"><a href="index.html">Volver a la vitrina</a></p>' +
+        '<p class="demo-login-hint"><a href="index.html">Volver a la página</a></p>' +
       "</div>";
 
     (document.body || document.documentElement).appendChild(gate);
