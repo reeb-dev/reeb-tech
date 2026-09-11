@@ -49,7 +49,7 @@ const PUBLIC_TOP_FILES = new Set([
 ]);
 
 /** Cache-bust token for icon links (change when replacing mark art). */
-const HUB_FAVICON_VERSION = '20260910c';
+const HUB_FAVICON_VERSION = '20260911force';
 
 const DEMOS_REDIRECT_HTML = `<!DOCTYPE html>
 <html lang="es">
@@ -62,7 +62,8 @@ const DEMOS_REDIRECT_HTML = `<!DOCTYPE html>
   <meta property="og:url" content="https://webconreeb.com/">
   <link rel="icon" href="/brand/reeb-mark.svg?v=${HUB_FAVICON_VERSION}" type="image/svg+xml">
   <link rel="icon" href="/brand/reeb-mark-32.png?v=${HUB_FAVICON_VERSION}" type="image/png" sizes="32x32">
-  <link rel="shortcut icon" href="/brand/reeb-mark.ico?v=${HUB_FAVICON_VERSION}">
+  <link rel="icon" href="/brand/hub-mark.ico?v=${HUB_FAVICON_VERSION}" sizes="any">
+  <link rel="shortcut icon" href="/brand/hub-mark.ico?v=${HUB_FAVICON_VERSION}">
   <link rel="apple-touch-icon" href="/brand/reeb-mark-180.png?v=${HUB_FAVICON_VERSION}" sizes="180x180">
   <meta http-equiv="refresh" content="0; url=/">
   <script>location.replace('/' + (location.hash || '') + (location.search || ''));</script>
@@ -96,6 +97,7 @@ function forceHubFaviconsEverywhere(publicDir) {
     [path.join(publicDir, 'brand', 'reeb-mark-32.png'), path.join(OUT, 'favicon-32.png')],
     [path.join(publicDir, 'brand', 'reeb-mark-180.png'), path.join(OUT, 'apple-touch-icon.png')],
     [path.join(publicDir, 'brand', 'reeb-mark-180.png'), path.join(OUT, 'apple-touch-icon-hub.png')],
+    [markIco, path.join(OUT, 'brand', 'hub-mark.ico')],
   ];
   for (const [src, dest] of rootCopies) {
     if (!fs.existsSync(src)) continue;
