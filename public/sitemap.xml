@@ -11,37 +11,52 @@
     <priority>0.5</priority>
   </url>
   <url>
+    <loc>https://webconreeb.com/demos/gestion/</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.9</priority>
+  </url>
+  <url>
+    <loc>https://webconreeb.com/demos/inventario/</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.85</priority>
+  </url>
+  <url>
     <loc>https://webconreeb.com/demos/restaurante/</loc>
     <changefreq>monthly</changefreq>
-    <priority>0.8</priority>
+    <priority>0.85</priority>
   </url>
   <url>
     <loc>https://webconreeb.com/demos/inmobiliaria/</loc>
     <changefreq>monthly</changefreq>
-    <priority>0.8</priority>
+    <priority>0.85</priority>
   </url>
   <url>
     <loc>https://webconreeb.com/demos/estudio/</loc>
     <changefreq>monthly</changefreq>
-    <priority>0.8</priority>
+    <priority>0.85</priority>
   </url>
   <url>
     <loc>https://webconreeb.com/demos/comercio/</loc>
     <changefreq>monthly</changefreq>
-    <priority>0.7</priority>
+    <priority>0.85</priority>
   </url>
   <url>
-    <loc>https://webconreeb.com/demos/facturacion/</loc>
+    <loc>https://webconreeb.com/demos/kiosco/</loc>
     <changefreq>monthly</changefreq>
-    <priority>0.7</priority>
+    <priority>0.85</priority>
   </url>
   <url>
     <loc>https://webconreeb.com/demos/taller/</loc>
     <changefreq>monthly</changefreq>
-    <priority>0.7</priority>
+    <priority>0.85</priority>
   </url>
   <url>
     <loc>https://webconreeb.com/demos/peluqueria/</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.85</priority>
+  </url>
+  <url>
+    <loc>https://webconreeb.com/demos/facturacion/</loc>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
@@ -83,45 +98,50 @@
   <url>
     <loc>https://webconreeb.com/demos/carpinteria/</loc>
     <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
+    <priority>0.7</priority>
   </url>
   <url>
     <loc>https://webconreeb.com/demos/libreria/</loc>
     <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
+    <priority>0.7</priority>
   </url>
   <url>
     <loc>https://webconreeb.com/demos/biblioteca/</loc>
     <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
+    <priority>0.7</priority>
   </url>
   <url>
     <loc>https://webconreeb.com/demos/rotiseria/</loc>
     <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
-  </url>
-  <url>
-    <loc>https://webconreeb.com/demos/kiosco/</loc>
-    <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
+    <priority>0.7</priority>
   </url>
   <url>
     <loc>https://webconreeb.com/demos/marketplace/</loc>
     <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
+    <priority>0.7</priority>
   </url>
   <url>
     <loc>https://webconreeb.com/demos/stockfacturacion/</loc>
     <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
-  </url>
-  <url>
-    <loc>https://webconreeb.com/docs/</loc>
-    <changefreq>monthly</changefreq>
-    <priority>0.3</priority>
+    <priority>0.7</priority>
   </url>
   <url>
     <loc>https://webconreeb.com/demos/turnos/</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.75</priority>
+  </url>
+  <url>
+    <loc>https://webconreeb.com/demos/reservas/</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.75</priority>
+  </url>
+  <url>
+    <loc>https://webconreeb.com/demos/comandas/</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.75</priority>
+  </url>
+  <url>
+    <loc>https://webconreeb.com/demos/takeaway/</loc>
     <changefreq>monthly</changefreq>
     <priority>0.75</priority>
   </url>
@@ -136,13 +156,68 @@
     <priority>0.75</priority>
   </url>
   <url>
-    <loc>https://webconreeb.com/demos/comandas/</loc>
+    <loc>https://webconreeb.com/demos/abonos/</loc>
     <changefreq>monthly</changefreq>
     <priority>0.75</priority>
   </url>
   <url>
-    <loc>https://webconreeb.com/demos/reservas/</loc>
+    <loc>https://webconreeb.com/demos/contratos/</loc>
     <changefreq>monthly</changefreq>
     <priority>0.75</priority>
+  </url>
+  <url>
+    <loc>https://webconreeb.com/demos/cuotas/</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.75</priority>
+  </url>
+  <url>
+    <loc>https://webconreeb.com/demos/eventos/</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.75</priority>
+  </url>
+  <url>
+    <loc>https://webconreeb.com/demos/fichas/</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.75</priority>
+  </url>
+  <url>
+    <loc>https://webconreeb.com/demos/flota/</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.75</priority>
+  </url>
+  <url>
+    <loc>https://webconreeb.com/demos/obra/</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.75</priority>
+  </url>
+  <url>
+    <loc>https://webconreeb.com/demos/ordenes/</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.75</priority>
+  </url>
+  <url>
+    <loc>https://webconreeb.com/demos/reparto/</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.75</priority>
+  </url>
+  <url>
+    <loc>https://webconreeb.com/demos/stockalertas/</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.75</priority>
+  </url>
+  <url>
+    <loc>https://webconreeb.com/demos/visitas/</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.75</priority>
+  </url>
+  <url>
+    <loc>https://webconreeb.com/demos/mayorista/</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.75</priority>
+  </url>
+  <url>
+    <loc>https://webconreeb.com/docs/</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.3</priority>
   </url>
 </urlset>
