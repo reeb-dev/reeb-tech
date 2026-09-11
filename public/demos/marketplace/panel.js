@@ -644,9 +644,9 @@ function renderBilletera() {
 
   document.getElementById("publist").innerHTML = `
     <div class="mp-section">
-      <h4>Billetera Feria (pago demo)</h4>
+      <h4>Billetera Feria (pago de ejemplo)</h4>
       <div class="mp-balance">${money(mp.saldoDisponible)}</div>
-      <div class="mp-available">Comisión demo: 5% por venta. No hay transferencia real.</div>
+      <div class="mp-available">Comisión de ejemplo: 5% por venta. No hay transferencia real.</div>
     </div>
     ${(mp.movimientos || []).map((m) => `
       <div class="sale-item">
@@ -740,7 +740,7 @@ function renderFacturacion() {
       <div><strong>CAE:</strong> <span class="cae">${esc(venta.factura.cae)}</span></div>
       <div><strong>Vto CAE:</strong> ${esc(venta.factura.vto)}</div>
     </div>
-    <p style="font-size:12px;color:var(--muted);">Demo: CAE simulado. En producción se conecta a ARCA/AFIP.</p>
+    <p style="font-size:12px;color:var(--muted);">Ejemplo: CAE simulado. En un sistema real se conecta a ARCA/AFIP.</p>
   ` : `
     <h2>Emitir factura</h2>
     <p style="color:var(--muted);font-size:13px;">${esc(venta.comprador.nombre)} · ${money(venta.total)}</p>

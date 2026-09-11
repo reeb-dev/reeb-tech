@@ -334,7 +334,7 @@ function render() {
         <button class="btn-panel" type="button" id="registrar-venta" style="margin-top:10px;">
           Vender y facturar (simulado)
         </button>
-        <p style="font-size:11px;color:#64748b;margin-top:8px;">Demo: genera CAE simulado y descuenta stock.</p>
+        <p style="font-size:11px;color:#64748b;margin-top:8px;">Ejemplo: genera CAE simulado y descuenta stock.</p>
       </div>
     ` : `<p class="note">Sin stock para facturar.</p>`}
 

@@ -234,7 +234,7 @@ function render() {
         <button class="btn-panel" type="button" id="emitir-factura" style="margin-top:10px;" ${!item.honorarios ? "disabled" : ""}>
           Emitir factura (simulado)
         </button>
-        <p style="font-size:11px;color:#6b6b6b;margin-top:8px;">Demo: genera CAE simulado. En producción se conecta a ARCA/AFIP.</p>
+        <p style="font-size:11px;color:#6b6b6b;margin-top:8px;">Ejemplo: genera CAE simulado. En un sistema real se conecta a ARCA/AFIP.</p>
       </div>
     `}
     <form id="edit">
@@ -504,7 +504,7 @@ function renderDocs() {
   const doc = all.find((d) => d.id === selectedDoc);
   const detail = document.getElementById("doc-detail");
   if (!doc) {
-    detail.innerHTML = "<p>Elegí un documento de la lista. En esta demo no se suben archivos: es un listado de planos.</p>";
+    detail.innerHTML = "<p>Elegí un documento de la lista. En este ejemplo no se suben archivos: es un listado de planos.</p>";
     return;
   }
   const obra = items.find((o) => o.id === doc.obraId);

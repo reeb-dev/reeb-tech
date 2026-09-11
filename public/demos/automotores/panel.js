@@ -182,7 +182,7 @@ function renderArcaBox(item, prefix = "arca") {
       <button class="btn-panel" type="button" id="${prefix}-emitir" style="margin-top:12px;">
         Emitir factura (simulado)
       </button>
-      <p style="font-size:11px;color:#64748b;margin-top:10px;">Demo: genera CAE simulado. En producción se conecta a ARCA/AFIP.</p>
+      <p style="font-size:11px;color:#64748b;margin-top:10px;">Ejemplo: genera CAE simulado. En un sistema real se conecta a ARCA/AFIP.</p>
     </div>
   `;
 }

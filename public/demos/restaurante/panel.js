@@ -258,7 +258,7 @@ function renderMesas() {
         <button class="btn-panel" type="button" id="cerrar-mesa" style="margin-top:10px;" ${total === 0 ? "disabled" : ""}>
           Cobrar y cerrar (simulado)
         </button>
-        <p style="font-size:11px;color:#64748b;margin-top:8px;">Demo: genera CAE simulado.</p>
+        <p style="font-size:11px;color:#64748b;margin-top:8px;">Ejemplo: genera CAE simulado.</p>
       </div>
     ` : ""}
 

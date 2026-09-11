@@ -194,7 +194,7 @@ function renderOrdenes() {
           </select>
         </label>
         <button class="btn-panel" type="button" id="emitir-factura" ${total === 0 ? "disabled" : ""}>Emitir factura (simulado)</button>
-        <p class="hint">Demo: genera CAE simulado. En producción se conecta a ARCA/AFIP.</p>
+        <p class="hint">Ejemplo: genera CAE simulado. En un sistema real se conecta a ARCA/AFIP.</p>
       </div>
     `}
     <form id="edit">

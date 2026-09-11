@@ -408,7 +408,7 @@ function renderFacturas() {
         <label>CUIT cliente<input id="fac-cuit" value="${esc(fac.cliente.cuit)}" placeholder="30-12345678-9"></label>
         <label>Razón social<input id="fac-nombre" value="${esc(fac.cliente.nombre)}"></label>
         <button class="btn-panel" type="button" id="emitir">Emitir factura (simulado)</button>
-        <p class="hint">Demo: genera CAE simulado. En producción se conecta a ARCA/AFIP.</p>
+        <p class="hint">Ejemplo: genera CAE simulado. En un sistema real se conecta a ARCA/AFIP.</p>
       </div>
     ` : "")}
     <div class="actions">

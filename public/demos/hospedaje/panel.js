@@ -158,7 +158,7 @@ function render() {
         <button class="btn-panel" type="button" id="emitir-factura" style="margin-top:10px;">
           Emitir factura (simulado)
         </button>
-        <p style="font-size:11px;color:var(--muted);margin-top:8px;">Demo: genera CAE simulado. En un sistema real se conecta a ARCA/AFIP.</p>
+        <p style="font-size:11px;color:var(--muted);margin-top:8px;">Ejemplo: genera CAE simulado. En un sistema real se conecta a ARCA/AFIP.</p>
       </div>
     `}
 
