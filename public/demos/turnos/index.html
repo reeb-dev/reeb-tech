@@ -4,15 +4,15 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Agenda de turnos — ejemplo de sistema</title>
-  <meta name="description" content="Sistema de agenda: profesionales, horarios y estados del día. Ejemplo a medida, no suscripción.">
+  <meta name="description" content="Agenda con profesionales, horarios y estados. Ejemplo de sistema a medida, no suscripción.">
   <meta name="robots" content="index, follow">
   <link rel="canonical" href="https://webconreeb.com/demos/turnos/">
   <meta property="og:type" content="website">
   <meta property="og:site_name" content="Web con REEB">
   <meta property="og:url" content="https://webconreeb.com/demos/turnos/">
   <meta property="og:title" content="Agenda de turnos — ejemplo de sistema">
-  <meta property="og:description" content="Sistema de agenda: profesionales, horarios y estados del día. Ejemplo a medida, no suscripción.">
-  <meta property="og:image" content="https://webconreeb.com/demos/turnos/og.jpg?v=20260911b">
+  <meta property="og:description" content="Agenda con profesionales, horarios y estados. Ejemplo de sistema a medida, no suscripción.">
+  <meta property="og:image" content="https://webconreeb.com/demos/turnos/og.jpg?v=20260911d">
   <meta property="og:image:type" content="image/jpeg">
   <meta property="og:image:width" content="1200">
   <meta property="og:image:height" content="630">
@@ -20,11 +20,10 @@
   <meta property="og:locale" content="es_AR">
   <meta name="twitter:card" content="summary_large_image">
   <meta name="twitter:title" content="Agenda de turnos — ejemplo de sistema">
-  <meta name="twitter:description" content="Sistema de agenda: profesionales, horarios y estados del día. Ejemplo a medida, no suscripción.">
-  <meta name="twitter:image" content="https://webconreeb.com/demos/turnos/og.jpg?v=20260911b">
-
-<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;600&family=Source+Sans+3:wght@400;600;700&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="../_sistemas/base.css">
+  <meta name="twitter:description" content="Agenda con profesionales, horarios y estados. Ejemplo de sistema a medida, no suscripción.">
+  <meta name="twitter:image" content="https://webconreeb.com/demos/turnos/og.jpg?v=20260911d">
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;600&family=Source+Sans+3:wght@400;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../sistemas-ui/base.css?v=c2">
   <link rel="stylesheet" href="styles.css">
 </head>
 <body>
@@ -32,8 +31,8 @@
     <div class="band-inner">
       <a class="brand" href="index.html"><strong>Agenda</strong><span>Turnos · sistema de ejemplo</span></a>
       <nav>
-        <a href="#para-quien">Para quién</a>
-        <a href="#funciones">Qué hace</a>
+        <a href="#como">Cómo funciona</a>
+        <a href="#galeria">Fotos</a>
         <a class="btn" href="panel.html">Abrir panel</a>
       </nav>
     </div>
@@ -43,54 +42,60 @@
     <section class="hero">
       <div>
         <p class="kicker">Sistema de gestión</p>
-        <h1>La agenda del día, sin papelitos ni chats perdidos.</h1>
-        <p class="lead">Para peluquerías, veterinarias, consultorios, talleres o estética: cargan el turno, el profesional y el estado. El cliente pide por WhatsApp; ustedes lo confirman en el panel.</p>
+        <h1>La agenda del día, clara y en un solo lugar.</h1>
+        <p class="lead">Para salones, veterinarias, consultorios o talleres: cargan el turno, el profesional y el estado. El cliente pide por WhatsApp; ustedes confirman en el panel.</p>
         <div class="hero-actions">
           <a class="btn" href="panel.html">Probar el panel</a>
-          <a class="btn btn-quiet" href="/#sistemas-gestion">Volver al catálogo</a>
+          <a class="btn btn-quiet" href="/demos/#sistemas-gestion">Volver al catálogo</a>
         </div>
         <ul class="hero-facts">
-          <li><strong>Hoy</strong> turnos del día</li>
-          <li><strong>Estados</strong> pendiente · hecho · cancelado</li>
-          <li><strong>Varios</strong> profesionales</li>
+          <li><strong>Hoy</strong> turnos del día</li><li><strong>Estados</strong> pendientes y atendidos</li><li><strong>Equipo</strong> varios profesionales</li>
         </ul>
       </div>
-      <aside class="panel-card">
-        <h3>En el panel de ejemplo</h3>
-        <ul>
-          <li>Alta de turno con hora y servicio</li>
-          <li>Filtro por profesional</li>
-          <li>Marcar atendido o cancelado</li>
-          <li>Datos en el navegador (localStorage)</li>
-        </ul>
-      </aside>
+      <div class="hero-stage">
+        <img src="img/hero.jpg" alt="Agenda">
+        <div class="cap"><strong>Agenda</strong><span>Página de ejemplo · panel incluido</span></div>
+      </div>
     </section>
 
-    <section class="section" id="para-quien">
+    <section class="section" id="como">
       <p class="kicker">Uso</p>
-      <h2>Sirve cuando el negocio vive de la agenda</h2>
-      <p class="section-lead">No es una página de presentación sola: es el tablero de quien atiende. Se adapta al rubro; este ejemplo es genérico a propósito.</p>
-      <div class="grid-3">
-        <article class="feature"><strong>Salón o estética</strong><p>Varios puestos, servicios con duración y recordatorio al cliente.</p></article>
-        <article class="feature"><strong>Consultorio o vet</strong><p>Turnos por profesional, motivo de la visita y estado.</p></article>
-        <article class="feature"><strong>Taller o lavadero</strong><p>Cola del día: quién entra, quién espera, quién salió.</p></article>
+      <h2>Cómo funciona en el día a día</h2>
+      <p class="section-lead">Para salones, veterinarias, consultorios o talleres: cargan el turno, el profesional y el estado. El cliente pide por WhatsApp; ustedes confirman en el panel.</p>
+      <div class="steps">
+        <article class="step"><strong>Pedido</strong><p>El cliente escribe por WhatsApp o llama.</p></article><article class="step"><strong>Agenda</strong><p>Usted carga hora, profesional y servicio.</p></article><article class="step"><strong>Estado</strong><p>Pendiente, en curso o atendido.</p></article>
       </div>
     </section>
 
-    <section class="section" id="funciones">
-      <p class="kicker">Alcance</p>
-      <h2>Qué incluye este ejemplo</h2>
-      <p class="section-lead">Desarrollo a medida: se cotiza según profesionales, recordatorios y si quieren que el cliente reserve desde la web. Cobros en línea van aparte.</p>
-      <div class="grid-3">
-        <article class="feature"><strong>Agenda</strong><p>Lista del día con hora, cliente y servicio.</p></article>
-        <article class="feature"><strong>Estados</strong><p>Pendiente, en curso, atendido, cancelado.</p></article>
-        <article class="feature"><strong>Equipo</strong><p>Filtro por quien atiende.</p></article>
+    <section class="section" id="galeria">
+      <p class="kicker">Referencia visual</p>
+      <h2>Ambiente del ejemplo</h2>
+      <p class="section-lead">Fotos de referencia del rubro. En un trabajo a medida se usan las suyas.</p>
+      <div class="gallery">
+        <figure><img src="img/hero.jpg" alt="Salón"><figcaption>Salón</figcaption></figure><figure><img src="img/servicio-1.jpg" alt="Equipo"><figcaption>Equipo</figcaption></figure><figure><img src="img/servicio-2.jpg" alt="Servicio"><figcaption>Servicio</figcaption></figure><figure><img src="img/equipo.jpg" alt="Detalle"><figcaption>Detalle</figcaption></figure>
       </div>
     </section>
+
+    <section class="section">
+      <p class="kicker">Panel</p>
+      <h2>Qué ve quien administra</h2>
+      <div class="grid-3">
+        <article class="feature"><strong>Lista del día</strong><p>Hora, cliente, servicio y profesional.</p></article>
+        <article class="feature"><strong>Filtros</strong><p>Por quien atiende.</p></article>
+        <article class="feature"><strong>Estados</strong><p>Pendiente, en curso, atendido, cancelado.</p></article>
+      </div>
+    </section>
+
+    <div class="cta-band">
+      <p class="kicker" style="color:#e3c48a">A medida</p>
+      <h2>¿Le sirve este sistema a su local?</h2>
+      <p>Se adapta a su rubro. No es un software de suscripción: se cotiza y se entrega para usted.</p>
+      <a class="btn" href="#contacto">Consultar</a>
+    </div>
   </main>
 
   <div id="contacto"></div>
-  <footer class="wrap">Agenda de turnos · ejemplo de sistema · no es un software de suscripción.</footer>
-  <script src="../contacto.js" data-phone="5492915757934" data-text="Hola, quiero consultar por un sistema de turnos" data-subject="Consulta — Turnos" data-title="Consultar" data-place="index"></script>
+  <footer class="wrap">Agenda · ejemplo de sistema · no es un software de suscripción.</footer>
+  <script src="../contacto.js" data-phone="5492915757934" data-text="Hola, quiero consultar por un sistema de turnos" data-subject="Consulta — Agenda" data-title="Consultar" data-place="index"></script>
 </body>
 </html>

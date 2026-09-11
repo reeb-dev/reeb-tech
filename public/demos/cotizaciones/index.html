@@ -4,15 +4,15 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Cotizaciones — ejemplo de sistema</title>
-  <meta name="description" content="Para oficios, corralones y talleres: arman la cotización, la mandan por WhatsApp y, si el cliente acepta, la pasan a pedido con seña.">
+  <meta name="description" content="Del presupuesto al pedido con seña. Ejemplo de sistema a medida para oficios y comercios.">
   <meta name="robots" content="index, follow">
   <link rel="canonical" href="https://webconreeb.com/demos/cotizaciones/">
   <meta property="og:type" content="website">
   <meta property="og:site_name" content="Web con REEB">
   <meta property="og:url" content="https://webconreeb.com/demos/cotizaciones/">
   <meta property="og:title" content="Cotizaciones — ejemplo de sistema">
-  <meta property="og:description" content="Para oficios, corralones y talleres: arman la cotización, la mandan por WhatsApp y, si el cliente acepta, la pasan a pedido con seña.">
-  <meta property="og:image" content="https://webconreeb.com/demos/cotizaciones/og.jpg?v=20260911b">
+  <meta property="og:description" content="Del presupuesto al pedido con seña. Ejemplo de sistema a medida para oficios y comercios.">
+  <meta property="og:image" content="https://webconreeb.com/demos/cotizaciones/og.jpg?v=20260911d">
   <meta property="og:image:type" content="image/jpeg">
   <meta property="og:image:width" content="1200">
   <meta property="og:image:height" content="630">
@@ -20,11 +20,10 @@
   <meta property="og:locale" content="es_AR">
   <meta name="twitter:card" content="summary_large_image">
   <meta name="twitter:title" content="Cotizaciones — ejemplo de sistema">
-  <meta name="twitter:description" content="Para oficios, corralones y talleres: arman la cotización, la mandan por WhatsApp y, si el cliente acepta, la pasan a pedido con seña.">
-  <meta name="twitter:image" content="https://webconreeb.com/demos/cotizaciones/og.jpg?v=20260911b">
-
-<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;600&family=Source+Sans+3:wght@400;600;700&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="../_sistemas/base.css">
+  <meta name="twitter:description" content="Del presupuesto al pedido con seña. Ejemplo de sistema a medida para oficios y comercios.">
+  <meta name="twitter:image" content="https://webconreeb.com/demos/cotizaciones/og.jpg?v=20260911d">
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;600&family=Source+Sans+3:wght@400;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../sistemas-ui/base.css?v=c2">
   <link rel="stylesheet" href="styles.css">
 </head>
 <body>
@@ -32,12 +31,13 @@
     <div class="band-inner">
       <a class="brand" href="index.html"><strong>Cotizaciones</strong><span>Presupuesto → pedido · sistema de ejemplo</span></a>
       <nav>
-        <a href="#para-quien">Para quién</a>
-        <a href="#funciones">Qué hace</a>
+        <a href="#como">Cómo funciona</a>
+        <a href="#galeria">Fotos</a>
         <a class="btn" href="panel.html">Abrir panel</a>
       </nav>
     </div>
   </header>
+
   <main class="wrap">
     <section class="hero">
       <div>
@@ -46,28 +46,54 @@
         <p class="lead">Para oficios, corralones y talleres: arman la cotización, la mandan por WhatsApp y, si el cliente acepta, la pasan a pedido con seña.</p>
         <div class="hero-actions">
           <a class="btn" href="panel.html">Probar el panel</a>
-          <a class="btn btn-quiet" href="/#sistemas-gestion">Volver al catálogo</a>
+          <a class="btn btn-quiet" href="/demos/#sistemas-gestion">Volver al catálogo</a>
         </div>
+        <ul class="hero-facts">
+          <li><strong>Estados</strong> borrador a pedido</li><li><strong>WhatsApp</strong> texto listo</li><li><strong>Seña</strong> al aceptar</li>
+        </ul>
       </div>
-      <aside class="panel-card">
-        <h3>En el panel de ejemplo</h3>
-        <ul><li>Alta de cotización con ítems y total</li>
-<li>Estados: borrador, enviada, aceptada, pedido</li>
-<li>Pasar a pedido con seña</li></ul>
-      </aside>
+      <div class="hero-stage">
+        <img src="img/hero.jpg" alt="Cotizaciones">
+        <div class="cap"><strong>Cotizaciones</strong><span>Página de ejemplo · panel incluido</span></div>
+      </div>
     </section>
-    <section class="section" id="para-quien">
+
+    <section class="section" id="como">
       <p class="kicker">Uso</p>
-      <h2>Cuándo tiene sentido</h2>
+      <h2>Cómo funciona en el día a día</h2>
       <p class="section-lead">Para oficios, corralones y talleres: arman la cotización, la mandan por WhatsApp y, si el cliente acepta, la pasan a pedido con seña.</p>
-      <div class="grid-3"><article class="feature"><strong>Oficio</strong><p>Presupuesto de obra o mueble con seña.</p></article><article class="feature"><strong>Corralón</strong><p>Lista de materiales y precio por cliente.</p></article><article class="feature"><strong>Servicio</strong><p>Cotización de trabajo y fecha tentativa.</p></article></div>
+      <div class="steps">
+        <article class="step"><strong>Armar</strong><p>Ítem, monto y validez de la cotización.</p></article><article class="step"><strong>Enviar</strong><p>Copiar texto para WhatsApp.</p></article><article class="step"><strong>Pedido</strong><p>Si acepta, pasa a pedido con seña.</p></article>
+      </div>
     </section>
-    <section class="section" id="funciones">
-      <p class="kicker">Alcance</p>
-      <h2>Qué incluye este ejemplo</h2>
-      <p class="section-lead">Desarrollo a medida, no suscripción. Cobros en línea y facturación electrónica se cotizan aparte.</p>
+
+    <section class="section" id="galeria">
+      <p class="kicker">Referencia visual</p>
+      <h2>Ambiente del ejemplo</h2>
+      <p class="section-lead">Fotos de referencia del rubro. En un trabajo a medida se usan las suyas.</p>
+      <div class="gallery">
+        <figure><img src="img/hero.jpg" alt="Taller"><figcaption>Taller</figcaption></figure><figure><img src="img/trabajo-1.jpg" alt="Placard"><figcaption>Placard</figcaption></figure><figure><img src="img/trabajo-2.jpg" alt="Mesa"><figcaption>Mesa</figcaption></figure><figure><img src="img/trabajo-3.jpg" alt="Deck"><figcaption>Deck</figcaption></figure>
+      </div>
     </section>
+
+    <section class="section">
+      <p class="kicker">Panel</p>
+      <h2>Qué ve quien administra</h2>
+      <div class="grid-3">
+        <article class="feature"><strong>Alta rápida</strong><p>Cliente, ítem y monto.</p></article>
+        <article class="feature"><strong>Copiar</strong><p>Texto listo para WhatsApp.</p></article>
+        <article class="feature"><strong>Pedido</strong><p>Cambia de estado cuando aceptan.</p></article>
+      </div>
+    </section>
+
+    <div class="cta-band">
+      <p class="kicker" style="color:#e3c48a">A medida</p>
+      <h2>¿Le sirve este sistema a su local?</h2>
+      <p>Se adapta a su rubro. No es un software de suscripción: se cotiza y se entrega para usted.</p>
+      <a class="btn" href="#contacto">Consultar</a>
+    </div>
   </main>
+
   <div id="contacto"></div>
   <footer class="wrap">Cotizaciones · ejemplo de sistema · no es un software de suscripción.</footer>
   <script src="../contacto.js" data-phone="5492915757934" data-text="Hola, quiero consultar por un sistema de cotizaciones" data-subject="Consulta — Cotizaciones" data-title="Consultar" data-place="index"></script>

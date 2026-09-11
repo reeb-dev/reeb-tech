@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Panel · Agenda de turnos</title>
   <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;600&family=Source+Sans+3:wght@400;600;700&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="../_sistemas/base.css">
+  <link rel="stylesheet" href="../sistemas-ui/base.css?v=c2">
   <link rel="stylesheet" href="styles.css">
 </head>
 <body class="panel-body">
@@ -26,7 +26,12 @@
         <p class="kicker">Datos de ejemplo</p>
         <h1>Turnos del día</h1>
       </div>
+      <div class="toolbar-actions">
+        <button type="button" class="btn-ghost-nav" id="reset-sample" style="background:transparent;border:1px solid var(--line);color:var(--ink);padding:0.45rem 0.8rem;border-radius:8px;font-weight:600">Restablecer ejemplo</button>
+      </div>
     </div>
+    <p class="hint-bar"><strong>Ejemplo en el navegador.</strong> Los cambios quedan en este equipo (localStorage). Clave de acceso: <strong>demo</strong>.</p>
+    <div class="thumb-row"><img src="img/servicio-1.jpg" alt=""><img src="img/servicio-2.jpg" alt=""><img src="img/equipo.jpg" alt=""></div>
     <div class="stats" id="stats"></div>
     <div class="filters-row" id="filters"></div>
     <form class="create" id="create" hidden>

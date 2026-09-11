@@ -36,7 +36,7 @@
     var sheet = document.getElementById("sheet");
     var m = state.mesas.filter(function(x){return x.id===selected;})[0];
     if (!m) { sheet.innerHTML = "<p>Elija una mesa.</p>"; return; }
-    sheet.innerHTML = "<h3>"+esc(m.mesa)+"</h3><p>"+esc(m.notas||"Sin notas")+"</p><p><strong>"+money(total(m))+"</strong></p><div>"+(m.items||[]).map(function(i){return "<p>"+esc(i.nombre)+" · "+money(i.monto)+"</p>";}).join("")+"</div><p><span class=\"badge-state "+badge(m.estado)+"\">"+esc(label(m.estado))+"</span></p><div class=\"actions\"><button data-s=\"abierta\">Abierta</button><button data-s=\"cocina\">A cocina</button><button data-s=\"lista\">Lista</button><button data-s=\"cerrada\">Cerrar</button></div>";
+    sheet.innerHTML = '<img class="sheet-hero" src="img/plato-1.jpg" alt="">' + "<h3>"+esc(m.mesa)+"</h3><p>"+esc(m.notas||"Sin notas")+"</p><p><strong>"+money(total(m))+"</strong></p><div>"+(m.items||[]).map(function(i){return "<p>"+esc(i.nombre)+" · "+money(i.monto)+"</p>";}).join("")+"</div><p><span class=\"badge-state "+badge(m.estado)+"\">"+esc(label(m.estado))+"</span></p><div class=\"actions\"><button data-s=\"abierta\">Abierta</button><button data-s=\"cocina\">A cocina</button><button data-s=\"lista\">Lista</button><button data-s=\"cerrada\">Cerrar</button></div>";
     sheet.querySelectorAll("[data-s]").forEach(function(b){ b.onclick=function(){ m.estado=b.getAttribute("data-s"); save(); render(); }; });
   }
   var form = document.getElementById("create");
@@ -58,4 +58,13 @@
     save(); form.reset(); form.hidden = true; render();
   };
   render();
+
+  var resetBtn = document.getElementById("reset-sample");
+  if (resetBtn) {
+    resetBtn.addEventListener("click", function () {
+      if (!confirm("¿Restablecer los datos de ejemplo de este panel?")) return;
+      localStorage.removeItem("sistema-comandas-v1");
+      location.reload();
+    });
+  }
 })();

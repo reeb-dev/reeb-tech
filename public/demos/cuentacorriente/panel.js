@@ -36,19 +36,59 @@
     var c = state.clientes.filter(function (x) { return x.id === selected; })[0];
     if (!c) { sheet.innerHTML = "<p>Elija un cliente.</p>"; return; }
     var movs = state.movs.filter(function (m) { return m.clienteId === c.id; }).sort(function (a,b){ return b.fecha.localeCompare(a.fecha); });
-    sheet.innerHTML = "<h3>"+esc(c.nombre)+"</h3><p>Saldo: <strong>"+money(saldo(c.id))+"</strong></p><p>Tel: "+esc(c.tel)+"</p><div style=\"margin-top:0.8rem\">"+movs.map(function(m){
+    sheet.innerHTML = '<img class="sheet-hero" src="img/local-1.jpg" alt="">' + "<h3>"+esc(c.nombre)+"</h3><p>Saldo: <strong>"+money(saldo(c.id))+"</strong></p><p>Tel: "+esc(c.tel)+"</p><div style=\"margin-top:0.8rem\">"+movs.map(function(m){
       return "<p>"+esc(m.fecha)+" · "+esc(m.tipo)+" · "+money(m.monto)+" — "+esc(m.detalle)+"</p>";
     }).join("")+"</div>";
   }
+  function fillClientes() {
+    var sel = form.clienteId;
+    var cur = sel.value;
+    sel.innerHTML = "";
+    state.clientes.forEach(function (c) {
+      var o = document.createElement("option");
+      o.value = c.id;
+      o.textContent = c.nombre;
+      sel.appendChild(o);
+    });
+    if (cur) sel.value = cur;
+  }
   var form = document.getElementById("create");
-  var sel = form.clienteId;
-  state.clientes.forEach(function (c) { var o = document.createElement("option"); o.value = c.id; o.textContent = c.nombre; sel.appendChild(o); });
-  document.getElementById("open-create").onclick = function () { form.hidden = !form.hidden; };
+  var formCliente = document.getElementById("create-cliente");
+  fillClientes();
+  document.getElementById("open-create").onclick = function () {
+    form.hidden = !form.hidden;
+    if (!form.hidden) formCliente.hidden = true;
+  };
+  document.getElementById("open-cliente").onclick = function () {
+    formCliente.hidden = !formCliente.hidden;
+    if (!formCliente.hidden) form.hidden = true;
+  };
+  formCliente.onsubmit = function (ev) {
+    ev.preventDefault();
+    var fd = new FormData(formCliente);
+    var neu = { id: "cl" + Date.now(), nombre: String(fd.get("nombre")).trim(), tel: String(fd.get("tel") || "").trim() };
+    state.clientes.push(neu);
+    selected = neu.id;
+    save();
+    fillClientes();
+    formCliente.reset();
+    formCliente.hidden = true;
+    render();
+  };
   form.onsubmit = function (ev) {
     ev.preventDefault();
     var fd = new FormData(form);
     state.movs.push({ id: "m"+Date.now(), clienteId: String(fd.get("clienteId")), tipo: String(fd.get("tipo")), monto: Number(fd.get("monto")||0), detalle: String(fd.get("detalle")).trim(), fecha: "2026-09-11" });
-    selected = String(fd.get("clienteId")); save(); form.reset(); form.hidden = true; render();
+    selected = String(fd.get("clienteId")); save(); form.reset(); form.hidden = true; fillClientes(); render();
   };
   render();
+
+  var resetBtn = document.getElementById("reset-sample");
+  if (resetBtn) {
+    resetBtn.addEventListener("click", function () {
+      if (!confirm("¿Restablecer los datos de ejemplo de este panel?")) return;
+      localStorage.removeItem("sistema-cc-v1");
+      location.reload();
+    });
+  }
 })();

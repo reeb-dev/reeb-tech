@@ -34,11 +34,12 @@
     var sheet = document.getElementById("sheet");
     var r = state.reservas.filter(function(x){return x.id===selected;})[0];
     if (!r) { sheet.innerHTML = "<p>Elija una reserva.</p>"; return; }
-    sheet.innerHTML = "<h3>"+esc(r.unidad)+"</h3><p>"+esc(r.huesped)+"</p><p>"+esc(r.desde)+" → "+esc(r.hasta)+"</p><p>Seña: <strong>"+money(r.sena)+"</strong></p><p>"+esc(r.notas||"—")+"</p><p><span class=\"badge-state "+badge(r.estado)+"\">"+esc(label(r.estado))+"</span></p><div class=\"actions\"><button data-s=\"consulta\">Consulta</button><button data-s=\"reservada\">Reservada</button><button data-s=\"ocupada\">Check-in</button><button data-s=\"cerrada\">Check-out</button></div>";
+    var uObj=state.unidades.filter(function(u){var n=typeof u==="string"?u:u.nombre; return n===r.unidad;})[0]; var foto=(uObj&&uObj.foto)||"img/hero.jpg";
+    sheet.innerHTML = '<img class="sheet-hero" src="'+foto+'" alt="">' + "<h3>"+esc(r.unidad)+"</h3><p>"+esc(r.huesped)+"</p><p>"+esc(r.desde)+" → "+esc(r.hasta)+"</p><p>Seña: <strong>"+money(r.sena)+"</strong></p><p>"+esc(r.notas||"—")+"</p><p><span class=\"badge-state "+badge(r.estado)+"\">"+esc(label(r.estado))+"</span></p><div class=\"actions\"><button data-s=\"consulta\">Consulta</button><button data-s=\"reservada\">Reservada</button><button data-s=\"ocupada\">Check-in</button><button data-s=\"cerrada\">Check-out</button></div>";
     sheet.querySelectorAll("[data-s]").forEach(function(b){ b.onclick=function(){ r.estado=b.getAttribute("data-s"); save(); render(); }; });
   }
   var form = document.getElementById("create");
-  state.unidades.forEach(function(u){ var o=document.createElement("option"); o.value=u; o.textContent=u; form.unidad.appendChild(o); });
+  state.unidades.forEach(function(u){ var name=typeof u==="string"?u:u.nombre; var o=document.createElement("option"); o.value=name; o.textContent=name; form.unidad.appendChild(o); });
   document.getElementById("open-create").onclick = function(){ form.hidden=!form.hidden; };
   form.onsubmit = function(ev){
     ev.preventDefault();
@@ -47,4 +48,13 @@
     state.reservas.unshift(item); selected = item.id; save(); form.reset(); form.hidden = true; render();
   };
   render();
+
+  var resetBtn = document.getElementById("reset-sample");
+  if (resetBtn) {
+    resetBtn.addEventListener("click", function () {
+      if (!confirm("¿Restablecer los datos de ejemplo de este panel?")) return;
+      localStorage.removeItem("sistema-reservas-v1");
+      location.reload();
+    });
+  }
 })();

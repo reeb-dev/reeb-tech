@@ -4,15 +4,15 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Comandas — ejemplo de sistema</title>
-  <meta name="description" content="Para restaurantes y rotiserías: mesas abiertas, ítems, estados de cocina y cierre. Ejemplo de salón; se adapta al local.">
+  <meta name="description" content="Mesas, cocina y cierre de cuenta. Ejemplo de sistema a medida para gastronomía.">
   <meta name="robots" content="index, follow">
   <link rel="canonical" href="https://webconreeb.com/demos/comandas/">
   <meta property="og:type" content="website">
   <meta property="og:site_name" content="Web con REEB">
   <meta property="og:url" content="https://webconreeb.com/demos/comandas/">
   <meta property="og:title" content="Comandas — ejemplo de sistema">
-  <meta property="og:description" content="Para restaurantes y rotiserías: mesas abiertas, ítems, estados de cocina y cierre. Ejemplo de salón; se adapta al local.">
-  <meta property="og:image" content="https://webconreeb.com/demos/comandas/og.jpg?v=20260911b">
+  <meta property="og:description" content="Mesas, cocina y cierre de cuenta. Ejemplo de sistema a medida para gastronomía.">
+  <meta property="og:image" content="https://webconreeb.com/demos/comandas/og.jpg?v=20260911d">
   <meta property="og:image:type" content="image/jpeg">
   <meta property="og:image:width" content="1200">
   <meta property="og:image:height" content="630">
@@ -20,11 +20,10 @@
   <meta property="og:locale" content="es_AR">
   <meta name="twitter:card" content="summary_large_image">
   <meta name="twitter:title" content="Comandas — ejemplo de sistema">
-  <meta name="twitter:description" content="Para restaurantes y rotiserías: mesas abiertas, ítems, estados de cocina y cierre. Ejemplo de salón; se adapta al local.">
-  <meta name="twitter:image" content="https://webconreeb.com/demos/comandas/og.jpg?v=20260911b">
-
-<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;600&family=Source+Sans+3:wght@400;600;700&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="../_sistemas/base.css">
+  <meta name="twitter:description" content="Mesas, cocina y cierre de cuenta. Ejemplo de sistema a medida para gastronomía.">
+  <meta name="twitter:image" content="https://webconreeb.com/demos/comandas/og.jpg?v=20260911d">
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;600&family=Source+Sans+3:wght@400;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../sistemas-ui/base.css?v=c2">
   <link rel="stylesheet" href="styles.css">
 </head>
 <body>
@@ -32,42 +31,69 @@
     <div class="band-inner">
       <a class="brand" href="index.html"><strong>Comandas</strong><span>Salón → cocina · sistema de ejemplo</span></a>
       <nav>
-        <a href="#para-quien">Para quién</a>
-        <a href="#funciones">Qué hace</a>
+        <a href="#como">Cómo funciona</a>
+        <a href="#galeria">Fotos</a>
         <a class="btn" href="panel.html">Abrir panel</a>
       </nav>
     </div>
   </header>
+
   <main class="wrap">
     <section class="hero">
       <div>
         <p class="kicker">Sistema de gestión</p>
         <h1>La mesa pide, la cocina ve, la caja cierra.</h1>
-        <p class="lead">Para restaurantes y rotiserías: mesas abiertas, ítems, estados de cocina y cierre. Ejemplo de salón; se adapta al local.</p>
+        <p class="lead">Para restaurantes y rotiserías: mesas abiertas, ítems, estados de cocina y cierre. Se adapta al local.</p>
         <div class="hero-actions">
           <a class="btn" href="panel.html">Probar el panel</a>
-          <a class="btn btn-quiet" href="/#sistemas-gestion">Volver al catálogo</a>
+          <a class="btn btn-quiet" href="/demos/#sistemas-gestion">Volver al catálogo</a>
         </div>
+        <ul class="hero-facts">
+          <li><strong>Mesas</strong> abiertas</li><li><strong>Cocina</strong> en cola</li><li><strong>Cierre</strong> de cuenta</li>
+        </ul>
       </div>
-      <aside class="panel-card">
-        <h3>En el panel de ejemplo</h3>
-        <ul><li>Mesas abiertas</li>
-<li>Ítems a cocina</li>
-<li>Estados y cierre</li></ul>
-      </aside>
+      <div class="hero-stage">
+        <img src="img/hero.jpg" alt="Comandas">
+        <div class="cap"><strong>Comandas</strong><span>Página de ejemplo · panel incluido</span></div>
+      </div>
     </section>
-    <section class="section" id="para-quien">
+
+    <section class="section" id="como">
       <p class="kicker">Uso</p>
-      <h2>Cuándo tiene sentido</h2>
-      <p class="section-lead">Para restaurantes y rotiserías: mesas abiertas, ítems, estados de cocina y cierre. Ejemplo de salón; se adapta al local.</p>
-      <div class="grid-3"><article class="feature"><strong>Salón</strong><p>Mesa, mozo y total en curso.</p></article><article class="feature"><strong>Cocina</strong><p>Cola de preparación por estado.</p></article><article class="feature"><strong>Caja</strong><p>Cerrar mesa cuando está lista.</p></article></div>
+      <h2>Cómo funciona en el día a día</h2>
+      <p class="section-lead">Para restaurantes y rotiserías: mesas abiertas, ítems, estados de cocina y cierre. Se adapta al local.</p>
+      <div class="steps">
+        <article class="step"><strong>Abrir mesa</strong><p>Carga ítems y notas.</p></article><article class="step"><strong>Cocina</strong><p>Pasa a preparación.</p></article><article class="step"><strong>Cerrar</strong><p>Cuando está lista, cierra la cuenta.</p></article>
+      </div>
     </section>
-    <section class="section" id="funciones">
-      <p class="kicker">Alcance</p>
-      <h2>Qué incluye este ejemplo</h2>
-      <p class="section-lead">Desarrollo a medida, no suscripción. Cobros en línea y facturación electrónica se cotizan aparte.</p>
+
+    <section class="section" id="galeria">
+      <p class="kicker">Referencia visual</p>
+      <h2>Ambiente del ejemplo</h2>
+      <p class="section-lead">Fotos de referencia del rubro. En un trabajo a medida se usan las suyas.</p>
+      <div class="gallery">
+        <figure><img src="img/hero.jpg" alt="Salón"><figcaption>Salón</figcaption></figure><figure><img src="img/plato-1.jpg" alt="Asado"><figcaption>Asado</figcaption></figure><figure><img src="img/plato-2.jpg" alt="Empanadas"><figcaption>Empanadas</figcaption></figure><figure><img src="img/plato-3.jpg" alt="Bife"><figcaption>Bife</figcaption></figure>
+      </div>
     </section>
+
+    <section class="section">
+      <p class="kicker">Panel</p>
+      <h2>Qué ve quien administra</h2>
+      <div class="grid-3">
+        <article class="feature"><strong>Salón</strong><p>Mesa e ítems en curso.</p></article>
+        <article class="feature"><strong>Cocina</strong><p>Estados de preparación.</p></article>
+        <article class="feature"><strong>Caja</strong><p>Cerrar cuando está lista.</p></article>
+      </div>
+    </section>
+
+    <div class="cta-band">
+      <p class="kicker" style="color:#e3c48a">A medida</p>
+      <h2>¿Le sirve este sistema a su local?</h2>
+      <p>Se adapta a su rubro. No es un software de suscripción: se cotiza y se entrega para usted.</p>
+      <a class="btn" href="#contacto">Consultar</a>
+    </div>
   </main>
+
   <div id="contacto"></div>
   <footer class="wrap">Comandas · ejemplo de sistema · no es un software de suscripción.</footer>
   <script src="../contacto.js" data-phone="5492915757934" data-text="Hola, quiero consultar por un sistema de comandas" data-subject="Consulta — Comandas" data-title="Consultar" data-place="index"></script>

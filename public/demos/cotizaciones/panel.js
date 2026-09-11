@@ -36,8 +36,20 @@
     var sheet = document.getElementById("sheet");
     var x = state.items.filter(function(i){return i.id===selected;})[0];
     if (!x) { sheet.innerHTML = "<p>Elija una cotización.</p>"; return; }
-    sheet.innerHTML = "<h3>"+esc(x.numero)+"</h3><p>"+esc(x.cliente)+"</p><p>"+esc(x.item)+"</p><p><strong>"+money(x.monto)+"</strong></p><p>Válida: "+esc(x.valida||"—")+"</p><p>"+esc(x.notas||"")+"</p><p><span class=\"badge-state "+badge(x.estado)+"\">"+esc(label(x.estado))+"</span></p><div class=\"actions\"><button data-s=\"enviada\">Marcar enviada</button><button data-s=\"aceptada\">Aceptada</button><button data-s=\"pedido\">Pasar a pedido</button><button data-s=\"borrador\">Borrador</button></div>";
+    var fotos=["img/trabajo-1.jpg","img/trabajo-2.jpg","img/trabajo-3.jpg"]; var foto=fotos[Math.abs(x.numero.length)%3];
+    sheet.innerHTML = '<img class="sheet-hero" src="'+foto+'" alt="">' + "<h3>"+esc(x.numero)+"</h3><p>"+esc(x.cliente)+"</p><p>"+esc(x.item)+"</p><p><strong>"+money(x.monto)+"</strong></p><p>Válida: "+esc(x.valida||"—")+"</p><p>"+esc(x.notas||"")+"</p><p><span class=\"badge-state "+badge(x.estado)+"\">"+esc(label(x.estado))+"</span></p><div class=\"actions\"><button data-s=\"enviada\">Marcar enviada</button><button data-s=\"aceptada\">Aceptada</button><button data-s=\"pedido\">Pasar a pedido</button><button data-s=\"borrador\">Borrador</button><button type=\"button\" id=\"copy-wa\">Copiar para WhatsApp</button></div>";
     sheet.querySelectorAll("[data-s]").forEach(function(b){ b.onclick=function(){ x.estado=b.getAttribute("data-s"); save(); render(); }; });
+    var copyBtn = sheet.querySelector("#copy-wa");
+    if (copyBtn) {
+      copyBtn.onclick = function () {
+        var msg = "Cotización " + x.numero + "\n" + x.cliente + "\n" + x.item + "\nTotal: " + money(x.monto) + (x.valida ? ("\nVálida hasta: " + x.valida) : "");
+        if (navigator.clipboard && navigator.clipboard.writeText) {
+          navigator.clipboard.writeText(msg).then(function () { copyBtn.textContent = "Copiado"; setTimeout(function(){ copyBtn.textContent = "Copiar para WhatsApp"; }, 1500); });
+        } else {
+          prompt("Copie el texto:", msg);
+        }
+      };
+    }
   }
   var form = document.getElementById("create");
   document.getElementById("open-create").onclick = function(){ form.hidden = !form.hidden; };
@@ -48,4 +60,13 @@
     state.items.unshift(item); selected = item.id; save(); form.reset(); form.hidden = true; render();
   };
   render();
+
+  var resetBtn = document.getElementById("reset-sample");
+  if (resetBtn) {
+    resetBtn.addEventListener("click", function () {
+      if (!confirm("¿Restablecer los datos de ejemplo de este panel?")) return;
+      localStorage.removeItem("sistema-cotizaciones-v1");
+      location.reload();
+    });
+  }
 })();

@@ -101,7 +101,9 @@
       sheet.innerHTML = "<p>Elija un turno de la lista.</p>";
       return;
     }
+    var foto = t.profesional === "Lucía" ? "img/servicio-1.jpg" : t.profesional === "Ana" ? "img/servicio-2.jpg" : "img/equipo.jpg";
     sheet.innerHTML =
+      '<img class="sheet-hero" src="' + foto + '" alt="">' +
       "<h3>" + esc(t.cliente) + "</h3>" +
       "<p><strong>" + esc(t.hora) + "</strong> · " + esc(t.fecha) + "</p>" +
       "<p>" + esc(t.servicio) + " · " + esc(t.profesional) + "</p>" +
@@ -168,4 +170,13 @@
   });
 
   render();
+
+  var resetBtn = document.getElementById("reset-sample");
+  if (resetBtn) {
+    resetBtn.addEventListener("click", function () {
+      if (!confirm("¿Restablecer los datos de ejemplo de este panel?")) return;
+      localStorage.removeItem("sistema-turnos-v1");
+      location.reload();
+    });
+  }
 })();

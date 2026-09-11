@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Panel · Cuenta corriente</title>
   <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;600&family=Source+Sans+3:wght@400;600;700&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="../_sistemas/base.css">
+  <link rel="stylesheet" href="../sistemas-ui/base.css?v=c2">
   <link rel="stylesheet" href="styles.css">
 </head>
 <body class="panel-body">
@@ -15,15 +15,23 @@
       <a class="brand" href="index.html"><strong>Cuenta corriente</strong><span>Panel de ejemplo</span></a>
       <nav>
         <a href="index.html">Qué es</a>
+        <button class="btn" id="open-cliente" type="button">Nuevo cliente</button>
         <button class="btn" id="open-create" type="button">Nuevo movimiento</button>
       </nav>
     </div>
   </header>
   <div class="wrap">
     <div class="toolbar"><div><p class="kicker">Datos de ejemplo</p><h1>Cuentas</h1></div></div>
+    <p class="hint-bar"><strong>Ejemplo en el navegador.</strong> Clave de acceso: <strong>demo</strong>. <button type="button" id="reset-sample" style="margin-left:0.5rem;font:inherit;cursor:pointer;border:1px solid var(--line);background:#fff;border-radius:8px;padding:0.25rem 0.55rem">Restablecer ejemplo</button></p>
+    <div class="thumb-row"><img src="img/local-1.jpg" alt=""><img src="img/local-2.jpg" alt=""><img src="img/local-3.jpg" alt=""></div>
     <div class="stats" id="stats"></div>
     <div class="filters-row" id="filters"></div>
 
+    <form class="create" id="create-cliente" hidden>
+      <label>Nombre<input name="nombre" required placeholder="Comercio o persona"></label>
+      <label>Teléfono<input name="tel" placeholder="291…"></label>
+      <button type="submit">Guardar cliente</button>
+    </form>
     <form class="create" id="create" hidden>
       <label>Cliente
         <select name="clienteId"></select>

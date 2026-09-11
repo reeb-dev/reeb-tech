@@ -19,6 +19,7 @@ const CV_DIR = path.join(OUT, 'cv');
 const PUBLIC_TOP_DIRS = new Set(['demos', 'docs', 'media', 'tech', 'brand']);
 const PUBLIC_TOP_FILES = new Set([
   'CNAME',
+  '.nojekyll',
   'robots.txt',
   'sitemap.xml',
   'og.png',
@@ -193,6 +194,9 @@ function preparePublishLayout() {
   fs.writeFileSync(path.join(OUT, 'demos', 'index.html'), DEMOS_REDIRECT_HTML, 'utf8');
 
   forceHubFaviconsEverywhere(path.join(ROOT, 'public'));
+  // Disable Jekyll so folders/files like shared assets are published as-is.
+  fs.writeFileSync(path.join(OUT, '.nojekyll'), '');
+
 
   console.log('Pages layout: / = hub catalog; /demos/ → /; Angular CV at /cv/; hub favicons forced at root.');
 }

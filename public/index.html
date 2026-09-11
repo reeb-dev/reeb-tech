@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Web con REEB</title>
+  <meta http-equiv="refresh" content="0; url=/demos/">
+  <script>
+    // En local: el catálogo vive en /demos/. En producción el build pone el hub en /.
+    location.replace("/demos/" + (location.hash || "") + (location.search || ""));
+  </script>
+</head>
+<body>
+  <p style="font-family: system-ui, sans-serif; padding: 2rem;">
+    <a href="/demos/">Ir al catálogo</a>
+  </p>
+</body>
+</html>

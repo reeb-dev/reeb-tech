@@ -1,5 +1,10 @@
 window.RESERVAS_SEED = {
-  unidades: ["Cabaña Arrayán", "Cabaña Ciprés", "Habitación 1", "Habitación 2"],
+  unidades: [
+    { nombre: "Cabaña Arrayán", foto: "img/unidad-1.jpg" },
+    { nombre: "Cabaña Ciprés", foto: "img/unidad-2.jpg" },
+    { nombre: "Habitación 1", foto: "img/unidad-3.jpg" },
+    { nombre: "Habitación 2", foto: "img/hero.jpg" }
+  ],
   reservas: [
     { id: "r1", unidad: "Cabaña Arrayán", huesped: "Familia Torres", desde: "2026-09-12", hasta: "2026-09-15", sena: 80000, notas: "Cuna", estado: "reservada" },
     { id: "r2", unidad: "Habitación 1", huesped: "Lucía Vega", desde: "2026-09-11", hasta: "2026-09-13", sena: 40000, notas: "", estado: "ocupada" },
