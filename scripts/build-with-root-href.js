@@ -46,6 +46,7 @@ const PUBLIC_TOP_FILES = new Set([
   'logofavico.png',
   'screenshot-2025-02-05-130401.png',
   'unnamed.webp',
+  '404.html',
 ]);
 
 /** Cache-bust token for icon links (change when replacing mark art). */
