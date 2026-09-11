@@ -1199,7 +1199,7 @@ function defaultVitrinaPage() {
       },
       pie: {
         line1: "¿Es agente inmobiliario? El panel lista la cartera, cambia estados, registra visitas y elige si el aviso va a la web, a Mercado Libre o a redes. Esos datos no se muestran acá.",
-        line2: "Estudio Nahuel Huapi · Bariloche · demo de producto · datos ficticios con fines ilustrativos. La venta se muestra en dólares y el alquiler permanente en pesos."
+        line2: "Estudio Nahuel Huapi · Bariloche · ejemplo de página web · datos ficticios con fines ilustrativos. La venta se muestra en dólares y el alquiler permanente en pesos."
       }
     }
   };
@@ -1251,7 +1251,7 @@ const VITRINA_SECTIONS = [
   {
     id: "lugares",
     label: "Lugares",
-    hint: "La tira de fotos para ubicarse. Cada lámina ya está en la vitrina.",
+    hint: "La tira de fotos para ubicarse. Cada lámina ya está en la página pública.",
     nav: "lugares",
     fields: [
       { path: "lugares.kicker", label: "Antetítulo", kind: "text" },
@@ -1312,7 +1312,7 @@ const VITRINA_SECTIONS = [
   {
     id: "contacto",
     label: "Contacto",
-    hint: "Formulario y WhatsApp de la vitrina. No es un servidor real.",
+    hint: "Formulario y WhatsApp de la página. No es un servidor real.",
     nav: "contacto",
     fields: [
       { path: "contacto.title", label: "Título", kind: "text" },
@@ -1322,7 +1322,7 @@ const VITRINA_SECTIONS = [
   {
     id: "pie",
     label: "Pie de página",
-    hint: "Las dos líneas del final de la vitrina.",
+    hint: "Las dos líneas del final de la página.",
     fields: [
       { path: "pie.line1", label: "Primera línea", kind: "area" },
       { path: "pie.line2", label: "Segunda línea", kind: "area" }
@@ -1331,7 +1331,7 @@ const VITRINA_SECTIONS = [
   {
     id: "agentes",
     label: "Acceso para agentes",
-    hint: "El enlace «Para agentes» del menú público. El panel sigue existiendo; solo deja de verse en la vitrina.",
+    hint: "El enlace «Para agentes» del menú público. El panel sigue existiendo; solo deja de verse en la página pública.",
     fields: []
   }
 ];
@@ -1755,7 +1755,7 @@ function destMarca(dest) {
 }
 
 function destChipNombre(dest) {
-  if (dest.id === "web") return "Vitrina";
+  if (dest.id === "web") return "Página pública";
   if (dest.id === "ml") return "ML";
   if (dest.id === "fbmarket") return "Marketplace";
   if (dest.id === "google") return "Google";

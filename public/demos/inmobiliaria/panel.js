@@ -1126,7 +1126,7 @@ function paintCarteraList() {
         <div class="row-actions">
           <button type="button" class="ghost" data-edit="${esc(item.id)}">${editable ? "Editar" : "Ver ficha"}</button>
           ${editable ? `<button type="button" class="ghost" data-pub="${esc(item.id)}">Publicar</button>` : ""}
-          <a class="ghost" href="propiedad.html?id=${esc(item.id)}" target="_blank" rel="noopener">Ver vitrina</a>
+          <a class="ghost" href="propiedad.html?id=${esc(item.id)}" target="_blank" rel="noopener">Ver página</a>
         </div>
       </td>
     </tr>`;

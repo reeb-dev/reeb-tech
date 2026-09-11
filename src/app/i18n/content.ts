@@ -446,7 +446,7 @@ export const translations: Record<Lang, Dictionary> = {
       sistemasCols: ['Kiosco / almacén', 'Inmobiliaria', 'Hospedaje', 'Estudio jurídico', 'Taller / salón'],
       sistemasRows: [
         {
-          cap: 'Vitrina',
+          cap: 'Página pública',
           cells: [
             'Qué vende, horario y cómo llegar.',
             'Propiedades en venta y alquiler.',
@@ -547,13 +547,13 @@ export const translations: Record<Lang, Dictionary> = {
         },
       ],
       sistemasNote: 'Cobros en línea y ARCA se cotizan aparte; no están en el piso de Presencia ni de Negocio. En los ejemplos, un kiosco muestra precios en pesos; un 0km o una propiedad pueden ir en dólares, como en el mercado local. Los paneles piden un usuario de ejemplo (clave demo); no es un acceso real.',
-      sistemasTradesTitle: 'Cada demo',
+      sistemasTradesTitle: 'Cada ejemplo',
       sistemasTradesLead: 'Una o dos frases por rubro, más dónde se publica. No es un manual del panel.',
       sistemasTrades: [
         { name: 'Kiosco Lo de Pedro', blurb: 'Muestra el kiosco. En el panel usted controla góndola y fiado; el vecino no ve la libreta. Precios de ejemplo en pesos. Una carga: web, Instagram, Facebook o WhatsApp.' },
         { name: 'Almacén del Barrio', blurb: 'Pedidos a proveedores, góndola y cierre de caja. No es una inmobiliaria ni un hotel. Una carga: web, Mercado Libre o redes.' },
         { name: 'Libro (facturación)', blurb: 'Comprobantes A, B y notas de crédito. Pensado para quien ya factura; no reemplaza al contador. Una carga: web o WhatsApp. Sin Mercado Libre.' },
-        { name: 'Inmobiliaria Reeb', blurb: 'Vitrina de propiedades, filtros y consulta. Las visitas y los interesados viven en el panel. Una carga: web, Mercado Libre, Zonaprop, Argenprop o redes. El aviso del portal se contrata aparte.' },
+        { name: 'Nahuel Huapi', blurb: 'Página de propiedades, filtros y consulta. Las visitas y los interesados viven en el panel. Una carga: web, Mercado Libre, Zonaprop, Argenprop o redes. El aviso del portal se contrata aparte.' },
         { name: 'Taller mecánico', blurb: 'El cliente pide presupuesto. Usted sigue la orden: diagnóstico, repuestos y mano de obra. Una carga: web, Instagram, Google o WhatsApp.' },
         { name: 'Salón Camelia', blurb: 'Agenda de turnos y servicios. No es un catálogo de kiosco. Una carga: web, Instagram, Google o WhatsApp.' },
         { name: 'El Quebracho', blurb: 'Muebles a medida: presupuesto, seña y fecha de entrega. Una carga: web, Instagram o WhatsApp.' },
@@ -561,7 +561,7 @@ export const translations: Record<Lang, Dictionary> = {
         { name: 'Biblioteca Pública Almagro', blurb: 'Préstamos a socios. No vende ni factura como un comercio. Una carga: web, Instagram o WhatsApp.' },
         { name: 'Parrilla Don Ernesto', blurb: 'Carta, mesas y comandas. La cocina y el cierre de cuenta están en el panel. Una carga: web, Instagram, Google o WhatsApp.' },
         { name: 'Rotisería', blurb: 'Producción del día, mostrador y delivery. No es una reserva de cabaña. Una carga: web, Instagram, Google o WhatsApp.' },
-        { name: 'Feria', blurb: 'Publicaciones de varios vendedores. En la demo los pagos son de ejemplo; un cobro real se cotiza. Una carga: web, Mercado Libre o redes.' },
+        { name: 'Feria', blurb: 'Publicaciones de varios vendedores. En el ejemplo los pagos son de muestra; un cobro real se cotiza. Una carga: web, Mercado Libre o redes.' },
         { name: 'Stock y facturación', blurb: 'Inventario y facturación juntos. ARCA de ejemplo; en un trabajo real se cotiza según el caso. Una carga: web, Mercado Libre o WhatsApp.' },
         { name: 'Automotores Reeb', blurb: '0km y usados: en Argentina el precio de lista suele ir en dólares. Consulta y permuta de ejemplo. Una carga: web, Mercado Libre o redes.' },
         { name: 'Estudio Norte', blurb: 'El público ve el estudio. Expedientes y plazos no están en la web abierta. Una carga: web o WhatsApp. Sin portales de inmuebles.' },
@@ -1248,7 +1248,7 @@ export const translations: Record<Lang, Dictionary> = {
         },
       ],
       sistemasNote: 'Online collections and ARCA are quoted separately; they are not in the Presence or Business floor price. In the examples, a kiosk shows prices in pesos; a new car or a property may be listed in dollars, as in the local market. Panels ask for a sample user (password demo); it is not a real login.',
-      sistemasTradesTitle: 'Each demo',
+      sistemasTradesTitle: 'Each example',
       sistemasTradesLead: 'One or two sentences per trade, plus where it is published. This is not a panel manual.',
       sistemasTrades: [
         { name: 'Kiosco Lo de Pedro', blurb: 'It shows the kiosk. In the panel you control the shelf and the credit book; the neighbor does not see that book. Sample prices in pesos. One load: website, Instagram, Facebook, or WhatsApp.' },
@@ -1262,7 +1262,7 @@ export const translations: Record<Lang, Dictionary> = {
         { name: 'Biblioteca Pública Almagro', blurb: 'Loans to members. It does not sell or invoice like a shop. One load: website, Instagram, or WhatsApp.' },
         { name: 'Parrilla Don Ernesto', blurb: 'Menu, tables, and kitchen tickets. The kitchen view and checkout live in the panel. One load: website, Instagram, Google, or WhatsApp.' },
         { name: 'Rotisería', blurb: 'The day’s production, the counter, and delivery. Not a cabin booking. One load: website, Instagram, Google, or WhatsApp.' },
-        { name: 'Feria', blurb: 'Listings from several sellers. Payments in the demo are samples; live charging is quoted. One load: website, Mercado Libre, or social posts.' },
+        { name: 'Feria', blurb: 'Listings from several sellers. Payments in the example are samples; live charging is quoted. One load: website, Mercado Libre, or social posts.' },
         { name: 'Stock y facturación', blurb: 'Inventory and invoicing together. Sample ARCA; real work is quoted for the case. One load: website, Mercado Libre, or WhatsApp.' },
         { name: 'Automotores Reeb', blurb: 'New and used cars: in Argentina the list price is often in dollars. Sample enquiry and trade-in. One load: website, Mercado Libre, or social posts.' },
         { name: 'Estudio Norte', blurb: 'The public sees the firm. Case files and deadlines are not on the open website. One load: website or WhatsApp. No property portals.' },

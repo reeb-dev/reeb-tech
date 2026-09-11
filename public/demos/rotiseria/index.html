@@ -163,7 +163,7 @@
     </div>
   </div>
 
-  <footer class="wrap" id="site-footer">Rotisería · Av. Rivadavia 4500, Caballito, CABA · demo de producto · no es un comercio en actividad.</footer>
+  <footer class="wrap" id="site-footer">Rotisería · Av. Rivadavia 4500, Caballito, CABA · ejemplo de página web · no es un comercio en actividad.</footer>
 
   <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" crossorigin=""></script>
   <script src="data.js"></script>
@@ -182,7 +182,7 @@
       document.getElementById("mapa-fallback").textContent = direccionCompleta(suc);
       document.getElementById("mapa-link").href = `https://www.openstreetmap.org/?mlat=${suc.lat}&mlon=${suc.lng}#map=16/${suc.lat}/${suc.lng}`;
       pintarMapa(suc);
-      document.getElementById("site-footer").textContent = `Rotisería · ${direccionCompleta(suc)} · demo de producto · no es un comercio en actividad.`;
+      document.getElementById("site-footer").textContent = `Rotisería · ${direccionCompleta(suc)} · ejemplo de página web · no es un comercio en actividad.`;
     } catch (err) {
       console.warn("No se pudo completar la sucursal", err);
     }
@@ -268,6 +268,6 @@
     renderCatalog();
   </script>
   <script src="../difusion.js?v=2" data-rubro="rotiseria" data-place="vitrina"></script>
-  <script src="../contacto.js" data-phone="5492915757934" data-text="Hola, quiero consultar por un pedido o delivery" data-subject="Consulta demo — Rotisería" data-title="Hacer un pedido"></script>
+  <script src="../contacto.js" data-phone="5492915757934" data-text="Hola, quiero consultar por un pedido o delivery" data-subject="Consulta — Rotisería" data-title="Hacer un pedido"></script>
 </body>
 </html>
