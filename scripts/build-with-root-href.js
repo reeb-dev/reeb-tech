@@ -22,6 +22,8 @@ const PUBLIC_TOP_FILES = new Set([
   'robots.txt',
   'sitemap.xml',
   'og.png',
+  'og.jpg',
+  'og-cv.png',
   'logo.svg',
   'bp4.png',
   'fiserv.svg',
