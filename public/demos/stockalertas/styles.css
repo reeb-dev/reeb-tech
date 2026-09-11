@@ -1,4 +1,30 @@
 :root {
-  --ink: #15233a; --muted: #4d5f78; --paper: #eef3f9; --card: #fff;
-  --line: #c5d2e4; --brand: #1f3a5f; --accent: #c9daf0;
+  --ink: #1a1a1a; --muted: #5a5a5a; --paper: #f7f5f1; --card: #fff;
+  --brand: #2f6b32; --accent: color-mix(in srgb, #2f6b32 22%, #fff); --band: #183818;
+}
+body.sys-stockalertas {
+  background:
+    radial-gradient(ellipse at 90% 0%, #d4efd6, transparent 50%),
+    var(--paper);
+  background-attachment: fixed;
+}
+body.sys-stockalertas .app-top {
+  border-bottom: 3px solid color-mix(in srgb, var(--brand) 55%, transparent);
+}
+body.sys-stockalertas .app-shell {
+  position: relative;
+}
+body.sys-stockalertas .app-head h1::after {
+  content: "";
+  display: block;
+  width: 3rem;
+  height: 3px;
+  margin-top: 0.45rem;
+  background: var(--brand);
+  border-radius: 2px;
+}
+body.panel-body {
+  --brand: #2f6b32;
+  --band: #183818;
+  --accent: color-mix(in srgb, #2f6b32 22%, #fff);
 }

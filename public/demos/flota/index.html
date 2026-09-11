@@ -9,77 +9,26 @@
   <link rel="icon" href="/brand/reeb-mark.svg?v=20260911fav" type="image/svg+xml">
   <link rel="shortcut icon" href="/favicon.ico?v=20260911fav">
   <link rel="apple-touch-icon" href="/brand/reeb-mark-180.png?v=20260911fav" sizes="180x180">
-
   <title>Flota del local — ejemplo de sistema</title>
-  <meta name="description" content="Para vehículos propios del negocio: service, vencimientos y kilometraje. No es stock de automotora.">
-  <meta name="robots" content="index, follow">
+  <meta name="description" content="Unidades editables. Puede alta, editar y borrar en este navegador.">
   <link rel="canonical" href="https://webconreeb.com/demos/flota/">
-  <meta property="og:type" content="website">
-  <meta property="og:site_name" content="Web con REEB">
-  <meta property="og:url" content="https://webconreeb.com/demos/flota/">
   <meta property="og:title" content="Flota del local — ejemplo de sistema">
-  <meta property="og:description" content="Para vehículos propios del negocio: service, vencimientos y kilometraje. No es stock de automotora.">
-  <meta property="og:image" content="https://webconreeb.com/demos/flota/og.jpg?v=20260911f">
-  <meta property="og:image:type" content="image/jpeg">
-  <meta property="og:image:width" content="1200">
-  <meta property="og:image:height" content="630">
-  <meta property="og:image:alt" content="Flota del local — ejemplo de sistema">
-  <meta property="og:locale" content="es_AR">
-  <meta name="twitter:card" content="summary_large_image">
-  <meta name="twitter:title" content="Flota del local — ejemplo de sistema">
-  <meta name="twitter:description" content="Para vehículos propios del negocio: service, vencimientos y kilometraje. No es stock de automotora.">
-  <meta name="twitter:image" content="https://webconreeb.com/demos/flota/og.jpg?v=20260911f">
-
+  <meta property="og:description" content="Unidades editables">
+  <meta property="og:image" content="https://webconreeb.com/demos/flota/og.jpg?v=20260911h">
   <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;600&family=Source+Sans+3:wght@400;600;700&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="../sistemas-ui/base.css?v=c6">
-  <link rel="stylesheet" href="styles.css?v=c5">
+  <link rel="stylesheet" href="../sistemas-ui/app-shells.css?v=c20">
+  <link rel="stylesheet" href="styles.css?v=c20">
 </head>
-<body>
-  <header class="band">
-    <div class="band-inner">
-      <a class="brand" href="index.html"><strong>Flota</strong><span>Service · vencimientos · km</span></a>
-      <nav>
-        <a href="#como">Cómo funciona</a>
-        <a class="btn" href="panel.html">Abrir panel</a>
-      </nav>
-    </div>
-  </header>
-  <main class="wrap">
-    <section class="hero">
-      <div>
-        <p class="kicker">Sistema de gestión</p>
-        <h1>Flota del local</h1>
-        <p class="lead">Para vehículos propios del negocio: service, vencimientos y kilometraje. No es stock de automotora.</p>
-        <div class="hero-actions">
-          <a class="btn" href="panel.html">Probar el panel</a>
-          <a class="btn btn-quiet" href="/demos/#sistemas-gestion">Volver al catálogo</a>
-        </div>
-      </div>
-      <div class="hero-stage">
-        <img src="img/hero.jpg" alt="Flota del local">
-        <div class="cap"><strong>Flota</strong><span>Página de ejemplo · panel incluido</span></div>
-      </div>
-    </section>
-    <section class="section" id="como">
-      <p class="kicker">Uso</p>
-      <h2>Cómo funciona en el día a día</h2>
-      <p class="section-lead">Para vehículos propios del negocio: service, vencimientos y kilometraje. No es stock de automotora.</p>
-      <div class="steps"><article class="step"><strong>Alta</strong><p>Carga el registro en el panel.</p></article><article class="step"><strong>Estados</strong><p>Sigue el avance del día a día.</p></article><article class="step"><strong>Consulta</strong><p>Si hace falta, copia un texto para WhatsApp.</p></article></div>
-    </section>
-    <section class="section">
-      <p class="kicker">Panel</p>
-      <h2>Qué puede hacer</h2>
-      <ul><li>Alta / edición / baja de vehículos</li><li>Registrar service</li><li>Alertas de vencimiento</li><li>Km</li></ul>
-    </section>
-    <div class="cta-band">
-      <p class="kicker" style="color:#e3c48a">A medida</p>
-      <h2>¿Le sirve este sistema a su local?</h2>
-      <p>Se adapta a su rubro. No es un software de suscripción: se cotiza y se entrega para usted.</p>
-      <a class="btn" href="#contacto">Consultar</a>
-    </div>
-  </main>
-  <div id="contacto"></div>
-  <footer class="wrap">Flota del local · ejemplo de sistema · no es un software de suscripción.</footer>
-  <script src="../contacto.js" data-phone="5492915757934" data-text="Hola, quiero consultar por Flota del local" data-subject="Consulta — Flota del local" data-title="Consultar" data-place="index"></script>
+<body class="sys-flota">
+<header class="app-top">
+  <a class="back" href="/demos/#sistemas-gestion">← Catálogo</a>
+  <div><strong>Vehículos propios</strong><span>Km, VTV y seguro</span></div>
+  <a class="btn" href="panel.html">Panel completo</a>
+</header>
+<main id="app" class="app-shell is-flota"></main>
+<script src="data.js"></script>
+<script src="cfg.js"></script>
+<script src="../sistemas-ui/mini-app.js?v=c20"></script>
+<script src="../wa-float.js?v=wa8"></script>
 </body>
 </html>

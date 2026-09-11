@@ -30,18 +30,20 @@
   <meta name="twitter:image" content="https://webconreeb.com/demos/turnos/og.jpg?v=20260911f">
 
 <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;600&family=Source+Sans+3:wght@400;600;700&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="../sistemas-ui/base.css?v=c6">
-  <link rel="stylesheet" href="styles.css?v=c5">
+  <link rel="stylesheet" href="../sistemas-ui/base.css?v=c21">
+  <link rel="stylesheet" href="styles.css?v=c21">
+  <link rel="stylesheet" href="../sistemas-ui/panel-kit.css?v=c21">
 </head>
 <body class="panel-body">
-  <script src="../login.js?v=2" data-rubro="turnos" data-place="panel"></script>
+  <script src="../login.js?v=4" data-rubro="turnos" data-place="panel" data-auto-enter="1"></script>
   <header class="band">
     <div class="band-inner">
       <a class="brand" href="index.html"><strong>Agenda</strong><span>CRUD + WhatsApp</span></a>
       <nav>
         <a href="index.html">Qué es</a>
         <div class="panel-tabs">
-          <button type="button" class="on" data-view="agenda">Agenda</button>
+          <button type="button" class="on" data-view="resumen">Resumen</button>
+          <button type="button" class="" data-view="agenda">Agenda</button>
           <button type="button" data-view="whatsapp">WhatsApp <span class="tab-badge" id="wa-badge" hidden>0</span></button>
           <button type="button" data-view="clientes">Clientes</button>
           <button type="button" data-view="servicios">Servicios</button>
@@ -75,6 +77,7 @@
 
     <div id="view-agenda">
       <div class="stats" id="stats"></div>
+    <div id="view-resumen" class="panel-hidden"><div class="dash" id="dash"></div></div>
       <div class="filters-row" id="filters"></div>
       <form class="create" id="create" hidden>
         <input type="hidden" name="id" value="">
@@ -157,7 +160,10 @@
   <div id="contacto"></div>
   <footer class="wrap">Agenda · CRUD + pedidos WhatsApp · clave demo.</footer>
   <script src="data.js"></script>
-  <script src="panel.js"></script>
-  <script src="../contacto.js" data-phone="5492915757934" data-text="Hola, quiero consultar por un sistema de turnos con WhatsApp" data-subject="Consulta — Turnos" data-title="Consultar" data-place="panel"></script>
+  <script src="../sistemas-ui/panel-dash.js?v=c21"></script>
+  <script src="panel.js?v=c21"></script>
+  <script src="../contacto.js?v=wa8" data-phone="5492915757934" data-text="Hola, vi el ejemplo de turnos y quiero consultar una página web a medida para mi local" data-subject="Consulta — página web (turnos)" data-title="Consultar" data-place="panel"></script>
+
+
 </body>
 </html>

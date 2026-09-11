@@ -1,0 +1,117 @@
+/* Dashboard + kanban cards for sistema panels */
+.create[hidden] { display: none !important; }
+
+.kanban-card {
+  display: block;
+  width: 100%;
+  text-align: left;
+  cursor: pointer;
+  font: inherit;
+  color: inherit;
+  border: 1px solid var(--line, #ddd);
+  background: #fff;
+  margin-bottom: 0.45rem;
+}
+.kanban-card.is-on { outline: 2px solid var(--brand); }
+.kanban-col.is-mid { border-top: 3px solid var(--brand); }
+.kanban-col.is-ok { border-top: 3px solid #2f8a55; }
+.empty-col { margin: 0; color: var(--muted); font-size: 0.88rem; }
+
+.dash { display: grid; gap: 1rem; }
+.dash-hello h2 {
+  margin: 0 0 0.35rem;
+  font-family: Fraunces, Georgia, serif;
+  font-size: 1.55rem;
+}
+.dash-hello p { margin: 0; color: var(--muted); max-width: 62ch; }
+.dash-cards {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+  gap: 0.65rem;
+}
+.dash-card {
+  background: var(--card, #fff);
+  border: 1px solid color-mix(in srgb, var(--brand) 18%, #ccc);
+  border-radius: 14px;
+  padding: 0.95rem 1rem;
+}
+.dash-card span {
+  display: block;
+  font-size: 0.72rem;
+  font-weight: 750;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+.dash-card strong {
+  display: block;
+  margin-top: 0.25rem;
+  font-family: Fraunces, Georgia, serif;
+  font-size: 1.7rem;
+  line-height: 1.1;
+}
+.dash-card small { display: block; margin-top: 0.35rem; color: var(--muted); font-size: 0.85rem; }
+.dash-card.warn { background: #fff6e8; border-color: #e8c48a; }
+.dash-card.mid { background: color-mix(in srgb, var(--accent, #eee) 55%, #fff); }
+.dash-card.ok { background: #eef8f1; border-color: #9dceb3; }
+
+.dash-split {
+  display: grid;
+  grid-template-columns: 1.1fr 0.9fr;
+  gap: 0.75rem;
+}
+.dash-panel {
+  background: var(--card, #fff);
+  border: 1px solid color-mix(in srgb, var(--brand) 16%, #ccc);
+  border-radius: 14px;
+  padding: 1rem;
+}
+.dash-panel h3 {
+  margin: 0 0 0.25rem;
+  font-family: Fraunces, Georgia, serif;
+  font-size: 1.15rem;
+}
+.dash-panel > p { margin: 0 0 0.75rem; color: var(--muted); font-size: 0.92rem; }
+.dash-activity, .dash-top {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  gap: 0.45rem;
+}
+.dash-activity li, .dash-top li {
+  display: grid;
+  gap: 0.15rem;
+  padding: 0.65rem 0.75rem;
+  border-radius: 10px;
+  background: color-mix(in srgb, var(--accent, #eee) 40%, #fff);
+  border: 1px solid color-mix(in srgb, var(--brand) 12%, #ddd);
+}
+.dash-activity li[data-go] { cursor: pointer; }
+.dash-activity li[data-go]:hover { border-color: var(--brand); }
+.dash-activity strong, .dash-top strong { display: block; font-size: 0.95rem; }
+.dash-activity span, .dash-top span { color: var(--muted); font-size: 0.85rem; }
+.dash-empty { color: var(--muted); background: transparent !important; border: 0 !important; }
+.dash-shortcuts { display: grid; gap: 0.45rem; margin-top: 0.35rem; }
+.dash-shortcuts button {
+  display: block;
+  width: 100%;
+  text-align: left;
+  font: inherit;
+  cursor: pointer;
+  border-radius: 12px;
+  border: 1.5px solid color-mix(in srgb, var(--brand) 22%, #ccc);
+  background: #fff;
+  padding: 0.75rem 0.9rem;
+  color: var(--ink);
+}
+.dash-shortcuts button:hover {
+  border-color: var(--brand);
+  background: color-mix(in srgb, var(--accent, #eee) 45%, #fff);
+}
+.dash-shortcuts strong { display: block; }
+.dash-shortcuts small { display: block; margin-top: 0.15rem; color: var(--muted); font-size: 0.82rem; }
+
+@media (max-width: 900px) {
+  .dash-split { grid-template-columns: 1fr; }
+}

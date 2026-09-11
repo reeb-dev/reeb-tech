@@ -1,22 +1,115 @@
-/* Contacto demo: WhatsApp flotante + formulario. Número y correo de ejemplo. */
+/* Contacto: WhatsApp flotante + formulario. Número y correo de ejemplo. */
 .wa-float {
+  --wa: #25d366;
+  --wa-dark: #128c7e;
   position: fixed;
-  right: 20px;
-  bottom: 20px;
-  z-index: 40;
-  width: 56px;
-  height: 56px;
-  border-radius: 50%;
-  background: #25D366;
-  color: #fff;
-  display: flex;
+  right: 18px;
+  bottom: 18px;
+  z-index: 60;
+  display: inline-flex;
   align-items: center;
-  justify-content: center;
-  box-shadow: 0 8px 24px rgba(37, 211, 102, 0.35);
+  gap: 10px;
+  min-height: 58px;
+  padding: 0 16px 0 12px;
+  border-radius: 999px;
+  background: linear-gradient(145deg, #2fe074 0%, #25d366 42%, #1ebe57 100%);
+  color: #fff;
   text-decoration: none;
+  box-shadow:
+    0 10px 28px rgba(18, 140, 126, 0.45),
+    0 0 0 1px rgba(255, 255, 255, 0.18) inset;
+  transform-origin: 90% 90%;
+  transition: transform 0.18s ease, box-shadow 0.18s ease, filter 0.18s ease;
 }
-.wa-float:hover { background: #1da851; color: #fff; }
-.wa-float svg { width: 30px; height: 30px; display: block; }
+.wa-float:hover,
+.wa-float:focus-visible {
+  color: #fff;
+  transform: scale(1.05);
+  box-shadow:
+    0 14px 34px rgba(18, 140, 126, 0.55),
+    0 0 0 1px rgba(255, 255, 255, 0.22) inset;
+  filter: brightness(1.04);
+  outline: none;
+}
+.wa-float:focus-visible {
+  box-shadow:
+    0 14px 34px rgba(18, 140, 126, 0.55),
+    0 0 0 3px rgba(37, 211, 102, 0.45);
+}
+
+.wa-float-icon {
+  position: relative;
+  z-index: 1;
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  display: grid;
+  place-items: center;
+  background: rgba(0, 0, 0, 0.12);
+  flex: 0 0 auto;
+}
+.wa-float-icon svg {
+  width: 22px;
+  height: 22px;
+  display: block;
+}
+
+.wa-float-label {
+  position: relative;
+  z-index: 1;
+  font-family: inherit;
+  font-size: 14px;
+  font-weight: 750;
+  letter-spacing: 0.02em;
+  line-height: 1;
+  white-space: nowrap;
+  text-shadow: 0 1px 0 rgba(0, 0, 0, 0.12);
+}
+
+.wa-float-ring {
+  position: absolute;
+  left: 11px;
+  top: 50%;
+  width: 38px;
+  height: 38px;
+  margin-top: -19px;
+  border-radius: 50%;
+  border: 2px solid rgba(47, 224, 116, 0.75);
+  pointer-events: none;
+  animation: wa-pulse 2.4s ease-out infinite;
+}
+.wa-float-ring--late {
+  animation-delay: 1.2s;
+}
+
+@keyframes wa-pulse {
+  0% {
+    transform: scale(1);
+    opacity: 0.7;
+  }
+  70% {
+    transform: scale(2.15);
+    opacity: 0;
+  }
+  100% {
+    transform: scale(2.15);
+    opacity: 0;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .wa-float-ring {
+    animation: none;
+    display: none;
+  }
+  .wa-float {
+    transition: none;
+  }
+  .wa-float:hover,
+  .wa-float:focus-visible {
+    transform: none;
+  }
+}
 
 .demo-contacto {
   margin: 36px auto 8px;
@@ -113,6 +206,241 @@
 }
 
 @media (max-width: 640px) {
-  .wa-float { right: 14px; bottom: 16px; }
+  .wa-float {
+    right: 12px;
+    bottom: 14px;
+    min-height: 54px;
+    padding: 0 14px 0 10px;
+    gap: 8px;
+  }
+  .wa-float-icon {
+    width: 34px;
+    height: 34px;
+  }
+  .wa-float-label {
+    font-size: 13px;
+  }
+  .wa-float-ring {
+    left: 9px;
+    width: 36px;
+    height: 36px;
+    margin-top: -18px;
+  }
   .demo-contacto { margin-left: 0; margin-right: 0; }
+}
+
+/* Tarjeta de consulta (hub + ejemplos). Colores vía --wa-card-* (contacto.js). */
+aside.wa-float.wa-float--hub {
+  --wa-card-bg: #1a1510;
+  --wa-card-accent: #e3c48a;
+  --wa-card-border: rgba(227, 196, 138, 0.32);
+  --wa-card-text: #fbf7f0;
+  --wa-card-muted: rgba(251, 247, 240, 0.78);
+  position: fixed !important;
+  right: 20px !important;
+  bottom: 20px !important;
+  left: auto !important;
+  z-index: 120 !important;
+  width: min(280px, calc(100vw - 32px)) !important;
+  height: auto !important;
+  min-height: 0 !important;
+  display: grid !important;
+  gap: 12px !important;
+  padding: 18px !important;
+  border-radius: 20px !important;
+  background: var(--wa-card-bg) !important;
+  border: 1px solid var(--wa-card-border) !important;
+  color: var(--wa-card-text) !important;
+  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.45) !important;
+  isolation: isolate;
+  overflow: hidden;
+  transform: none !important;
+  filter: none !important;
+  text-decoration: none !important;
+  animation: wa-hub-in 0.4s ease-out both;
+}
+aside.wa-float.wa-float--hub:hover,
+aside.wa-float.wa-float--hub:focus-visible {
+  transform: none !important;
+  filter: none !important;
+  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.45) !important;
+  background: var(--wa-card-bg) !important;
+  color: var(--wa-card-text) !important;
+}
+aside.wa-float.wa-float--hub .wa-hub-kicker {
+  margin: 0;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--wa-card-accent);
+}
+aside.wa-float.wa-float--hub h2 {
+  margin: 0;
+  font-family: Fraunces, Georgia, "Times New Roman", serif;
+  font-size: 1.28rem;
+  font-weight: 560;
+  line-height: 1.18;
+  letter-spacing: -0.02em;
+  color: var(--wa-card-text);
+  max-width: 15ch;
+}
+aside.wa-float.wa-float--hub .wa-hub-lead {
+  margin: 0;
+  font-size: 0.9rem;
+  line-height: 1.4;
+  color: var(--wa-card-muted);
+}
+aside.wa-float.wa-float--hub .wa-hub-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  min-height: 48px;
+  margin-top: 2px;
+  padding: 12px 16px;
+  border-radius: 999px;
+  background: #25d366;
+  color: #fff !important;
+  font-weight: 750;
+  font-size: 0.94rem;
+  text-decoration: none;
+  text-align: center;
+  box-shadow: 0 8px 20px rgba(37, 211, 102, 0.3);
+}
+aside.wa-float.wa-float--hub .wa-hub-btn svg {
+  width: 20px;
+  height: 20px;
+  flex: 0 0 auto;
+}
+aside.wa-float.wa-float--hub .wa-hub-btn:hover {
+  background: #1ebe57;
+  color: #fff !important;
+  filter: none;
+}
+aside.wa-float.wa-float--hub .wa-hub-link {
+  justify-self: center;
+  color: var(--wa-card-accent);
+  font-size: 0.88rem;
+  font-weight: 600;
+  text-decoration: none;
+}
+aside.wa-float.wa-float--hub .wa-hub-link:hover {
+  color: #fff;
+  text-decoration: underline;
+}
+
+@keyframes wa-hub-in {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  aside.wa-float.wa-float--hub {
+    animation: none;
+  }
+}
+
+@media (max-width: 720px) {
+  aside.wa-float.wa-float--hub {
+    left: 12px !important;
+    right: 12px !important;
+    bottom: 12px !important;
+    width: auto !important;
+    border-radius: 16px !important;
+    gap: 8px !important;
+    padding: 14px 16px !important;
+  }
+  aside.wa-float.wa-float--hub h2 {
+    font-size: 1.12rem;
+    max-width: none;
+  }
+  aside.wa-float.wa-float--hub .wa-hub-lead {
+    display: none;
+  }
+  aside.wa-float.wa-float--hub .wa-hub-btn {
+    min-height: 44px;
+  }
+}
+
+aside.wa-float.wa-float--hub .wa-hub-top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+}
+aside.wa-float.wa-float--hub .wa-hub-min {
+  flex: 0 0 auto;
+  width: 28px;
+  height: 28px;
+  margin: 0;
+  padding: 0;
+  border: 0;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.08);
+  color: var(--wa-card-muted);
+  font-size: 18px;
+  line-height: 1;
+  cursor: pointer;
+}
+aside.wa-float.wa-float--hub .wa-hub-min:hover {
+  background: rgba(255, 255, 255, 0.16);
+  color: #fff;
+}
+aside.wa-float.wa-float--hub .wa-hub-expand {
+  display: none;
+}
+
+/* Minimizada: no tapa el panel */
+aside.wa-float.wa-float--hub.is-min {
+  width: auto !important;
+  min-width: 0 !important;
+  padding: 10px 12px !important;
+  gap: 0 !important;
+  grid-template-columns: 1fr;
+}
+aside.wa-float.wa-float--hub.is-min .wa-hub-top,
+aside.wa-float.wa-float--hub.is-min h2,
+aside.wa-float.wa-float--hub.is-min .wa-hub-lead,
+aside.wa-float.wa-float--hub.is-min .wa-hub-btn,
+aside.wa-float.wa-float--hub.is-min .wa-hub-link {
+  display: none !important;
+}
+aside.wa-float.wa-float--hub.is-min .wa-hub-expand {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 40px;
+  padding: 8px 14px;
+  border: 0;
+  border-radius: 999px;
+  background: #25d366;
+  color: #fff;
+  font-weight: 700;
+  font-size: 0.9rem;
+  cursor: pointer;
+  box-shadow: 0 8px 18px rgba(37, 211, 102, 0.28);
+}
+
+/* En paneles: aire inferior para que no tape tablas/acciones */
+body.panel-body:has(aside.wa-float.wa-float--hub:not(.is-min)) .workspace,
+body.panel-body:has(aside.wa-float.wa-float--hub:not(.is-min)) main,
+body.panel-page:has(aside.wa-float.wa-float--hub:not(.is-min)) main {
+  padding-bottom: 15rem;
+}
+
+@media (max-height: 760px) {
+  aside.wa-float.wa-float--hub:not(.is-min) .wa-hub-lead {
+    display: none;
+  }
+  aside.wa-float.wa-float--hub:not(.is-min) {
+    gap: 8px !important;
+    padding: 14px !important;
+  }
 }

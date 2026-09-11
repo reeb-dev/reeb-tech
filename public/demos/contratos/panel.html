@@ -31,33 +31,36 @@
   <meta name="twitter:image" content="https://webconreeb.com/demos/contratos/og.jpg?v=20260911f">
 
   <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;600&family=Source+Sans+3:wght@400;600;700&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="../sistemas-ui/base.css?v=c6">
-  <link rel="stylesheet" href="styles.css?v=c5">
+  <link rel="stylesheet" href="../sistemas-ui/base.css?v=c21">
+  <link rel="stylesheet" href="styles.css?v=c21">
+  <link rel="stylesheet" href="../sistemas-ui/panel-kit.css?v=c21">
 </head>
 <body class="panel-body">
-  <script src="../login.js?v=2" data-rubro="contratos" data-place="panel"></script>
+  <script src="../login.js?v=4" data-rubro="contratos" data-place="panel" data-auto-enter="1"></script>
   <header class="band">
     <div class="band-inner">
       <a class="brand" href="index.html"><strong>Contratos</strong><span>Vencimientos · renovación</span></a>
       <nav>
         <a href="index.html">Qué es</a>
-        <div class="panel-tabs"><button type="button" class="on" data-view="contratos">Contratos</button><button type="button" class="" data-view="partes">Partes</button></div>
+        <div class="panel-tabs"><button type="button" class="on" data-view="resumen">Resumen</button><button type="button" data-view="contratos">Contratos</button><button type="button" class="" data-view="partes">Partes</button></div>
         <button class="btn" id="open-create" type="button">Nuevo contrato</button>
       </nav>
     </div>
   </header>
   <div class="wrap">
     <div class="toolbar">
-      <div><p class="kicker">Datos de ejemplo · este navegador</p><h1 id="view-title">Contratos</h1></div>
+      <div><p class="kicker">Datos de ejemplo · este navegador</p><h1 id="view-title">Resumen del día</h1></div>
       <div class="toolbar-actions">
-        <label class="search-box"><span class="visually-hidden">Buscar</span><input type="search" id="search" placeholder="Buscar…"></label>
+        <label class="search-box" id="search-wrap" hidden><span class="visually-hidden">Buscar</span><input type="search" id="search" placeholder="Buscar…"></label>
         <button type="button" id="reset-sample" class="btn-soft">Restablecer</button>
       </div>
     </div>
-    <p class="hint-bar"><strong>Qué puede hacer aquí.</strong> Clave de ejemplo: <strong>demo</strong>.</p>
+    <p class="hint-bar"><strong>Vencimientos.</strong> Qué renovar este mes. Datos de ejemplo en este navegador.</p>
     <div class="can-do"><span>Alta / edición / baja</span><span>Vencimientos</span><span>Renovación</span><span>Partes</span></div>
-    <div class="stats" id="stats"></div>
-    <div id="view-contratos" data-panel-view="contratos">
+    <div class="stats panel-hidden" id="stats"></div>
+    
+    <div id="view-resumen" data-panel-view="resumen"><div class="dash" id="dash"></div></div>
+<div id="view-contratos" data-panel-view="contratos" class="panel-hidden">
       <form class="create" id="create" hidden>
         <label>Título<input name="titulo" required></label>
         <label>Parte<select name="parteId" data-source="partes" required></select></label>
@@ -66,6 +69,7 @@
         <button type="submit">Guardar</button>
       </form>
       
+      <div class="kanban" id="kanban"></div>
       <div class="workspace">
         <section class="list"><div class="table-scroll"><table>
           <thead><tr><th>Contrato</th><th>Parte</th><th>Vence</th><th>Monto</th><th>Estado</th></tr></thead>
@@ -91,7 +95,7 @@
   <footer class="wrap">Contratos · ejemplo de sistema · clave demo.</footer>
   <script src="data.js"></script>
   <script src="cfg.js"></script>
-  <script src="panel.js"></script>
-  <script src="../contacto.js" data-phone="5492915757934" data-text="Hola, quiero consultar por Contratos" data-subject="Consulta — Contratos" data-title="Consultar" data-place="panel"></script>
+  <script src="../sistemas-ui/panel-kit.js?v=c21"></script>
+  <script src="../contacto.js?v=wa8" data-phone="5492915757934" data-text="Hola, vi el ejemplo de contratos y quiero consultar una página web a medida para mi local" data-subject="Consulta — página web (contratos)" data-title="Consultar" data-place="panel"></script>
 </body>
 </html>

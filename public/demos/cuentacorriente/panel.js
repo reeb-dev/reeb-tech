@@ -15,13 +15,37 @@
   function fillSel(){ document.querySelector("#create [name=clienteId]").innerHTML=state.clientes.map(function(c){return '<option value="'+esc(c.id)+'">'+esc(c.nombre)+'</option>';}).join(""); }
   function showView(name){
     view=name;
-    document.getElementById("view-cuentas").classList.toggle("panel-hidden", name!=="cuentas");
-    document.getElementById("view-movimientos").classList.toggle("panel-hidden", name!=="movimientos");
+    ["resumen","cuentas","movimientos"].forEach(function(v){
+      var el=document.getElementById("view-"+v);
+      if(el) el.classList.toggle("panel-hidden", name!==v);
+    });
     document.querySelectorAll(".panel-tabs button").forEach(function(b){ b.classList.toggle("on", b.getAttribute("data-view")===name); });
-    document.getElementById("view-title").textContent = name==="cuentas"?"Cuentas":"Movimientos";
+    document.getElementById("view-title").textContent = ({resumen:"Resumen del día",cuentas:"Cuentas",movimientos:"Movimientos"})[name]||name;
+    var stats=document.getElementById("stats");
+    if(stats) stats.classList.toggle("panel-hidden", name==="resumen");
+    var oc=document.getElementById("open-create");
+    if(oc) oc.classList.toggle("panel-hidden", name==="resumen");
+    if(name==="resumen"){ renderDashboard(); return; }
     render();
   }
+  function renderDashboard(){
+    if(!window.SisPanelDash) return;
+    var deudores=state.clientes.filter(function(c){return saldo(c.id)>0;});
+    var total=deudores.reduce(function(a,c){return a+Math.max(0,saldo(c.id));},0);
+    SisPanelDash.paint({
+      title:"Cuentas corrientes",
+      lead:"Saldos a cobrar y movimientos recientes.",
+      goPrimary:"cuentas",
+      kpis:[
+        {label:"Clientes",value:state.clientes.length,hint:"En cartera"},
+        {label:"Con deuda",value:deudores.length,hint:"A cobrar",tone:"warn"},
+        {label:"A cobrar",value:money(total),hint:"Saldo positivo",tone:"ok"}
+      ],
+      attention:deudores.slice(0,5).map(function(c){ return {title:c.nombre,sub:money(saldo(c.id))}; })
+    });
+  }
   function render(){
+    if(view==="resumen"){ renderDashboard(); return; }
     var deudores=state.clientes.filter(function(c){return saldo(c.id)>0;}).length;
     var total=state.clientes.reduce(function(a,c){return a+Math.max(0,saldo(c.id));},0);
     document.getElementById("stats").innerHTML=
@@ -113,5 +137,5 @@
     save(); fillSel(); ev.target.reset(); ev.target.id.value=""; ev.target.hidden=true;
     document.getElementById("cliente-submit").textContent="Guardar cliente"; document.getElementById("cliente-cancel").hidden=true; render();
   };
-  render();
+  showView("resumen");
 })();

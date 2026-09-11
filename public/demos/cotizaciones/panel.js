@@ -22,11 +22,35 @@
   }
   function showView(name){
     view=name;
-    ["lista","clientes","catalogo"].forEach(function(v){ document.getElementById("view-"+v).classList.toggle("panel-hidden",v!==name); });
+    ["resumen","lista","clientes","catalogo"].forEach(function(v){
+      var el=document.getElementById("view-"+v);
+      if(el) el.classList.toggle("panel-hidden",v!==name);
+    });
     document.querySelectorAll(".panel-tabs button").forEach(function(b){ b.classList.toggle("on",b.getAttribute("data-view")===name); });
     document.getElementById("open-create").classList.toggle("panel-hidden", name!=="lista");
-    document.getElementById("view-title").textContent=({lista:"Cotizaciones",clientes:"Clientes",catalogo:"Catálogo"})[name];
+    document.getElementById("view-title").textContent=({resumen:"Resumen del día",lista:"Cotizaciones",clientes:"Clientes",catalogo:"Catálogo"})[name]||name;
+    var stats=document.getElementById("stats");
+    if(stats) stats.classList.toggle("panel-hidden", name==="resumen");
+    if(name==="resumen"){ renderDashboard(); return; }
     render();
+  }
+  function renderDashboard(){
+    if(!window.SisPanelDash) return;
+    var all=state.cotizaciones||[];
+    SisPanelDash.paint({
+      title:"Cotizaciones en curso",
+      lead:"Borradores, enviadas y aceptadas.",
+      goPrimary:"lista",
+      kpis:[
+        {label:"Total",value:all.length,hint:"Cotizaciones"},
+        {label:"Enviadas",value:all.filter(function(x){return x.estado==="enviada";}).length,hint:"Esperando respuesta",tone:"warn"},
+        {label:"Aceptadas",value:all.filter(function(x){return x.estado==="aceptada"||x.estado==="pedido";}).length,hint:"Avance",tone:"ok"}
+      ],
+      attention:all.filter(function(x){return x.estado==="enviada"||x.estado==="borrador";}).slice(0,5).map(function(x){
+        var c=byId(state.clientes,x.clienteId)||{};
+        return {title:c.nombre||"Cliente",sub:label(x.estado)};
+      })
+    });
   }
   function resetForm(){
     var f=document.getElementById("create");
@@ -134,7 +158,7 @@
         f.item1.value=c.nombre; f.monto1.value=c.precio; toast("Ítem cargado en el formulario"); };
     });
   }
-  function render(){ if(view==="lista")renderLista(); if(view==="clientes")renderClientes(); if(view==="catalogo")renderCatalogo(); }
+  function render(){ if(view==="resumen"){ renderDashboard(); return; } if(view==="lista")renderLista(); if(view==="clientes")renderClientes(); if(view==="catalogo")renderCatalogo(); }
   document.querySelectorAll(".panel-tabs button").forEach(function(b){b.onclick=function(){showView(b.getAttribute("data-view"));};});
   document.getElementById("open-create").onclick=function(){ var f=document.getElementById("create"); if(f.hidden){resetForm();f.hidden=false;} else {f.hidden=true;resetForm();} };
   document.getElementById("create-cancel").onclick=function(){ document.getElementById("create").hidden=true; resetForm(); };
@@ -166,5 +190,5 @@
     save(); ev.target.reset(); ev.target.id.value=""; document.getElementById("cat-submit").textContent="Guardar ítem"; document.getElementById("cat-cancel").hidden=true; render();
   };
   document.getElementById("cat-cancel").onclick=function(){ var f=document.getElementById("create-cat"); f.reset(); f.id.value=""; document.getElementById("cat-submit").textContent="Guardar ítem"; document.getElementById("cat-cancel").hidden=true; };
-  render();
+  showView("resumen");
 })();

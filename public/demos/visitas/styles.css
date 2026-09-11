@@ -1,4 +1,30 @@
 :root {
-  --ink: #15261f; --muted: #4f675c; --paper: #eef5f1; --card: #fff;
-  --line: #c5d8ce; --brand: #2c4a3e; --accent: #cfe6da;
+  --ink: #1a1a1a; --muted: #5a5a5a; --paper: #f7f5f1; --card: #fff;
+  --brand: #1d5f8a; --accent: color-mix(in srgb, #1d5f8a 22%, #fff); --band: #0e3248;
+}
+body.sys-visitas {
+  background:
+    radial-gradient(ellipse at 100% 20%, #d0e4f2, transparent 50%),
+    var(--paper);
+  background-attachment: fixed;
+}
+body.sys-visitas .app-top {
+  border-bottom: 3px solid color-mix(in srgb, var(--brand) 55%, transparent);
+}
+body.sys-visitas .app-shell {
+  position: relative;
+}
+body.sys-visitas .app-head h1::after {
+  content: "";
+  display: block;
+  width: 3rem;
+  height: 3px;
+  margin-top: 0.45rem;
+  background: var(--brand);
+  border-radius: 2px;
+}
+body.panel-body {
+  --brand: #1d5f8a;
+  --band: #0e3248;
+  --accent: color-mix(in srgb, #1d5f8a 22%, #fff);
 }

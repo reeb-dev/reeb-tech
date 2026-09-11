@@ -1,4 +1,30 @@
 :root {
-  --ink: #1c1f26; --muted: #5c6370; --paper: #f2f3f6; --card: #fff;
-  --line: #cfd3db; --brand: #3a3f4b; --accent: #d7dbe3;
+  --ink: #1a1a1a; --muted: #5a5a5a; --paper: #f7f5f1; --card: #fff;
+  --brand: #6b3f1f; --accent: color-mix(in srgb, #6b3f1f 22%, #fff); --band: #3a220e;
+}
+body.sys-ordenes {
+  background:
+    linear-gradient(180deg, #f0e4d8 0%, transparent 40%),
+    var(--paper);
+  background-attachment: fixed;
+}
+body.sys-ordenes .app-top {
+  border-bottom: 3px solid color-mix(in srgb, var(--brand) 55%, transparent);
+}
+body.sys-ordenes .app-shell {
+  position: relative;
+}
+body.sys-ordenes .app-head h1::after {
+  content: "";
+  display: block;
+  width: 3rem;
+  height: 3px;
+  margin-top: 0.45rem;
+  background: var(--brand);
+  border-radius: 2px;
+}
+body.panel-body {
+  --brand: #6b3f1f;
+  --band: #3a220e;
+  --accent: color-mix(in srgb, #6b3f1f 22%, #fff);
 }

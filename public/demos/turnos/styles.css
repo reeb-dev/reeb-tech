@@ -1,9 +1,30 @@
 :root {
-  --ink: #1c2a28;
-  --muted: #5a6b66;
-  --paper: #f2f6f4;
-  --card: #ffffff;
-  --line: #c9d8d2;
+  --ink: #1a1a1a; --muted: #5a5a5a; --paper: #f7f5f1; --card: #fff;
+  --brand: #2f5d56; --accent: color-mix(in srgb, #2f5d56 22%, #fff); --band: #183430;
+}
+body.sys-turnos {
+  background:
+    linear-gradient(180deg, #d8ebe8 0%, transparent 40%),
+    var(--paper);
+  background-attachment: fixed;
+}
+body.sys-turnos .app-top {
+  border-bottom: 3px solid color-mix(in srgb, var(--brand) 55%, transparent);
+}
+body.sys-turnos .app-shell {
+  position: relative;
+}
+body.sys-turnos .app-head h1::after {
+  content: "";
+  display: block;
+  width: 3rem;
+  height: 3px;
+  margin-top: 0.45rem;
+  background: var(--brand);
+  border-radius: 2px;
+}
+body.panel-body {
   --brand: #2f5d56;
-  --accent: #d4ebe4;
+  --band: #183430;
+  --accent: color-mix(in srgb, #2f5d56 22%, #fff);
 }

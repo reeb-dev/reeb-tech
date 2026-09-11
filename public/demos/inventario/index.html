@@ -1,0 +1,46 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="icon" href="/favicon.ico?v=20260911fav" sizes="any">
+  <link rel="icon" href="/brand/reeb-mark-32.png?v=20260911fav" type="image/png" sizes="32x32">
+  <link rel="icon" href="/brand/reeb-mark-16.png?v=20260911fav" type="image/png" sizes="16x16">
+  <link rel="icon" href="/brand/reeb-mark.svg?v=20260911fav" type="image/svg+xml">
+  <link rel="shortcut icon" href="/favicon.ico?v=20260911fav">
+  <link rel="apple-touch-icon" href="/brand/reeb-mark-180.png?v=20260911fav" sizes="180x180">
+  <title>Inventario — ejemplo de sistema</title>
+  <meta name="description" content="Ejemplo editable con alta, edición y baja en este navegador.">
+  <link rel="canonical" href="https://webconreeb.com/demos/inventario/">
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;600&family=Source+Sans+3:wght@400;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../sistemas-ui/app-shells.css?v=c20">
+  <link rel="stylesheet" href="styles.css?v=c20">
+</head>
+<body class="sys-inventario">
+<header class="app-top">
+  <a class="back" href="/demos/#sistemas-gestion">← Catálogo</a>
+  <div><strong>Depósito con código</strong><span>Barras, planillas y movimientos</span></div>
+  <a class="btn" href="panel.html">Panel completo</a>
+</header>
+<main id="app" class="app-shell"></main>
+<script src="data.js"></script>
+<script>
+
+window.SIS_STORAGE_KEY = "sistema-inventario-v1";
+var seed = window.INV_SEED || {};
+window.SIS_SEED = {
+  items: seed.productos || seed.items || [],
+};
+window.SIS_CFG = {
+  slug: "inventario", listKey: "items",
+  columns: [["codigo","Código"],["nombre","Producto"],["stock","Stock"],["minimo","Mínimo"]],
+  form: [["codigo","Código","text"],["nombre","Nombre","text"],["stock","Stock","number"],["minimo","Mínimo","number"]],
+  row: ["codigo","nombre","stock","minimo"],
+  statuses: [], statusLabels: {}
+};
+
+</script>
+<script src="../sistemas-ui/mini-app.js?v=c20"></script>
+<script src="../wa-float.js?v=wa8"></script>
+</body>
+</html>

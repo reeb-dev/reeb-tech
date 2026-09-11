@@ -10,99 +10,43 @@
   <link rel="shortcut icon" href="/favicon.ico?v=20260911fav">
   <link rel="apple-touch-icon" href="/brand/reeb-mark-180.png?v=20260911fav" sizes="180x180">
   <title>Cuenta corriente — ejemplo de sistema</title>
-  <meta name="description" content="Cargos, pagos y saldo por cliente. Ejemplo de sistema a medida para comercios.">
-  <meta name="robots" content="index, follow">
+  <meta name="description" content="Ejemplo editable con alta, edición y baja en este navegador.">
   <link rel="canonical" href="https://webconreeb.com/demos/cuentacorriente/">
-  <meta property="og:type" content="website">
-  <meta property="og:site_name" content="Web con REEB">
-  <meta property="og:url" content="https://webconreeb.com/demos/cuentacorriente/">
-  <meta property="og:title" content="Cuenta corriente — ejemplo de sistema">
-  <meta property="og:description" content="Cargos, pagos y saldo por cliente. Ejemplo de sistema a medida para comercios.">
-  <meta property="og:image" content="https://webconreeb.com/demos/cuentacorriente/og.jpg?v=20260911f">
-  <meta property="og:image:type" content="image/jpeg">
-  <meta property="og:image:width" content="1200">
-  <meta property="og:image:height" content="630">
-  <meta property="og:image:alt" content="Cuenta corriente — ejemplo de sistema">
-  <meta property="og:locale" content="es_AR">
-  <meta name="twitter:card" content="summary_large_image">
-  <meta name="twitter:title" content="Cuenta corriente — ejemplo de sistema">
-  <meta name="twitter:description" content="Cargos, pagos y saldo por cliente. Ejemplo de sistema a medida para comercios.">
-  <meta name="twitter:image" content="https://webconreeb.com/demos/cuentacorriente/og.jpg?v=20260911f">
-
-<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;600&family=Source+Sans+3:wght@400;600;700&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="../sistemas-ui/base.css?v=c2">
-  <link rel="stylesheet" href="styles.css">
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;600&family=Source+Sans+3:wght@400;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../sistemas-ui/app-shells.css?v=c20">
+  <link rel="stylesheet" href="styles.css?v=c20">
 </head>
-<body>
-  <header class="band">
-    <div class="band-inner">
-      <a class="brand" href="index.html"><strong>Cuenta corriente</strong><span>Debe / haber · sistema de ejemplo</span></a>
-      <nav>
-        <a href="#como">Cómo funciona</a>
-        <a href="#galeria">Fotos</a>
-        <a class="btn" href="panel.html">Abrir panel</a>
-      </nav>
-    </div>
-  </header>
+<body class="sys-cuentacorriente">
+<header class="app-top">
+  <a class="back" href="/demos/#sistemas-gestion">← Catálogo</a>
+  <div><strong>Fiado del local</strong><span>Cargos, pagos y saldo</span></div>
+  <a class="btn" href="panel.html">Panel completo</a>
+</header>
+<main id="app" class="app-shell"></main>
+<script src="data.js"></script>
+<script>
 
-  <main class="wrap">
-    <section class="hero">
-      <div>
-        <p class="kicker">Sistema de gestión</p>
-        <h1>Quién debe y quién pagó, sin la libreta perdida.</h1>
-        <p class="lead">Para comercios y mayoristas: movimientos por cliente, saldo y seguimiento. No reemplaza un sistema contable ni ARCA.</p>
-        <div class="hero-actions">
-          <a class="btn" href="panel.html">Probar el panel</a>
-          <a class="btn btn-quiet" href="/demos/#sistemas-gestion">Volver al catálogo</a>
-        </div>
-        <ul class="hero-facts">
-          <li><strong>Clientes</strong> con teléfono</li><li><strong>Saldo</strong> al instante</li><li><strong>Historial</strong> por persona</li>
-        </ul>
-      </div>
-      <div class="hero-stage">
-        <img src="img/hero.jpg" alt="Cuenta corriente">
-        <div class="cap"><strong>Cuenta corriente</strong><span>Página de ejemplo · panel incluido</span></div>
-      </div>
-    </section>
+window.SIS_STORAGE_KEY = "sistema-cc-v3";
+var seed = window.CC_SEED || {};
+window.SIS_SEED = {
+  items: (seed.clientes || []).map(function(c){
+    var movs = (seed.movs || []).filter(function(m){ return m.clienteId === c.id; });
+    var saldo = movs.reduce(function(a,m){ return a + (m.tipo==="pago" ? -Number(m.monto||0) : Number(m.monto||0)); }, 0);
+    return { id: c.id, nombre: c.nombre, tel: c.tel, saldo: saldo, estado: saldo > 0 ? "debe" : "al_dia" };
+  }),
+  movs: seed.movs || []
+};
+window.SIS_CFG = {
+  slug: "cuentacorriente", listKey: "items",
+  statuses: ["al_dia","debe"],
+  statusLabels: { al_dia:"Al día", debe:"Debe" },
+  columns: [["nombre","Cliente"],["tel","Tel"],["saldo","Saldo"],["estado","Estado"]],
+  form: [["nombre","Cliente","text"],["tel","Teléfono","text"],["saldo","Saldo","number"]],
+  row: ["nombre","saldo","estado"]
+};
 
-    <section class="section" id="como">
-      <p class="kicker">Uso</p>
-      <h2>Cómo funciona en el día a día</h2>
-      <p class="section-lead">Para comercios y mayoristas: movimientos por cliente, saldo y seguimiento. No reemplaza un sistema contable ni ARCA.</p>
-      <div class="steps">
-        <article class="step"><strong>Cliente</strong><p>Alta con nombre y teléfono.</p></article><article class="step"><strong>Movimiento</strong><p>Cargo o pago con detalle.</p></article><article class="step"><strong>Saldo</strong><p>Ve quién debe y el historial.</p></article>
-      </div>
-    </section>
-
-    <section class="section" id="galeria">
-      <p class="kicker">Referencia visual</p>
-      <h2>Ambiente del ejemplo</h2>
-      <p class="section-lead">Fotos de referencia del rubro. En un trabajo a medida se usan las suyas.</p>
-      <div class="gallery">
-        <figure><img src="img/hero.jpg" alt="Mostrador"><figcaption>Mostrador</figcaption></figure><figure><img src="img/local-1.jpg" alt="Barrio"><figcaption>Barrio</figcaption></figure><figure><img src="img/local-2.jpg" alt="Depósito"><figcaption>Depósito</figcaption></figure><figure><img src="img/local-3.jpg" alt="Caja"><figcaption>Caja</figcaption></figure>
-      </div>
-    </section>
-
-    <section class="section">
-      <p class="kicker">Panel</p>
-      <h2>Qué ve quien administra</h2>
-      <div class="grid-3">
-        <article class="feature"><strong>Clientes</strong><p>Alta simple con teléfono.</p></article>
-        <article class="feature"><strong>Cargos y pagos</strong><p>Cada movimiento queda registrado.</p></article>
-        <article class="feature"><strong>A cobrar</strong><p>Total de saldos positivos.</p></article>
-      </div>
-    </section>
-
-    <div class="cta-band">
-      <p class="kicker" style="color:#e3c48a">A medida</p>
-      <h2>¿Le sirve este sistema a su local?</h2>
-      <p>Se adapta a su rubro. No es un software de suscripción: se cotiza y se entrega para usted.</p>
-      <a class="btn" href="#contacto">Consultar</a>
-    </div>
-  </main>
-
-  <div id="contacto"></div>
-  <footer class="wrap">Cuenta corriente · ejemplo de sistema · no es un software de suscripción.</footer>
-  <script src="../contacto.js" data-phone="5492915757934" data-text="Hola, quiero consultar por un sistema de cuenta corriente" data-subject="Consulta — Cuenta corriente" data-title="Consultar" data-place="index"></script>
+</script>
+<script src="../sistemas-ui/mini-app.js?v=c20"></script>
+<script src="../wa-float.js?v=wa8"></script>
 </body>
 </html>

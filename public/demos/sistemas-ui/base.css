@@ -236,6 +236,9 @@ h2 { font-size: 1.55rem; margin: 0.2rem 0 0.55rem; }
 }
 .stat span { display: block; color: var(--muted); font-size: 0.8rem; }
 .stat strong { font-size: 1.25rem; font-family: "Fraunces", Georgia, serif; }
+.create[hidden] {
+  display: none !important;
+}
 .create {
   display: grid;
   grid-template-columns: repeat(4, minmax(0, 1fr));
@@ -425,22 +428,24 @@ body {
 .gallery {
   display: grid;
   grid-template-columns: repeat(4, minmax(0, 1fr));
-  gap: 0.7rem;
+  gap: 0.85rem;
   margin-top: 0.9rem;
 }
 .gallery figure {
   margin: 0;
-  border-radius: 12px;
+  border-radius: 14px;
   overflow: hidden;
   background: var(--card);
   border: 1px solid var(--line);
+  box-shadow: 0 8px 20px color-mix(in srgb, var(--brand) 10%, transparent);
 }
 .gallery img {
   width: 100%;
   aspect-ratio: 4/3;
+  min-height: 150px;
   object-fit: cover;
   display: block;
-  transition: transform .35s ease;
+  transition: transform .45s ease;
 }
 .gallery figure:hover img { transform: scale(1.04); }
 .gallery figcaption {
@@ -448,6 +453,82 @@ body {
   font-size: 0.82rem;
   color: var(--muted);
   font-weight: 600;
+}
+
+.caso-dia {
+  background: color-mix(in srgb, var(--accent) 28%, #fff);
+  border: 1px solid var(--line);
+  border-radius: 18px;
+  padding: 1.4rem 1.35rem 1.5rem;
+}
+.caso-table-wrap {
+  overflow-x: auto;
+  border-radius: 12px;
+  border: 1px solid var(--line);
+  background: #fff;
+  margin-top: 0.85rem;
+}
+.caso-table {
+  width: 100%;
+  border-collapse: collapse;
+  min-width: 520px;
+}
+.caso-table th,
+.caso-table td {
+  padding: 0.7rem 0.85rem;
+  text-align: left;
+  border-bottom: 1px solid var(--line);
+  font-size: 0.95rem;
+}
+.caso-table th {
+  background: color-mix(in srgb, var(--brand) 92%, #000);
+  color: #f7f4ef;
+  font-size: 0.78rem;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+.caso-table tr:last-child td { border-bottom: 0; }
+.caso-table tbody tr:nth-child(even) td {
+  background: color-mix(in srgb, var(--accent) 22%, #fff);
+}
+.caso-note {
+  margin: 0.85rem 0 0;
+  color: var(--muted);
+  font-size: 0.9rem;
+  max-width: 52ch;
+}
+.puede-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0.55rem;
+}
+.puede-list li {
+  position: relative;
+  padding: 0.75rem 0.85rem 0.75rem 1.65rem;
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  background: #fff;
+  color: var(--ink);
+  font-size: 0.98rem;
+  line-height: 1.35;
+  font-weight: 600;
+}
+.puede-list li::before {
+  content: "";
+  position: absolute;
+  left: 0.7rem;
+  top: 1rem;
+  width: 0.45rem;
+  height: 0.45rem;
+  border-radius: 50%;
+  background: var(--brand);
+}
+@media (max-width: 700px) {
+  .caso-dia { padding: 1.1rem 1rem 1.2rem; }
+  .puede-list { grid-template-columns: 1fr; }
 }
 .steps {
   display: grid;

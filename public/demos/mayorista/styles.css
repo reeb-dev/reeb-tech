@@ -1,4 +1,30 @@
 :root {
-  --ink: #222818; --muted: #5f6752; --paper: #f3f5ea; --card: #fff;
-  --line: #d5dbc4; --brand: #3d4a1f; --accent: #e2ecc0;
+  --ink: #1a1a1a; --muted: #5a5a5a; --paper: #f7f5f1; --card: #fff;
+  --brand: #2a4080; --accent: color-mix(in srgb, #2a4080 22%, #fff); --band: #152248;
+}
+body.sys-mayorista {
+  background:
+    linear-gradient(120deg, #d8e0f4 0%, transparent 40%),
+    var(--paper);
+  background-attachment: fixed;
+}
+body.sys-mayorista .app-top {
+  border-bottom: 3px solid color-mix(in srgb, var(--brand) 55%, transparent);
+}
+body.sys-mayorista .app-shell {
+  position: relative;
+}
+body.sys-mayorista .app-head h1::after {
+  content: "";
+  display: block;
+  width: 3rem;
+  height: 3px;
+  margin-top: 0.45rem;
+  background: var(--brand);
+  border-radius: 2px;
+}
+body.panel-body {
+  --brand: #2a4080;
+  --band: #152248;
+  --accent: color-mix(in srgb, #2a4080 22%, #fff);
 }

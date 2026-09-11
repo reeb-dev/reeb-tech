@@ -17,11 +17,35 @@
   function fillUnidades(){ document.querySelector("#create [name=unidadId]").innerHTML=state.unidades.map(function(u){return '<option value="'+esc(u.id)+'">'+esc(u.nombre)+'</option>';}).join(""); }
   function showView(name){
     view=name;
-    ["reservas","unidades","calendario"].forEach(function(v){ document.getElementById("view-"+v).classList.toggle("panel-hidden", v!==name); });
+    ["resumen","reservas","unidades","calendario"].forEach(function(v){
+      var el=document.getElementById("view-"+v);
+      if(el) el.classList.toggle("panel-hidden", v!==name);
+    });
     document.querySelectorAll(".panel-tabs button").forEach(function(b){ b.classList.toggle("on", b.getAttribute("data-view")===name); });
     document.getElementById("open-create").classList.toggle("panel-hidden", name!=="reservas");
-    document.getElementById("view-title").textContent=({reservas:"Reservas",unidades:"Unidades",calendario:"Calendario"})[name];
+    document.getElementById("view-title").textContent=({resumen:"Resumen del día",reservas:"Reservas",unidades:"Unidades",calendario:"Calendario"})[name]||name;
+    var stats=document.getElementById("stats");
+    if(stats) stats.classList.toggle("panel-hidden", name==="resumen");
+    if(name==="resumen"){ renderDashboard(); return; }
     render();
+  }
+  function renderDashboard(){
+    if(!window.SisPanelDash) return;
+    var list=state.reservas||[];
+    SisPanelDash.paint({
+      title:"Ocupación",
+      lead:"Reservas, check-in y unidades.",
+      goPrimary:"reservas",
+      kpis:[
+        {label:"Reservas",value:list.length,hint:"Totales"},
+        {label:"Ocupadas",value:list.filter(function(r){return r.estado==="ocupada";}).length,hint:"En casa",tone:"warn"},
+        {label:"Reservadas",value:list.filter(function(r){return r.estado==="reservada";}).length,hint:"Confirmadas",tone:"ok"}
+      ],
+      attention:list.filter(function(r){return r.estado==="reservada"||r.estado==="ocupada";}).slice(0,5).map(function(r){
+        var u=byU(r.unidadId)||{};
+        return {title:r.huesped,sub:(u.nombre||"")+" · "+label(r.estado)};
+      })
+    });
   }
   function resetForm(){
     var f=document.getElementById("create"); f.reset(); f.id.value=""; f.sena.value=0;
@@ -37,6 +61,7 @@
     f.scrollIntoView({behavior:"smooth",block:"nearest"});
   }
   function render(){
+    if(view==="resumen"){ renderDashboard(); return; }
     document.getElementById("stats").innerHTML=
       '<div class="stat"><span>Reservas</span><strong>'+state.reservas.length+'</strong></div>'+
       '<div class="stat"><span>Ocupadas</span><strong>'+state.reservas.filter(function(r){return r.estado==="ocupada";}).length+'</strong></div>'+
@@ -133,5 +158,5 @@
     save(); fillUnidades(); ev.target.reset(); ev.target.id.value=""; document.getElementById("unidad-submit").textContent="Guardar unidad"; document.getElementById("unidad-cancel").hidden=true; render();
   };
   document.getElementById("unidad-cancel").onclick=function(){ var f=document.getElementById("create-unidad"); f.reset(); f.id.value=""; document.getElementById("unidad-submit").textContent="Guardar unidad"; document.getElementById("unidad-cancel").hidden=true; };
-  render();
+  showView("resumen");
 })();

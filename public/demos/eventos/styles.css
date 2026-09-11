@@ -1,4 +1,30 @@
 :root {
-  --ink: #241824; --muted: #6a556a; --paper: #f6eff6; --card: #fff;
-  --line: #dfcfe0; --brand: #4a2f4a; --accent: #ead5ea;
+  --ink: #1a1a1a; --muted: #5a5a5a; --paper: #f7f5f1; --card: #fff;
+  --brand: #8a2f5a; --accent: color-mix(in srgb, #8a2f5a 22%, #fff); --band: #4a1830;
+}
+body.sys-eventos {
+  background:
+    radial-gradient(ellipse at 20% 0%, #f0d0e0, transparent 50%),
+    var(--paper);
+  background-attachment: fixed;
+}
+body.sys-eventos .app-top {
+  border-bottom: 3px solid color-mix(in srgb, var(--brand) 55%, transparent);
+}
+body.sys-eventos .app-shell {
+  position: relative;
+}
+body.sys-eventos .app-head h1::after {
+  content: "";
+  display: block;
+  width: 3rem;
+  height: 3px;
+  margin-top: 0.45rem;
+  background: var(--brand);
+  border-radius: 2px;
+}
+body.panel-body {
+  --brand: #8a2f5a;
+  --band: #4a1830;
+  --accent: color-mix(in srgb, #8a2f5a 22%, #fff);
 }

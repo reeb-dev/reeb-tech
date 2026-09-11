@@ -115,21 +115,49 @@
 
   function showView(name) {
     view = name;
-    ["agenda", "whatsapp", "clientes", "servicios", "equipo"].forEach(function (v) {
-      document.getElementById("view-" + v).classList.toggle("panel-hidden", v !== name);
+    ["resumen", "agenda", "whatsapp", "clientes", "servicios", "equipo"].forEach(function (v) {
+      var el = document.getElementById("view-" + v);
+      if (el) el.classList.toggle("panel-hidden", v !== name);
     });
     document.querySelectorAll(".panel-tabs button").forEach(function (b) {
       b.classList.toggle("on", b.getAttribute("data-view") === name);
     });
     document.getElementById("open-create").classList.toggle("panel-hidden", name !== "agenda");
     document.getElementById("view-title").textContent = ({
+      resumen: "Resumen del día",
       agenda: "Agenda de turnos",
       whatsapp: "Pedidos por WhatsApp",
       clientes: "Clientes",
       servicios: "Servicios",
       equipo: "Equipo"
-    })[name];
+    })[name] || name;
+    var stats = document.getElementById("stats");
+    if (stats) stats.classList.toggle("panel-hidden", name === "resumen");
+    if (name === "resumen") {
+      renderDashboard();
+      return;
+    }
     render();
+  }
+
+  function renderDashboard() {
+    if (!window.SisPanelDash) return;
+    var list = state.turnos || [];
+    var pend = list.filter(function (t) { return t.estado === "pendiente" || t.estado === "en_curso"; });
+    SisPanelDash.paint({
+      title: "Agenda de hoy",
+      lead: "Turnos, WhatsApp y equipo en un vistazo.",
+      goPrimary: "agenda",
+      kpis: [
+        { label: "Turnos", value: list.length, hint: "En agenda" },
+        { label: "Pendientes", value: pend.length, hint: "Requieren atención", tone: "warn" },
+        { label: "Atendidos", value: list.filter(function (t) { return t.estado === "atendido"; }).length, hint: "Cerrados", tone: "ok" }
+      ],
+      attention: pend.slice(0, 5).map(function (t) {
+        var c = byId(state.clientes, t.clienteId) || {};
+        return { title: (t.hora || "") + " · " + (c.nombre || "Cliente"), sub: labelEstado(t.estado) };
+      })
+    });
   }
 
   function filteredTurnos() {
@@ -589,6 +617,7 @@
 
   function render() {
     updateWaBadge();
+    if (view === "resumen") { renderDashboard(); return; }
     if (view === "agenda") renderAgenda();
     if (view === "whatsapp") renderWhatsapp();
     if (view === "clientes") renderClientes();
@@ -812,5 +841,5 @@
     document.getElementById("pro-cancel").hidden = true;
   };
 
-  render();
+  showView("resumen");
 })();

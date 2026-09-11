@@ -1,4 +1,30 @@
 :root {
-  --ink: #151c22; --muted: #55616c; --paper: #eef1f4; --card: #fff;
-  --line: #c8d0d8; --brand: #2a3540; --accent: #d0d8e0;
+  --ink: #1a1a1a; --muted: #5a5a5a; --paper: #f7f5f1; --card: #fff;
+  --brand: #2a3848; --accent: color-mix(in srgb, #2a3848 22%, #fff); --band: #141c24;
+}
+body.sys-flota {
+  background:
+    radial-gradient(ellipse at 100% 0%, #d0d8e0, transparent 55%),
+    var(--paper);
+  background-attachment: fixed;
+}
+body.sys-flota .app-top {
+  border-bottom: 3px solid color-mix(in srgb, var(--brand) 55%, transparent);
+}
+body.sys-flota .app-shell {
+  position: relative;
+}
+body.sys-flota .app-head h1::after {
+  content: "";
+  display: block;
+  width: 3rem;
+  height: 3px;
+  margin-top: 0.45rem;
+  background: var(--brand);
+  border-radius: 2px;
+}
+body.panel-body {
+  --brand: #2a3848;
+  --band: #141c24;
+  --accent: color-mix(in srgb, #2a3848 22%, #fff);
 }

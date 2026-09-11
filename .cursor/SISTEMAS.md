@@ -16,7 +16,8 @@ Sitio personal (CV): `/cv/` — no mezclar con sistemas comerciales.
 | Familia | Qué es | Rutas típicas |
 |---------|--------|----------------|
 | **Rubro / página pública** | Ejemplo de sitio del local + panel del rubro | `/demos/peluqueria/`, `/demos/taller/`, `/demos/restaurante/`, … |
-| **Sistema de gestión** | Panel “producto” cotizable (CRUD, estados) | `/demos/turnos/`, `/demos/comandas/`, … · sección hub `#sistemas-gestion` |
+| **Panel de gestión** | Admin de alto nivel (stock, clientes, mapa) | `/demos/gestion/` · ancla hub `#gestion` |
+| **Sistemas legacy (no en hub)** | Carpetas CRUD antiguas, sin vitrina en catálogo | `/demos/turnos/`, `/demos/inventario/`, … (no enlazar en hub) |
 
 UI compartida de sistemas: `public/demos/sistemas-ui/base.css`  
 Login de paneles: `public/demos/login.js` (clave de ejemplo `demo`)  
@@ -38,11 +39,12 @@ OG por rubro/sistema: `scripts/generate-demo-og.py` → `og.jpg` + meta
 
 ## 3. Sistemas nuevos (2026-09) — sin choque de rutas
 
-En el hub `#sistemas-gestion`: **7 destacados** (turnos, cotizaciones, cuenta corriente, comandas, reservas, órdenes, takeaway) y el resto bajo “Más sistemas…”.
+En el hub: ancla `#gestion` → destacado **Panel de gestión** (`/demos/gestion/`).  
+La sección `#sistemas-gestion` **ya no se publica** en el catálogo (carpetas legacy pueden existir en disco).
 
 | Slug | Nombre | Utilidad | Separación explícita |
 |------|--------|----------|----------------------|
-| `ordenes` | Órdenes de trabajo | OT: ingreso, diagnóstico, estados, aviso | ≠ `taller` (página del taller) |
+| `gestion` | Panel de gestión | Stock + código barras/QR, clientes, mapa OSM | Panel comercial principal |
 | `stockalertas` | Stock y alertas | Mínimos, movimientos, alertas | ≠ `stockfacturacion` (depósito + facturas) |
 | `visitas` | Visitas / técnicos | Agenda de campo, check-in | ≠ `turnos` (salón/consultorio) |
 | `takeaway` | Pedidos para llevar | Cola mostrador/cocina, listo/entregado | ≠ `comandas` (mesas) ni `rotiseria` (carta) |
@@ -62,7 +64,7 @@ En el hub `#sistemas-gestion`: **7 destacados** (turnos, cotizaciones, cuenta co
 
 `arquitectura`, `automotores`, `biblioteca`, `carpinteria`, `comercio`, `complejo`, `estudio`, `excursiones`, `facturacion`, `hospedaje`, `inmobiliaria`, `kiosco`, `libreria`, `marketplace`, `materiales`, `peluqueria`, `restaurante`, `rotiseria`, `steelframe`, `stockfacturacion`, `taller`, …
 
-Cada uno: página pública + panel del rubro. Los **sistemas** de la sección `#sistemas-gestion` se cotizan / muestran aparte.
+Cada uno: página pública + panel del rubro. El panel comercial destacado en hub es `#gestion` (`/demos/gestion/`).
 
 ---
 
@@ -74,7 +76,7 @@ Cada uno: página pública + panel del rubro. Los **sistemas** de la sección `#
 4. Copy cliente: **ejemplo / página / panel** — no “demo/vitrina” hacia el cliente.  
 5. Panel con CRUD usable (alta / edición / baja / estados).  
 6. Favicon hub (`/brand/reeb-mark*`) + `og.jpg` del rubro.  
-7. Ficha en hub `#sistemas-gestion`.  
+7. Ficha en hub `#gestion` (o destacado en Destacados), no reabrir un listado masivo de sistemas incompletos.  
 8. Regenerar OG: `python3 scripts/generate-demo-og.py`.
 
 ---

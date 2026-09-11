@@ -1,4 +1,30 @@
 :root {
-  --ink: #1c2a28; --muted: #5a6b66; --paper: #f2f6f4; --card: #fff;
-  --line: #c9d8d2; --brand: #2f5d56; --accent: #d4ebe4;
+  --ink: #1a1a1a; --muted: #5a5a5a; --paper: #f7f5f1; --card: #fff;
+  --brand: #1a6b5c; --accent: color-mix(in srgb, #1a6b5c 22%, #fff); --band: #0d3d35;
+}
+body.sys-contratos {
+  background:
+    linear-gradient(180deg, #e4f3ef 0%, transparent 40%),
+    var(--paper);
+  background-attachment: fixed;
+}
+body.sys-contratos .app-top {
+  border-bottom: 3px solid color-mix(in srgb, var(--brand) 55%, transparent);
+}
+body.sys-contratos .app-shell {
+  position: relative;
+}
+body.sys-contratos .app-head h1::after {
+  content: "";
+  display: block;
+  width: 3rem;
+  height: 3px;
+  margin-top: 0.45rem;
+  background: var(--brand);
+  border-radius: 2px;
+}
+body.panel-body {
+  --brand: #1a6b5c;
+  --band: #0d3d35;
+  --accent: color-mix(in srgb, #1a6b5c 22%, #fff);
 }

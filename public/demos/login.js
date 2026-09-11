@@ -12,6 +12,15 @@
   css.href = base + "login.css?v=1";
   document.head.appendChild(css);
 
+  if (!document.querySelector('script[src*="reeb-mark.js"]')) {
+    var mark = document.createElement("script");
+    mark.src = base + "reeb-mark.js?v=rm3";
+    mark.async = false;
+    document.head.appendChild(mark);
+  } else if (window.REEB_MARK && typeof window.REEB_MARK.inject === "function") {
+    window.REEB_MARK.inject(base);
+  }
+
   var USERS = {
     comercio: [
       { user: "ana", pass: "demo", nombre: "Ana Gómez", rol: "Dueña" },
@@ -108,6 +117,10 @@
     ],
     ordenes: [
       { user: "hector", pass: "demo", nombre: "Héctor OT", rol: "Taller" }
+    ],
+    inventario: [
+      { user: "nora", pass: "demo", nombre: "Nora Palacios", rol: "Depósito" },
+      { user: "demo", pass: "demo", nombre: "Demo", rol: "Depósito" }
     ],
     stockalertas: [
       { user: "nora", pass: "demo", nombre: "Nora Stock", rol: "Depósito" }
@@ -271,6 +284,10 @@
     if (session) {
       unlock();
       showSession(session);
+      return;
+    }
+    if (script.getAttribute("data-auto-enter") === "1") {
+      enter(users[0]);
       return;
     }
     showGate();

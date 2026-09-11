@@ -1,4 +1,30 @@
 :root {
-  --ink: #2a1c14; --muted: #6d5748; --paper: #f7f0e8; --card: #fff;
-  --line: #e2d3c4; --brand: #5a2e16; --accent: #f0d5b8;
+  --ink: #1a1a1a; --muted: #5a5a5a; --paper: #f7f5f1; --card: #fff;
+  --brand: #6b4820; --accent: color-mix(in srgb, #6b4820 22%, #fff); --band: #3a2610;
+}
+body.sys-cuentacorriente {
+  background:
+    linear-gradient(135deg, #f3eadc 0%, transparent 45%),
+    var(--paper);
+  background-attachment: fixed;
+}
+body.sys-cuentacorriente .app-top {
+  border-bottom: 3px solid color-mix(in srgb, var(--brand) 55%, transparent);
+}
+body.sys-cuentacorriente .app-shell {
+  position: relative;
+}
+body.sys-cuentacorriente .app-head h1::after {
+  content: "";
+  display: block;
+  width: 3rem;
+  height: 3px;
+  margin-top: 0.45rem;
+  background: var(--brand);
+  border-radius: 2px;
+}
+body.panel-body {
+  --brand: #6b4820;
+  --band: #3a2610;
+  --accent: color-mix(in srgb, #6b4820 22%, #fff);
 }

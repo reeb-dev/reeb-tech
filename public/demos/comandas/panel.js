@@ -16,13 +16,40 @@
   function byPlato(id){ return state.carta.filter(function(p){return p.id===id;})[0]; }
   function showView(name){
     view=name;
-    ["salon","cocina","carta"].forEach(function(v){ document.getElementById("view-"+v).classList.toggle("panel-hidden", v!==name); });
+    ["resumen","salon","cocina","carta"].forEach(function(v){
+      var el=document.getElementById("view-"+v);
+      if(el) el.classList.toggle("panel-hidden", v!==name);
+    });
     document.querySelectorAll(".panel-tabs button").forEach(function(b){ b.classList.toggle("on", b.getAttribute("data-view")===name); });
     document.getElementById("open-create").classList.toggle("panel-hidden", name!=="salon");
-    document.getElementById("view-title").textContent=({salon:"Salón",cocina:"Cocina",carta:"Carta"})[name];
+    document.getElementById("view-title").textContent=({resumen:"Resumen del día",salon:"Salón",cocina:"Cocina",carta:"Carta"})[name]||name;
+    var stats=document.getElementById("stats");
+    if(stats) stats.classList.toggle("panel-hidden", name==="resumen");
+    var create=document.getElementById("create");
+    if(create && name!=="salon") create.hidden=true;
+    if(name==="resumen"){ renderDashboard(); return; }
     render();
   }
+  function renderDashboard(){
+    if(!window.SisPanelDash) return;
+    var list=state.mesas||[];
+    var act=list.filter(function(m){return m.estado!=="cerrada";});
+    SisPanelDash.paint({
+      title:"Salón en vivo",
+      lead:"Mesas abiertas, cocina y cobro.",
+      goPrimary:"salon",
+      kpis:[
+        {label:"Activas",value:act.length,hint:"Mesas abiertas"},
+        {label:"Cocina",value:list.filter(function(m){return m.estado==="cocina";}).length,hint:"Preparando",tone:"warn"},
+        {label:"Listas",value:list.filter(function(m){return m.estado==="lista";}).length,hint:"Para servir",tone:"ok"}
+      ],
+      attention:act.filter(function(m){return m.estado==="lista"||m.estado==="cocina";}).slice(0,5).map(function(m){
+        return {title:m.mesa,sub:label(m.estado)+" · "+money(total(m))};
+      })
+    });
+  }
   function render(){
+    if(view==="resumen"){ renderDashboard(); return; }
     var act=state.mesas.filter(function(m){return m.estado!=="cerrada";});
     document.getElementById("stats").innerHTML=
       '<div class="stat"><span>Activas</span><strong>'+act.length+'</strong></div>'+
@@ -119,5 +146,5 @@
     save(); ev.target.reset(); ev.target.id.value=""; document.getElementById("plato-submit").textContent="Guardar plato"; document.getElementById("plato-cancel").hidden=true; render();
   };
   document.getElementById("plato-cancel").onclick=function(){ var f=document.getElementById("create-plato"); f.reset(); f.id.value=""; document.getElementById("plato-submit").textContent="Guardar plato"; document.getElementById("plato-cancel").hidden=true; };
-  render();
+  showView("resumen");
 })();

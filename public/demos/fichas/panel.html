@@ -31,33 +31,36 @@
   <meta name="twitter:image" content="https://webconreeb.com/demos/fichas/og.jpg?v=20260911f">
 
   <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;600&family=Source+Sans+3:wght@400;600;700&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="../sistemas-ui/base.css?v=c6">
-  <link rel="stylesheet" href="styles.css?v=c5">
+  <link rel="stylesheet" href="../sistemas-ui/base.css?v=c21">
+  <link rel="stylesheet" href="styles.css?v=c21">
+  <link rel="stylesheet" href="../sistemas-ui/panel-kit.css?v=c21">
 </head>
 <body class="panel-body">
-  <script src="../login.js?v=2" data-rubro="fichas" data-place="panel"></script>
+  <script src="../login.js?v=4" data-rubro="fichas" data-place="panel" data-auto-enter="1"></script>
   <header class="band">
     <div class="band-inner">
       <a class="brand" href="index.html"><strong>Fichas</strong><span>Historial · próximo control</span></a>
       <nav>
         <a href="index.html">Qué es</a>
-        <div class="panel-tabs"><button type="button" class="on" data-view="fichas">Fichas</button></div>
+        <div class="panel-tabs"><button type="button" class="on" data-view="resumen">Resumen</button><button type="button" data-view="fichas">Fichas</button></div>
         <button class="btn" id="open-create" type="button">Nueva ficha</button>
       </nav>
     </div>
   </header>
   <div class="wrap">
     <div class="toolbar">
-      <div><p class="kicker">Datos de ejemplo · este navegador</p><h1 id="view-title">Fichas</h1></div>
+      <div><p class="kicker">Datos de ejemplo · este navegador</p><h1 id="view-title">Resumen del día</h1></div>
       <div class="toolbar-actions">
-        <label class="search-box"><span class="visually-hidden">Buscar</span><input type="search" id="search" placeholder="Buscar…"></label>
+        <label class="search-box" id="search-wrap" hidden><span class="visually-hidden">Buscar</span><input type="search" id="search" placeholder="Buscar…"></label>
         <button type="button" id="reset-sample" class="btn-soft">Restablecer</button>
       </div>
     </div>
-    <p class="hint-bar"><strong>Qué puede hacer aquí.</strong> Clave de ejemplo: <strong>demo</strong>.</p>
+    <p class="hint-bar"><strong>Historial.</strong> Próximo control por persona o mascota. Datos de ejemplo en este navegador.</p>
     <div class="can-do"><span>Alta / edición / baja de fichas</span><span>Agregar nota al historial</span><span>Próximo control</span><span>Buscar</span></div>
-    <div class="stats" id="stats"></div>
-    <div id="view-fichas" data-panel-view="fichas">
+    <div class="stats panel-hidden" id="stats"></div>
+    
+    <div id="view-resumen" data-panel-view="resumen"><div class="dash" id="dash"></div></div>
+<div id="view-fichas" data-panel-view="fichas" class="panel-hidden">
       <form class="create" id="create" hidden>
         <label>Nombre<input name="nombre" required></label>
         <label>Tipo<input name="tipo" required></label>
@@ -67,6 +70,7 @@
         <button type="submit">Guardar</button>
       </form>
       
+      <div class="kanban" id="kanban"></div>
       <div class="workspace">
         <section class="list"><div class="table-scroll"><table>
           <thead><tr><th>Nombre</th><th>Tipo</th><th>Responsable</th><th>Próximo</th><th>Tel</th></tr></thead>
@@ -82,7 +86,7 @@
   <footer class="wrap">Fichas · ejemplo de sistema · clave demo.</footer>
   <script src="data.js"></script>
   <script src="cfg.js"></script>
-  <script src="panel.js"></script>
-  <script src="../contacto.js" data-phone="5492915757934" data-text="Hola, quiero consultar por Fichas" data-subject="Consulta — Fichas" data-title="Consultar" data-place="panel"></script>
+  <script src="../sistemas-ui/panel-kit.js?v=c21"></script>
+  <script src="../contacto.js?v=wa8" data-phone="5492915757934" data-text="Hola, vi el ejemplo de fichas y quiero consultar una página web a medida para mi local" data-subject="Consulta — página web (fichas)" data-title="Consultar" data-place="panel"></script>
 </body>
 </html>
