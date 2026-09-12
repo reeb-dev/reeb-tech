@@ -17,7 +17,7 @@
   if (!document.querySelector('link[href*="contacto.css"]')) {
     var css = document.createElement("link");
     css.rel = "stylesheet";
-    css.href = base + "contacto.css?v=wa7";
+    css.href = base + "contacto.css?v=wa10";
     document.head.appendChild(css);
   }
   if (!document.querySelector('link[href*="Fraunces"]')) {
@@ -83,7 +83,10 @@
   themeWaCard(wa);
 
   (function wireMinimize(card) {
-    var key = "reeb-wa-card-min";
+    // Preferencias separadas: la home mantiene la tarjeta completa;
+    // el panel puede ir minimizado sin afectar la página principal.
+    var isPanel = card.classList.contains("wa-float--panel");
+    var key = isPanel ? "reeb-wa-card-min-panel" : "reeb-wa-card-min-hub";
     var minBtn = card.querySelector(".wa-hub-min");
     var expandBtn = card.querySelector(".wa-hub-expand");
     function setMin(on) {
@@ -106,9 +109,12 @@
       var stored = localStorage.getItem(key);
       if (stored === "1") setMin(true);
       else if (stored === "0") setMin(false);
-      // Primera visita en panel: minimizado para no tapar la operación.
-      else if (card.classList.contains("wa-float--panel")) setMin(true);
-    } catch (e) {}
+      else if (isPanel) setMin(true); // panel: minimizado por defecto
+      else setMin(false); // home/hub: tarjeta CONSULTA completa
+    } catch (e) {
+      if (isPanel) setMin(true);
+      else setMin(false);
+    }
   })(wa);
 
   function cssVar(name) {
