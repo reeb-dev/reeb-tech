@@ -108,3 +108,75 @@
 @media (max-width: 760px) {
   .demo-difusion { padding-left: 14px; padding-right: 14px; }
 }
+
+/* Panel: difusión al final, plegada — la operación del día queda arriba */
+.demo-difusion-fold {
+  max-width: 1240px;
+  margin: 28px auto 48px;
+  padding: 0 22px 12px;
+  color: var(--ink, #1c1917);
+}
+
+.demo-difusion-fold > summary {
+  list-style: none;
+  cursor: pointer;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 8px 14px;
+  padding: 14px 16px;
+  border-radius: 14px;
+  border: 1px solid var(--line, rgba(0, 0, 0, 0.14));
+  background: color-mix(in srgb, var(--card, #fff) 88%, transparent);
+  font-size: 15px;
+  user-select: none;
+}
+
+.demo-difusion-fold > summary::-webkit-details-marker {
+  display: none;
+}
+
+.demo-difusion-fold > summary::before {
+  content: "▸";
+  font-size: 12px;
+  opacity: 0.7;
+  transition: transform 0.15s ease;
+}
+
+.demo-difusion-fold[open] > summary::before {
+  transform: rotate(90deg);
+}
+
+.demo-difusion-fold > summary strong {
+  font-weight: 700;
+  letter-spacing: 0.02em;
+}
+
+.demo-difusion-fold > summary span {
+  font-size: 13px;
+  opacity: 0.72;
+  font-weight: 500;
+}
+
+.demo-difusion-fold[open] > summary {
+  margin-bottom: 10px;
+  border-color: color-mix(in srgb, currentColor 22%, transparent);
+}
+
+.demo-difusion-fold .demo-difusion {
+  margin: 0;
+  padding: 4px 2px 8px;
+  max-width: none;
+}
+
+.demo-difusion-fold .demo-difusion.is-folded > .demo-difusion-kicker {
+  display: none;
+}
+
+@media (max-width: 760px) {
+  .demo-difusion-fold {
+    padding-left: 14px;
+    padding-right: 14px;
+    margin-bottom: 72px;
+  }
+}

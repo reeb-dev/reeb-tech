@@ -17,7 +17,7 @@
   if (!document.querySelector('link[href*="contacto.css"]')) {
     var css = document.createElement("link");
     css.rel = "stylesheet";
-    css.href = base + "contacto.css?v=wa6";
+    css.href = base + "contacto.css?v=wa7";
     document.head.appendChild(css);
   }
   if (!document.querySelector('link[href*="Fraunces"]')) {
@@ -60,6 +60,7 @@
   wa.className = "wa-float wa-float--hub";
   if (place === "panel" || document.body.classList.contains("panel-body") || document.body.classList.contains("panel-page")) {
     wa.classList.add("wa-float--panel");
+    document.body.classList.add("panel-body");
   }
   wa.setAttribute("aria-label", "Consulta por WhatsApp");
   wa.innerHTML =
@@ -102,8 +103,11 @@
       });
     }
     try {
-      if (localStorage.getItem(key) === "1") setMin(true);
-      else if (card.classList.contains("wa-float--panel") && window.innerHeight < 780) setMin(true);
+      var stored = localStorage.getItem(key);
+      if (stored === "1") setMin(true);
+      else if (stored === "0") setMin(false);
+      // Primera visita en panel: minimizado para no tapar la operación.
+      else if (card.classList.contains("wa-float--panel")) setMin(true);
     } catch (e) {}
   })(wa);
 
