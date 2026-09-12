@@ -7,7 +7,7 @@
   var base = script.src.replace(/difusion\.js(\?.*)?$/, "");
   var css = document.createElement("link");
   css.rel = "stylesheet";
-  css.href = base + "difusion.css?v=4";
+  css.href = base + "difusion.css?v=5";
   document.head.appendChild(css);
 
   var D = {
@@ -185,14 +185,19 @@
     else document.body.appendChild(fold);
 
     function openIfHash() {
-      if ((location.hash || "").replace(/^#/, "") === "difusion") {
-        fold.open = true;
+      if ((location.hash || "").replace(/^#/, "") !== "difusion") return;
+      fold.open = true;
+      // Esperar al layout del <details> abierto; "start" baja al bloque real al final.
+      function scrollToFold() {
         try {
-          fold.scrollIntoView({ block: "nearest", behavior: "smooth" });
+          fold.scrollIntoView({ block: "start", behavior: "smooth" });
         } catch (err) {
           fold.scrollIntoView(true);
         }
       }
+      requestAnimationFrame(function () {
+        requestAnimationFrame(scrollToFold);
+      });
     }
     openIfHash();
     window.addEventListener("hashchange", openIfHash);
