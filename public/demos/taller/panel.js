@@ -144,7 +144,7 @@ function renderOrdenes() {
   const item = items.find((entry) => entry.id === selected);
   const detail = document.getElementById("detail");
   if (!item) {
-    detail.innerHTML = "<p>Elegí una orden del listado.</p>";
+    detail.innerHTML = "<p>Elija una orden del listado.</p>";
     return;
   }
 

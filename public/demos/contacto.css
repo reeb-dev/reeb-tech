@@ -431,8 +431,19 @@ aside.wa-float.wa-float--hub.is-min .wa-hub-expand {
 /* En paneles: aire inferior para que no tape tablas/acciones */
 body.panel-body:has(aside.wa-float.wa-float--hub:not(.is-min)) .workspace,
 body.panel-body:has(aside.wa-float.wa-float--hub:not(.is-min)) main,
+body.panel-body:has(aside.wa-float.wa-float--hub:not(.is-min)) .app,
 body.panel-page:has(aside.wa-float.wa-float--hub:not(.is-min)) main {
   padding-bottom: 15rem;
+}
+
+body.panel-body:has(aside.wa-float.wa-float--panel.is-min) .app,
+body.panel-body:has(aside.wa-float.wa-float--panel.is-min) .workspace {
+  padding-bottom: 4.5rem;
+}
+
+aside.wa-float.wa-float--panel.is-min {
+  bottom: 14px !important;
+  right: 14px !important;
 }
 
 @media (max-height: 760px) {

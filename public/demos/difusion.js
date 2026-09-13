@@ -7,7 +7,7 @@
   var base = script.src.replace(/difusion\.js(\?.*)?$/, "");
   var css = document.createElement("link");
   css.rel = "stylesheet";
-  css.href = base + "difusion.css?v=3";
+  css.href = base + "difusion.css?v=5";
   document.head.appendChild(css);
 
   var D = {
@@ -164,14 +164,43 @@
   render();
 
   if (place === "panel") {
-    var header = document.querySelector("header.top") || document.querySelector(".panel-header") || document.querySelector("header");
-    if (header && header.parentNode) {
-      header.parentNode.insertBefore(section, header.nextSibling);
-    } else {
-      var toolbar = document.querySelector(".toolbar");
-      if (toolbar && toolbar.parentNode) toolbar.parentNode.insertBefore(section, toolbar.nextSibling);
-      else (document.querySelector(".app") || document.body).appendChild(section);
+    // Al final y colapsado: lo primero que se ve es la operación del día.
+    var fold = document.createElement("details");
+    fold.id = "difusion";
+    fold.className = "demo-difusion-fold";
+    fold.setAttribute("data-place", "panel");
+    var summary = document.createElement("summary");
+    summary.innerHTML =
+      "<strong>Difusión</strong>" +
+      "<span>Una carga · varios destinos · se abre si hace falta</span>";
+    section.removeAttribute("id");
+    section.classList.add("is-folded");
+    fold.appendChild(summary);
+    fold.appendChild(section);
+
+    var app = document.querySelector(".app");
+    var footerPanel = document.querySelector("footer");
+    if (app) app.appendChild(fold);
+    else if (footerPanel && footerPanel.parentNode) footerPanel.parentNode.insertBefore(fold, footerPanel);
+    else document.body.appendChild(fold);
+
+    function openIfHash() {
+      if ((location.hash || "").replace(/^#/, "") !== "difusion") return;
+      fold.open = true;
+      // Esperar al layout del <details> abierto; "start" baja al bloque real al final.
+      function scrollToFold() {
+        try {
+          fold.scrollIntoView({ block: "start", behavior: "smooth" });
+        } catch (err) {
+          fold.scrollIntoView(true);
+        }
+      }
+      requestAnimationFrame(function () {
+        requestAnimationFrame(scrollToFold);
+      });
     }
+    openIfHash();
+    window.addEventListener("hashchange", openIfHash);
   } else {
     var host = document.getElementById("contacto") || document.querySelector(".contact-host");
     var info = document.getElementById("info");

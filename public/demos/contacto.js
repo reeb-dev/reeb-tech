@@ -17,7 +17,7 @@
   if (!document.querySelector('link[href*="contacto.css"]')) {
     var css = document.createElement("link");
     css.rel = "stylesheet";
-    css.href = base + "contacto.css?v=wa6";
+    css.href = base + "contacto.css?v=wa10";
     document.head.appendChild(css);
   }
   if (!document.querySelector('link[href*="Fraunces"]')) {
@@ -60,6 +60,7 @@
   wa.className = "wa-float wa-float--hub";
   if (place === "panel" || document.body.classList.contains("panel-body") || document.body.classList.contains("panel-page")) {
     wa.classList.add("wa-float--panel");
+    document.body.classList.add("panel-body");
   }
   wa.setAttribute("aria-label", "Consulta por WhatsApp");
   wa.innerHTML =
@@ -82,7 +83,10 @@
   themeWaCard(wa);
 
   (function wireMinimize(card) {
-    var key = "reeb-wa-card-min";
+    // Preferencias separadas: la home mantiene la tarjeta completa;
+    // el panel puede ir minimizado sin afectar la página principal.
+    var isPanel = card.classList.contains("wa-float--panel");
+    var key = isPanel ? "reeb-wa-card-min-panel" : "reeb-wa-card-min-hub";
     var minBtn = card.querySelector(".wa-hub-min");
     var expandBtn = card.querySelector(".wa-hub-expand");
     function setMin(on) {
@@ -102,9 +106,15 @@
       });
     }
     try {
-      if (localStorage.getItem(key) === "1") setMin(true);
-      else if (card.classList.contains("wa-float--panel") && window.innerHeight < 780) setMin(true);
-    } catch (e) {}
+      var stored = localStorage.getItem(key);
+      if (stored === "1") setMin(true);
+      else if (stored === "0") setMin(false);
+      else if (isPanel) setMin(true); // panel: minimizado por defecto
+      else setMin(false); // home/hub: tarjeta CONSULTA completa
+    } catch (e) {
+      if (isPanel) setMin(true);
+      else setMin(false);
+    }
   })(wa);
 
   function cssVar(name) {
