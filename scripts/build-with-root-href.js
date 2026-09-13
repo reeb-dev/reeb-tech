@@ -191,6 +191,24 @@ function inlineHubStyles(html) {
   return withMinifiedScripts.replace(stylesheet, `<style data-inline="hub">${minified}</style>`);
 }
 
+function inlinePublishedStyles(htmlRelativePath, cssRelativePath, stylesheet) {
+  const htmlPath = path.join(OUT, htmlRelativePath);
+  const cssPath = path.join(OUT, cssRelativePath);
+  if (!fs.existsSync(htmlPath) || !fs.existsSync(cssPath)) {
+    console.error('Static page or stylesheet missing:', htmlPath, cssPath);
+    process.exit(1);
+  }
+
+  const html = fs.readFileSync(htmlPath, 'utf8');
+  if (!stylesheet.test(html)) {
+    console.error('Expected stylesheet link missing:', htmlPath);
+    process.exit(1);
+  }
+  const css = fs.readFileSync(cssPath, 'utf8');
+  const minified = esbuild.transformSync(css, { loader: 'css', minify: true }).code;
+  fs.writeFileSync(htmlPath, html.replace(stylesheet, `<style data-inline="page">${minified}</style>`), 'utf8');
+}
+
 function preparePublishLayout() {
   if (!fs.existsSync(OUT)) {
     console.error('Build output missing:', OUT);
@@ -219,6 +237,11 @@ function preparePublishLayout() {
   const hubHtml = fs.readFileSync(hubSource, 'utf8');
   fs.writeFileSync(path.join(OUT, 'index.html'), inlineHubStyles(hubHtml), 'utf8');
   fs.writeFileSync(path.join(OUT, 'demos', 'index.html'), DEMOS_REDIRECT_HTML, 'utf8');
+  inlinePublishedStyles(
+    path.join('demos', 'inmobiliaria', 'index.html'),
+    path.join('demos', 'inmobiliaria', 'styles.css'),
+    /<link rel="stylesheet" href="styles\.css\?v=bariloche43">/
+  );
 
   forceHubFaviconsEverywhere(path.join(ROOT, 'public'));
   // Disable Jekyll so folders/files like shared assets are published as-is.

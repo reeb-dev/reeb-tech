@@ -26,6 +26,11 @@ function formatPrice(price, operacion) {
 let mapaComarca = null;
 let mapaFicha = null;
 
+function publicImage(src) {
+  const value = String(src || "");
+  return value.startsWith("img/") ? value.replace(/\.jpg(?=$|[?#])/, ".webp") : value;
+}
+
 function populateBarrios() {
   const select = document.getElementById("filterBarrio");
   if (!select) return;
@@ -137,7 +142,7 @@ function renderZoneCards() {
     const foto = typeof zonaFotoDe === "function" ? zonaFotoDe(z) : (z.foto || "img/lago.jpg");
     return `
     <button type="button" class="zone-pick ${currentFilters.barrio === z.id ? "active" : ""}" data-zona="${esc(z.id)}" aria-pressed="${currentFilters.barrio === z.id ? "true" : "false"}">
-      <img src="${esc(foto)}" alt="${esc(z.nombre)}">
+      <img src="${esc(publicImage(foto))}" alt="${esc(z.nombre)}" loading="lazy" decoding="async">
       <span>${esc(z.nombre)}</span>
       ${cerca ? `<em class="zone-cerca">Cerca de ${esc(cerca)}</em>` : ""}
       <small>${esc(z.texto || "")}</small>
@@ -179,6 +184,20 @@ function pintarMapaComarca() {
   if (activa) mapaComarca.setView([activa.lat, activa.lng], activa.id === "El Bolsón" || activa.parentId === "El Bolsón" ? 11 : 12);
   else mapaComarca.fitBounds(zonas.map((z) => [z.lat, z.lng]), { padding: [28, 28] });
   window.setTimeout(() => mapaComarca && mapaComarca.invalidateSize(), 80);
+}
+
+function watchMapaComarca() {
+  const el = document.getElementById("mapaComarca");
+  if (!el || typeof IntersectionObserver === "undefined") {
+    pintarMapaComarca();
+    return;
+  }
+  const observer = new IntersectionObserver((entries) => {
+    if (!entries.some((entry) => entry.isIntersecting)) return;
+    observer.disconnect();
+    pintarMapaComarca();
+  }, { rootMargin: "320px 0px" });
+  observer.observe(el);
 }
 
 function pintarMapaFicha(p) {
@@ -314,7 +333,7 @@ function renderProperties() {
       <article class="property-card ${cardMods}" data-id="${esc(p.id)}">
         <div class="image">
           <a class="card-cover" href="${esc(detalleHref(p.id))}">
-            <img src="${esc(portada)}" alt="${esc(p.titulo)}">
+            <img src="${esc(publicImage(portada))}" alt="${esc(p.titulo)}" loading="lazy" decoding="async">
             <div class="badges">
               ${htmlPublicBadges(p)}
             </div>
@@ -358,7 +377,7 @@ function htmlNovedadCard(p) {
   return `
       <a class="recientes-card${p.nuevo ? " is-nueva" : ""}${p.bajoPrecio ? " is-baja" : ""}" href="${esc(detalleHref(p.id))}">
         <span class="recientes-card-media">
-          <img src="${esc(portada)}" alt="">
+          <img src="${esc(publicImage(portada))}" alt="" loading="lazy" decoding="async">
         </span>
         <strong>${esc(p.titulo)}</strong>
         ${htmlPrecioVitrina(p)}
@@ -545,12 +564,12 @@ function updateModalImage() {
   const safeIndex = ((currentImageIndex % imgs.length) + imgs.length) % imgs.length;
   currentImageIndex = safeIndex;
   const img = document.getElementById("modalImage");
-  img.src = imgs[safeIndex];
+  img.src = publicImage(imgs[safeIndex]);
   img.alt = currentProperty.titulo;
   document.getElementById("imageCounter").textContent = `${safeIndex + 1} / ${imgs.length}`;
   document.getElementById("modalThumbs").innerHTML = imgs.map((src, i) => `
     <button type="button" class="${i === safeIndex ? "active" : ""}" data-thumb="${i}">
-      <img src="${esc(src)}" alt="">
+      <img src="${esc(publicImage(src))}" alt="" loading="lazy" decoding="async">
     </button>
   `).join("");
 }
@@ -764,7 +783,7 @@ populateBarrios();
 aplicarZonaDesdeUrl();
 renderProperties();
 markFilterFields();
-pintarMapaComarca();
+watchMapaComarca();
 
 function aplicarZonaDesdeUrl() {
   const zona = new URLSearchParams(location.search).get("zona");
