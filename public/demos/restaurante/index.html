@@ -13,6 +13,7 @@
   <meta name="description" content="Ejemplo de página web para parrilla: carta y WhatsApp.">
   <meta name="robots" content="index, follow">
   <link rel="canonical" href="https://webconreeb.com/demos/restaurante/">
+  <link rel="preload" as="image" href="img/hero-salon-640.webp" imagesrcset="img/hero-salon-640.webp 640w, img/hero-salon-960.webp 960w" imagesizes="(max-width: 960px) calc(100vw - 48px), 600px" type="image/webp" fetchpriority="high">
   <meta property="og:type" content="website">
   <meta property="og:site_name" content="Web con REEB">
   <meta property="og:url" content="https://webconreeb.com/demos/restaurante/">
@@ -29,9 +30,8 @@
   <meta name="twitter:description" content="Ejemplo de página web para parrilla: carta y WhatsApp.">
   <meta name="twitter:image" content="https://webconreeb.com/demos/restaurante/og.jpg?v=20260911f">
 
-<link rel="stylesheet" href="styles.css?v=restaurante2">
-  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" crossorigin="">
-</head>
+<link rel="stylesheet" href="styles.css?v=restaurante3">
+  </head>
 <body>
   <header class="top">
     <div class="top-inner">
@@ -59,7 +59,7 @@
         </div>
       </div>
       <aside class="hero-photo">
-        <img src="img/hero-salon.jpg" alt="Mesa servida en Parrilla Don Ernesto">
+        <img src="img/hero-salon-960.webp" srcset="img/hero-salon-640.webp 640w, img/hero-salon-960.webp 960w" sizes="(max-width: 960px) calc(100vw - 48px), 600px" width="960" height="640" fetchpriority="high" decoding="async" alt="Mesa servida en Parrilla Don Ernesto">
       </aside>
     </section>
 
@@ -83,7 +83,7 @@
           <h3>Entradas</h3>
           <div class="menu-grid">
             <article class="plato-card" data-id="m1" data-cat="entrada">
-              <div class="plato-photo"><img src="img/provoleta.jpg" alt="Provoleta"></div>
+              <div class="plato-photo"><img src="img/provoleta.webp" loading="lazy" decoding="async" alt="Provoleta"></div>
               <div class="plato-body">
                 <h4>Provoleta</h4>
                 <p>Queso provolone a la parrilla, orégano y aceite de oliva.</p>
@@ -91,7 +91,7 @@
               </div>
             </article>
             <article class="plato-card" data-id="m2" data-cat="entrada">
-              <div class="plato-photo"><img src="img/empanadas.jpg" alt="Empanadas de carne"></div>
+              <div class="plato-photo"><img src="img/empanadas.webp" loading="lazy" decoding="async" alt="Empanadas de carne"></div>
               <div class="plato-body">
                 <h4>Empanadas de carne</h4>
                 <p>Tres empanadas fritas, carne cortada a cuchillo.</p>
@@ -99,7 +99,7 @@
               </div>
             </article>
             <article class="plato-card" data-id="m3" data-cat="entrada">
-              <div class="plato-photo"><img src="img/tabla.jpg" alt="Tabla de fiambres"></div>
+              <div class="plato-photo"><img src="img/tabla.webp" loading="lazy" decoding="async" alt="Tabla de fiambres"></div>
               <div class="plato-body">
                 <h4>Tabla de fiambres</h4>
                 <p>Jamón, salame, quesos y aceitunas, para compartir.</p>
@@ -112,7 +112,7 @@
           <h3>Principales</h3>
           <div class="menu-grid">
             <article class="plato-card" data-id="m4" data-cat="principal">
-              <div class="plato-photo"><img src="img/bife-chorizo.jpg" alt="Bife de chorizo"></div>
+              <div class="plato-photo"><img src="img/bife-chorizo.webp" loading="lazy" decoding="async" alt="Bife de chorizo"></div>
               <div class="plato-body">
                 <h4>Bife de chorizo</h4>
                 <p>Corte jugoso a la parrilla. Pedilo jugoso, a punto o cocido.</p>
@@ -120,7 +120,7 @@
               </div>
             </article>
             <article class="plato-card" data-id="m5" data-cat="principal">
-              <div class="plato-photo"><img src="img/ojo-bife.jpg" alt="Ojo de bife"></div>
+              <div class="plato-photo"><img src="img/ojo-bife.webp" loading="lazy" decoding="async" alt="Ojo de bife"></div>
               <div class="plato-body">
                 <h4>Ojo de bife</h4>
                 <p>Bife ancho con hueso, a la parrilla.</p>
@@ -128,7 +128,7 @@
               </div>
             </article>
             <article class="plato-card" data-id="m6" data-cat="principal">
-              <div class="plato-photo"><img src="img/asado.jpg" alt="Asado a la parrilla"></div>
+              <div class="plato-photo"><img src="img/asado.webp" loading="lazy" decoding="async" alt="Asado a la parrilla"></div>
               <div class="plato-body">
                 <h4>Asado a la parrilla</h4>
                 <p>Parrillada de cortes, chorizo y achuras, con chimichurri.</p>
@@ -136,7 +136,7 @@
               </div>
             </article>
             <article class="plato-card" data-id="m7" data-cat="principal">
-              <div class="plato-photo"><img src="img/milanesa.jpg" alt="Milanesa napolitana"></div>
+              <div class="plato-photo"><img src="img/milanesa.webp" loading="lazy" decoding="async" alt="Milanesa napolitana"></div>
               <div class="plato-body">
                 <h4>Milanesa napolitana</h4>
                 <p>Napolitana con jamón, salsa de tomate y muzzarella.</p>
@@ -144,7 +144,7 @@
               </div>
             </article>
             <article class="plato-card" data-id="m8" data-cat="principal">
-              <div class="plato-photo"><img src="img/pastas.jpg" alt="Penne a la bolognesa"></div>
+              <div class="plato-photo"><img src="img/pastas.webp" loading="lazy" decoding="async" alt="Penne a la bolognesa"></div>
               <div class="plato-body">
                 <h4>Penne a la bolognesa</h4>
                 <p>Pasta al dente con salsa de carne y queso rallado.</p>
@@ -152,7 +152,7 @@
               </div>
             </article>
             <article class="plato-card" data-id="m9" data-cat="principal">
-              <div class="plato-photo"><img src="img/risotto.jpg" alt="Risotto de hongos"></div>
+              <div class="plato-photo"><img src="img/risotto.webp" loading="lazy" decoding="async" alt="Risotto de hongos"></div>
               <div class="plato-body">
                 <h4>Risotto de hongos</h4>
                 <p>Arroz cremoso con hongos y queso.</p>
@@ -160,7 +160,7 @@
               </div>
             </article>
             <article class="plato-card is-off" data-id="m10" data-cat="principal">
-              <div class="plato-photo"><img src="img/pescado.jpg" alt="Salmón a la plancha"></div>
+              <div class="plato-photo"><img src="img/pescado.webp" loading="lazy" decoding="async" alt="Salmón a la plancha"></div>
               <div class="plato-body">
                 <h4>Salmón a la plancha</h4>
                 <p>Salmón grillado con vegetales. Hoy no hay.</p>
@@ -168,7 +168,7 @@
               </div>
             </article>
             <article class="plato-card" data-id="m20" data-cat="principal">
-              <div class="plato-photo"><img src="img/hero-salon.jpg" alt="Menú del mediodía"></div>
+              <div class="plato-photo"><img src="img/hero-salon.webp" loading="lazy" decoding="async" alt="Menú del mediodía"></div>
               <div class="plato-body">
                 <h4>Menú del mediodía</h4>
                 <p>Plato del día + guarnición + bebida. Martes a viernes, almuerzo.</p>
@@ -181,7 +181,7 @@
           <h3>Guarniciones</h3>
           <div class="menu-grid">
             <article class="plato-card" data-id="m11" data-cat="guarnicion">
-              <div class="plato-photo"><img src="img/papas.jpg" alt="Papas fritas"></div>
+              <div class="plato-photo"><img src="img/papas.webp" loading="lazy" decoding="async" alt="Papas fritas"></div>
               <div class="plato-body">
                 <h4>Papas fritas</h4>
                 <p>Porción de papas fritas crocantes.</p>
@@ -189,7 +189,7 @@
               </div>
             </article>
             <article class="plato-card" data-id="m12" data-cat="guarnicion">
-              <div class="plato-photo"><img src="img/pure.jpg" alt="Puré de papas"></div>
+              <div class="plato-photo"><img src="img/pure.webp" loading="lazy" decoding="async" alt="Puré de papas"></div>
               <div class="plato-body">
                 <h4>Puré de papas</h4>
                 <p>Puré casero, manteca y un toque de nuez moscada.</p>
@@ -197,7 +197,7 @@
               </div>
             </article>
             <article class="plato-card" data-id="m13" data-cat="guarnicion">
-              <div class="plato-photo"><img src="img/ensalada.jpg" alt="Ensalada mixta"></div>
+              <div class="plato-photo"><img src="img/ensalada.webp" loading="lazy" decoding="async" alt="Ensalada mixta"></div>
               <div class="plato-body">
                 <h4>Ensalada mixta</h4>
                 <p>Lechuga, tomate y cebolla, con aceite y vinagre.</p>
@@ -210,7 +210,7 @@
           <h3>Postres</h3>
           <div class="menu-grid">
             <article class="plato-card" data-id="m14" data-cat="postre">
-              <div class="plato-photo"><img src="img/flan.jpg" alt="Flan con dulce de leche"></div>
+              <div class="plato-photo"><img src="img/flan.webp" loading="lazy" decoding="async" alt="Flan con dulce de leche"></div>
               <div class="plato-body">
                 <h4>Flan con dulce de leche</h4>
                 <p>Flan casero con caramelo y dulce de leche.</p>
@@ -218,7 +218,7 @@
               </div>
             </article>
             <article class="plato-card" data-id="m15" data-cat="postre">
-              <div class="plato-photo"><img src="img/panqueque.jpg" alt="Panqueque de dulce de leche"></div>
+              <div class="plato-photo"><img src="img/panqueque.webp" loading="lazy" decoding="async" alt="Panqueque de dulce de leche"></div>
               <div class="plato-body">
                 <h4>Panqueque de dulce de leche</h4>
                 <p>Panqueque tibio, relleno de dulce de leche.</p>
@@ -231,7 +231,7 @@
           <h3>Bebidas</h3>
           <div class="menu-grid">
             <article class="plato-card" data-id="m16" data-cat="bebida">
-              <div class="plato-photo"><img src="img/malbec.jpg" alt="Copa de malbec"></div>
+              <div class="plato-photo"><img src="img/malbec.webp" loading="lazy" decoding="async" alt="Copa de malbec"></div>
               <div class="plato-body">
                 <h4>Copa de malbec</h4>
                 <p>Copa de malbec de la casa.</p>
@@ -239,7 +239,7 @@
               </div>
             </article>
             <article class="plato-card" data-id="m17" data-cat="bebida">
-              <div class="plato-photo"><img src="img/malbec-botella.jpg" alt="Malbec botella"></div>
+              <div class="plato-photo"><img src="img/malbec-botella.webp" loading="lazy" decoding="async" alt="Malbec botella"></div>
               <div class="plato-body">
                 <h4>Malbec botella</h4>
                 <p>Botella de malbec para la mesa.</p>
@@ -247,7 +247,7 @@
               </div>
             </article>
             <article class="plato-card" data-id="m18" data-cat="bebida">
-              <div class="plato-photo"><img src="img/agua.jpg" alt="Agua mineral 500 ml"></div>
+              <div class="plato-photo"><img src="img/agua.webp" loading="lazy" decoding="async" alt="Agua mineral 500 ml"></div>
               <div class="plato-body">
                 <h4>Agua mineral 500 ml</h4>
                 <p>Agua sin gas.</p>
@@ -255,7 +255,7 @@
               </div>
             </article>
             <article class="plato-card" data-id="m19" data-cat="bebida">
-              <div class="plato-photo"><img src="img/gaseosa.jpg" alt="Gaseosa de línea"></div>
+              <div class="plato-photo"><img src="img/gaseosa.webp" loading="lazy" decoding="async" alt="Gaseosa de línea"></div>
               <div class="plato-body">
                 <h4>Gaseosa de línea</h4>
                 <p>Vaso de gaseosa de la casa.</p>
@@ -279,7 +279,7 @@
           <p>La parrilla está a la vista del salón. Los lunes el local no abre. El resto de la semana hay almuerzo y cena; el domingo se sirve hasta la 1.</p>
           <p>Esta página es un ejemplo: los precios y la capacidad son de muestra, no de un restaurante en actividad.</p>
         </article>
-        <img src="img/terraza.jpg" alt="Mesas al aire libre, ejemplo de terraza">
+        <img src="img/terraza.webp" loading="lazy" decoding="async" alt="Mesas al aire libre, ejemplo de terraza">
       </div>
     </section>
 
@@ -356,8 +356,7 @@
 
   <footer class="wrap">Parrilla Don Ernesto · Honduras 4827, Palermo, CABA · ejemplo de página web · no es un restaurante en actividad.</footer>
 
-  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" crossorigin=""></script>
-  <script src="data.js"></script>
+    <script src="data.js"></script>
   <script>
     const local = seedLocal();
     const carta = seedMenu();
@@ -394,7 +393,7 @@
     function openPlato(id) {
       const item = carta.find((p) => p.id === id);
       if (!item) return;
-      document.getElementById("plato-modal-img").src = fotoPlato(item);
+      document.getElementById("plato-modal-img").src = fotoPlato(item).replace(/\.jpg$/i, ".webp");
       document.getElementById("plato-modal-img").alt = item.nombre;
       document.getElementById("plato-modal-cat").textContent = catLabel(item.categoria);
       document.getElementById("plato-modal-title").textContent = item.nombre;
@@ -456,10 +455,34 @@
       setTimeout(() => { toast.classList.remove("show"); setTimeout(() => toast.remove(), 300); }, 3200);
     }
 
+    function cargarMapa(s) {
+      if (cargarMapa.iniciado) return;
+      cargarMapa.iniciado = true;
+      const css = document.createElement("link");
+      css.rel = "stylesheet";
+      css.href = "https://unpkg.com/leaflet@1.9.4/dist/leaflet.css";
+      document.head.appendChild(css);
+      const script = document.createElement("script");
+      script.src = "https://unpkg.com/leaflet@1.9.4/dist/leaflet.js";
+      script.onload = () => { try { pintarMapa(s); } catch (_) {} };
+      document.body.appendChild(script);
+    }
+
+    function prepararMapa(s) {
+      const target = document.getElementById("ubicacion");
+      if (!("IntersectionObserver" in window) || !target) return cargarMapa(s);
+      const observer = new IntersectionObserver((entries) => {
+        if (!entries.some((entry) => entry.isIntersecting)) return;
+        observer.disconnect();
+        cargarMapa(s);
+      }, { rootMargin: "400px 0px" });
+      observer.observe(target);
+    }
+
     renderMenu();
-    try { pintarMapa(local); } catch (err) { /* el mapa no debe dejar la carta vacía */ }
+    prepararMapa(local);
   </script>
-  <script src="../difusion.js?v=3" data-rubro="restaurante" data-place="vitrina"></script>
-  <script src="../contacto.js?v=wa8" data-phone="5492915757934" data-text="Hola, vi el ejemplo de restaurante y quiero consultar una página web a medida para mi local" data-subject="Consulta — página web (restaurante)" data-title="Escribinos"></script>
+  <script defer src="../difusion.js?v=3" data-rubro="restaurante" data-place="vitrina"></script>
+  <script defer src="../contacto.js?v=wa8" data-phone="5492915757934" data-text="Hola, vi el ejemplo de restaurante y quiero consultar una página web a medida para mi local" data-subject="Consulta — página web (restaurante)" data-title="Escribinos"></script>
 </body>
 </html>

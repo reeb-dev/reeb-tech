@@ -242,6 +242,11 @@ function preparePublishLayout() {
     path.join('demos', 'inmobiliaria', 'styles.css'),
     /<link rel="stylesheet" href="styles\.css\?v=bariloche43">/
   );
+  inlinePublishedStyles(
+    path.join('demos', 'restaurante', 'index.html'),
+    path.join('demos', 'restaurante', 'styles.css'),
+    /<link rel="stylesheet" href="styles\.css\?v=restaurante3">/
+  );
 
   forceHubFaviconsEverywhere(path.join(ROOT, 'public'));
   // Disable Jekyll so folders/files like shared assets are published as-is.
