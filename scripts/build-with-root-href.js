@@ -16,7 +16,7 @@ const ROOT = path.join(__dirname, '..');
 const OUT = path.join(ROOT, 'dist', 'manuelreeb', 'browser');
 const CV_DIR = path.join(OUT, 'cv');
 
-const PUBLIC_TOP_DIRS = new Set(['demos', 'docs', 'media', 'tech', 'brand']);
+const PUBLIC_TOP_DIRS = new Set(['demos', 'docs', 'media', 'tech', 'brand', 'soluciones']);
 const PUBLIC_TOP_FILES = new Set([
   'CNAME',
   '.nojekyll',
