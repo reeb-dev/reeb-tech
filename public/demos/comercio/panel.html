@@ -9,27 +9,27 @@
   <link rel="icon" href="/brand/hub-mark.ico?v=20260911force" sizes="any">
   <link rel="shortcut icon" href="/brand/hub-mark.ico?v=20260911force">
   <link rel="apple-touch-icon" href="/brand/reeb-mark-180.png?v=20260911force" sizes="180x180">
-<title>Mostrador · Almacén del Barrio</title>
-  <meta name="description" content="Mostrador · Almacén del Barrio. Ejemplo a medida: gestione datos de ejemplo en el panel.">
+<title>Panel de gestión · Mercado La Esquina</title>
+  <meta name="description" content="Panel de Mercado La Esquina para organizar pedidos, faltantes y cierres de caja.">
   <meta name="robots" content="noindex, follow">
 <link rel="canonical" href="https://webconreeb.com/demos/comercio/panel.html">
   <meta property="og:type" content="website">
   <meta property="og:site_name" content="Web con REEB">
   <meta property="og:url" content="https://webconreeb.com/demos/comercio/panel.html">
-  <meta property="og:title" content="Mostrador · Almacén del Barrio">
-  <meta property="og:description" content="Mostrador · Almacén del Barrio. Ejemplo a medida: gestione datos de ejemplo en el panel.">
+  <meta property="og:title" content="Panel de gestión · Mercado La Esquina">
+  <meta property="og:description" content="Pedidos, faltantes y cierres de caja organizados en un solo lugar.">
   <meta property="og:image" content="https://webconreeb.com/demos/comercio/og.jpg?v=20260911f">
   <meta property="og:image:type" content="image/jpeg">
   <meta property="og:image:width" content="1200">
   <meta property="og:image:height" content="630">
-  <meta property="og:image:alt" content="Mostrador · Almacén del Barrio">
+  <meta property="og:image:alt" content="Panel de gestión · Mercado La Esquina">
   <meta property="og:locale" content="es_AR">
   <meta name="twitter:card" content="summary_large_image">
-  <meta name="twitter:title" content="Mostrador · Almacén del Barrio">
-  <meta name="twitter:description" content="Mostrador · Almacén del Barrio. Ejemplo a medida: gestione datos de ejemplo en el panel.">
+  <meta name="twitter:title" content="Panel de gestión · Mercado La Esquina">
+  <meta name="twitter:description" content="Pedidos, faltantes y cierres de caja organizados en un solo lugar.">
   <meta name="twitter:image" content="https://webconreeb.com/demos/comercio/og.jpg?v=20260911f">
 
-<link href="https://fonts.googleapis.com/css2?family=Barlow:wght@400;600;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Fraunces:opsz,wght@9..144,600;9..144,700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="styles.css">
 </head>
 <body>
@@ -37,9 +37,12 @@
   <div class="app">
     <header class="top">
       <div class="top-inner">
-        <a class="logo" href="index.html">MOSTRADOR<small>Pedidos, faltantes y caja · ejemplo</small></a>
+        <a class="logo market-logo" href="index.html">
+          <span class="market-mark" aria-hidden="true">LE</span>
+          <span>LA ESQUINA<small>Panel del mercado</small></span>
+        </a>
         <nav>
-          <a href="index.html">El local</a>
+          <a class="store-link" href="index.html">← Ver página pública</a>
           <div class="panel-tabs" id="tabs">
             <button type="button" data-tab="pedido" class="on">Pedidos</button>
             <button type="button" data-tab="faltante">Faltantes</button>
@@ -52,7 +55,7 @@
 
     <div class="toolbar">
       <div>
-        <p class="kicker">Turno de ejemplo</p>
+        <p class="kicker">Operación de hoy · datos de ejemplo</p>
         <h1 id="panelTitle">Pedidos a proveedor</h1>
       </div>
       <input type="search" id="search" class="search-input" placeholder="Buscar ticket, proveedor o ítem">
