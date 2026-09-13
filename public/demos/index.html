@@ -31,7 +31,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,560;9..144,650&family=Outfit:wght@400;600;650;700&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="/demos/hub.css?v=hub57">
+  <link rel="stylesheet" href="/demos/hub.css?v=hub58">
   <script type="application/ld+json">
   {
     "@context": "https://schema.org",
@@ -100,25 +100,96 @@
     </div>
   </section>
 
-  <section class="solution-video" id="recorrido" aria-labelledby="solution-video-title">
-    <div class="solution-video-copy">
-      <p class="badge" data-tone="gold">Recorrido en 29 segundos</p>
-      <h2 id="solution-video-title">Vea cómo funciona una solución completa</h2>
-      <p>Conozca la página que utilizan sus clientes y el panel desde donde usted administra la operación diaria.</p>
-      <div class="ctas">
-        <a class="btn btn-primary" href="#destacados">Ver ejemplos por rubro</a>
-        <a class="btn btn-ghost" href="https://wa.me/5492915757934?text=Hola%2C%20vi%20el%20recorrido%20de%20Web%20con%20REEB.%20Tengo%20un%20negocio%20y%20quisiera%20saber%20qu%C3%A9%20soluci%C3%B3n%20me%20recomienda." target="_blank" rel="noopener noreferrer">Contar qué negocio tiene</a>
+  <section class="solution-showcase" id="recorrido" aria-labelledby="solution-showcase-title">
+    <div class="solution-showcase-head">
+      <p class="badge" data-tone="gold">Ejemplos interactivos</p>
+      <h2 id="solution-showcase-title">Vea la solución por dentro</h2>
+      <p>Elija un rubro y compare la página que ven sus clientes con el panel que utiliza para trabajar.</p>
+      <div class="showcase-tabs" role="tablist" aria-label="Elegir un rubro">
+        <button type="button" class="is-active" role="tab" aria-selected="true"
+          data-name="Comercio"
+          data-public="/demos/showcase/comercio-public.webp"
+          data-panel="/demos/showcase/comercio-panel.webp"
+          data-public-href="/demos/comercio/"
+          data-panel-href="/demos/comercio/panel.html">Comercio</button>
+        <button type="button" role="tab" aria-selected="false"
+          data-name="Inmobiliaria"
+          data-public="/demos/showcase/inmobiliaria-public.webp"
+          data-panel="/demos/showcase/inmobiliaria-panel.webp"
+          data-public-href="/demos/inmobiliaria/"
+          data-panel-href="/demos/inmobiliaria/panel.html">Inmobiliaria</button>
+        <button type="button" role="tab" aria-selected="false"
+          data-name="Gastronomía"
+          data-public="/demos/showcase/gastronomia-public.webp"
+          data-panel="/demos/showcase/gastronomia-panel.webp"
+          data-public-href="/demos/restaurante/"
+          data-panel-href="/demos/restaurante/panel.html">Gastronomía</button>
       </div>
     </div>
-    <figure class="solution-video-frame">
-      <video controls muted playsinline preload="metadata" poster="/og-webconreeb.jpg?v=20260912" aria-label="Recorrido por una solución Web con REEB, desde la página pública hasta el panel administrativo">
-        <source src="/video/soluciones-web-reeb.webm?v=2" type="video/webm">
-        <source src="/video/soluciones-web-reeb.mp4?v=2" type="video/mp4">
-        <p>Su navegador no puede reproducir este video. <a href="/video/soluciones-web-reeb.mp4?v=2">Descargue el recorrido</a>.</p>
-      </video>
-      <figcaption>Página pública, soluciones por rubro y panel administrativo en un recorrido real.</figcaption>
-    </figure>
+
+    <div class="showcase-views" aria-live="polite">
+      <a class="showcase-view" id="showcase-public-link" href="/demos/comercio/">
+        <figure>
+          <img id="showcase-public-img" src="/demos/showcase/comercio-public.webp" width="960" height="540" alt="Página pública de un comercio" loading="lazy">
+          <figcaption><span>Lo que ve el cliente</span><strong>Página pública</strong></figcaption>
+        </figure>
+      </a>
+      <a class="showcase-view" id="showcase-panel-link" href="/demos/comercio/panel.html">
+        <figure>
+          <img id="showcase-panel-img" src="/demos/showcase/comercio-panel.webp" width="960" height="540" alt="Panel administrativo de un comercio" loading="lazy">
+          <figcaption><span>Lo que usa el negocio</span><strong>Panel administrativo</strong></figcaption>
+        </figure>
+      </a>
+    </div>
+
+    <div class="showcase-actions">
+      <p><strong id="showcase-name">Comercio</strong> · página pública y operación diaria conectadas.</p>
+      <a class="btn btn-primary" id="showcase-example-link" href="/demos/comercio/">Abrir este ejemplo</a>
+      <a class="btn btn-ghost" href="https://wa.me/5492915757934?text=Hola%2C%20vi%20los%20ejemplos%20de%20Web%20con%20REEB.%20Tengo%20un%20negocio%20y%20quisiera%20saber%20qu%C3%A9%20soluci%C3%B3n%20me%20recomienda." target="_blank" rel="noopener noreferrer">Adaptarlo a mi negocio</a>
+    </div>
   </section>
+
+  <script>
+    (function () {
+      var buttons = Array.from(document.querySelectorAll(".showcase-tabs button"));
+      var publicImage = document.getElementById("showcase-public-img");
+      var panelImage = document.getElementById("showcase-panel-img");
+      var publicLink = document.getElementById("showcase-public-link");
+      var panelLink = document.getElementById("showcase-panel-link");
+      var exampleLink = document.getElementById("showcase-example-link");
+      var name = document.getElementById("showcase-name");
+
+      function select(button) {
+        var rubro = button.dataset.name || "";
+        buttons.forEach(function (item) {
+          var active = item === button;
+          item.classList.toggle("is-active", active);
+          item.setAttribute("aria-selected", active ? "true" : "false");
+          item.tabIndex = active ? 0 : -1;
+        });
+        publicImage.src = button.dataset.public;
+        publicImage.alt = "Página pública de " + rubro.toLowerCase();
+        panelImage.src = button.dataset.panel;
+        panelImage.alt = "Panel administrativo de " + rubro.toLowerCase();
+        publicLink.href = button.dataset.publicHref;
+        panelLink.href = button.dataset.panelHref;
+        exampleLink.href = button.dataset.publicHref;
+        name.textContent = rubro;
+      }
+
+      buttons.forEach(function (button, index) {
+        button.addEventListener("click", function () { select(button); });
+        button.addEventListener("keydown", function (event) {
+          if (event.key !== "ArrowRight" && event.key !== "ArrowLeft") return;
+          event.preventDefault();
+          var direction = event.key === "ArrowRight" ? 1 : -1;
+          var next = buttons[(index + direction + buttons.length) % buttons.length];
+          select(next);
+          next.focus();
+        });
+      });
+    })();
+  </script>
 
   <section class="solutions" id="soluciones">
     <div class="section-heading">
