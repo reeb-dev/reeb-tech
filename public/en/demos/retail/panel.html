@@ -1,0 +1,106 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="icon" href="/brand/reeb-mark.svg?v=20260911force" type="image/svg+xml">
+  <link rel="icon" href="/brand/reeb-mark-32.png?v=20260911force" type="image/png" sizes="32x32">
+  <link rel="icon" href="/brand/reeb-mark-16.png?v=20260911force" type="image/png" sizes="16x16">
+  <link rel="icon" href="/brand/hub-mark.ico?v=20260911force" sizes="any">
+  <link rel="shortcut icon" href="/brand/hub-mark.ico?v=20260911force">
+  <link rel="apple-touch-icon" href="/brand/reeb-mark-180.png?v=20260911force" sizes="180x180">
+<title>Admin panel · La Esquina Market</title>
+  <meta name="description" content="La Esquina Market admin panel for supplier orders, shelf shortages and cash reconciliation.">
+  <meta name="robots" content="noindex, follow">
+<link rel="canonical" href="https://webconreeb.com/en/demos/retail/panel.html">
+  <meta property="og:type" content="website">
+  <meta property="og:site_name" content="Web con REEB">
+  <meta property="og:url" content="https://webconreeb.com/en/demos/retail/panel.html">
+  <meta property="og:title" content="Admin panel · La Esquina Market">
+  <meta property="og:description" content="Supplier orders, shelf shortages and cash reconciliation in one place.">
+  <meta property="og:image" content="https://webconreeb.com/en/demos/retail/og.jpg?v=20260913">
+  <meta property="og:image:type" content="image/jpeg">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta property="og:image:alt" content="Admin panel · La Esquina Market">
+  <meta property="og:locale" content="en_US">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Admin panel · La Esquina Market">
+  <meta name="twitter:description" content="Supplier orders, shelf shortages and cash reconciliation in one place.">
+  <meta name="twitter:image" content="https://webconreeb.com/en/demos/retail/og.jpg?v=20260913">
+
+<link rel="preload" as="font" href="/demos/comercio/fonts/dm-sans-latin.woff2" type="font/woff2" crossorigin>
+  <link rel="preload" as="font" href="/demos/comercio/fonts/Fraunces-latin.woff2" type="font/woff2" crossorigin>
+  <link rel="stylesheet" href="/demos/comercio/styles.css?v=comercio-perf1">
+</head>
+<body>
+  <script src="/demos/login.js?v=5" data-rubro="comercio" data-place="panel" data-lang="en"></script>
+  <div class="app">
+    <header class="top">
+      <div class="top-inner">
+        <a class="logo market-logo" href="index.html">
+          <span class="market-mark" aria-hidden="true">LE</span>
+          <span>LA ESQUINA<small>Market admin panel</small></span>
+        </a>
+        <nav>
+          <a class="store-link" href="index.html">← View public website</a>
+          <a class="store-link" href="/demos/comercio/panel.html" hreflang="es-AR">ES</a>
+          <div class="panel-tabs" id="tabs">
+            <button type="button" data-tab="pedido" class="on">Orders</button>
+            <button type="button" data-tab="faltante">Shortages</button>
+            <button type="button" data-tab="caja">Cash</button>
+          </div>
+          <button class="btn" id="open-create" type="button">New order</button>
+        </nav>
+      </div>
+    </header>
+
+    <div class="toolbar">
+      <div>
+        <p class="kicker">Today’s operation · sample data</p>
+        <h1 id="panelTitle">Supplier orders</h1>
+      </div>
+      <input type="search" id="search" class="search-input" placeholder="Search ticket, supplier or item">
+    </div>
+
+    <div class="stats" id="stats"></div>
+
+    <form class="create" id="create-pedido">
+      <input name="ticket" placeholder="Ticket (PED-453)" required>
+      <input name="origin" placeholder="Supplier" required>
+      <input name="due" placeholder="When (today, 7:00 AM)">
+      <input name="item" placeholder="First item" required>
+      <input name="qty" type="number" min="0" value="1">
+      <button class="btn" type="submit">Add order</button>
+    </form>
+
+    <form class="create" id="create-faltante">
+      <input name="ticket" placeholder="Ticket (GON-22)" required>
+      <input name="origin" placeholder="Aisle or shelf" required>
+      <input name="item" placeholder="Missing product" required>
+      <input name="qty" type="number" min="0" value="1" placeholder="Ordered">
+      <input name="missing" type="number" min="0" value="1" placeholder="Missing">
+      <button class="btn" type="submit">Add shortage</button>
+    </form>
+
+    <form class="create" id="create-caja">
+      <input name="ticket" placeholder="Ticket (CAJA-HOY)" required>
+      <input name="origin" placeholder="Register 1" required>
+      <input name="due" placeholder="Shift" value="Today">
+      <input name="efectivo" type="number" placeholder="Cash" required>
+      <input name="tarjetas" type="number" placeholder="Cards" required>
+      <input name="contado" type="number" placeholder="Counted cash" required>
+      <button class="btn" type="submit">Close reconciliation</button>
+    </form>
+
+    <div class="layout">
+      <section class="tickets" id="tickets"></section>
+      <aside class="sheet" id="sheet"></aside>
+    </div>
+  </div>
+
+  <script src="data.js"></script>
+  <script src="panel.js"></script>
+
+</body>
+</html>
