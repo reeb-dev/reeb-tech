@@ -11,6 +11,7 @@
 const { spawnSync } = require('child_process');
 const fs = require('fs');
 const path = require('path');
+const esbuild = require('esbuild');
 
 const ROOT = path.join(__dirname, '..');
 const OUT = path.join(ROOT, 'dist', 'manuelreeb', 'browser');
@@ -168,6 +169,28 @@ function isAngularArtifact(name) {
   return true;
 }
 
+function inlineHubStyles(html) {
+  const cssPath = path.join(OUT, 'demos', 'hub.css');
+  const stylesheet = /<link rel="stylesheet" href="\/demos\/hub\.css[^"]*">/;
+  if (!fs.existsSync(cssPath) || !stylesheet.test(html)) {
+    console.error('Hub stylesheet missing or not linked:', cssPath);
+    process.exit(1);
+  }
+
+  const css = fs.readFileSync(cssPath, 'utf8');
+  const minified = esbuild.transformSync(css, { loader: 'css', minify: true }).code;
+  const withoutLegacy = html.replace(/\s*<template data-legacy-functions>[\s\S]*?<\/template>/, '');
+  const withMinifiedScripts = withoutLegacy.replace(
+    /<script((?![^>]*application\/ld\+json)[^>]*)>([\s\S]*?)<\/script>/g,
+    (match, attributes, source) => {
+      if (!source.trim()) return match;
+      const result = esbuild.transformSync(source, { loader: 'js', minify: true, target: 'es2017' });
+      return `<script${attributes}>${result.code.trim()}</script>`;
+    }
+  );
+  return withMinifiedScripts.replace(stylesheet, `<style data-inline="hub">${minified}</style>`);
+}
+
 function preparePublishLayout() {
   if (!fs.existsSync(OUT)) {
     console.error('Build output missing:', OUT);
@@ -192,8 +215,9 @@ function preparePublishLayout() {
     process.exit(1);
   }
 
-  // Promote catalog to site root; keep vertical demos under /demos/<rubro>/.
-  fs.copyFileSync(hubSource, path.join(OUT, 'index.html'));
+  // Promote and optimize catalog at site root; keep vertical demos under /demos/<rubro>/.
+  const hubHtml = fs.readFileSync(hubSource, 'utf8');
+  fs.writeFileSync(path.join(OUT, 'index.html'), inlineHubStyles(hubHtml), 'utf8');
   fs.writeFileSync(path.join(OUT, 'demos', 'index.html'), DEMOS_REDIRECT_HTML, 'utf8');
 
   forceHubFaviconsEverywhere(path.join(ROOT, 'public'));

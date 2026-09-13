@@ -28,11 +28,12 @@
   <link rel="icon" href="/brand/hub-mark.ico?v=20260911force" sizes="any">
   <link rel="shortcut icon" href="/brand/hub-mark.ico?v=20260911force">
   <link rel="apple-touch-icon" href="/brand/reeb-mark-180.png?v=20260911force" sizes="180x180">
-  <link rel="preload" as="image" href="/demos/hub-img/hero.webp" type="image/webp" media="(min-width: 861px)" fetchpriority="high">
-  <link rel="preload" as="image" href="/demos/hub-img/hero-mobile.webp" type="image/webp" media="(max-width: 860px)" fetchpriority="high">
+  <link rel="preload" as="image" href="/demos/hub-img/hero.webp?v=hub10" type="image/webp" media="(min-width: 861px)" fetchpriority="high">
+  <link rel="preload" as="image" href="/demos/hub-img/hero-mobile.webp?v=hub10" type="image/webp" media="(max-width: 860px)" fetchpriority="high">
 <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,560;9..144,650&family=Outfit:wght@400;600;650;700&display=swap" rel="stylesheet">
+  <link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,560;9..144,650&family=Outfit:wght@400;600;650;700&display=swap" onload="this.onload=null;this.rel='stylesheet'">
+  <noscript><link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,560;9..144,650&family=Outfit:wght@400;600;650;700&display=swap" rel="stylesheet"></noscript>
   <link rel="stylesheet" href="/demos/hub.css?v=hub60">
   <script type="application/ld+json">
   {
@@ -880,12 +881,12 @@
       <p class="badge" data-tone="gold">Una solución completa</p>
       <h2>Su web es solo una parte</h2>
       <p class="sistemas-lead">Cada solución puede combinar una página pública, un panel de gestión y funciones adaptadas a la forma de trabajar de su negocio.</p>
-      <div class="sistemas-compact-actions">
+      <div class="sistemas-compact-actions" id="funciones">
         <a class="btn btn-primary" href="#recorrido">Ver ejemplos</a>
         <a class="btn btn-ghost" href="https://wa.me/5492915757934?text=Hola%2C%20vi%20las%20soluciones%20de%20Web%20con%20REEB.%20Tengo%20un%20negocio%20y%20quisiera%20saber%20qu%C3%A9%20p%C3%A1gina%20y%20panel%20me%20recomienda." target="_blank" rel="noopener noreferrer">Consultar por WhatsApp</a>
       </div>
 
-      <details class="sistemas-more" id="funciones" hidden>
+      <template data-legacy-functions>
       <summary>Funciones posibles por sitio</summary>
       <p class="sistemas-sublead">Qué suele pedirse en cada ejemplo. No es un paquete cerrado ni “todo incluido”: se arma con su rubro. Cobrar con tarjeta o Mercado Pago y la facturación electrónica se cotizan aparte; no vienen en el piso de los planes (ver <a href="#precios">Precios</a>).</p>
       <div class="sistemas-fns">
@@ -1156,7 +1157,7 @@
           </ul>
         </article>
       </div>
-      </details>
+      </template>
     </div>
   </section>
 
