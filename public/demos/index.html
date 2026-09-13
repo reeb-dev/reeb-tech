@@ -7,6 +7,9 @@
   <meta name="description" content="Soluciones web para comercios y profesionales: catálogos, tiendas, sistemas de gestión, turnos, reservas, stock y paneles administrativos a medida.">
   <meta name="robots" content="index, follow">
   <link rel="canonical" href="https://webconreeb.com/">
+  <link rel="alternate" hreflang="es-AR" href="https://webconreeb.com/">
+  <link rel="alternate" hreflang="en" href="https://webconreeb.com/en/">
+  <link rel="alternate" hreflang="x-default" href="https://webconreeb.com/">
   <meta property="og:type" content="website">
   <meta property="og:site_name" content="Web con REEB">
   <meta property="og:url" content="https://webconreeb.com/">
@@ -77,6 +80,7 @@
       <a class="nav-link" href="#precios">Precios</a>
       <a class="nav-link" href="#contacto">Contacto</a>
       <a class="nav-link nav-link-more" href="/cv/">Sitio personal</a>
+      <a class="nav-link" href="/en/" hreflang="en" data-language="en">EN</a>
     </nav>
   </header>
 
@@ -154,6 +158,7 @@
 
   <script>
     (function () {
+      localStorage.setItem("webconreeb-language", "es");
       var buttons = Array.from(document.querySelectorAll(".showcase-tabs button"));
       var publicImage = document.getElementById("showcase-public-img");
       var panelImage = document.getElementById("showcase-panel-img");

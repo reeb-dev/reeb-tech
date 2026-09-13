@@ -17,7 +17,7 @@ const ROOT = path.join(__dirname, '..');
 const OUT = path.join(ROOT, 'dist', 'manuelreeb', 'browser');
 const CV_DIR = path.join(OUT, 'cv');
 
-const PUBLIC_TOP_DIRS = new Set(['demos', 'docs', 'media', 'tech', 'brand', 'soluciones']);
+const PUBLIC_TOP_DIRS = new Set(['demos', 'docs', 'en', 'media', 'tech', 'brand', 'soluciones']);
 const PUBLIC_TOP_FILES = new Set([
   'CNAME',
   '.nojekyll',
@@ -237,6 +237,12 @@ function preparePublishLayout() {
   const hubHtml = fs.readFileSync(hubSource, 'utf8');
   fs.writeFileSync(path.join(OUT, 'index.html'), inlineHubStyles(hubHtml), 'utf8');
   fs.writeFileSync(path.join(OUT, 'demos', 'index.html'), DEMOS_REDIRECT_HTML, 'utf8');
+  const englishHome = path.join(OUT, 'en', 'index.html');
+  if (!fs.existsSync(englishHome)) {
+    console.error('English home missing:', englishHome);
+    process.exit(1);
+  }
+  fs.writeFileSync(englishHome, inlineHubStyles(fs.readFileSync(englishHome, 'utf8')), 'utf8');
   inlinePublishedStyles(
     path.join('demos', 'inmobiliaria', 'index.html'),
     path.join('demos', 'inmobiliaria', 'styles.css'),
