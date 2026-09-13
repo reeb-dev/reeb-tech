@@ -184,7 +184,21 @@
       `).join("");
     }
 
-    renderCatalog();
+    function prepararCatalogo() {
+      const catalog = document.getElementById("catalog");
+      if (!("IntersectionObserver" in window) || !catalog) {
+        renderCatalog();
+        return;
+      }
+      const observer = new IntersectionObserver((entries) => {
+        if (!entries.some((entry) => entry.isIntersecting)) return;
+        observer.disconnect();
+        renderCatalog();
+      }, { rootMargin: "200px 0px" });
+      observer.observe(catalog);
+    }
+
+    prepararCatalogo();
   </script>
   <script defer src="../difusion.js?v=3" data-rubro="comercio" data-place="vitrina"></script>
   <script defer src="../contacto.js?v=wa8" data-phone="5492915757934" data-text="Hola, vi el ejemplo de Mercado La Esquina y quiero consultar una solución web para mi comercio" data-subject="Consulta — solución web para comercio" data-title="Hacer un pedido"></script>
