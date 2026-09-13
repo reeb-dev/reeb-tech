@@ -10,6 +10,24 @@
   <link rel="alternate" hreflang="es-AR" href="https://webconreeb.com/">
   <link rel="alternate" hreflang="en" href="https://webconreeb.com/en/">
   <link rel="alternate" hreflang="x-default" href="https://webconreeb.com/">
+  <script>
+    (function () {
+      var key = "webconreeb-language";
+      var crawler = /bot|crawler|spider|slurp|lighthouse/i.test(navigator.userAgent);
+      if (crawler) return;
+      try {
+        var saved = localStorage.getItem(key);
+        var preferred = saved || ((navigator.languages || [navigator.language || "es"])[0] || "es");
+        var language = String(preferred).toLowerCase().startsWith("en") ? "en" : "es";
+        if (!saved) localStorage.setItem(key, language);
+        if (language === "en") {
+          location.replace("/en/" + location.search + location.hash);
+        }
+      } catch (_) {
+        // Si el navegador bloquea el almacenamiento, se mantiene la portada en español.
+      }
+    })();
+  </script>
   <meta property="og:type" content="website">
   <meta property="og:site_name" content="Web con REEB">
   <meta property="og:url" content="https://webconreeb.com/">

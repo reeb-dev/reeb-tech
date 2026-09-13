@@ -44,7 +44,7 @@
 
   if (!document.querySelector('script[src*="reeb-mark.js"]')) {
     var mark = document.createElement("script");
-    mark.src = base + "reeb-mark.js?v=rm3";
+    mark.src = base + "reeb-mark.js?v=rm4";
     mark.async = false;
     document.head.appendChild(mark);
   } else if (window.REEB_MARK && typeof window.REEB_MARK.inject === "function") {
@@ -197,6 +197,13 @@
     users = users.map(function (user) {
       return Object.assign({}, user, {
         rol: user.rol === "Dueña" ? "Owner" : user.rol === "Cajero" ? "Cashier" : user.rol
+      });
+    });
+  }
+  if (isEnglish && rubro === "restaurante") {
+    users = users.map(function (user) {
+      return Object.assign({}, user, {
+        rol: user.rol === "Caja" ? "Front of house" : user.rol === "Cocina" ? "Kitchen" : user.rol
       });
     });
   }

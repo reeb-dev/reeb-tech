@@ -1,0 +1,115 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="icon" href="/brand/reeb-mark.svg?v=20260911force" type="image/svg+xml">
+  <link rel="icon" href="/brand/reeb-mark-32.png?v=20260911force" type="image/png" sizes="32x32">
+  <link rel="icon" href="/brand/reeb-mark-16.png?v=20260911force" type="image/png" sizes="16x16">
+  <link rel="icon" href="/brand/hub-mark.ico?v=20260911force" sizes="any">
+  <link rel="shortcut icon" href="/brand/hub-mark.ico?v=20260911force">
+  <link rel="apple-touch-icon" href="/brand/reeb-mark-180.png?v=20260911force" sizes="180x180">
+<title>Operations panel · Don Ernesto Grill</title>
+  <meta name="description" content="Restaurant operations panel for tables, kitchen orders and menu management.">
+  <meta name="robots" content="noindex, follow">
+<link rel="canonical" href="https://webconreeb.com/en/demos/food-service/panel.html">
+  <meta property="og:type" content="website">
+  <meta property="og:site_name" content="Web con REEB">
+  <meta property="og:url" content="https://webconreeb.com/en/demos/food-service/panel.html">
+  <meta property="og:title" content="Operations panel · Don Ernesto Grill">
+  <meta property="og:description" content="Manage tables, kitchen orders and the daily menu in one restaurant panel.">
+  <meta property="og:image" content="https://webconreeb.com/en/demos/food-service/og.jpg?v=20260913">
+  <meta property="og:image:type" content="image/jpeg">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta property="og:image:alt" content="Operations panel · Don Ernesto Grill">
+  <meta property="og:locale" content="en_US">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Operations panel · Don Ernesto Grill">
+  <meta name="twitter:description" content="Manage tables, kitchen orders and the daily menu in one restaurant panel.">
+  <meta name="twitter:image" content="https://webconreeb.com/en/demos/food-service/og.jpg?v=20260913">
+
+<link rel="stylesheet" href="/demos/restaurante/styles.css?v=restaurante2">
+</head>
+<body>
+  <script src="/demos/login.js?v=6" data-rubro="restaurante" data-place="panel" data-lang="en"></script>
+  <div class="app">
+    <header class="top">
+      <div class="top-inner">
+        <a class="logo" href="index.html">DON ERNESTO<small>Dining room · Honduras 4827</small></a>
+        <nav>
+          <a href="index.html">Website</a>
+          <button class="btn" id="open-create" type="button">New table</button>
+          <a href="/demos/restaurante/panel.html" hreflang="es-AR">ES</a>
+        </nav>
+      </div>
+    </header>
+
+    <div class="toolbar">
+      <div>
+        <p class="eyebrow">Active shift</p>
+        <h1 id="panelTitle">Restaurant floor</h1>
+      </div>
+    </div>
+
+    <div class="tabs" id="tabs">
+      <button type="button" data-tab="mesas" class="on">Tables</button>
+      <button type="button" data-tab="cocina">Kitchen</button>
+      <button type="button" data-tab="carta">Menu</button>
+    </div>
+
+    <div class="stats" id="stats"></div>
+
+    <form class="create" id="create-mesa">
+      <input name="numero" type="number" min="1" placeholder="Table number" required>
+      <input name="capacidad" type="number" min="1" placeholder="Capacity" value="4" required>
+      <select name="zona">
+        <option value="dining room">Dining room</option>
+        <option value="terrace">Terrace</option>
+      </select>
+      <select name="status">
+        <option value="libre">Available</option>
+        <option value="reservada">Reserved</option>
+      </select>
+      <input name="reservaNombre" placeholder="Reservation name (optional)">
+      <input name="reservaHora" placeholder="Time (e.g. 9:00 PM)">
+      <button class="btn-panel" type="submit">Add table</button>
+    </form>
+
+    <form class="create" id="create-plato">
+      <input name="codigo" placeholder="Code (e.g. MAIN-09)" required>
+      <input name="nombre" placeholder="Dish name" required>
+      <select name="categoria">
+        <option value="entrada">Starters</option>
+        <option value="principal">Main courses</option>
+        <option value="guarnicion">Sides</option>
+        <option value="postre">Desserts</option>
+        <option value="bebida">Wine and drinks</option>
+      </select>
+      <input name="precio" type="number" min="0" placeholder="Price" required>
+      <select name="foto" id="foto-plato"></select>
+      <input name="descripcion" placeholder="Description">
+      <button class="btn-panel" type="submit">Add dish</button>
+    </form>
+
+    <div class="workspace" id="view-mesas">
+      <section class="list" id="mesas-list"></section>
+      <aside class="detail" id="mesa-detail"></aside>
+    </div>
+
+    <div class="workspace" id="view-cocina" hidden>
+      <section class="list" id="cocina-list"></section>
+      <aside class="detail" id="cocina-detail"></aside>
+    </div>
+
+    <div class="workspace" id="view-carta" hidden>
+      <section class="list" id="carta-list"></section>
+      <aside class="detail" id="carta-detail"></aside>
+    </div>
+  </div>
+
+  <script src="data.js?v=1"></script>
+  <script src="panel.js?v=1"></script>
+
+</body>
+</html>

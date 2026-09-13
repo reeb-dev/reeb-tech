@@ -1,0 +1,499 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="icon" href="/brand/reeb-mark.svg?v=20260911force" type="image/svg+xml">
+  <link rel="icon" href="/brand/reeb-mark-32.png?v=20260911force" type="image/png" sizes="32x32">
+  <link rel="icon" href="/brand/reeb-mark-16.png?v=20260911force" type="image/png" sizes="16x16">
+  <link rel="icon" href="/brand/hub-mark.ico?v=20260911force" sizes="any">
+  <link rel="shortcut icon" href="/brand/hub-mark.ico?v=20260911force">
+  <link rel="apple-touch-icon" href="/brand/reeb-mark-180.png?v=20260911force" sizes="180x180">
+<title>Don Ernesto Grill — Palermo, Buenos Aires</title>
+  <meta name="description" content="Restaurant website example with menu, reservations, WhatsApp and an operations panel.">
+  <meta name="robots" content="index, follow">
+  <link rel="canonical" href="https://webconreeb.com/en/demos/food-service/">
+  <link rel="alternate" hreflang="es-AR" href="https://webconreeb.com/demos/restaurante/">
+  <link rel="alternate" hreflang="en" href="https://webconreeb.com/en/demos/food-service/">
+  <link rel="alternate" hreflang="x-default" href="https://webconreeb.com/demos/restaurante/">
+  <link rel="preload" as="image" href="/demos/restaurante/img/hero-salon-640.webp" imagesrcset="/demos/restaurante/img/hero-salon-640.webp 640w, /demos/restaurante/img/hero-salon-960.webp 960w" imagesizes="(max-width: 960px) calc(100vw - 48px), 600px" type="image/webp" fetchpriority="high">
+  <meta property="og:type" content="website">
+  <meta property="og:site_name" content="Web con REEB">
+  <meta property="og:url" content="https://webconreeb.com/en/demos/food-service/">
+  <meta property="og:title" content="Don Ernesto Grill — Restaurant website and operations panel">
+  <meta property="og:description" content="Menu, reservations, tables and kitchen orders in one connected restaurant solution.">
+  <meta property="og:image" content="https://webconreeb.com/en/demos/food-service/og.jpg?v=20260913">
+  <meta property="og:image:type" content="image/jpeg">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta property="og:image:alt" content="Don Ernesto Grill — restaurant website and operations panel">
+  <meta property="og:locale" content="en_US">
+  <meta property="og:locale:alternate" content="es_AR">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Don Ernesto Grill — Restaurant website and operations panel">
+  <meta name="twitter:description" content="Menu, reservations, tables and kitchen orders in one connected restaurant solution.">
+  <meta name="twitter:image" content="https://webconreeb.com/en/demos/food-service/og.jpg?v=20260913">
+
+<link rel="stylesheet" href="/demos/restaurante/styles.css?v=restaurante3">
+  <style>
+    .hero .kicker { color: #78521f; font-weight: 700; }
+    .plato-card.is-off { opacity: 1; }
+    .plato-card.is-off .plato-photo { opacity: .72; }
+    .plato-off { color: #862e2b; }
+    .en-wa-float { position: fixed; right: 16px; bottom: 16px; z-index: 50; padding: 13px 18px; border-radius: 999px; background: #25d366; color: #102e26; font-weight: 750; text-decoration: none; box-shadow: 0 10px 28px rgba(0,0,0,.28); }
+  </style>
+</head>
+<body>
+  <header class="top">
+    <div class="top-inner">
+      <a class="logo" href="index.html">DON ERNESTO<small>Honduras 4827 · Palermo, CABA</small></a>
+      <nav>
+        <a href="#menu">Menu</a>
+        <a href="#ambiente">The restaurant</a>
+        <a href="#ubicacion">Location</a>
+        <a href="#reservas">Reservations</a>
+        <a class="btn" href="panel.html">Admin panel</a>
+        <a href="/demos/restaurante/" hreflang="es-AR">ES</a>
+      </nav>
+    </div>
+  </header>
+
+  <main class="wrap">
+    <section class="hero">
+      <div>
+        <p class="kicker">Neighborhood grill · Palermo</p>
+        <h1>Don Ernesto Grill</h1>
+        <p class="lead">Argentine grill, pasta and homemade desserts in Palermo. Indoor dining and sidewalk tables. Closed Mondays.</p>
+        <p class="hero-meta">Honduras 4827, Palermo, CABA<br>Tue–Thu 12–3:30 PM and 8 PM–midnight · Fri–Sun 12–4 PM and 8 PM–1 AM</p>
+        <div class="hero-actions">
+          <a class="btn" href="#menu">View menu</a>
+          <a class="btn btn-line" href="#reservas">Book a table</a>
+        </div>
+      </div>
+      <aside class="hero-photo">
+        <img src="/demos/restaurante/img/hero-salon-960.webp" srcset="/demos/restaurante/img/hero-salon-640.webp 640w, /demos/restaurante/img/hero-salon-960.webp 960w" sizes="(max-width: 960px) calc(100vw - 48px), 600px" width="960" height="640" fetchpriority="high" decoding="async" alt="Dining table at Don Ernesto Grill">
+      </aside>
+    </section>
+
+    <section class="section carta" id="menu">
+      <div class="catalog-header">
+        <div class="carta-intro">
+          <p class="kicker">Argentine grill · Palermo</p>
+          <h2>Our menu</h2>
+        </div>
+        <div class="filters" id="filters">
+          <button class="active" data-filter="all" type="button">All</button>
+          <button data-filter="entrada" type="button">Starters</button>
+          <button data-filter="principal" type="button">Main courses</button>
+          <button data-filter="guarnicion" type="button">Sides</button>
+          <button data-filter="postre" type="button">Desserts</button>
+          <button data-filter="bebida" type="button">Drinks</button>
+        </div>
+      </div>
+      <div id="catalog">
+        <section class="menu-section" data-cat="entrada">
+          <h3>Starters</h3>
+          <div class="menu-grid">
+            <article class="plato-card" data-id="m1" data-cat="entrada">
+              <div class="plato-photo"><img src="/demos/restaurante/img/provoleta.webp" loading="lazy" decoding="async" alt="Provoleta"></div>
+              <div class="plato-body">
+                <h4>Provoleta</h4>
+                <p>Grilled provolone with oregano and olive oil.</p>
+                <div class="plato-foot"><span class="plato-precio">ARS 7,800</span></div>
+              </div>
+            </article>
+            <article class="plato-card" data-id="m2" data-cat="entrada">
+              <div class="plato-photo"><img src="/demos/restaurante/img/empanadas.webp" loading="lazy" decoding="async" alt="Beef empanadas"></div>
+              <div class="plato-body">
+                <h4>Beef empanadas</h4>
+                <p>Three fried empanadas filled with hand-cut beef.</p>
+                <div class="plato-foot"><span class="plato-precio">ARS 5,200</span></div>
+              </div>
+            </article>
+            <article class="plato-card" data-id="m3" data-cat="entrada">
+              <div class="plato-photo"><img src="/demos/restaurante/img/tabla.webp" loading="lazy" decoding="async" alt="Cold cuts board"></div>
+              <div class="plato-body">
+                <h4>Cold cuts board</h4>
+                <p>Ham, salami, cheeses and olives to share.</p>
+                <div class="plato-foot"><span class="plato-precio">ARS 14,800</span></div>
+              </div>
+            </article>
+          </div>
+        </section>
+        <section class="menu-section" data-cat="principal">
+          <h3>Main courses</h3>
+          <div class="menu-grid">
+            <article class="plato-card" data-id="m4" data-cat="principal">
+              <div class="plato-photo"><img src="/demos/restaurante/img/bife-chorizo.webp" loading="lazy" decoding="async" alt="New York strip steak"></div>
+              <div class="plato-body">
+                <h4>New York strip steak</h4>
+                <p>Juicy grilled steak, cooked to your preference.</p>
+                <div class="plato-foot"><span class="plato-precio">ARS 19,800</span></div>
+              </div>
+            </article>
+            <article class="plato-card" data-id="m5" data-cat="principal">
+              <div class="plato-photo"><img src="/demos/restaurante/img/ojo-bife.webp" loading="lazy" decoding="async" alt="Rib-eye steak"></div>
+              <div class="plato-body">
+                <h4>Rib-eye steak</h4>
+                <p>Bone-in rib-eye cooked over the grill.</p>
+                <div class="plato-foot"><span class="plato-precio">ARS 22,400</span></div>
+              </div>
+            </article>
+            <article class="plato-card" data-id="m6" data-cat="principal">
+              <div class="plato-photo"><img src="/demos/restaurante/img/asado.webp" loading="lazy" decoding="async" alt="Argentine mixed grill"></div>
+              <div class="plato-body">
+                <h4>Argentine mixed grill</h4>
+                <p>Beef cuts, chorizo and offal served with chimichurri.</p>
+                <div class="plato-foot"><span class="plato-precio">ARS 18,600</span></div>
+              </div>
+            </article>
+            <article class="plato-card" data-id="m7" data-cat="principal">
+              <div class="plato-photo"><img src="/demos/restaurante/img/milanesa.webp" loading="lazy" decoding="async" alt="Milanesa Napolitana"></div>
+              <div class="plato-body">
+                <h4>Milanesa Napolitana</h4>
+                <p>Breaded beef with ham, tomato sauce and mozzarella.</p>
+                <div class="plato-foot"><span class="plato-precio">ARS 16,200</span></div>
+              </div>
+            </article>
+            <article class="plato-card" data-id="m8" data-cat="principal">
+              <div class="plato-photo"><img src="/demos/restaurante/img/pastas.webp" loading="lazy" decoding="async" alt="Penne Bolognese"></div>
+              <div class="plato-body">
+                <h4>Penne Bolognese</h4>
+                <p>Al dente pasta with meat sauce and grated cheese.</p>
+                <div class="plato-foot"><span class="plato-precio">ARS 12,400</span></div>
+              </div>
+            </article>
+            <article class="plato-card" data-id="m9" data-cat="principal">
+              <div class="plato-photo"><img src="/demos/restaurante/img/risotto.webp" loading="lazy" decoding="async" alt="Mushroom risotto"></div>
+              <div class="plato-body">
+                <h4>Mushroom risotto</h4>
+                <p>Creamy rice with mushrooms and cheese.</p>
+                <div class="plato-foot"><span class="plato-precio">ARS 13,600</span></div>
+              </div>
+            </article>
+            <article class="plato-card is-off" data-id="m10" data-cat="principal">
+              <div class="plato-photo"><img src="/demos/restaurante/img/pescado.webp" loading="lazy" decoding="async" alt="Grilled salmon"></div>
+              <div class="plato-body">
+                <h4>Grilled salmon</h4>
+                <p>Grilled salmon with vegetables. Unavailable today.</p>
+                <div class="plato-foot"><span class="plato-precio">ARS 21,800</span><span class="plato-off">Unavailable</span></div>
+              </div>
+            </article>
+            <article class="plato-card" data-id="m20" data-cat="principal">
+              <div class="plato-photo"><img src="/demos/restaurante/img/hero-salon.webp" loading="lazy" decoding="async" alt="Lunch menu"></div>
+              <div class="plato-body">
+                <h4>Lunch menu</h4>
+                <p>Daily main, side and drink. Tuesday through Friday at lunch.</p>
+                <div class="plato-foot"><span class="plato-precio">ARS 15,600</span></div>
+              </div>
+            </article>
+          </div>
+        </section>
+        <section class="menu-section" data-cat="guarnicion">
+          <h3>Sides</h3>
+          <div class="menu-grid">
+            <article class="plato-card" data-id="m11" data-cat="guarnicion">
+              <div class="plato-photo"><img src="/demos/restaurante/img/papas.webp" loading="lazy" decoding="async" alt="French fries"></div>
+              <div class="plato-body">
+                <h4>French fries</h4>
+                <p>A serving of crispy French fries.</p>
+                <div class="plato-foot"><span class="plato-precio">ARS 4,800</span></div>
+              </div>
+            </article>
+            <article class="plato-card" data-id="m12" data-cat="guarnicion">
+              <div class="plato-photo"><img src="/demos/restaurante/img/pure.webp" loading="lazy" decoding="async" alt="Mashed potatoes"></div>
+              <div class="plato-body">
+                <h4>Mashed potatoes</h4>
+                <p>Homemade mashed potatoes with butter and nutmeg.</p>
+                <div class="plato-foot"><span class="plato-precio">ARS 4,200</span></div>
+              </div>
+            </article>
+            <article class="plato-card" data-id="m13" data-cat="guarnicion">
+              <div class="plato-photo"><img src="/demos/restaurante/img/ensalada.webp" loading="lazy" decoding="async" alt="Mixed salad"></div>
+              <div class="plato-body">
+                <h4>Mixed salad</h4>
+                <p>Lettuce, tomato and onion with oil and vinegar.</p>
+                <div class="plato-foot"><span class="plato-precio">ARS 4,500</span></div>
+              </div>
+            </article>
+          </div>
+        </section>
+        <section class="menu-section" data-cat="postre">
+          <h3>Desserts</h3>
+          <div class="menu-grid">
+            <article class="plato-card" data-id="m14" data-cat="postre">
+              <div class="plato-photo"><img src="/demos/restaurante/img/flan.webp" loading="lazy" decoding="async" alt="Flan with dulce de leche"></div>
+              <div class="plato-body">
+                <h4>Flan with dulce de leche</h4>
+                <p>Homemade caramel flan with dulce de leche.</p>
+                <div class="plato-foot"><span class="plato-precio">ARS 5,800</span></div>
+              </div>
+            </article>
+            <article class="plato-card" data-id="m15" data-cat="postre">
+              <div class="plato-photo"><img src="/demos/restaurante/img/panqueque.webp" loading="lazy" decoding="async" alt="Dulce de leche pancake"></div>
+              <div class="plato-body">
+                <h4>Dulce de leche pancake</h4>
+                <p>Warm pancake filled with dulce de leche.</p>
+                <div class="plato-foot"><span class="plato-precio">ARS 6,200</span></div>
+              </div>
+            </article>
+          </div>
+        </section>
+        <section class="menu-section" data-cat="bebida">
+          <h3>Drinks</h3>
+          <div class="menu-grid">
+            <article class="plato-card" data-id="m16" data-cat="bebida">
+              <div class="plato-photo"><img src="/demos/restaurante/img/malbec.webp" loading="lazy" decoding="async" alt="Glass of Malbec"></div>
+              <div class="plato-body">
+                <h4>Glass of Malbec</h4>
+                <p>Glass of Malbec de la casa.</p>
+                <div class="plato-foot"><span class="plato-precio">ARS 4,900</span></div>
+              </div>
+            </article>
+            <article class="plato-card" data-id="m17" data-cat="bebida">
+              <div class="plato-photo"><img src="/demos/restaurante/img/malbec-botella.webp" loading="lazy" decoding="async" alt="Bottle of Malbec"></div>
+              <div class="plato-body">
+                <h4>Bottle of Malbec</h4>
+                <p>A bottle of Malbec for the table.</p>
+                <div class="plato-foot"><span class="plato-precio">ARS 16,800</span></div>
+              </div>
+            </article>
+            <article class="plato-card" data-id="m18" data-cat="bebida">
+              <div class="plato-photo"><img src="/demos/restaurante/img/agua.webp" loading="lazy" decoding="async" alt="Still water 500 ml"></div>
+              <div class="plato-body">
+                <h4>Still water 500 ml</h4>
+                <p>Still mineral water.</p>
+                <div class="plato-foot"><span class="plato-precio">ARS 2,200</span></div>
+              </div>
+            </article>
+            <article class="plato-card" data-id="m19" data-cat="bebida">
+              <div class="plato-photo"><img src="/demos/restaurante/img/gaseosa.webp" loading="lazy" decoding="async" alt="Soft drink"></div>
+              <div class="plato-body">
+                <h4>Soft drink</h4>
+                <p>A glass of house soft drink.</p>
+                <div class="plato-foot"><span class="plato-precio">ARS 2,800</span></div>
+              </div>
+            </article>
+          </div>
+        </section>
+      </div>
+      <div class="admin-link">
+        <p>Do you run the dining room?</p>
+        <a class="btn" href="panel.html">Open tables, kitchen and menu</a>
+      </div>
+    </section>
+
+    <section class="section" id="ambiente">
+      <h2>The restaurant</h2>
+      <div class="ambiente-grid">
+        <article class="ambiente-copy">
+          <p>Around 32 indoor seats and 16 terrace seats, one block from Plaza Serrano. Tables for two and four, with terrace seating for small groups.</p>
+          <p>The open grill is visible from the dining room. Closed Mondays; lunch and dinner service runs the rest of the week.</p>
+          <p>This website is an example. Prices and capacity are fictional and do not represent an operating restaurant.</p>
+        </article>
+        <img src="/demos/restaurante/img/terraza.webp" loading="lazy" decoding="async" alt="Outdoor terrace tables">
+      </div>
+    </section>
+
+    <section class="section" id="ubicacion">
+      <h2>Visit us</h2>
+      <div class="modules ubicacion-grid">
+        <article>
+          <h3>Hours</h3>
+          <p>Tue–Thu: 12–3:30 PM and 8 PM–midnight</p>
+          <p>Fri–Sun: 12–4 PM and 8 PM–1 AM</p>
+          <p>Closed Mondays</p>
+        </article>
+        <article>
+          <h3>Address</h3>
+          <p>Honduras 4827</p>
+          <p>Palermo, CABA</p>
+          <p>One block from Plaza Serrano</p>
+        </article>
+        <article>
+          <h3>Getting here</h3>
+          <p>Take subway line D to Plaza Italia, then walk toward Honduras Street.</p>
+          <p>Example phone: 011-4774-1820</p>
+        </article>
+      </div>
+      <div class="map-embed">
+        <p class="map-fallback" id="mapa-fallback">Honduras 4827, Palermo, CABA</p>
+        <div id="mapa-local" class="map-canvas" role="img" aria-label="Map of Don Ernesto Grill in Palermo"></div>
+      </div>
+      <p class="map-caption"><a id="mapa-link" href="https://www.openstreetmap.org/?mlat=-34.5889&amp;mlon=-58.4307#map=16/-34.5889/-58.4307" target="_blank" rel="noopener">Open larger map</a></p>
+    </section>
+
+    <section class="section" id="reservas">
+      <h2>Book a table</h2>
+      <p class="note">Complete the form to record a sample reservation. It is not sent to a server. You can also use WhatsApp.</p>
+      <form class="reserva-form" id="form-reserva">
+        <label>Name
+          <input name="nombre" required autocomplete="name" placeholder="Full name">
+        </label>
+        <label>Date
+          <input name="fecha" type="date" required>
+        </label>
+        <label>Time
+          <input name="hora" type="time" required value="21:00">
+        </label>
+        <label>Guests
+          <input name="personas" type="number" min="1" max="12" value="2" required>
+        </label>
+        <label class="full">Message
+          <textarea name="mensaje" rows="3" placeholder="Terrace, birthday or another request"></textarea>
+        </label>
+        <div class="reserva-actions">
+          <button class="btn" type="submit">Record reservation</button>
+          <a class="btn btn-line btn-whatsapp" href="#">Message on WhatsApp</a>
+        </div>
+      </form>
+      <div id="contacto"></div>
+    </section>
+  </main>
+
+  <div class="plato-modal" id="plato-modal" hidden>
+    <div class="plato-modal-card" role="dialog" aria-modal="true" aria-labelledby="plato-modal-title">
+      <button type="button" class="plato-modal-close" id="plato-modal-close" aria-label="Close">×</button>
+      <img id="plato-modal-img" alt="">
+      <div class="plato-modal-body">
+        <p class="cat" id="plato-modal-cat"></p>
+        <h2 id="plato-modal-title"></h2>
+        <p class="price" id="plato-modal-precio"></p>
+        <p id="plato-modal-desc"></p>
+        <p id="plato-modal-disp"></p>
+        <p class="place-line">Honduras 4827, Palermo, CABA</p>
+      </div>
+    </div>
+  </div>
+
+  <footer class="wrap">Don Ernesto Grill · Honduras 4827, Palermo, Buenos Aires · website example · not an operating restaurant.</footer>
+
+    <script src="data.js?v=1"></script>
+  <script>
+    const local = seedLocal();
+    const carta = seedMenu();
+    let currentFilter = "all";
+
+    function pintarMapa(s) {
+      const el = document.getElementById("mapa-local");
+      if (!el || typeof L === "undefined") return;
+      const lat = Number(s.lat);
+      const lng = Number(s.lng);
+      const map = L.map(el, { scrollWheelZoom: false }).setView([lat, lng], 16);
+      L.tileLayer("https://tile.openstreetmap.org/{z}/{x}/{y}.png", {
+        attribution: "&copy; OpenStreetMap"
+      }).addTo(map);
+      L.marker([lat, lng]).addTo(map).bindPopup(esc(s.nombre));
+      setTimeout(() => map.invalidateSize(), 80);
+    }
+
+    function renderMenu() {
+      const catalog = document.getElementById("catalog");
+      if (!catalog) return;
+      catalog.querySelectorAll(".menu-section").forEach((section) => {
+        const cards = section.querySelectorAll(".plato-card");
+        let visible = 0;
+        cards.forEach((card) => {
+          const show = currentFilter === "all" || card.dataset.cat === currentFilter;
+          card.hidden = !show;
+          if (show) visible += 1;
+        });
+        section.hidden = visible === 0;
+      });
+    }
+
+    function openPlato(id) {
+      const item = carta.find((p) => p.id === id);
+      if (!item) return;
+      document.getElementById("plato-modal-img").src = fotoPlato(item).replace(/\.jpg$/i, ".webp");
+      document.getElementById("plato-modal-img").alt = item.nombre;
+      document.getElementById("plato-modal-cat").textContent = catLabel(item.categoria);
+      document.getElementById("plato-modal-title").textContent = item.nombre;
+      document.getElementById("plato-modal-precio").textContent = money(item.precio);
+      document.getElementById("plato-modal-desc").textContent = item.descripcion || "";
+      document.getElementById("plato-modal-disp").textContent = item.disponible ? "Available today" : "Unavailable today";
+      document.getElementById("plato-modal").hidden = false;
+    }
+
+    function closePlato() {
+      document.getElementById("plato-modal").hidden = true;
+    }
+
+    document.getElementById("plato-modal-close").addEventListener("click", closePlato);
+    document.getElementById("plato-modal").addEventListener("click", (ev) => {
+      if (ev.target.id === "plato-modal") closePlato();
+    });
+
+    document.getElementById("catalog").addEventListener("click", (ev) => {
+      const card = ev.target.closest(".plato-card");
+      if (card) openPlato(card.dataset.id);
+    });
+
+    document.querySelectorAll("#filters button").forEach((btn) => {
+      btnAdd(btn);
+    });
+
+    function btnAdd(btn) {
+      btn.addEventListener("click", () => {
+        document.querySelectorAll("#filters button").forEach((b) => b.classList.remove("active"));
+        btn.classList.add("active");
+        currentFilter = btn.dataset.filter;
+        renderMenu();
+      });
+    }
+
+    document.getElementById("form-reserva").addEventListener("submit", (ev) => {
+      ev.preventDefault();
+      const data = new FormData(ev.currentTarget);
+      const nombre = String(data.get("nombre") || "").trim();
+      const fecha = String(data.get("fecha") || "");
+      const hora = String(data.get("hora") || "");
+      const personas = String(data.get("personas") || "");
+      if (!nombre || !fecha || !hora) return;
+      showToast(`Reservation recorded for ${nombre} · ${personas} guests · ${fecha} ${hora}`);
+      ev.currentTarget.reset();
+      ev.currentTarget.querySelector('[name="hora"]').value = "21:00";
+      ev.currentTarget.querySelector('[name="personas"]').value = "2";
+    });
+
+    function showToast(message) {
+      const existing = document.querySelector(".toast");
+      if (existing) existing.remove();
+      const toast = document.createElement("div");
+      toast.className = "toast";
+      toast.textContent = message;
+      document.body.appendChild(toast);
+      setTimeout(() => toast.classList.add("show"), 10);
+      setTimeout(() => { toast.classList.remove("show"); setTimeout(() => toast.remove(), 300); }, 3200);
+    }
+
+    function cargarMapa(s) {
+      if (cargarMapa.iniciado) return;
+      cargarMapa.iniciado = true;
+      const css = document.createElement("link");
+      css.rel = "stylesheet";
+      css.href = "https://unpkg.com/leaflet@1.9.4/dist/leaflet.css";
+      document.head.appendChild(css);
+      const script = document.createElement("script");
+      script.src = "https://unpkg.com/leaflet@1.9.4/dist/leaflet.js";
+      script.onload = () => { try { pintarMapa(s); } catch (_) {} };
+      document.body.appendChild(script);
+    }
+
+    function prepararMapa(s) {
+      const target = document.getElementById("ubicacion");
+      if (!("IntersectionObserver" in window) || !target) return cargarMapa(s);
+      const observer = new IntersectionObserver((entries) => {
+        if (!entries.some((entry) => entry.isIntersecting)) return;
+        observer.disconnect();
+        cargarMapa(s);
+      }, { rootMargin: "400px 0px" });
+      observer.observe(target);
+    }
+
+    renderMenu();
+    prepararMapa(local);
+  </script>
+  <a class="en-wa-float" href="https://wa.me/5492915757934?text=Hi%2C%20I%20saw%20the%20restaurant%20example%20and%20would%20like%20a%20similar%20solution" target="_blank" rel="noopener noreferrer">WhatsApp</a>
+</body>
+</html>

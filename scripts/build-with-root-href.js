@@ -191,7 +191,7 @@ function inlineHubStyles(html) {
   return withMinifiedScripts.replace(stylesheet, `<style data-inline="hub">${minified}</style>`);
 }
 
-function inlinePublishedStyles(htmlRelativePath, cssRelativePath, stylesheet) {
+function inlinePublishedStyles(htmlRelativePath, cssRelativePath, stylesheet, assetBase = '', stripFontFaces = false) {
   const htmlPath = path.join(OUT, htmlRelativePath);
   const cssPath = path.join(OUT, cssRelativePath);
   if (!fs.existsSync(htmlPath) || !fs.existsSync(cssPath)) {
@@ -205,7 +205,13 @@ function inlinePublishedStyles(htmlRelativePath, cssRelativePath, stylesheet) {
     process.exit(1);
   }
   const css = fs.readFileSync(cssPath, 'utf8');
-  const minified = esbuild.transformSync(css, { loader: 'css', minify: true }).code;
+  let minified = esbuild.transformSync(css, { loader: 'css', minify: true }).code;
+  if (stripFontFaces) {
+    minified = minified.replace(/@font-face\{[^}]*\}/g, '');
+  }
+  if (assetBase) {
+    minified = minified.replace(/url\(fonts\//g, `url(${assetBase}/fonts/`);
+  }
   fs.writeFileSync(htmlPath, html.replace(stylesheet, `<style data-inline="page">${minified}</style>`), 'utf8');
 }
 
@@ -249,9 +255,21 @@ function preparePublishLayout() {
     /<link rel="stylesheet" href="styles\.css\?v=bariloche43">/
   );
   inlinePublishedStyles(
+    path.join('en', 'demos', 'real-estate', 'index.html'),
+    path.join('demos', 'inmobiliaria', 'styles.css'),
+    /<link rel="stylesheet" href="\/demos\/inmobiliaria\/styles\.css\?v=bariloche43">/,
+    '/demos/inmobiliaria',
+    true
+  );
+  inlinePublishedStyles(
     path.join('demos', 'restaurante', 'index.html'),
     path.join('demos', 'restaurante', 'styles.css'),
     /<link rel="stylesheet" href="styles\.css\?v=restaurante3">/
+  );
+  inlinePublishedStyles(
+    path.join('en', 'demos', 'food-service', 'index.html'),
+    path.join('demos', 'restaurante', 'styles.css'),
+    /<link rel="stylesheet" href="\/demos\/restaurante\/styles\.css\?v=restaurante3">/
   );
   inlinePublishedStyles(
     path.join('demos', 'comercio', 'index.html'),

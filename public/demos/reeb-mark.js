@@ -19,7 +19,7 @@
   }
 
   function inject(base) {
-    if (document.getElementById("reeb-mark") || isHubPath()) return;
+    if (document.documentElement.lang === "en" || document.getElementById("reeb-mark") || isHubPath()) return;
     var root = base || "/demos/";
     ensureCss(root + "reeb-mark.css?v=rm3");
     var a = document.createElement("a");
