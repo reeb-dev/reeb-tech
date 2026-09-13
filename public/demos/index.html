@@ -28,10 +28,12 @@
   <link rel="icon" href="/brand/hub-mark.ico?v=20260911force" sizes="any">
   <link rel="shortcut icon" href="/brand/hub-mark.ico?v=20260911force">
   <link rel="apple-touch-icon" href="/brand/reeb-mark-180.png?v=20260911force" sizes="180x180">
+  <link rel="preload" as="image" href="/demos/hub-img/hero.webp" type="image/webp" media="(min-width: 861px)" fetchpriority="high">
+  <link rel="preload" as="image" href="/demos/hub-img/hero-mobile.webp" type="image/webp" media="(max-width: 860px)" fetchpriority="high">
 <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,560;9..144,650&family=Outfit:wght@400;600;650;700&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="/demos/hub.css?v=hub59">
+  <link rel="stylesheet" href="/demos/hub.css?v=hub60">
   <script type="application/ld+json">
   {
     "@context": "https://schema.org",
@@ -377,7 +379,7 @@
     </div>
     <div class="picks">
       <article class="pick" data-cat="gastronomia" data-search="parrilla don ernesto restaurante gastronomia mesas comandas cocina factura">
-        <div class="pick-media"><img src="/demos/hub-img/restaurante.jpg" alt="Mesa de parrilla servida"></div>
+        <div class="pick-media"><img src="/demos/hub-img/restaurante.webp" alt="Mesa de parrilla servida" loading="lazy" decoding="async"></div>
         <div class="pick-copy">
           <span class="badge" data-tone="ember">Gastronomía</span>
           <h3>Parrilla Don Ernesto</h3>
@@ -390,7 +392,7 @@
         </div>
       </article>
       <article class="pick" data-cat="inmuebles" data-search="inmobiliaria inmuebles venta alquiler propiedades visitas">
-        <div class="pick-media"><img src="/demos/inmobiliaria/img/zona-llao.jpg" alt="Lago Nahuel Huapi y la península de Llao Llao"></div>
+        <div class="pick-media"><img src="/demos/hub-img/inmobiliaria.webp" alt="Lago Nahuel Huapi y la península de Llao Llao" loading="lazy" decoding="async"></div>
         <div class="pick-copy">
           <span class="badge" data-tone="teal">Inmuebles</span>
           <h3>Nahuel Huapi</h3>
@@ -403,7 +405,7 @@
         </div>
       </article>
       <article class="pick" data-cat="legal" data-search="estudio norte legal abogado expedientes plazos escritos mesa de entradas">
-        <div class="pick-media"><img src="/demos/hub-img/estudio.jpg" alt="Mesa de un estudio jurídico"></div>
+        <div class="pick-media"><img src="/demos/hub-img/estudio.webp" alt="Mesa de un estudio jurídico" loading="lazy" decoding="async"></div>
         <div class="pick-copy">
           <span class="badge" data-tone="slate">Legal</span>
           <h3>Estudio Norte</h3>
@@ -449,7 +451,7 @@
 
   <div class="catalog">
   <article class="row" data-cat="comercio" data-search="almacen del barrio comercio pedidos proveedores gondola caja">
-    <div class="row-media"><img src="/demos/hub-img/comercio.jpg" alt="Góndola de almacén"></div>
+    <div class="row-media"><img src="/demos/hub-img/comercio.webp" alt="Góndola de almacén" loading="lazy" decoding="async"></div>
     <div class="row-copy">
       <span class="badge" data-tone="amber">Comercio</span>
       <h3>Almacén del Barrio</h3>
@@ -463,7 +465,7 @@
   </article>
 
   <article class="row is-flip" data-cat="comercio" data-search="kiosco lo de pedro comercio stock gondola fiado reposicion">
-    <div class="row-media"><img src="/demos/hub-img/kiosco.jpg" alt="Fachada de kiosco de barrio"></div>
+    <div class="row-media"><img src="/demos/hub-img/kiosco.webp" alt="Fachada de kiosco de barrio" loading="lazy" decoding="async"></div>
     <div class="row-copy">
       <span class="badge" data-tone="amber">Comercio</span>
       <h3>Kiosco Lo de Pedro</h3>
@@ -477,7 +479,7 @@
   </article>
 
   <article class="row" data-cat="automotriz" data-search="taller mecanico automotriz ordenes diagnostico presupuesto repuestos">
-    <div class="row-media"><img src="/demos/hub-img/taller.jpg" alt="Trabajo en un taller mecánico"></div>
+    <div class="row-media"><img src="/demos/hub-img/taller.webp" alt="Trabajo en un taller mecánico" loading="lazy" decoding="async"></div>
     <div class="row-copy">
       <span class="badge" data-tone="steel">Automotriz</span>
       <h3>Taller Mecánico</h3>
@@ -491,7 +493,7 @@
   </article>
 
   <article class="row is-flip" data-cat="servicios" data-search="salon camelia peluqueria servicios turnos agenda profesionales cobro">
-    <div class="row-media"><img src="/demos/hub-img/peluqueria.jpg" alt="Interior de un salón de peluquería"></div>
+    <div class="row-media"><img src="/demos/hub-img/peluqueria.webp" alt="Interior de un salón de peluquería" loading="lazy" decoding="async"></div>
     <div class="row-copy">
       <span class="badge" data-tone="sage">Servicios</span>
       <h3>Salón Camelia</h3>
@@ -505,7 +507,7 @@
   </article>
 
   <article class="row" data-cat="servicios" data-search="el quebracho carpinteria servicios muebles presupuesto sena entrega">
-    <div class="row-media"><img src="/demos/hub-img/carpinteria.jpg" alt="Taller de carpintería"></div>
+    <div class="row-media"><img src="/demos/hub-img/carpinteria.webp" alt="Taller de carpintería" loading="lazy" decoding="async"></div>
     <div class="row-copy">
       <span class="badge" data-tone="sage">Servicios</span>
       <h3>El Quebracho</h3>
@@ -519,7 +521,7 @@
   </article>
 
   <article class="row is-flip" data-cat="comercio" data-search="libro facturacion comercio comprobantes factura notas credito cobro">
-    <div class="row-media"><img src="/demos/hub-img/facturacion.jpg" alt="Comprobantes y calculadora"></div>
+    <div class="row-media"><img src="/demos/hub-img/facturacion.webp" alt="Comprobantes y calculadora" loading="lazy" decoding="async"></div>
     <div class="row-copy">
       <span class="badge" data-tone="amber">Comercio</span>
       <h3>Libro</h3>
@@ -533,7 +535,7 @@
   </article>
 
   <article class="row" data-cat="comercio" data-search="stock facturacion comercio inventario movimientos arca electronica">
-    <div class="row-media"><img src="/demos/hub-img/stockfacturacion.jpg" alt="Depósito con mercadería"></div>
+    <div class="row-media"><img src="/demos/hub-img/stockfacturacion.webp" alt="Depósito con mercadería" loading="lazy" decoding="async"></div>
     <div class="row-copy">
       <span class="badge" data-tone="amber">Comercio</span>
       <h3>Stock y Facturación</h3>
@@ -547,7 +549,7 @@
   </article>
 
   <article class="row is-flip" data-cat="comercio" data-search="libreria rivadavia comercio catalogo pedidos sena stock">
-    <div class="row-media"><img src="/demos/hub-img/libreria.jpg" alt="Estantería de librería"></div>
+    <div class="row-media"><img src="/demos/hub-img/libreria.webp" alt="Estantería de librería" loading="lazy" decoding="async"></div>
     <div class="row-copy">
       <span class="badge" data-tone="amber">Comercio</span>
       <h3>Librería Rivadavia</h3>
@@ -561,7 +563,7 @@
   </article>
 
   <article class="row" data-cat="cultura" data-search="biblioteca publica almagro cultura prestamos socios devoluciones multas">
-    <div class="row-media"><img src="/demos/hub-img/biblioteca.jpg" alt="Sala de una biblioteca pública"></div>
+    <div class="row-media"><img src="/demos/hub-img/biblioteca.webp" alt="Sala de una biblioteca pública" loading="lazy" decoding="async"></div>
     <div class="row-copy">
       <span class="badge" data-tone="plum">Cultura</span>
       <h3>Biblioteca Pública Almagro</h3>
@@ -575,7 +577,7 @@
   </article>
 
   <article class="row" data-cat="gastronomia" data-search="rotiseria gastronomia produccion mostrador delivery pedidos">
-    <div class="row-media"><img src="/demos/hub-img/rotiseria.jpg" alt="Pollo asado de rotisería"></div>
+    <div class="row-media"><img src="/demos/hub-img/rotiseria.webp" alt="Pollo asado de rotisería" loading="lazy" decoding="async"></div>
     <div class="row-copy">
       <span class="badge" data-tone="ember">Gastronomía</span>
       <h3>Rotisería</h3>
@@ -589,7 +591,7 @@
   </article>
 
   <article class="row" data-cat="comercio" data-search="feria marketplace comercio publicaciones ventas preguntas envios">
-    <div class="row-media"><img src="/demos/hub-img/marketplace.jpg" alt="Pago en mostrador"></div>
+    <div class="row-media"><img src="/demos/hub-img/marketplace.webp" alt="Pago en mostrador" loading="lazy" decoding="async"></div>
     <div class="row-copy">
       <span class="badge" data-tone="amber">Comercio</span>
       <h3>Feria</h3>
@@ -603,7 +605,7 @@
   </article>
 
   <article class="row is-flip" data-cat="automotriz" data-search="automotores automotriz 0km usados financiacion permuta">
-    <div class="row-media"><img src="/demos/hub-img/automotores.jpg" alt="Toyota Corolla en concesionaria"></div>
+    <div class="row-media"><img src="/demos/hub-img/automotores.webp" alt="Toyota Corolla en concesionaria" loading="lazy" decoding="async"></div>
     <div class="row-copy">
       <span class="badge" data-tone="steel">Automotriz</span>
       <h3>Automotores</h3>
@@ -622,7 +624,7 @@
   </div>
 
   <article class="row" data-cat="turismo" data-search="hospedaje cabanas del sauce villa ventana turismo reservas calendario factura sierra de la ventana">
-    <div class="row-media"><img src="/demos/hub-img/hospedaje.jpg" alt="Cabañas con pileta y las sierras de Ventania"></div>
+    <div class="row-media"><img src="/demos/hub-img/hospedaje.webp" alt="Cabañas con pileta y las sierras de Ventania" loading="lazy" decoding="async"></div>
     <div class="row-copy">
       <span class="badge" data-tone="sky">Turismo</span>
       <h3>Cabañas del Sauce</h3>
@@ -636,7 +638,7 @@
   </article>
 
   <article class="row is-flip" data-cat="turismo" data-search="excursiones senderos tornquist turismo cupos guias salidas cerro ventana garganta cueva sierra de la ventana">
-    <div class="row-media"><img src="/demos/hub-img/excursiones.jpg" alt="Cerro Ventana en el Parque Tornquist"></div>
+    <div class="row-media"><img src="/demos/hub-img/excursiones.webp" alt="Cerro Ventana en el Parque Tornquist" loading="lazy" decoding="async"></div>
     <div class="row-copy">
       <span class="badge" data-tone="sky">Turismo</span>
       <h3>Senderos Tornquist</h3>
@@ -650,7 +652,7 @@
   </article>
 
   <article class="row" data-cat="turismo" data-search="complejo el palomar turismo habitaciones spa actividades paquetes predio sierra de la ventana">
-    <div class="row-media"><img src="/demos/hub-img/complejo.jpg" alt="Campo de golf con sierras al fondo"></div>
+    <div class="row-media"><img src="/demos/hub-img/complejo.webp" alt="Campo de golf con sierras al fondo" loading="lazy" decoding="async"></div>
     <div class="row-copy">
       <span class="badge" data-tone="sky">Turismo</span>
       <h3>Complejo El Palomar</h3>
@@ -669,7 +671,7 @@
   </div>
 
   <article class="row is-flip" data-cat="construccion" data-search="estudio loma arquitectura construccion casa reforma ph planos obra renders palermo">
-    <div class="row-media"><img src="/demos/hub-img/arquitectura.jpg" alt="Arquitecto trabajando sobre un plano"></div>
+    <div class="row-media"><img src="/demos/hub-img/arquitectura.webp" alt="Arquitecto trabajando sobre un plano" loading="lazy" decoding="async"></div>
     <div class="row-copy">
       <span class="badge" data-tone="sand">Construcción</span>
       <h3>Estudio Loma</h3>
@@ -683,7 +685,7 @@
   </article>
 
   <article class="row" data-cat="construccion" data-search="corralon el arido materiales construccion cemento ladrillo hierro arena stock pedido obra">
-    <div class="row-media"><img src="/demos/hub-img/materiales.jpg" alt="Depósito de materiales de obra"></div>
+    <div class="row-media"><img src="/demos/hub-img/materiales.webp" alt="Depósito de materiales de obra" loading="lazy" decoding="async"></div>
     <div class="row-copy">
       <span class="badge" data-tone="sand">Construcción</span>
       <h3>Corralón El Árido</h3>
@@ -697,7 +699,7 @@
   </article>
 
   <article class="row is-flip" data-cat="construccion" data-search="framehaus steelframe steel frame construccion vivienda modelos duplex ph ampliacion fabricacion montaje">
-    <div class="row-media"><img src="/demos/hub-img/steelframe.jpg" alt="Casas contemporáneas de steel frame"></div>
+    <div class="row-media"><img src="/demos/hub-img/steelframe.webp" alt="Casas contemporáneas de steel frame" loading="lazy" decoding="async"></div>
     <div class="row-copy">
       <span class="badge" data-tone="sand">Construcción</span>
       <h3>Framehaus</h3>

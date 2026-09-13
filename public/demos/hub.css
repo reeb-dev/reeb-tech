@@ -102,7 +102,7 @@ img { display: block; width: 100%; height: 100%; object-fit: cover; }
   min-height: 0;
   display: flex;
   align-items: flex-end;
-  background: #0b0a09 url("hub-img/hero.jpg?v=hub9") 58% 42% / cover no-repeat;
+  background: #0b0a09 url("hub-img/hero.webp?v=hub10") 58% 42% / cover no-repeat;
   padding: 112px 36px 40px;
 }
 
@@ -2906,6 +2906,10 @@ body:has(#precios:target, #cobros:target, #arca:target, #hosting:target, #extras
 }
 
 @media (max-width: 860px) {
+  .hero {
+    background-image: url("hub-img/hero-mobile.webp?v=hub10");
+  }
+
   .nav, .hero, .bar, .band, .picks-head, .catalog-head, .who, .sistemas, .prices, .demo-contacto.is-hub,
   .solutions, .business-types, .how-it-works, .solution-showcase, .integrations { padding-left: 20px; padding-right: 20px; }
   .nav { gap: 10px; flex-direction: column; align-items: flex-start; }
