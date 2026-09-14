@@ -19,12 +19,20 @@
             <img
               [src]="company.logo"
               [alt]="company.name"
+              [attr.width]="logoWell(company) === 'indra' ? 738 : (logoWell(company) === 'siskit' ? 160 : 128)"
+              [attr.height]="logoWell(company) === 'indra' ? 224 : (logoWell(company) === 'siskit' ? 196 : 128)"
+              loading="lazy"
+              decoding="async"
               [ngClass]="company.logoExtra ? 'h-16 w-16 shrink-0 object-contain' : (logoWell(company) === 'indra' ? 'h-full w-full object-cover' : 'max-h-[4.75rem] max-w-[78%] object-contain')"
             >
             <img
               *ngIf="company.logoExtra"
               [src]="company.logoExtra"
               alt=""
+              width="126"
+              height="64"
+              loading="lazy"
+              decoding="async"
               class="h-16 w-auto max-h-16 max-w-[58%] object-contain"
             >
           </ng-container>

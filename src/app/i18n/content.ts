@@ -201,18 +201,23 @@ export interface Dictionary {
 const companiesMeta = {
   bp4: {
     name: 'BP4 · Fiserv',
-    logo: '/bp4.png',
+    logo: 'cv-assets/bp4.webp',
     logoExtra: '/fiserv.svg',
     initials: 'BP4',
     current: true as const,
   },
   indra: {
     name: 'Indra',
-    logo: '/screenshot-2025-02-05-130401.png',
+    logo: 'cv-assets/indra.webp',
     initials: 'IN',
     logoWell: 'indra' as const,
   },
-  siskit: { name: 'Siskit', logo: '/siskit.png', initials: 'SK', logoWell: 'siskit' as const },
+  siskit: {
+    name: 'Siskit',
+    logo: 'cv-assets/siskit.webp',
+    initials: 'SK',
+    logoWell: 'siskit' as const,
+  },
 };
 
 export const translations: Record<Lang, Dictionary> = {

@@ -1,0 +1,256 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="icon" href="/brand/reeb-mark.svg?v=20260911force" type="image/svg+xml">
+  <link rel="icon" href="/brand/reeb-mark-32.png?v=20260911force" type="image/png" sizes="32x32">
+  <link rel="icon" href="/brand/reeb-mark-16.png?v=20260911force" type="image/png" sizes="16x16">
+  <link rel="icon" href="/brand/hub-mark.ico?v=20260911force" sizes="any">
+  <link rel="shortcut icon" href="/brand/hub-mark.ico?v=20260911force">
+  <link rel="apple-touch-icon" href="/brand/reeb-mark-180.png?v=20260911force" sizes="180x180">
+<title>Admin panel · Nahuel Huapi Real Estate</title>
+  <meta name="description" content="Real estate admin panel example for listings, visits, users and distribution.">
+  <meta name="robots" content="noindex, follow">
+<link rel="canonical" href="https://webconreeb.com/en/demos/real-estate/panel.html">
+  <meta property="og:type" content="website">
+  <meta property="og:site_name" content="Web con REEB">
+  <meta property="og:url" content="https://webconreeb.com/en/demos/real-estate/panel.html">
+  <meta property="og:title" content="Admin panel · Nahuel Huapi Real Estate">
+  <meta property="og:description" content="Manage property listings, visits, users and distribution from one panel.">
+  <meta property="og:image" content="https://webconreeb.com/en/demos/real-estate/og.jpg?v=20260913">
+  <meta property="og:image:type" content="image/jpeg">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta property="og:image:alt" content="Admin panel · Nahuel Huapi Real Estate">
+  <meta property="og:locale" content="en_US">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Admin panel · Nahuel Huapi Real Estate">
+  <meta name="twitter:description" content="Manage property listings, visits, users and distribution from one panel.">
+  <meta name="twitter:image" content="https://webconreeb.com/en/demos/real-estate/og.jpg?v=20260913">
+
+<link rel="preload" href="/demos/inmobiliaria/fonts/cormorant-garamond.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="preload" href="/demos/inmobiliaria/fonts/figtree.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="stylesheet" href="/demos/inmobiliaria/styles.css?v=bariloche42">
+  <style>
+    body.panel-page:not(.nh-authed) .app { display: none !important; }
+    #reeb-mark { display: none !important; }
+  </style>
+</head>
+<body class="panel-page">
+  <section id="nh-login" class="nh-login" role="dialog" aria-modal="true" aria-labelledby="nh-login-title">
+    <div class="nh-login-card">
+      <p class="eyebrow">Example access</p>
+      <h1 id="nh-login-title">Agency admin panel</h1>
+      <p>Customers do not access this panel. Choose a sample account or use the prefilled credentials. The password is <strong>demo</strong>.</p>
+      <div class="nh-login-users" id="nh-login-users">
+        <button type="button" data-user="milena"><strong>Milena Huapi</strong><span>Owner · user milena</span></button>
+        <button type="button" data-user="nahuel"><strong>Nahuel Lagos</strong><span>Agent · user nahuel</span></button>
+        <button type="button" data-user="agenda"><strong>Laura Visitas</strong><span>Scheduling · user agenda</span></button>
+      </div>
+      <form class="nh-login-form form-shell" id="nh-login-form" novalidate>
+        <div class="nh-field">
+          <label for="nh-login-user">User</label>
+          <input id="nh-login-user" name="user" value="milena" autocomplete="username" spellcheck="false">
+        </div>
+        <div class="nh-field">
+          <label for="nh-login-pass">Password</label>
+          <input id="nh-login-pass" name="pass" type="password" value="demo" autocomplete="current-password">
+        </div>
+        <p class="nh-login-error" role="alert"></p>
+        <div class="form-actions">
+          <button class="btn-panel nh-login-enter" type="submit" id="nh-login-enter">Sign in</button>
+        </div>
+      </form>
+      <p class="nh-login-hint">This is not a real login. <a href="index.html">Back to the website</a></p>
+    </div>
+  </section>
+
+  <div id="nh-loading" class="nh-loading" hidden>
+    <div class="nh-loading-card">
+      <p class="eyebrow">Nahuel Huapi Real Estate</p>
+      <p class="nh-loading-title" id="nh-loading-title">Loading the panel…</p>
+      <p id="nh-loading-lead">Opening listings and public website sections.</p>
+      <div class="nh-spinner" role="status" aria-label="Loading"></div>
+    </div>
+  </div>
+
+  <div class="app">
+    <header class="top">
+      <div class="top-inner">
+        <a class="logo" href="index.html">
+          <span class="logo-mark" aria-hidden="true"></span>
+          <span>Nahuel Huapi Real Estate<small>Admin panel · Bariloche</small></span>
+        </a>
+        <details class="mobile-menu">
+          <summary>Menu</summary>
+          <a href="index.html">View website</a>
+          <a href="/demos/inmobiliaria/panel.html" hreflang="es-AR">ES</a>
+          <button type="button" data-panel-nav="resumen">Dashboard</button>
+          <button type="button" data-panel-nav="cartera">Listings</button>
+          <button type="button" data-panel-nav="zonas">Areas</button>
+          <button type="button" data-panel-nav="vitrina">Public website</button>
+          <button type="button" data-panel-nav="difusion">Distribution</button>
+          <button type="button" data-panel-nav="usuarios">User manager</button>
+          <button type="button" data-panel-nav="contacto">Contact</button>
+        </details>
+        <nav id="siteNav">
+          <a href="index.html">View website</a>
+          <a href="/demos/inmobiliaria/panel.html" hreflang="es-AR">ES</a>
+          <button type="button" data-panel-nav="resumen">Dashboard</button>
+          <button type="button" data-panel-nav="cartera">Listings</button>
+          <button type="button" data-panel-nav="zonas">Areas</button>
+          <button type="button" data-panel-nav="vitrina">Public website</button>
+          <button type="button" data-panel-nav="difusion">Distribution</button>
+          <button type="button" data-panel-nav="usuarios">User manager</button>
+          <button type="button" data-panel-nav="contacto">Contact</button>
+        </nav>
+        <button class="btn" id="open-create" type="button">New property</button>
+      </div>
+    </header>
+
+    <section class="panel-view" data-panel-view="resumen" id="resumen">
+      <div class="resumen-desk" id="resumen-desk"></div>
+    </section>
+
+    <section class="panel-view" data-panel-view="cartera" id="cartera" hidden>
+      <div class="toolbar cartera-toolbar">
+        <div>
+          <p class="eyebrow">Sample data</p>
+          <h1>Property listings</h1>
+          <p class="lead-panel">Enter a property once. Featured, recent and price-drop labels appear publicly; visits and interactions stay in the panel.</p>
+        </div>
+        <button class="btn" type="button" data-open-create>New property</button>
+      </div>
+
+      <div class="stats" id="stats"></div>
+
+      <div class="cartera-desk">
+        <section class="cartera-list" id="cartera-list">
+          <div class="table-scroll">
+            <table class="cartera-tabla">
+              <thead>
+                <tr>
+                  <th>Photo</th>
+                  <th>Code</th>
+                  <th>Title</th>
+                  <th>Area</th>
+                  <th class="amount">Price</th>
+                  <th>Status</th>
+                  <th>Website views</th>
+                  <th>Destinations</th>
+                  <th>Actions</th>
+                </tr>
+              </thead>
+              <tbody id="rows"></tbody>
+            </table>
+          </div>
+        </section>
+        <section class="cartera-editor" id="detail" hidden></section>
+      </div>
+    </section>
+
+    <section class="panel-view zonas" data-panel-view="zonas" id="zonas" hidden>
+      <div class="toolbar">
+        <div>
+          <p class="eyebrow">Region</p>
+          <h1>Areas and towns</h1>
+          <p class="lead-panel">The public website starts with Bariloche and nearby southern areas. Add a town or neighborhood and relate it to an existing area without creating listings automatically.</p>
+        </div>
+      </div>
+      <div class="zonas-desk" id="zonas-desk"></div>
+    </section>
+
+    <section class="panel-view" data-panel-view="vitrina" id="vitrina" hidden>
+      <div class="toolbar">
+        <div>
+          <p class="eyebrow">Public website</p>
+          <h1>Public website manager</h1>
+          <p class="lead-panel">Control whether each public website section is visible and which text it shows. Saving updates this browser’s example website.</p>
+        </div>
+      </div>
+      <div class="vitrina-gestor" id="vitrina-gestor"></div>
+    </section>
+
+    <section class="panel-view difusion" data-panel-view="difusion" id="difusion" hidden>
+      <div class="toolbar">
+        <div>
+          <p class="eyebrow">Websites, portals and social media</p>
+          <h1>Distribution</h1>
+          <p class="lead-panel">First connect an account, then choose a listing and mark its destinations. Each card explains what a real API, feed, CRM or manual workflow can and cannot do. This example only stores markers in your browser; it does not publish externally. Portal subscriptions and paid listings are contracted separately.</p>
+        </div>
+      </div>
+      <div class="difusion-desk" id="difusion-desk"></div>
+    </section>
+
+    <section class="panel-view usuarios" data-panel-view="usuarios" id="usuarios" hidden>
+      <div class="difusion-head">
+        <p class="eyebrow">Panel access</p>
+        <h2>User manager</h2>
+        <p>Only agency staff access this panel. The owner can add, pause or change roles; other roles can view the list. Sample accounts: <strong>milena</strong>, <strong>nahuel</strong>, <strong>sofia</strong>, <strong>diego</strong>, <strong>carmen</strong> and <strong>agenda</strong>. The password is <strong>demo</strong>. There is no server.</p>
+      </div>
+      <form class="usuario-alta form-shell" id="usuario-alta">
+        <div class="nh-field">
+          <label for="alta-nombre">Name</label>
+          <input id="alta-nombre" name="nombre" required autocomplete="name">
+        </div>
+        <div class="nh-field">
+          <label for="alta-user">User</label>
+          <input id="alta-user" name="user" required autocomplete="off" spellcheck="false">
+        </div>
+        <div class="nh-field">
+          <label for="alta-rol">Role</label>
+          <select id="alta-rol" name="rol">
+            <option value="agente">Agent</option>
+            <option value="comercial">Sales</option>
+            <option value="marketing">Marketing</option>
+            <option value="administracion">Administration</option>
+            <option value="agenda">Scheduling</option>
+            <option value="titular">Owner</option>
+          </select>
+        </div>
+        <div class="nh-field">
+          <label for="alta-pass">Password</label>
+          <input id="alta-pass" name="pass" value="demo" autocomplete="new-password">
+        </div>
+        <p class="nh-form-error" id="usuario-alta-error" role="alert"></p>
+        <div class="form-actions">
+          <button class="btn-panel" type="submit" id="usuario-alta-submit">Add user</button>
+        </div>
+      </form>
+      <p class="usuario-alta-nota lead-mini" id="usuario-alta-nota" hidden>Only the owner can add or pause accounts. You can view the list.</p>
+      <div class="table-scroll">
+        <table>
+          <thead>
+            <tr>
+              <th>Name</th>
+              <th>User</th>
+              <th>Role</th>
+              <th>Status</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody id="usuario-rows"></tbody>
+        </table>
+      </div>
+    </section>
+
+    <section class="panel-view" data-panel-view="contacto" id="view-contacto" hidden>
+      <div class="toolbar">
+        <div>
+          <p class="eyebrow">Example channel</p>
+          <h1>Contact</h1>
+          <p class="lead-panel">Sample message form. It does not submit to a server.</p>
+        </div>
+      </div>
+      <div class="panel-contact wrap" id="contacto"></div>
+    </section>
+  </div>
+
+  <script src="storage.js?v=1"></script>
+  <script src="/demos/inmobiliaria/data.js?v=bariloche42"></script>
+  <script src="locale.js?v=3"></script>
+  <script src="/demos/inmobiliaria/panel.js?v=bariloche42"></script>
+  <script src="/demos/contacto.js?v=wa10" data-phone="5492915757934" data-text="Hi, I saw the real estate example and would like a custom solution for my agency" data-subject="Real estate web solution inquiry" data-title="Ask about a property" data-place="panel"></script>
+  </body>
+</html>

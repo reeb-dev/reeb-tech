@@ -13,6 +13,10 @@
           <img
             [src]="category.icon"
             alt=""
+            width="32"
+            height="32"
+            loading="lazy"
+            decoding="async"
             class="h-8 w-8 shrink-0 object-contain rounded-md bg-white p-1"
           >
           <h3 class="text-xl font-semibold text-gray-900 dark:text-white">{{ category.name }}</h3>
@@ -23,6 +27,10 @@
               *ngIf="logoFor(tech)"
               [src]="logoFor(tech)"
               alt=""
+              width="16"
+              height="16"
+              loading="lazy"
+              decoding="async"
               class="h-4 w-4 shrink-0 object-contain"
             >
             {{ tech }}

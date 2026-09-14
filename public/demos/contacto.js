@@ -30,6 +30,7 @@
 
   if (place !== "hub") {
     (function injectReebMarkLocal() {
+      if (document.documentElement.lang === "en") return;
       if (document.getElementById("reeb-mark")) return;
       var path = String(location.pathname || "").replace(/\/+$/, "") || "/";
       if (path === "/demos" || path === "/demos/index.html" || path === "/" || path === "/index.html") return;

@@ -3,24 +3,45 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Soluciones web y sistemas para negocios | Web con REEB</title>
-  <meta name="description" content="Soluciones web para comercios y profesionales: catálogos, tiendas, sistemas de gestión, turnos, reservas, stock y paneles administrativos a medida.">
+  <title>Páginas web y sistemas a medida para negocios | REEB</title>
+  <meta name="description" content="REEB desarrolla páginas web, catálogos, tiendas y sistemas de gestión a medida para comercios y profesionales. Trato directo con Manuel Reeb.">
   <meta name="robots" content="index, follow">
   <link rel="canonical" href="https://webconreeb.com/">
+  <link rel="alternate" hreflang="es-AR" href="https://webconreeb.com/">
+  <link rel="alternate" hreflang="en" href="https://webconreeb.com/en/">
+  <link rel="alternate" hreflang="x-default" href="https://webconreeb.com/">
+  <script>
+    (function () {
+      var key = "webconreeb-language";
+      var crawler = /bot|crawler|spider|slurp|lighthouse/i.test(navigator.userAgent);
+      if (crawler) return;
+      try {
+        var saved = localStorage.getItem(key);
+        var preferred = saved || ((navigator.languages || [navigator.language || "es"])[0] || "es");
+        var language = String(preferred).toLowerCase().startsWith("en") ? "en" : "es";
+        if (!saved) localStorage.setItem(key, language);
+        if (language === "en") {
+          location.replace("/en/" + location.search + location.hash);
+        }
+      } catch (_) {
+        // Si el navegador bloquea el almacenamiento, se mantiene la portada en español.
+      }
+    })();
+  </script>
   <meta property="og:type" content="website">
-  <meta property="og:site_name" content="Web con REEB">
+  <meta property="og:site_name" content="REEB">
   <meta property="og:url" content="https://webconreeb.com/">
-  <meta property="og:title" content="Soluciones web para su negocio | Web con REEB">
-  <meta property="og:description" content="Catálogos, tiendas, turnos, reservas y sistemas de gestión adaptados a su forma de trabajar.">
+  <meta property="og:title" content="Páginas web y sistemas a medida | REEB">
+  <meta property="og:description" content="Software a medida para negocios: páginas web, catálogos, tiendas y sistemas de gestión con trato directo.">
   <meta property="og:image" content="https://webconreeb.com/og-webconreeb.jpg?v=20260913">
   <meta property="og:image:type" content="image/jpeg">
   <meta property="og:image:width" content="1200">
   <meta property="og:image:height" content="630">
-  <meta property="og:image:alt" content="Web con REEB — soluciones web y sistemas para negocios">
+  <meta property="og:image:alt" content="REEB — páginas web y sistemas a medida para negocios">
   <meta property="og:locale" content="es_AR">
   <meta name="twitter:card" content="summary_large_image">
-  <meta name="twitter:title" content="Soluciones web para su negocio | Web con REEB">
-  <meta name="twitter:description" content="Catálogos, tiendas, turnos, reservas y sistemas de gestión adaptados a su forma de trabajar.">
+  <meta name="twitter:title" content="Páginas web y sistemas a medida | REEB">
+  <meta name="twitter:description" content="Software a medida para negocios: páginas web, catálogos, tiendas y sistemas de gestión con trato directo.">
   <meta name="twitter:image" content="https://webconreeb.com/og-webconreeb.jpg?v=20260913">
   <link rel="icon" href="/brand/reeb-mark.svg?v=20260911force" type="image/svg+xml">
   <link rel="icon" href="/brand/reeb-mark-32.png?v=20260911force" type="image/png" sizes="32x32">
@@ -28,15 +49,19 @@
   <link rel="icon" href="/brand/hub-mark.ico?v=20260911force" sizes="any">
   <link rel="shortcut icon" href="/brand/hub-mark.ico?v=20260911force">
   <link rel="apple-touch-icon" href="/brand/reeb-mark-180.png?v=20260911force" sizes="180x180">
+  <link rel="preload" as="image" href="/demos/hub-img/hero.webp?v=hub10" type="image/webp" media="(min-width: 861px)" fetchpriority="high">
+  <link rel="preload" as="image" href="/demos/hub-img/hero-mobile.webp?v=hub10" type="image/webp" media="(max-width: 860px)" fetchpriority="high">
 <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,560;9..144,650&family=Outfit:wght@400;600;650;700&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="/demos/hub.css?v=hub59">
+  <link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,560;9..144,650&family=Outfit:wght@400;600;650;700&display=swap" onload="this.onload=null;this.rel='stylesheet'">
+  <noscript><link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,560;9..144,650&family=Outfit:wght@400;600;650;700&display=swap" rel="stylesheet"></noscript>
+  <link rel="stylesheet" href="/demos/hub.css?v=hub60">
   <script type="application/ld+json">
   {
     "@context": "https://schema.org",
     "@type": "ProfessionalService",
-    "name": "Web con REEB",
+    "name": "REEB",
+    "alternateName": "Web con REEB",
     "url": "https://webconreeb.com/",
     "image": "https://webconreeb.com/og-webconreeb.jpg?v=20260913",
     "description": "Soluciones web para comercios y profesionales en Argentina: catálogos, tiendas, sistemas de gestión, turnos, reservas, stock y paneles administrativos a medida.",
@@ -65,25 +90,26 @@
 <body>
 
   <header class="nav">
-    <a class="nav-brand" href="/"><span class="nav-mark">REEB</span><em>.</em> <span class="nav-demos">soluciones</span></a>
+    <a class="nav-brand" href="/"><span class="nav-mark">REEB</span><em>.</em> <span class="nav-demos">software a medida</span></a>
     <nav class="nav-links" aria-label="Navegación principal">
-      <a class="nav-link" href="#soluciones">Soluciones</a>
+      <a class="nav-link" href="/soluciones/">Soluciones</a>
       <a class="nav-link" href="#rubros">Rubros</a>
       <a class="nav-link" href="#gestion">Panel</a>
       <a class="nav-link" href="#destacados">Ejemplos</a>
       <a class="nav-link" href="#precios">Precios</a>
       <a class="nav-link" href="#contacto">Contacto</a>
       <a class="nav-link nav-link-more" href="/cv/">Sitio personal</a>
+      <a class="nav-link" href="/en/" hreflang="en" data-language="en">EN</a>
     </nav>
   </header>
 
   <section class="hero">
     <div class="hero-inner">
-      <p class="hero-kicker">Web con REEB · por Manuel Reeb</p>
-      <p class="hero-role">Sitios web · catálogos · sistemas de gestión</p>
-      <h1>Soluciones web para su negocio</h1>
+      <p class="hero-kicker">REEB · SOFTWARE A MEDIDA PARA NEGOCIOS</p>
+      <p class="hero-role">Páginas web · catálogos · sistemas de gestión</p>
+      <h1>Soluciones web y sistemas para su negocio</h1>
       <p class="hero-lead">Venda, muestre sus productos y administre su negocio desde un solo lugar. Elija una solución para su rubro o solicite una adaptada a su forma de trabajar.</p>
-      <p class="hero-trust">Página pública + panel administrativo + WhatsApp · desarrollo directo y a medida</p>
+      <p class="hero-trust">Página pública + panel administrativo + WhatsApp · desarrollo directo por Manuel Reeb</p>
       <nav class="hero-categories" aria-label="Tipos de soluciones">
         <a href="#soluciones">Sitios web</a>
         <a href="#soluciones">Catálogos</a>
@@ -151,6 +177,7 @@
 
   <script>
     (function () {
+      localStorage.setItem("webconreeb-language", "es");
       var buttons = Array.from(document.querySelectorAll(".showcase-tabs button"));
       var publicImage = document.getElementById("showcase-public-img");
       var panelImage = document.getElementById("showcase-panel-img");
@@ -207,7 +234,7 @@
           <li>Ubicación y contacto</li>
           <li>WhatsApp integrado</li>
         </ul>
-        <a href="/demos/estudio/">Ver solución</a>
+        <a href="/soluciones/sitios-profesionales/">Ver solución</a>
       </article>
       <article class="solution-card">
         <span class="solution-code" aria-hidden="true">CAT</span>
@@ -218,7 +245,7 @@
           <li>Fotos y disponibilidad</li>
           <li>Consulta por producto</li>
         </ul>
-        <a href="/demos/comercio/">Ver solución</a>
+        <a href="/soluciones/tiendas-catalogos/">Ver solución</a>
       </article>
       <article class="solution-card">
         <span class="solution-code" aria-hidden="true">SHOP</span>
@@ -229,7 +256,7 @@
           <li>Pedidos y estados</li>
           <li>Panel administrativo</li>
         </ul>
-        <a href="/demos/marketplace/">Ver solución</a>
+        <a href="/soluciones/tiendas-catalogos/">Ver solución</a>
       </article>
       <article class="solution-card">
         <span class="solution-code" aria-hidden="true">ADM</span>
@@ -240,7 +267,7 @@
           <li>Stock, caja y reportes</li>
           <li>Usuarios y permisos</li>
         </ul>
-        <a href="/demos/gestion/panel.html">Ver solución</a>
+        <a href="/soluciones/sistemas-gestion/">Ver solución</a>
       </article>
       <article class="solution-card">
         <span class="solution-code" aria-hidden="true">INM</span>
@@ -251,7 +278,7 @@
           <li>Filtros y zonas</li>
           <li>Panel de cartera</li>
         </ul>
-        <a href="/demos/inmobiliaria/">Ver solución</a>
+        <a href="/soluciones/inmobiliarias/">Ver solución</a>
       </article>
       <article class="solution-card">
         <span class="solution-code" aria-hidden="true">TUR</span>
@@ -262,7 +289,7 @@
           <li>Clientes y servicios</li>
           <li>Confirmaciones</li>
         </ul>
-        <a href="/demos/peluqueria/panel.html">Ver solución</a>
+        <a href="/soluciones/turnos-reservas/">Ver solución</a>
       </article>
       <article class="solution-card">
         <span class="solution-code" aria-hidden="true">RES</span>
@@ -273,7 +300,7 @@
           <li>Calendario disponible</li>
           <li>Reservas y clientes</li>
         </ul>
-        <a href="/demos/hospedaje/panel.html">Ver solución</a>
+        <a href="/soluciones/turnos-reservas/">Ver solución</a>
       </article>
       <article class="solution-card solution-card-custom">
         <span class="solution-code" aria-hidden="true">A MEDIDA</span>
@@ -301,6 +328,8 @@
       <a href="/demos/hospedaje/"><strong>Hospedajes</strong><span>Unidades, disponibilidad y reservas</span></a>
       <a href="/demos/taller/"><strong>Talleres</strong><span>Vehículos, órdenes y presupuestos</span></a>
       <a href="/demos/peluqueria/"><strong>Salones</strong><span>Servicios, profesionales y turnos</span></a>
+      <a href="https://gymfitnesscenter.com/"><strong>Gimnasios</strong><span>Landing, horarios, mapa y WhatsApp</span></a>
+      <a href="https://tuinglesonline.com/"><strong>Escuelas de inglés</strong><span>Clases online, prueba y WhatsApp</span></a>
       <a href="/demos/restaurante/"><strong>Gastronomía</strong><span>Carta, mesas, comandas y cocina</span></a>
     </div>
   </section>
@@ -377,7 +406,7 @@
     </div>
     <div class="picks">
       <article class="pick" data-cat="gastronomia" data-search="parrilla don ernesto restaurante gastronomia mesas comandas cocina factura">
-        <div class="pick-media"><img src="/demos/hub-img/restaurante.jpg" alt="Mesa de parrilla servida"></div>
+        <div class="pick-media"><img src="/demos/hub-img/restaurante.webp" alt="Mesa de parrilla servida" loading="lazy" decoding="async"></div>
         <div class="pick-copy">
           <span class="badge" data-tone="ember">Gastronomía</span>
           <h3>Parrilla Don Ernesto</h3>
@@ -389,7 +418,7 @@
         </div>
       </article>
       <article class="pick" data-cat="inmuebles" data-search="inmobiliaria inmuebles venta alquiler propiedades visitas">
-        <div class="pick-media"><img src="/demos/inmobiliaria/img/zona-llao.jpg" alt="Lago Nahuel Huapi y la península de Llao Llao"></div>
+        <div class="pick-media"><img src="/demos/hub-img/inmobiliaria.webp" alt="Lago Nahuel Huapi y la península de Llao Llao" loading="lazy" decoding="async"></div>
         <div class="pick-copy">
           <span class="badge" data-tone="teal">Inmuebles</span>
           <h3>Nahuel Huapi</h3>
@@ -401,7 +430,7 @@
         </div>
       </article>
       <article class="pick" data-cat="legal" data-search="estudio norte legal abogado expedientes plazos escritos mesa de entradas">
-        <div class="pick-media"><img src="/demos/hub-img/estudio.jpg" alt="Mesa de un estudio jurídico"></div>
+        <div class="pick-media"><img src="/demos/hub-img/estudio.webp" alt="Mesa de un estudio jurídico" loading="lazy" decoding="async"></div>
         <div class="pick-copy">
           <span class="badge" data-tone="slate">Legal</span>
           <h3>Estudio Norte</h3>
@@ -446,7 +475,7 @@
 
   <div class="catalog">
   <article class="row" data-cat="comercio" data-search="almacen del barrio comercio pedidos proveedores gondola caja">
-    <div class="row-media"><img src="/demos/hub-img/comercio.jpg" alt="Góndola de almacén"></div>
+    <div class="row-media"><img src="/demos/hub-img/comercio.webp" alt="Góndola de almacén" loading="lazy" decoding="async"></div>
     <div class="row-copy">
       <span class="badge" data-tone="amber">Comercio</span>
       <h3>Almacén del Barrio</h3>
@@ -459,7 +488,7 @@
   </article>
 
   <article class="row is-flip" data-cat="comercio" data-search="kiosco lo de pedro comercio stock gondola fiado reposicion">
-    <div class="row-media"><img src="/demos/hub-img/kiosco.jpg" alt="Fachada de kiosco de barrio"></div>
+    <div class="row-media"><img src="/demos/hub-img/kiosco.webp" alt="Fachada de kiosco de barrio" loading="lazy" decoding="async"></div>
     <div class="row-copy">
       <span class="badge" data-tone="amber">Comercio</span>
       <h3>Kiosco Lo de Pedro</h3>
@@ -472,7 +501,7 @@
   </article>
 
   <article class="row" data-cat="automotriz" data-search="taller mecanico automotriz ordenes diagnostico presupuesto repuestos">
-    <div class="row-media"><img src="/demos/hub-img/taller.jpg" alt="Trabajo en un taller mecánico"></div>
+    <div class="row-media"><img src="/demos/hub-img/taller.webp" alt="Trabajo en un taller mecánico" loading="lazy" decoding="async"></div>
     <div class="row-copy">
       <span class="badge" data-tone="steel">Automotriz</span>
       <h3>Taller Mecánico</h3>
@@ -485,7 +514,7 @@
   </article>
 
   <article class="row is-flip" data-cat="servicios" data-search="salon camelia peluqueria servicios turnos agenda profesionales cobro">
-    <div class="row-media"><img src="/demos/hub-img/peluqueria.jpg" alt="Interior de un salón de peluquería"></div>
+    <div class="row-media"><img src="/demos/hub-img/peluqueria.webp" alt="Interior de un salón de peluquería" loading="lazy" decoding="async"></div>
     <div class="row-copy">
       <span class="badge" data-tone="sage">Servicios</span>
       <h3>Salón Camelia</h3>
@@ -497,8 +526,32 @@
     </div>
   </article>
 
+  <article class="row" data-cat="servicios" data-search="gimnasio gym fitness gfc entrenamiento funcional coronel suarez">
+    <div class="row-media"><img src="/demos/hub-img/gimnasio.jpg" alt="Fachada de Gym Fitness Center en Coronel Suárez" loading="lazy" decoding="async"></div>
+    <div class="row-copy">
+      <span class="badge" data-tone="sage">Servicios</span>
+      <h3>Gym Fitness Center</h3>
+      <p>Landing de gimnasio: marca, máquinas, horarios, mapa, fachada y consulta por WhatsApp.</p>
+      <div class="ctas">
+        <a class="btn btn-primary" href="https://gymfitnesscenter.com/" target="_blank" rel="noopener noreferrer">Ver página pública</a>
+      </div>
+    </div>
+  </article>
+
+  <article class="row" data-cat="servicios" data-search="tu ingles online clases ingles escuela videollamada sierra de la ventana educacion">
+    <div class="row-media"><img src="/demos/hub-img/ingles.jpg" alt="Tu Inglés Online: clases de inglés por videollamada" loading="lazy" decoding="async"></div>
+    <div class="row-copy">
+      <span class="badge" data-tone="sage">Servicios</span>
+      <h3>Tu Inglés Online</h3>
+      <p>Landing de clases de inglés por videollamada, con primera clase de prueba.</p>
+      <div class="ctas">
+        <a class="btn btn-primary" href="https://tuinglesonline.com/" target="_blank" rel="noopener noreferrer">Ver página pública</a>
+      </div>
+    </div>
+  </article>
+
   <article class="row" data-cat="servicios" data-search="el quebracho carpinteria servicios muebles presupuesto sena entrega">
-    <div class="row-media"><img src="/demos/hub-img/carpinteria.jpg" alt="Taller de carpintería"></div>
+    <div class="row-media"><img src="/demos/hub-img/carpinteria.webp" alt="Taller de carpintería" loading="lazy" decoding="async"></div>
     <div class="row-copy">
       <span class="badge" data-tone="sage">Servicios</span>
       <h3>El Quebracho</h3>
@@ -511,7 +564,7 @@
   </article>
 
   <article class="row is-flip" data-cat="comercio" data-search="libro facturacion comercio comprobantes factura notas credito cobro">
-    <div class="row-media"><img src="/demos/hub-img/facturacion.jpg" alt="Comprobantes y calculadora"></div>
+    <div class="row-media"><img src="/demos/hub-img/facturacion.webp" alt="Comprobantes y calculadora" loading="lazy" decoding="async"></div>
     <div class="row-copy">
       <span class="badge" data-tone="amber">Comercio</span>
       <h3>Libro</h3>
@@ -524,7 +577,7 @@
   </article>
 
   <article class="row" data-cat="comercio" data-search="stock facturacion comercio inventario movimientos arca electronica">
-    <div class="row-media"><img src="/demos/hub-img/stockfacturacion.jpg" alt="Depósito con mercadería"></div>
+    <div class="row-media"><img src="/demos/hub-img/stockfacturacion.webp" alt="Depósito con mercadería" loading="lazy" decoding="async"></div>
     <div class="row-copy">
       <span class="badge" data-tone="amber">Comercio</span>
       <h3>Stock y Facturación</h3>
@@ -537,7 +590,7 @@
   </article>
 
   <article class="row is-flip" data-cat="comercio" data-search="libreria rivadavia comercio catalogo pedidos sena stock">
-    <div class="row-media"><img src="/demos/hub-img/libreria.jpg" alt="Estantería de librería"></div>
+    <div class="row-media"><img src="/demos/hub-img/libreria.webp" alt="Estantería de librería" loading="lazy" decoding="async"></div>
     <div class="row-copy">
       <span class="badge" data-tone="amber">Comercio</span>
       <h3>Librería Rivadavia</h3>
@@ -550,7 +603,7 @@
   </article>
 
   <article class="row" data-cat="cultura" data-search="biblioteca publica almagro cultura prestamos socios devoluciones multas">
-    <div class="row-media"><img src="/demos/hub-img/biblioteca.jpg" alt="Sala de una biblioteca pública"></div>
+    <div class="row-media"><img src="/demos/hub-img/biblioteca.webp" alt="Sala de una biblioteca pública" loading="lazy" decoding="async"></div>
     <div class="row-copy">
       <span class="badge" data-tone="plum">Cultura</span>
       <h3>Biblioteca Pública Almagro</h3>
@@ -563,7 +616,7 @@
   </article>
 
   <article class="row" data-cat="gastronomia" data-search="rotiseria gastronomia produccion mostrador delivery pedidos">
-    <div class="row-media"><img src="/demos/hub-img/rotiseria.jpg" alt="Pollo asado de rotisería"></div>
+    <div class="row-media"><img src="/demos/hub-img/rotiseria.webp" alt="Pollo asado de rotisería" loading="lazy" decoding="async"></div>
     <div class="row-copy">
       <span class="badge" data-tone="ember">Gastronomía</span>
       <h3>Rotisería</h3>
@@ -576,7 +629,7 @@
   </article>
 
   <article class="row" data-cat="comercio" data-search="feria marketplace comercio publicaciones ventas preguntas envios">
-    <div class="row-media"><img src="/demos/hub-img/marketplace.jpg" alt="Pago en mostrador"></div>
+    <div class="row-media"><img src="/demos/hub-img/marketplace.webp" alt="Pago en mostrador" loading="lazy" decoding="async"></div>
     <div class="row-copy">
       <span class="badge" data-tone="amber">Comercio</span>
       <h3>Feria</h3>
@@ -589,7 +642,7 @@
   </article>
 
   <article class="row is-flip" data-cat="automotriz" data-search="automotores automotriz 0km usados financiacion permuta">
-    <div class="row-media"><img src="/demos/hub-img/automotores.jpg" alt="Toyota Corolla en concesionaria"></div>
+    <div class="row-media"><img src="/demos/hub-img/automotores.webp" alt="Toyota Corolla en concesionaria" loading="lazy" decoding="async"></div>
     <div class="row-copy">
       <span class="badge" data-tone="steel">Automotriz</span>
       <h3>Automotores</h3>
@@ -607,7 +660,7 @@
   </div>
 
   <article class="row" data-cat="turismo" data-search="hospedaje cabanas del sauce villa ventana turismo reservas calendario factura sierra de la ventana">
-    <div class="row-media"><img src="/demos/hub-img/hospedaje.jpg" alt="Cabañas con pileta y las sierras de Ventania"></div>
+    <div class="row-media"><img src="/demos/hub-img/hospedaje.webp" alt="Cabañas con pileta y las sierras de Ventania" loading="lazy" decoding="async"></div>
     <div class="row-copy">
       <span class="badge" data-tone="sky">Turismo</span>
       <h3>Cabañas del Sauce</h3>
@@ -620,7 +673,7 @@
   </article>
 
   <article class="row is-flip" data-cat="turismo" data-search="excursiones senderos tornquist turismo cupos guias salidas cerro ventana garganta cueva sierra de la ventana">
-    <div class="row-media"><img src="/demos/hub-img/excursiones.jpg" alt="Cerro Ventana en el Parque Tornquist"></div>
+    <div class="row-media"><img src="/demos/hub-img/excursiones.webp" alt="Cerro Ventana en el Parque Tornquist" loading="lazy" decoding="async"></div>
     <div class="row-copy">
       <span class="badge" data-tone="sky">Turismo</span>
       <h3>Senderos Tornquist</h3>
@@ -633,7 +686,7 @@
   </article>
 
   <article class="row" data-cat="turismo" data-search="complejo el palomar turismo habitaciones spa actividades paquetes predio sierra de la ventana">
-    <div class="row-media"><img src="/demos/hub-img/complejo.jpg" alt="Campo de golf con sierras al fondo"></div>
+    <div class="row-media"><img src="/demos/hub-img/complejo.webp" alt="Campo de golf con sierras al fondo" loading="lazy" decoding="async"></div>
     <div class="row-copy">
       <span class="badge" data-tone="sky">Turismo</span>
       <h3>Complejo El Palomar</h3>
@@ -651,7 +704,7 @@
   </div>
 
   <article class="row is-flip" data-cat="construccion" data-search="estudio loma arquitectura construccion casa reforma ph planos obra renders palermo">
-    <div class="row-media"><img src="/demos/hub-img/arquitectura.jpg" alt="Arquitecto trabajando sobre un plano"></div>
+    <div class="row-media"><img src="/demos/hub-img/arquitectura.webp" alt="Arquitecto trabajando sobre un plano" loading="lazy" decoding="async"></div>
     <div class="row-copy">
       <span class="badge" data-tone="sand">Construcción</span>
       <h3>Estudio Loma</h3>
@@ -664,7 +717,7 @@
   </article>
 
   <article class="row" data-cat="construccion" data-search="corralon el arido materiales construccion cemento ladrillo hierro arena stock pedido obra">
-    <div class="row-media"><img src="/demos/hub-img/materiales.jpg" alt="Depósito de materiales de obra"></div>
+    <div class="row-media"><img src="/demos/hub-img/materiales.webp" alt="Depósito de materiales de obra" loading="lazy" decoding="async"></div>
     <div class="row-copy">
       <span class="badge" data-tone="sand">Construcción</span>
       <h3>Corralón El Árido</h3>
@@ -677,7 +730,7 @@
   </article>
 
   <article class="row is-flip" data-cat="construccion" data-search="framehaus steelframe steel frame construccion vivienda modelos duplex ph ampliacion fabricacion montaje">
-    <div class="row-media"><img src="/demos/hub-img/steelframe.jpg" alt="Casas contemporáneas de steel frame"></div>
+    <div class="row-media"><img src="/demos/hub-img/steelframe.webp" alt="Casas contemporáneas de steel frame" loading="lazy" decoding="async"></div>
     <div class="row-copy">
       <span class="badge" data-tone="sand">Construcción</span>
       <h3>Framehaus</h3>
@@ -857,10 +910,11 @@
   <div id="contacto"></div>
 
   <footer class="footer">
-    <p class="footer-mark"><span>REEB</span> by Manuel Reeb</p>
+    <p class="footer-mark"><span>REEB</span> · software a medida por Manuel Reeb</p>
     <p class="footer-visits" id="hub-visits" hidden>Visitas de este catálogo: <span>0</span></p>
     <p>Ejemplos por rubro para comercios y oficios. No son el sitio personal ni un producto de suscripción.</p>
     <p class="footer-links">
+      <a href="/soluciones/">Todas las soluciones</a>
       <a href="#sistemas">Funciones</a>
       <a href="#precios">Precios</a>
       <a href="/cv/">Sitio personal</a>
@@ -870,7 +924,7 @@
     </p>
   </footer>
 
-  <script src="/demos/contacto.js?v=wa11" data-phone="5492915757934" data-text="Hola, vi Web con REEB. Tengo un negocio y quisiera saber qué solución me recomienda." data-subject="Consulta por una solución web" data-title="Contacto" data-place="hub"></script>
+  <script src="/demos/contacto.js?v=wa11" data-phone="5492915757934" data-text="Hola, vi REEB. Tengo un negocio y quisiera saber qué solución me recomienda." data-subject="Consulta por software a medida" data-title="Contacto" data-place="hub"></script>
   <script>
     (function () {
       var buttons = document.querySelectorAll(".filter[data-filter]");

@@ -11,12 +11,13 @@
 const { spawnSync } = require('child_process');
 const fs = require('fs');
 const path = require('path');
+const esbuild = require('esbuild');
 
 const ROOT = path.join(__dirname, '..');
 const OUT = path.join(ROOT, 'dist', 'manuelreeb', 'browser');
 const CV_DIR = path.join(OUT, 'cv');
 
-const PUBLIC_TOP_DIRS = new Set(['demos', 'docs', 'media', 'tech', 'brand']);
+const PUBLIC_TOP_DIRS = new Set(['demos', 'docs', 'en', 'media', 'tech', 'brand', 'soluciones']);
 const PUBLIC_TOP_FILES = new Set([
   'CNAME',
   '.nojekyll',
@@ -168,6 +169,52 @@ function isAngularArtifact(name) {
   return true;
 }
 
+function inlineHubStyles(html) {
+  const cssPath = path.join(OUT, 'demos', 'hub.css');
+  const stylesheet = /<link rel="stylesheet" href="\/demos\/hub\.css[^"]*">/;
+  if (!fs.existsSync(cssPath) || !stylesheet.test(html)) {
+    console.error('Hub stylesheet missing or not linked:', cssPath);
+    process.exit(1);
+  }
+
+  const css = fs.readFileSync(cssPath, 'utf8');
+  const minified = esbuild.transformSync(css, { loader: 'css', minify: true }).code;
+  const withoutLegacy = html.replace(/\s*<template data-legacy-functions>[\s\S]*?<\/template>/, '');
+  const withMinifiedScripts = withoutLegacy.replace(
+    /<script((?![^>]*application\/ld\+json)[^>]*)>([\s\S]*?)<\/script>/g,
+    (match, attributes, source) => {
+      if (!source.trim()) return match;
+      const result = esbuild.transformSync(source, { loader: 'js', minify: true, target: 'es2017' });
+      return `<script${attributes}>${result.code.trim()}</script>`;
+    }
+  );
+  return withMinifiedScripts.replace(stylesheet, `<style data-inline="hub">${minified}</style>`);
+}
+
+function inlinePublishedStyles(htmlRelativePath, cssRelativePath, stylesheet, assetBase = '', stripFontFaces = false) {
+  const htmlPath = path.join(OUT, htmlRelativePath);
+  const cssPath = path.join(OUT, cssRelativePath);
+  if (!fs.existsSync(htmlPath) || !fs.existsSync(cssPath)) {
+    console.error('Static page or stylesheet missing:', htmlPath, cssPath);
+    process.exit(1);
+  }
+
+  const html = fs.readFileSync(htmlPath, 'utf8');
+  if (!stylesheet.test(html)) {
+    console.error('Expected stylesheet link missing:', htmlPath);
+    process.exit(1);
+  }
+  const css = fs.readFileSync(cssPath, 'utf8');
+  let minified = esbuild.transformSync(css, { loader: 'css', minify: true }).code;
+  if (stripFontFaces) {
+    minified = minified.replace(/@font-face\{[^}]*\}/g, '');
+  }
+  if (assetBase) {
+    minified = minified.replace(/url\(fonts\//g, `url(${assetBase}/fonts/`);
+  }
+  fs.writeFileSync(htmlPath, html.replace(stylesheet, `<style data-inline="page">${minified}</style>`), 'utf8');
+}
+
 function preparePublishLayout() {
   if (!fs.existsSync(OUT)) {
     console.error('Build output missing:', OUT);
@@ -192,9 +239,43 @@ function preparePublishLayout() {
     process.exit(1);
   }
 
-  // Promote catalog to site root; keep vertical demos under /demos/<rubro>/.
-  fs.copyFileSync(hubSource, path.join(OUT, 'index.html'));
+  // Promote and optimize catalog at site root; keep vertical demos under /demos/<rubro>/.
+  const hubHtml = fs.readFileSync(hubSource, 'utf8');
+  fs.writeFileSync(path.join(OUT, 'index.html'), inlineHubStyles(hubHtml), 'utf8');
   fs.writeFileSync(path.join(OUT, 'demos', 'index.html'), DEMOS_REDIRECT_HTML, 'utf8');
+  const englishHome = path.join(OUT, 'en', 'index.html');
+  if (!fs.existsSync(englishHome)) {
+    console.error('English home missing:', englishHome);
+    process.exit(1);
+  }
+  fs.writeFileSync(englishHome, inlineHubStyles(fs.readFileSync(englishHome, 'utf8')), 'utf8');
+  inlinePublishedStyles(
+    path.join('demos', 'inmobiliaria', 'index.html'),
+    path.join('demos', 'inmobiliaria', 'styles.css'),
+    /<link rel="stylesheet" href="styles\.css\?v=bariloche43">/
+  );
+  inlinePublishedStyles(
+    path.join('en', 'demos', 'real-estate', 'index.html'),
+    path.join('demos', 'inmobiliaria', 'styles.css'),
+    /<link rel="stylesheet" href="\/demos\/inmobiliaria\/styles\.css\?v=bariloche43">/,
+    '/demos/inmobiliaria',
+    true
+  );
+  inlinePublishedStyles(
+    path.join('demos', 'restaurante', 'index.html'),
+    path.join('demos', 'restaurante', 'styles.css'),
+    /<link rel="stylesheet" href="styles\.css\?v=restaurante3">/
+  );
+  inlinePublishedStyles(
+    path.join('en', 'demos', 'food-service', 'index.html'),
+    path.join('demos', 'restaurante', 'styles.css'),
+    /<link rel="stylesheet" href="\/demos\/restaurante\/styles\.css\?v=restaurante3">/
+  );
+  inlinePublishedStyles(
+    path.join('demos', 'comercio', 'index.html'),
+    path.join('demos', 'comercio', 'styles.css'),
+    /<link rel="stylesheet" href="styles\.css\?v=comercio-perf1">/
+  );
 
   forceHubFaviconsEverywhere(path.join(ROOT, 'public'));
   // Disable Jekyll so folders/files like shared assets are published as-is.

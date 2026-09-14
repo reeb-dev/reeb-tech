@@ -4,7 +4,37 @@
 
   var rubro = script.getAttribute("data-rubro") || "";
   var place = script.getAttribute("data-place") || "panel";
+  var lang = script.getAttribute("data-lang") || "es";
+  var isEnglish = lang === "en";
   if (place !== "panel" || !rubro) return;
+
+  var copy = isEnglish ? {
+    exit: "Sign out",
+    user: "user",
+    password: "password",
+    kicker: "Example access",
+    title: "Sign in with a business user",
+    lead: "Customers do not access the admin panel. These are sample accounts: choose one or enter the password <strong>demo</strong>.",
+    userLabel: "User",
+    passwordLabel: "Password",
+    enter: "Sign in",
+    hint: "Demo: there is no server or real password. In a custom system, each person has their own account.",
+    back: "Back to the website",
+    error: "The user or password does not match. Choose an account from the list; the password is demo."
+  } : {
+    exit: "Salir",
+    user: "usuario",
+    password: "clave",
+    kicker: "Acceso de ejemplo",
+    title: "Entre con un usuario del negocio",
+    lead: "El público no entra al panel. Estas cuentas son de muestra: toque una o escriba la clave <strong>demo</strong>.",
+    userLabel: "Usuario",
+    passwordLabel: "Clave",
+    enter: "Entrar",
+    hint: "Demo: no hay servidor ni clave real. En un sistema a medida cada persona tiene la suya.",
+    back: "Volver a la página",
+    error: "Usuario o clave no coinciden. Pruebe una cuenta de la lista; la clave es demo."
+  };
 
   var base = script.src.replace(/login\.js(\?.*)?$/, "");
   var css = document.createElement("link");
@@ -14,7 +44,7 @@
 
   if (!document.querySelector('script[src*="reeb-mark.js"]')) {
     var mark = document.createElement("script");
-    mark.src = base + "reeb-mark.js?v=rm3";
+    mark.src = base + "reeb-mark.js?v=rm4";
     mark.async = false;
     document.head.appendChild(mark);
   } else if (window.REEB_MARK && typeof window.REEB_MARK.inject === "function") {
@@ -163,8 +193,22 @@
 
   var users = USERS[rubro];
   if (!users || !users.length) return;
+  if (isEnglish && rubro === "comercio") {
+    users = users.map(function (user) {
+      return Object.assign({}, user, {
+        rol: user.rol === "Dueña" ? "Owner" : user.rol === "Cajero" ? "Cashier" : user.rol
+      });
+    });
+  }
+  if (isEnglish && rubro === "restaurante") {
+    users = users.map(function (user) {
+      return Object.assign({}, user, {
+        rol: user.rol === "Caja" ? "Front of house" : user.rol === "Cocina" ? "Kitchen" : user.rol
+      });
+    });
+  }
 
-  var key = "demo-login-" + rubro;
+  var key = "demo-login-" + rubro + "-" + lang;
 
   function esc(value) {
     return String(value || "").replace(/[&<>"']/g, function (ch) {
@@ -208,7 +252,7 @@
     box.className = "demo-login-session";
     box.innerHTML =
       "<span>" + esc(user.nombre) + " · " + esc(user.rol) + "</span>" +
-      '<button type="button">Salir</button>';
+      '<button type="button">' + copy.exit + "</button>";
     box.querySelector("button").addEventListener("click", function () {
       clearSession();
       location.reload();
@@ -234,25 +278,25 @@
       return (
         '<button type="button" data-user="' + esc(u.user) + '">' +
           "<strong>" + esc(u.nombre) + "</strong>" +
-          "<span>" + esc(u.rol) + " · usuario " + esc(u.user) + " · clave demo</span>" +
+          "<span>" + esc(u.rol) + " · " + copy.user + " " + esc(u.user) + " · " + copy.password + " demo</span>" +
         "</button>"
       );
     }).join("");
 
     gate.innerHTML =
       '<div class="demo-login-card">' +
-        '<p class="demo-login-kicker">Acceso de ejemplo</p>' +
-        '<h1 id="demo-login-title">Entre con un usuario del negocio</h1>' +
-        "<p class=\"demo-login-lead\">El público no entra al panel. Estas cuentas son de muestra: toque una o escriba la clave <strong>demo</strong>.</p>" +
+        '<p class="demo-login-kicker">' + copy.kicker + "</p>" +
+        '<h1 id="demo-login-title">' + copy.title + "</h1>" +
+        '<p class="demo-login-lead">' + copy.lead + "</p>" +
         '<div class="demo-login-users">' + cards + "</div>" +
         '<form class="demo-login-form" novalidate>' +
-          '<label>Usuario<input name="user" autocomplete="username" spellcheck="false"></label>' +
-          '<label>Clave<input name="pass" type="password" autocomplete="current-password"></label>' +
+          "<label>" + copy.userLabel + '<input name="user" autocomplete="username" spellcheck="false"></label>' +
+          "<label>" + copy.passwordLabel + '<input name="pass" type="password" autocomplete="current-password"></label>' +
           '<p class="demo-login-error" role="alert"></p>' +
-          '<button type="submit">Entrar</button>' +
+          '<button type="submit">' + copy.enter + "</button>" +
         "</form>" +
-        '<p class="demo-login-hint">Demo: no hay servidor ni clave real. En un sistema a medida cada persona tiene la suya.</p>' +
-        '<p class="demo-login-hint"><a href="index.html">Volver a la página</a></p>' +
+        '<p class="demo-login-hint">' + copy.hint + "</p>" +
+        '<p class="demo-login-hint"><a href="index.html">' + copy.back + "</a></p>" +
       "</div>";
 
     (document.body || document.documentElement).appendChild(gate);
@@ -272,7 +316,7 @@
       var pass = String((form.pass && form.pass.value) || "");
       var found = users.filter(function (u) { return u.user === userName && u.pass === pass; })[0];
       if (!found) {
-        error.textContent = "Usuario o clave no coinciden. Pruebe una cuenta de la lista; la clave es demo.";
+        error.textContent = copy.error;
         return;
       }
       enter(found);

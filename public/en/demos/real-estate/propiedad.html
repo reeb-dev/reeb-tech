@@ -1,0 +1,18 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="robots" content="noindex, follow">
+  <title>Opening property details…</title>
+  <script>
+    location.replace("property.html" + location.search + location.hash);
+  </script>
+</head>
+<body>
+  <p><a id="property-link" href="property.html">Open property details</a></p>
+  <script>
+    document.getElementById("property-link").href = "property.html" + location.search + location.hash;
+  </script>
+</body>
+</html>
