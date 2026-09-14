@@ -90,12 +90,12 @@
 <body>
 
   <header class="nav">
-    <a class="nav-brand" href="/"><span class="nav-mark">REEB</span><em>.</em> <span class="nav-demos">software a medida</span></a>
+    <a class="nav-brand" href="/" aria-label="REEB"><span class="nav-mark">REEB</span></a>
     <nav class="nav-links" aria-label="Navegación principal">
       <a class="nav-link" href="/soluciones/">Soluciones</a>
       <a class="nav-link" href="#rubros">Rubros</a>
       <a class="nav-link" href="#sistemas">Panel</a>
-      <a class="nav-link" href="#destacados">Ejemplos</a>
+      <a class="nav-link" href="#ejemplos">Ejemplos</a>
       <a class="nav-link" href="#precios">Precios</a>
       <a class="nav-link" href="#contacto">Contacto</a>
       <a class="nav-link nav-link-more" href="/cv/">Sitio personal</a>
@@ -308,9 +308,9 @@
 
   <section class="business-types" id="rubros">
     <div class="section-heading">
-      <p class="badge" data-tone="gold">Por actividad</p>
-      <h2>¿Qué tipo de negocio tiene?</h2>
-      <p>Abra el caso más cercano al suyo.</p>
+      <p class="badge" data-tone="gold">Atajos</p>
+      <h2>Vaya directo a su rubro</h2>
+      <p>Enlaces rápidos a un ejemplo cercano.</p>
     </div>
     <div class="business-grid">
       <a href="/demos/comercio/"><strong>Comercios</strong><span>Catálogo, stock, clientes y pedidos</span></a>
@@ -339,11 +339,13 @@
 
 
 
-  <section class="picks-wrap" id="destacados">
-    <div class="picks-head">
-      <p class="badge" data-tone="gold">Destacados</p>
-      <h2>Ejemplos para empezar</h2>
-      <p>Tres casos frecuentes. Abra la página o el panel.</p>
+  <section class="examples" id="ejemplos">
+    <span id="destacados" class="anchor-alias" aria-hidden="true"></span>
+    <span id="catalogo" class="anchor-alias" aria-hidden="true"></span>
+    <div class="examples-head">
+      <p class="badge" data-tone="gold">Ejemplos</p>
+      <h2>Elija un ejemplo</h2>
+      <p>Abra la página o el panel. Datos de muestra.</p>
     </div>
     <div class="picks">
       <article class="pick" data-cat="gastronomia" data-search="parrilla don ernesto restaurante gastronomia mesas comandas cocina factura">
@@ -383,7 +385,6 @@
         </div>
       </article>
     </div>
-  </section>
 
   <div class="bar">
     <p>Busque o filtre un rubro</p>
@@ -406,12 +407,6 @@
       <button type="button" class="filter" data-filter="turismo">Turismo</button>
       <button type="button" class="filter" data-filter="cultura">Cultura</button>
     </div>
-  </div>
-
-  <div class="catalog-head" id="catalogo">
-    <p class="badge" data-tone="gold">Catálogo</p>
-    <h2>Más rubros</h2>
-    <p>Datos de muestra en el navegador.</p>
   </div>
 
   <div class="catalog">
@@ -690,6 +685,7 @@
     </div>
   </aside>
   </div>
+  </section>
 
   <p class="empty" id="hub-empty" hidden>Ningún ejemplo coincide con esa búsqueda. Pruebe otro nombre o rubro.</p>
 
@@ -872,10 +868,10 @@
       var buttons = document.querySelectorAll(".filter[data-filter]");
       var items = document.querySelectorAll("[data-cat]");
       var bands = document.querySelectorAll("[data-band]");
-      var picksHead = document.querySelector("#destacados .picks-head");
-      var picksWrap = document.getElementById("destacados");
+      var examplesHead = document.querySelector("#ejemplos .examples-head");
+      var picksWrap = document.querySelector("#ejemplos .picks");
       var gestionEl = document.getElementById("gestion");
-      var catalogHead = document.querySelector(".catalog-head");
+      var catalogEl = document.querySelector("#ejemplos .catalog");
       var whoEl = document.getElementById("quien");
       var sistemasEl = document.getElementById("sistemas");
       var pricesEl = document.getElementById("precios");
@@ -916,9 +912,9 @@
           }
         });
 
-        if (picksHead) picksHead.hidden = visiblePicks === 0;
+        if (examplesHead) examplesHead.hidden = visible === 0;
         if (picksWrap) picksWrap.hidden = visiblePicks === 0;
-        if (catalogHead) catalogHead.hidden = visibleRows === 0;
+        if (catalogEl) catalogEl.hidden = visibleRows === 0;
         var browsing = filter !== "all" || !!q;
         if (gestionEl) {
           var gKeys = ["gestion", "panel", "stock", "mercaderia", "codigo", "clientes", "mapa", "administracion", "deposito"];
@@ -974,7 +970,7 @@
 
       if (searchEl) searchEl.addEventListener("input", apply);
 
-      document.querySelectorAll('a[href="#quien"], a[href="#sistemas"], a[href="#destacados"], a[href="#sistemas"], a[href="#funciones"], a[href="#precios"], a[href="#cobros"], a[href="#arca"]').forEach(function (a) {
+      document.querySelectorAll('a[href="#quien"], a[href="#sistemas"], a[href="#ejemplos"], a[href="#destacados"], a[href="#catalogo"], a[href="#funciones"], a[href="#precios"], a[href="#cobros"], a[href="#arca"]').forEach(function (a) {
         a.addEventListener("click", function () {
           activeFilter = "all";
           if (searchEl) searchEl.value = "";

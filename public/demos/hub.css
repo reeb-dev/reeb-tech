@@ -86,6 +86,8 @@ img { display: block; width: 100%; height: 100%; object-fit: cover; }
 .band[hidden],
 .picks-head[hidden],
 .picks-wrap[hidden],
+.examples-head[hidden],
+.examples[hidden],
 .catalog-head[hidden],
 .gestion-featured[hidden],
 .who[hidden],
@@ -903,9 +905,20 @@ body:has(#precios:target, #cobros:target, #arca:target, #hosting:target, #extras
   }
 }
 
-.picks-wrap {
+.picks-wrap,
+.examples {
   border-bottom: 1px solid var(--line);
   padding: 0 36px 32px;
+}
+
+.examples .bar {
+  margin: 24px -36px 0;
+}
+
+.examples .catalog {
+  padding-left: 0;
+  padding-right: 0;
+  border-bottom: 0;
 }
 
 .sistemas-gestion {
@@ -1208,11 +1221,13 @@ body:has(#precios:target, #cobros:target, #arca:target, #hosting:target, #extras
 .sistemas-gestion-more .preview-dates li:last-child { border-bottom: 0; }
 .sistemas-gestion-more .preview-dates em { font-style: normal; color: var(--muted); }
 
-.picks-head {
+.picks-head,
+.examples-head {
   padding: 48px 0 18px;
 }
 
-.picks-head h2 {
+.picks-head h2,
+.examples-head h2 {
   font-family: Fraunces, Georgia, serif;
   font-size: clamp(28px, 4vw, 40px);
   font-weight: 560;
@@ -1221,6 +1236,7 @@ body:has(#precios:target, #cobros:target, #arca:target, #hosting:target, #extras
 }
 
 .picks-head p:last-child,
+.examples-head p:last-child,
 .catalog-head p:last-child {
   color: var(--muted);
   max-width: 52ch;
@@ -1673,6 +1689,7 @@ body:has(#precios:target, #cobros:target, #arca:target, #hosting:target, #extras
 
 #gestion,
 #destacados,
+#ejemplos,
 #quien,
 #sistemas,
 #funciones,
@@ -2945,7 +2962,7 @@ body:has(#precios:target, #cobros:target, #arca:target, #hosting:target, #extras
     background-image: url("/demos/hub-img/hero-mobile.webp?v=hub10");
   }
 
-  .nav, .hero, .bar, .band, .picks-head, .catalog-head, .who, .sistemas, .prices, .demo-contacto.is-hub,
+  .nav, .hero, .bar, .band, .picks-head, .examples-head, .catalog-head, .who, .sistemas, .prices, .demo-contacto.is-hub,
   .solutions, .business-types, .how-it-works, .solution-showcase, .integrations { padding-left: 20px; padding-right: 20px; }
   .nav { gap: 10px; flex-direction: column; align-items: flex-start; }
   .nav-links { gap: 14px; }
@@ -2959,7 +2976,9 @@ body:has(#precios:target, #cobros:target, #arca:target, #hosting:target, #extras
   .pricing-time { min-height: 0; }
   .pricing-hosting,
   .pricing-extras { grid-template-columns: 1fr; }
-  .picks-wrap { padding-left: 20px; padding-right: 20px; }
+  .picks-wrap,
+  .examples { padding-left: 20px; padding-right: 20px; }
+  .examples .bar { margin-left: -20px; margin-right: -20px; }
   .catalog { grid-template-columns: 1fr; padding: 16px 20px 28px; gap: 14px; }
   .sistemas-gestion { padding: 8px 20px 36px; }
   .sistemas-gestion > .sistemas-more summary { padding: 14px 16px; }
@@ -3004,6 +3023,7 @@ body:has(#precios:target, #cobros:target, #arca:target, #hosting:target, #extras
   .who-demos-list { grid-template-columns: 1fr; max-height: none; }
   #gestion,
   #destacados,
+  #ejemplos,
   #soluciones,
   #rubros,
   #como-funciona,
