@@ -1257,25 +1257,75 @@ body:has(#precios:target, #cobros:target, #arca:target, #hosting:target, #extras
 
 .picks {
   display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
-  gap: 22px;
+  grid-template-columns: minmax(0, 1.45fr) minmax(260px, 1fr);
+  grid-template-rows: repeat(3, minmax(112px, 1fr));
+  gap: 14px;
+  margin-bottom: 36px;
+  min-height: 480px;
 }
 
 .pick {
   display: flex;
   flex-direction: column;
   min-width: 0;
+  min-height: 0;
   border: 1px solid var(--line);
   background: var(--bg-2);
   transition: background 0.2s ease;
 }
 
+.pick-hero {
+  grid-row: 1 / -1;
+  border-top: 3px solid #5a7fa0;
+}
+
+.pick-side[data-cat="comercio"] { border-top: 3px solid #e59c3a; }
+.pick-side[data-cat="servicios"] { border-top: 3px solid #6b9b7f; }
+.pick-side[data-cat="automotriz"] { border-top: 3px solid #6b8999; }
+
+.pick-hero .pick-media {
+  flex: 1;
+  height: auto;
+  min-height: 240px;
+}
+
+.pick-side {
+  display: grid;
+  grid-template-columns: 118px minmax(0, 1fr);
+  align-items: stretch;
+}
+
+.pick-side .pick-media {
+  height: 100%;
+  min-height: 0;
+}
+
+.pick-side .pick-copy {
+  padding: 16px 18px;
+  justify-content: center;
+}
+
+.pick-side h3 {
+  font-size: 18px;
+  margin-bottom: 10px;
+}
+
+.pick-hero .pick-copy .btn {
+  width: fit-content;
+}
+
+.pick-side .btn {
+  width: fit-content;
+  min-width: 88px;
+}
+
 .pick:hover { background: #1a1613; }
 
 @media (max-width: 1100px) {
-  .picks { grid-template-columns: 1fr; }
-  .pick,
-  .pick:last-child { border: 1px solid var(--line); }
+  .picks {
+    grid-template-columns: minmax(0, 1.2fr) minmax(220px, 1fr);
+    min-height: 420px;
+  }
   .who-benefits-list,
   .who-benefits-list-4 { grid-template-columns: 1fr 1fr; }
   .price-extras { grid-template-columns: 1fr 1fr; }
@@ -3071,10 +3121,22 @@ body:has(#precios:target, #cobros:target, #arca:target, #hosting:target, #extras
   .catalog-miss { padding: 24px 20px; }
   .who-more { margin-left: auto; margin-right: auto; }
   .search { max-width: none; }
-  .feat,
   .picks {
     grid-template-columns: 1fr;
+    grid-template-rows: none;
     min-height: 0;
+    gap: 12px;
+  }
+  .pick-hero {
+    grid-row: auto;
+  }
+  .pick-hero .pick-media {
+    height: 200px;
+    min-height: 200px;
+    flex: none;
+  }
+  .pick-side {
+    grid-template-columns: 108px minmax(0, 1fr);
   }
   .row,
   .row.is-flip {
