@@ -2699,8 +2699,8 @@ body:has(#precios:target, #cobros:target, #arca:target, #hosting:target, #extras
 .catalog {
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: 18px;
-  padding: 22px 36px 36px;
+  gap: 24px;
+  padding: 28px 36px 42px;
   border-bottom: 1px solid var(--line);
 }
 
@@ -2801,15 +2801,24 @@ body:has(#precios:target, #cobros:target, #arca:target, #hosting:target, #extras
 .row.is-flip .row-copy { background: var(--bg-2); }
 
 .row-copy {
-  padding: 22px 24px 20px;
+  padding: 24px 26px 22px;
   gap: 0;
 }
 
-.row .ctas { margin-top: auto; }
+.row-copy h3 { 
+  font-size: 22px; 
+  margin-bottom: 10px; 
+}
 
-.row .badge { margin-bottom: 8px; }
+.row-copy p {
+  margin-bottom: 16px;
+  line-height: 1.5;
+}
 
-.row-copy h3 { font-size: 22px; margin-bottom: 10px; }
+.row-copy .btn {
+  width: fit-content;
+  min-width: 100px;
+}
 
 .row-copy p {
   font-size: 14px;
@@ -3042,7 +3051,7 @@ body:has(#precios:target, #cobros:target, #arca:target, #hosting:target, #extras
   .picks-wrap,
   .examples { padding-left: 20px; padding-right: 20px; }
   .examples .bar { margin-left: -20px; margin-right: -20px; }
-  .catalog { grid-template-columns: 1fr; padding: 16px 20px 28px; gap: 14px; }
+  .catalog { grid-template-columns: 1fr; padding: 18px 20px 32px; gap: 18px; }
   .sistemas-gestion { padding: 8px 20px 36px; }
   .sistemas-gestion > .sistemas-more summary { padding: 14px 16px; }
   .sistemas-gestion > .sistemas-more .sistemas-more-title { font-size: 18px; }
@@ -3066,8 +3075,7 @@ body:has(#precios:target, #cobros:target, #arca:target, #hosting:target, #extras
   .row-media { min-height: 120px; height: 120px; }
   .feat-copy { padding: 28px 20px 36px; }
   .row-copy { padding: 18px 16px 18px; }
-  .row-copy .ctas { flex-wrap: wrap; }
-  .row-copy .btn { flex: 1 1 auto; min-width: 0; text-align: center; }
+  .row-copy .btn { width: 100%; text-align: center; }
   .pick,
   .pick:last-child { border: 1px solid var(--line); }
   .pick-copy { padding: 20px 18px 22px; }
