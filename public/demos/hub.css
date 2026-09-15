@@ -1257,48 +1257,100 @@ body:has(#precios:target, #cobros:target, #arca:target, #hosting:target, #extras
 
 .picks {
   display: grid;
-  grid-template-columns: minmax(0, 1.45fr) minmax(260px, 1fr);
-  grid-template-rows: repeat(3, minmax(112px, 1fr));
-  gap: 14px;
+  grid-template-columns: minmax(0, 1.55fr) minmax(240px, 0.92fr);
+  grid-template-rows: repeat(3, minmax(118px, 1fr));
+  gap: 2px;
   margin-bottom: 0;
-  min-height: 480px;
-  transition: opacity 0.35s ease;
+  min-height: 520px;
+  background: #1c1712;
+  transition: opacity 0.28s ease;
+}
+
+.picks.is-fading {
+  opacity: 0;
 }
 
 .picks.is-solo {
   grid-template-columns: 1fr;
-  grid-template-rows: minmax(280px, 1fr);
-  min-height: 320px;
+  grid-template-rows: minmax(320px, 1fr);
+  min-height: 360px;
 }
 
+.picks.is-n2 { grid-template-rows: repeat(1, minmax(160px, 1fr)); }
+.picks.is-n3 { grid-template-rows: repeat(2, minmax(130px, 1fr)); }
+.picks.is-n4 { grid-template-rows: repeat(3, minmax(118px, 1fr)); }
+
 .examples-carousel {
-  display: grid;
-  grid-template-columns: 44px minmax(0, 1fr) 44px;
-  gap: 12px;
-  align-items: center;
+  display: block;
   margin-bottom: 8px;
 }
 
-.carousel-nav {
-  width: 44px;
-  height: 44px;
+.examples-stage {
+  position: relative;
+  overflow: hidden;
+  border-radius: 18px;
   border: 1px solid var(--line);
-  border-radius: 50%;
-  background: var(--bg-2);
-  color: var(--gold);
-  font-size: 28px;
-  line-height: 1;
-  cursor: pointer;
+  background: #1c1712;
+  box-shadow: 0 24px 60px rgba(0, 0, 0, 0.28);
 }
+
+.carousel-nav {
+  position: absolute;
+  top: 50%;
+  z-index: 4;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 42px;
+  height: 42px;
+  margin: 0;
+  padding: 0;
+  border: 1px solid rgba(244, 239, 230, 0.16);
+  border-radius: 50%;
+  background: rgba(11, 10, 9, 0.72);
+  color: var(--gold);
+  cursor: pointer;
+  backdrop-filter: blur(10px);
+  transform: translateY(-50%);
+}
+
+.carousel-prev { left: 14px; }
+.carousel-next { right: 14px; }
 
 .carousel-nav:hover:not(:disabled) {
   border-color: var(--gold);
-  background: #1a1613;
+  background: rgba(11, 10, 9, 0.9);
 }
 
 .carousel-nav:disabled {
-  opacity: 0.35;
-  cursor: default;
+  opacity: 0;
+  pointer-events: none;
+}
+
+.carousel-progress {
+  height: 2px;
+  margin: 14px 2px 0;
+  overflow: hidden;
+  background: rgba(244, 239, 230, 0.1);
+  border-radius: 99px;
+}
+
+.carousel-progress span {
+  display: block;
+  height: 100%;
+  width: 100%;
+  transform-origin: left center;
+  background: var(--gold);
+  animation: carousel-progress 5.5s linear;
+}
+
+.examples-carousel.is-paused .carousel-progress span {
+  animation-play-state: paused;
+}
+
+@keyframes carousel-progress {
+  from { transform: scaleX(0); }
+  to { transform: scaleX(1); }
 }
 
 .carousel-dots {
@@ -1306,7 +1358,7 @@ body:has(#precios:target, #cobros:target, #arca:target, #hosting:target, #extras
   justify-content: center;
   flex-wrap: wrap;
   gap: 8px;
-  margin: 16px 0 8px;
+  margin: 14px 0 8px;
 }
 
 .carousel-dots button {
@@ -1324,72 +1376,100 @@ body:has(#precios:target, #cobros:target, #arca:target, #hosting:target, #extras
   background: var(--gold);
 }
 
-.carousel-miss {
-  margin-top: 28px;
+@media (prefers-reduced-motion: reduce) {
+  .picks { transition: none; }
+  .carousel-progress { display: none; }
+  .pick-media img { transition: none; }
 }
 
 .pick {
+  position: relative;
   display: flex;
-  flex-direction: column;
+  overflow: hidden;
   min-width: 0;
   min-height: 0;
-  border: 1px solid var(--line);
-  border-top: 3px solid var(--line);
-  background: var(--bg-2);
-  transition: background 0.2s ease;
+  color: inherit;
+  text-decoration: none;
+  background: #141210;
 }
 
 .pick-hero {
   grid-row: 1 / -1;
 }
 
-.pick[data-cat="comercio"] { border-top-color: #e59c3a; }
-.pick[data-cat="servicios"] { border-top-color: #6b9b7f; }
-.pick[data-cat="gastronomia"] { border-top-color: #c45c26; }
-.pick[data-cat="automotriz"] { border-top-color: #6b8999; }
-.pick[data-cat="turismo"] { border-top-color: #4a9b9b; }
-.pick[data-cat="construccion"] { border-top-color: #8b6b4a; }
-.pick[data-cat="inmuebles"] { border-top-color: #5a7fa0; }
-.pick[data-cat="cultura"] { border-top-color: #9b7fa0; }
-.pick[data-cat="legal"] { border-top-color: #8a8f99; }
-
-.pick-hero .pick-media {
-  flex: 1;
-  height: auto;
-  min-height: 240px;
-}
-
-.pick-side {
-  display: grid;
-  grid-template-columns: 118px minmax(0, 1fr);
-  align-items: stretch;
-}
-
+.pick-hero .pick-media,
 .pick-side .pick-media {
-  height: 100%;
+  position: absolute;
+  inset: 0;
+  height: auto;
   min-height: 0;
 }
 
+.pick-hero .pick-copy,
 .pick-side .pick-copy {
-  padding: 16px 18px;
-  justify-content: center;
+  position: relative;
+  z-index: 1;
+  justify-content: flex-end;
+  background: linear-gradient(180deg, transparent 18%, rgba(8, 7, 6, 0.88) 100%);
+}
+
+.pick-hero .pick-copy {
+  min-height: 100%;
+  padding: 28px 28px 26px;
+}
+
+.pick-side .pick-copy {
+  min-height: 100%;
+  padding: 14px 16px 16px;
+}
+
+.pick-kicker {
+  display: inline-block;
+  margin-bottom: 8px;
+  color: var(--gold);
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
+.pick-copy h3 {
+  font-family: Fraunces, Georgia, serif;
+  font-size: 26px;
+  font-weight: 560;
+  letter-spacing: -0.02em;
+  line-height: 1.12;
+  margin-bottom: 8px;
 }
 
 .pick-side h3 {
-  font-size: 18px;
-  margin-bottom: 10px;
+  font-size: 17px;
+  margin-bottom: 0;
 }
 
-.pick-hero .pick-copy .btn {
+.pick-copy p {
+  max-width: 32ch;
+  margin-bottom: 16px;
+  color: rgba(244, 239, 230, 0.82);
+  font-size: 15px;
+}
+
+.pick-cta {
+  display: inline-flex;
   width: fit-content;
+  padding: 9px 14px;
+  border-radius: 999px;
+  background: var(--ember);
+  color: #fff;
+  font-size: 13px;
+  font-weight: 700;
 }
 
-.pick-side .btn {
-  width: fit-content;
-  min-width: 88px;
+.pick:hover .pick-cta {
+  background: var(--ember-hover);
 }
 
-.pick:hover { background: #1a1613; }
+.pick:hover { background: #141210; }
 
 @media (max-width: 1100px) {
   .picks {
@@ -1405,40 +1485,18 @@ body:has(#precios:target, #cobros:target, #arca:target, #hosting:target, #extras
 }
 
 .pick-media {
-  height: 240px;
   overflow: hidden;
-  background: #1c1612;
+  background: #1c1712;
 }
 
-.pick:hover .pick-media img { transform: scale(1.04); }
+.pick:hover .pick-media img { transform: scale(1.05); }
 
-.pick-media img { transition: transform 0.55s ease; }
+.pick-media img { transition: transform 0.7s ease; }
 
 .pick-copy {
   display: flex;
   flex-direction: column;
-  flex: 1;
   min-width: 0;
-  padding: 24px 24px 26px;
-}
-
-.pick-copy .ctas { margin-top: auto; }
-
-.pick-copy h3 {
-  font-family: Fraunces, Georgia, serif;
-  font-size: 26px;
-  font-weight: 560;
-  letter-spacing: -0.02em;
-  line-height: 1.15;
-  margin-bottom: 10px;
-}
-
-.pick-copy p {
-  color: var(--muted);
-  font-size: 15px;
-  line-height: 1.5;
-  margin-bottom: 20px;
-  overflow-wrap: anywhere;
 }
 
 .pick-copy p.row-note,
@@ -3182,16 +3240,20 @@ body:has(#precios:target, #cobros:target, #arca:target, #hosting:target, #extras
   .picks-wrap,
   .examples { padding-left: 20px; padding-right: 20px; }
   .examples .bar { margin-left: -20px; margin-right: -20px; }
-  .examples-carousel {
-    grid-template-columns: 1fr 1fr;
-    grid-template-areas:
-      "picks picks"
-      "prev next";
-    justify-items: center;
+  .picks {
+    min-height: 560px;
+    grid-template-columns: 1fr;
+    grid-template-rows: minmax(220px, 1.4fr) repeat(3, minmax(88px, auto));
   }
-  .examples-carousel .picks { grid-area: picks; width: 100%; }
-  .carousel-prev { grid-area: prev; justify-self: end; }
-  .carousel-next { grid-area: next; justify-self: start; }
+  .pick-hero { grid-row: auto; min-height: 220px; }
+  .carousel-nav {
+    width: 36px;
+    height: 36px;
+  }
+  .carousel-prev { left: 10px; }
+  .carousel-next { right: 10px; }
+  .pick-hero .pick-copy { padding: 20px 18px 18px; }
+  .pick-copy h3 { font-size: 22px; }
   .catalog { grid-template-columns: 1fr; padding: 18px 20px 32px; gap: 18px; }
   .sistemas-gestion { padding: 8px 20px 36px; }
   .sistemas-gestion > .sistemas-more summary { padding: 14px 16px; }
@@ -3201,23 +3263,6 @@ body:has(#precios:target, #cobros:target, #arca:target, #hosting:target, #extras
   .catalog-miss { padding: 24px 20px; }
   .who-more { margin-left: auto; margin-right: auto; }
   .search { max-width: none; }
-  .picks {
-    grid-template-columns: 1fr;
-    grid-template-rows: none;
-    min-height: 0;
-    gap: 12px;
-  }
-  .pick-hero {
-    grid-row: auto;
-  }
-  .pick-hero .pick-media {
-    height: 200px;
-    min-height: 200px;
-    flex: none;
-  }
-  .pick-side {
-    grid-template-columns: 108px minmax(0, 1fr);
-  }
   .row,
   .row.is-flip {
     grid-template-columns: 120px minmax(0, 1fr);
@@ -3229,9 +3274,6 @@ body:has(#precios:target, #cobros:target, #arca:target, #hosting:target, #extras
   .feat-copy { padding: 28px 20px 36px; }
   .row-copy { padding: 18px 16px 18px; }
   .row-copy .btn { width: 100%; text-align: center; }
-  .pick,
-  .pick:last-child { border: 1px solid var(--line); }
-  .pick-copy { padding: 20px 18px 22px; }
   .who { padding-top: 48px; padding-bottom: 48px; }
   .who-inner { grid-template-columns: 1fr; gap: 24px; }
   .who-aside { padding: 24px 20px 22px; }

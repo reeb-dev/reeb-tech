@@ -55,7 +55,7 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,560;9..144,650&family=Outfit:wght@400;600;650;700&display=swap" onload="this.onload=null;this.rel='stylesheet'">
   <noscript><link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,560;9..144,650&family=Outfit:wght@400;600;650;700&display=swap" rel="stylesheet"></noscript>
-  <link rel="stylesheet" href="/demos/hub.css?v=hub62">
+  <link rel="stylesheet" href="/demos/hub.css?v=hub63">
   <script type="application/ld+json">
   {
     "@context": "https://schema.org",
@@ -370,15 +370,18 @@
   </div>
 
     <div class="examples-carousel">
-      <button type="button" class="carousel-nav carousel-prev" aria-label="Ejemplos anteriores">
-        <span aria-hidden="true">‹</span>
-      </button>
-      <div class="picks" id="examples-picks"></div>
-      <button type="button" class="carousel-nav carousel-next" aria-label="Más ejemplos">
-        <span aria-hidden="true">›</span>
-      </button>
+      <div class="examples-stage">
+        <button type="button" class="carousel-nav carousel-prev" aria-label="Ejemplos anteriores">
+          <svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><path fill="currentColor" d="M15.4 4.6 8 12l7.4 7.4 1.4-1.4L10.8 12l6-6z"/></svg>
+        </button>
+        <div class="picks" id="examples-picks"></div>
+        <button type="button" class="carousel-nav carousel-next" aria-label="Más ejemplos">
+          <svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><path fill="currentColor" d="M8.6 4.6 7.2 6l6 6-6 6 1.4 1.4L16 12z"/></svg>
+        </button>
+      </div>
+      <div class="carousel-progress" id="examples-progress" hidden><span></span></div>
+      <div class="carousel-dots" id="examples-dots" role="tablist" aria-label="Páginas de ejemplos"></div>
     </div>
-    <div class="carousel-dots" id="examples-dots" role="tablist" aria-label="Páginas de ejemplos"></div>
     <aside class="catalog-miss carousel-miss" aria-label="Si no ve su rubro">
       <div class="catalog-miss-copy">
         <p class="catalog-miss-kicker">¿No está su rubro?</p>
@@ -644,6 +647,7 @@
       var examplesHead = document.querySelector("#ejemplos .examples-head");
       var picksWrap = document.getElementById("examples-picks");
       var dotsWrap = document.getElementById("examples-dots");
+      var progressEl = document.getElementById("examples-progress");
       var prevBtn = document.querySelector(".carousel-prev");
       var nextBtn = document.querySelector(".carousel-next");
       var carousel = document.querySelector(".examples-carousel");
@@ -658,6 +662,17 @@
       var page = 0;
       var PAGE_SIZE = 4;
       var INTERVAL = 5500;
+      var CATS = {
+        inmuebles: "Inmuebles",
+        comercio: "Comercio",
+        servicios: "Servicios",
+        gastronomia: "Gastronomía",
+        automotriz: "Automotriz",
+        turismo: "Turismo",
+        construccion: "Construcción",
+        cultura: "Cultura",
+        legal: "Legal"
+      };
       var timer = null;
       var paused = false;
       var reduceMotion = window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
@@ -696,12 +711,14 @@
           ? ' target="_blank" rel="noopener noreferrer"'
           : "";
         var lead = hero && item.lead ? "<p>" + item.lead + "</p>" : "";
-        var eager = hero ? ' loading="eager"' : ' loading="lazy"';
+        var eager = hero ? ' fetchpriority="high" loading="eager"' : ' loading="lazy"';
+        var kicker = CATS[item.cat] || "";
         return (
-          '<article class="pick ' + (hero ? "pick-hero" : "pick-side") + '" data-cat="' + item.cat + '">' +
+          '<a class="pick ' + (hero ? "pick-hero" : "pick-side") + '" data-cat="' + item.cat + '" href="' + item.href + '"' + ext + ">" +
           '<div class="pick-media"><img src="' + item.img + '" alt="' + item.alt + '"' + eager + ' decoding="async"></div>' +
-          '<div class="pick-copy"><h3>' + item.title + "</h3>" + lead +
-          '<a class="btn btn-primary" href="' + item.href + '"' + ext + ">Ver</a></div></article>"
+          '<div class="pick-copy"><span class="pick-kicker">' + kicker + "</span><h3>" + item.title + "</h3>" + lead +
+          (hero ? '<span class="pick-cta">Ver ejemplo</span>' : "") +
+          "</div></a>"
         );
       }
 
@@ -714,9 +731,10 @@
         if (picksWrap) {
           picksWrap.classList.toggle("is-solo", slide.length === 1);
           picksWrap.classList.toggle("is-empty", slide.length === 0);
-          picksWrap.style.gridTemplateRows = slide.length <= 1
-            ? ""
-            : "repeat(" + Math.max(1, slide.length - 1) + ", minmax(112px, 1fr))";
+          picksWrap.classList.toggle("is-n2", slide.length === 2);
+          picksWrap.classList.toggle("is-n3", slide.length === 3);
+          picksWrap.classList.toggle("is-n4", slide.length >= 4);
+          picksWrap.style.gridTemplateRows = "";
           picksWrap.innerHTML = slide.map(function (item, i) {
             return pickHtml(item, i === 0);
           }).join("");
@@ -728,6 +746,10 @@
               (i === page ? ' class="is-on" aria-selected="true"' : ' aria-selected="false"') +
               ' data-page="' + i + '"></button>';
           }).join("");
+        }
+        if (progressEl) {
+          progressEl.hidden = pages.length < 2 || reduceMotion;
+          progressEl.innerHTML = pages.length < 2 ? "" : "<span></span>";
         }
         if (prevBtn) prevBtn.disabled = pages.length < 2;
         if (nextBtn) nextBtn.disabled = pages.length < 2;
@@ -744,11 +766,16 @@
           clearInterval(timer);
           timer = null;
         }
+        if (carousel) carousel.classList.add("is-paused");
       }
 
       function startTimer() {
         stopTimer();
-        if (reduceMotion || paused || document.hidden) return;
+        if (carousel) carousel.classList.remove("is-paused");
+        if (reduceMotion || paused || document.hidden) {
+          if (carousel) carousel.classList.add("is-paused");
+          return;
+        }
         if (pagesOf(filtered()).length < 2) return;
         timer = setInterval(function () {
           go(1, true);
@@ -764,9 +791,19 @@
       function go(delta, fromAuto) {
         var pages = pagesOf(filtered());
         if (pages.length < 2) return;
+        if (!fromAuto) stopTimer();
         page = (page + delta + pages.length) % pages.length;
-        render();
-        if (!fromAuto) startTimer();
+        if (picksWrap && !reduceMotion) {
+          picksWrap.classList.add("is-fading");
+          window.setTimeout(function () {
+            render();
+            picksWrap.classList.remove("is-fading");
+            if (!fromAuto) startTimer();
+          }, 160);
+        } else {
+          render();
+          if (!fromAuto) startTimer();
+        }
       }
 
       if (prevBtn) prevBtn.addEventListener("click", function () { go(-1); });
