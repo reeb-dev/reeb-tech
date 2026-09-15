@@ -2,7 +2,7 @@
   --bg: #0b0a09;
   --bg-2: #141210;
   --ink: #f4efe6;
-  --muted: #b7aea0;
+  --muted: #c5bcae;
   --line: rgba(244, 239, 230, 0.12);
   --ember: #c45c26;
   --ember-hover: #a64b1d;
@@ -1777,6 +1777,39 @@ body:has(#precios:target, #cobros:target, #arca:target, #hosting:target, #extras
   line-height: 1.55;
 }
 
+/* CTA intermedio en sistemas */
+.sistemas-cta {
+  max-width: 640px;
+  margin: 48px auto 0;
+  padding: 32px 28px;
+  text-align: center;
+  background: linear-gradient(135deg, rgba(227, 196, 138, 0.08), transparent 60%), var(--bg);
+  border: 1px solid rgba(227, 196, 138, 0.25);
+  border-radius: 12px;
+}
+
+.sistemas-cta-kicker {
+  font-size: 14px;
+  font-weight: 650;
+  color: var(--gold);
+  margin: 0 0 12px;
+  letter-spacing: 0.02em;
+}
+
+.sistemas-cta-text {
+  font-size: 16px;
+  line-height: 1.5;
+  color: var(--muted);
+  margin: 0 0 22px;
+  max-width: 48ch;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.sistemas-cta .btn {
+  min-width: 200px;
+}
+
 .anchor-alias {
   display: block;
   position: relative;
@@ -2231,6 +2264,27 @@ body:has(#precios:target, #cobros:target, #arca:target, #hosting:target, #extras
   background:
     linear-gradient(150deg, rgba(227, 196, 138, 0.045), transparent 42%),
     var(--bg-2);
+  position: relative;
+}
+
+.pricing-badge {
+  position: absolute;
+  top: -10px;
+  right: 20px;
+  padding: 5px 12px;
+  background: var(--ember);
+  color: var(--bg);
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  border-radius: 999px;
+  text-transform: uppercase;
+}
+
+.pricing-icon {
+  color: var(--gold);
+  margin-bottom: 18px;
+  opacity: 0.85;
 }
 
 .pricing-card-featured {
@@ -2275,6 +2329,14 @@ body:has(#precios:target, #cobros:target, #arca:target, #hosting:target, #extras
   font-weight: 600;
   letter-spacing: -0.025em;
   line-height: 1;
+}
+
+.pricing-amount small {
+  font-size: 14px;
+  font-weight: 400;
+  color: var(--muted);
+  font-family: Outfit, sans-serif;
+  letter-spacing: 0;
 }
 
 .pricing-amount span {
@@ -3162,6 +3224,16 @@ body:has(#precios:target, #cobros:target, #arca:target, #hosting:target, #extras
   .nav-link-more {
     display: none;
   }
+  
+  .sistemas-cta {
+    padding: 24px 18px;
+    margin-top: 36px;
+  }
+  
+  .sistemas-cta-text {
+    font-size: 15px;
+  }
+  
   .hero-brand {
     font-size: clamp(40px, 14vw, 56px);
   }
