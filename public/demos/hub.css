@@ -2778,8 +2778,19 @@ body:has(#precios:target, #cobros:target, #arca:target, #hosting:target, #extras
   min-height: 176px;
   align-items: stretch;
   border: 1px solid var(--line);
+  border-top: 3px solid var(--line);
   background: var(--bg-2);
 }
+
+/* Bordes por categoría */
+.row[data-cat="comercio"] { border-top-color: #e59c3a; }
+.row[data-cat="servicios"] { border-top-color: #6b9b7f; }
+.row[data-cat="gastronomia"] { border-top-color: #c45c26; }
+.row[data-cat="automotriz"] { border-top-color: #6b8999; }
+.row[data-cat="turismo"] { border-top-color: #4a9b9b; }
+.row[data-cat="construccion"] { border-top-color: #8b6b4a; }
+.row[data-cat="inmuebles"] { border-top-color: #5a7fa0; }
+.row[data-cat="cultura"] { border-top-color: #9b7fa0; }
 
 .row:hover .row-media img { transform: scale(1.04); }
 
