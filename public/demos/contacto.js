@@ -10,7 +10,7 @@
   var title = script.getAttribute("data-title") || "Consultar";
   var place = script.getAttribute("data-place") || "landing";
   var floatOnly = script.getAttribute("data-float-only") === "1";
-  var mail = "manuelreeb@icloud.com";
+  var mail = script.getAttribute("data-email") || "manuelreeb@icloud.com";
   var waUrl = "https://wa.me/" + phone + "?text=" + encodeURIComponent(text);
 
   var base = script.src.replace(/contacto\.js(\?.*)?$/, "");
@@ -219,15 +219,27 @@
     (place === "panel"
       ? "Canal de ejemplo para un mensaje del cliente. No sale a un servidor."
       : place === "hub"
-        ? "Si necesita un sistema parecido al de su rubro, escríbanos por WhatsApp, correo o este formulario. Respondemos a su consulta."
+        ? "WhatsApp es el camino más directo. Si prefiere, deje sus datos y se abre su correo con el mensaje listo."
         : "Deje un mensaje o escriba por WhatsApp.");
 
   var fields =
     place === "hub"
-      ? '<label for="hub-nombre">Su nombre<input id="hub-nombre" name="nombre" autocomplete="name" placeholder="Nombre y apellido"></label>' +
+      ? '<div class="demo-contacto-row">' +
+        '<label for="hub-nombre">Su nombre<input id="hub-nombre" name="nombre" autocomplete="name" placeholder="Nombre y apellido"></label>' +
         '<label for="hub-email">Su correo<input id="hub-email" name="email" type="email" autocomplete="email" required placeholder="su-correo@ejemplo.com"></label>' +
+        "</div>" +
         '<label for="hub-tel">Su teléfono <span class="demo-contacto-opt">(opcional)</span><input id="hub-tel" name="telefono" type="tel" autocomplete="tel" inputmode="tel" placeholder="291 575-7934"></label>' +
-        '<label for="hub-msg">En qué podemos ayudarle<textarea id="hub-msg" name="mensaje" required rows="5" placeholder="Cuéntenos su rubro y qué necesita: kiosco, hotel, taller…"></textarea></label>'
+        '<div class="demo-contacto-rubros-wrap">' +
+        '<p class="demo-contacto-rubros-label" id="hub-rubros-label">¿A qué se dedica?</p>' +
+        '<div class="demo-contacto-rubros" role="group" aria-labelledby="hub-rubros-label">' +
+        '<button type="button" class="demo-contacto-chip" data-rubro="un comercio">Comercio</button>' +
+        '<button type="button" class="demo-contacto-chip" data-rubro="un local de servicios">Servicios</button>' +
+        '<button type="button" class="demo-contacto-chip" data-rubro="gastronomía">Gastronomía</button>' +
+        '<button type="button" class="demo-contacto-chip" data-rubro="inmuebles">Inmuebles</button>' +
+        '<button type="button" class="demo-contacto-chip" data-rubro="construcción">Construcción</button>' +
+        '<button type="button" class="demo-contacto-chip" data-rubro="otro rubro">Otro</button>' +
+        "</div></div>" +
+        '<label for="hub-msg">En qué podemos ayudarle<textarea id="hub-msg" name="mensaje" required rows="4" placeholder="Ej.: Tengo un kiosco y quiero mostrar productos y atender pedidos."></textarea></label>'
       : '<label for="demo-nombre">Nombre<input id="demo-nombre" name="nombre" autocomplete="name" placeholder="Su nombre"></label>' +
         '<label for="demo-email">Correo<input id="demo-email" name="email" type="email" autocomplete="email" required placeholder="su-correo@ejemplo.com"></label>' +
         '<label for="demo-tel">Teléfono<input id="demo-tel" name="telefono" type="tel" autocomplete="tel" placeholder="294 442-0000"></label>' +
@@ -235,7 +247,7 @@
 
   var afterForm =
     place === "hub"
-      ? '<p class="demo-contacto-hint">Al enviar se abre su correo con el mensaje listo. No hay servidor: es el canal de consulta.</p>'
+      ? '<p class="demo-contacto-hint">Al enviar se abre su correo. Respuesta habitual en el día hábil.</p>'
       : '<a class="demo-wa-inline" href="' +
         waUrl +
         '" target="_blank" rel="noopener">WhatsApp · +54 9 291 575-7934</a>' +
@@ -247,26 +259,30 @@
 
   var channels =
     place === "hub"
-      ? '<div class="demo-contacto-channels">' +
-        '<a class="btn btn-primary" href="' +
+      ? '<div class="demo-contacto-direct">' +
+        '<a class="demo-contacto-wa" href="' +
         waUrl +
-        '" target="_blank" rel="noopener noreferrer">Escribir por WhatsApp</a>' +
-        '<a class="btn btn-ghost" href="mailto:' +
+        '" target="_blank" rel="noopener noreferrer">' +
+        waIcon +
+        "<span><strong>WhatsApp</strong><em>+54 9 291 575-7934</em></span></a>" +
+        '<a class="demo-contacto-mail" href="mailto:' +
         mail +
-        '">' +
+        '"><span><strong>Correo</strong><em>' +
         mail +
-        "</a>" +
-        '<p class="demo-contacto-phone">WhatsApp · +54 9 2915 75-7934</p>' +
+        "</em></span></a>" +
+        '<p class="demo-contacto-trust">Trato directo con Manuel Reeb.</p>' +
         "</div>"
       : "";
 
   section.innerHTML =
+    (place === "hub" ? '<p class="badge" data-tone="gold">Contacto</p>' : "") +
     "<h2>" +
     title +
     "</h2>" +
     '<p class="demo-contacto-lead">' +
     lead +
     "</p>" +
+    (place === "hub" ? '<div class="demo-contacto-layout">' : "") +
     channels +
     "<form novalidate>" +
     fields +
@@ -274,8 +290,10 @@
     '<button type="submit">' +
     (place === "hub" ? "Enviar consulta" : "Enviar mensaje") +
     "</button>" +
+    (place === "hub" ? afterForm : "") +
     "</form>" +
-    afterForm;
+    (place === "hub" ? "" : afterForm) +
+    (place === "hub" ? "</div>" : "");
 
   var host = document.getElementById("contacto");
   var info = document.getElementById("info");
@@ -287,6 +305,39 @@
 
   var form = section.querySelector("form");
   var error = section.querySelector(".demo-contacto-error");
+  var msgEl = form.querySelector("textarea[name='mensaje']");
+  var waBtn = section.querySelector(".demo-contacto-wa");
+
+  section.querySelectorAll(".demo-contacto-chip").forEach(function (chip) {
+    chip.addEventListener("click", function () {
+      var rubro = chip.getAttribute("data-rubro") || "";
+      section.querySelectorAll(".demo-contacto-chip").forEach(function (c) {
+        c.classList.toggle("is-on", c === chip);
+      });
+      if (msgEl) {
+        msgEl.value = "Tengo " + rubro + " y quisiera una solución a medida.";
+        msgEl.focus();
+      }
+    });
+  });
+
+  function waTextFromForm() {
+    var data = new FormData(form);
+    var nombre = String(data.get("nombre") || "").trim();
+    var mensaje = String(data.get("mensaje") || "").trim();
+    if (!nombre && !mensaje) return text;
+    return (
+      (nombre ? "Hola, soy " + nombre + ". " : "Hola. ") +
+      (mensaje || "Vi REEB y quisiera saber qué solución me recomienda.")
+    );
+  }
+
+  if (waBtn) {
+    waBtn.addEventListener("click", function () {
+      waBtn.href = "https://wa.me/" + phone + "?text=" + encodeURIComponent(waTextFromForm());
+    });
+  }
+
   form.addEventListener("submit", function (event) {
     event.preventDefault();
     var data = new FormData(form);
@@ -296,26 +347,31 @@
     var telefono = String(data.get("telefono") || "").trim();
     if (!email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
       error.textContent = "Ingrese un correo válido.";
+      var emailInput = form.querySelector("input[name='email']");
+      if (emailInput) emailInput.focus();
       return;
     }
     if (!mensaje) {
-      error.textContent = "El mensaje no puede quedar vacío.";
+      error.textContent = "Cuéntenos su rubro o qué necesita.";
+      if (msgEl) msgEl.focus();
       return;
     }
     error.textContent = "";
-    showToast("Mensaje enviado (demo)");
-    form.reset();
+    showToast(place === "hub" ? "Se abre su correo para enviar la consulta" : "Mensaje enviado (demo)");
     var body = [
       "Nombre: " + (nombre || "—"),
       "Email: " + email,
       "Teléfono: " + (telefono || "—"),
       "",
-      mensaje,
-      "",
-      "(demo, sin servidor)"
-    ].join("\n");
+      mensaje
+    ];
+    if (place !== "hub") body.push("", "(demo, sin servidor)");
     window.location.href =
-      "mailto:" + mail + "?subject=" + encodeURIComponent(subject) + "&body=" + encodeURIComponent(body);
+      "mailto:" + mail + "?subject=" + encodeURIComponent(subject) + "&body=" + encodeURIComponent(body.join("\n"));
+    form.reset();
+    section.querySelectorAll(".demo-contacto-chip.is-on").forEach(function (c) {
+      c.classList.remove("is-on");
+    });
   });
 
   function showToast(message) {
