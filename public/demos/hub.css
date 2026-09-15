@@ -1260,8 +1260,71 @@ body:has(#precios:target, #cobros:target, #arca:target, #hosting:target, #extras
   grid-template-columns: minmax(0, 1.45fr) minmax(260px, 1fr);
   grid-template-rows: repeat(3, minmax(112px, 1fr));
   gap: 14px;
-  margin-bottom: 36px;
+  margin-bottom: 0;
   min-height: 480px;
+}
+
+.picks.is-solo {
+  grid-template-columns: 1fr;
+  grid-template-rows: minmax(280px, 1fr);
+  min-height: 320px;
+}
+
+.examples-carousel {
+  display: grid;
+  grid-template-columns: 44px minmax(0, 1fr) 44px;
+  gap: 12px;
+  align-items: center;
+  margin-bottom: 8px;
+}
+
+.carousel-nav {
+  width: 44px;
+  height: 44px;
+  border: 1px solid var(--line);
+  border-radius: 50%;
+  background: var(--bg-2);
+  color: var(--gold);
+  font-size: 28px;
+  line-height: 1;
+  cursor: pointer;
+}
+
+.carousel-nav:hover:not(:disabled) {
+  border-color: var(--gold);
+  background: #1a1613;
+}
+
+.carousel-nav:disabled {
+  opacity: 0.35;
+  cursor: default;
+}
+
+.carousel-dots {
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin: 16px 0 8px;
+}
+
+.carousel-dots button {
+  width: 8px;
+  height: 8px;
+  padding: 0;
+  border: 0;
+  border-radius: 99px;
+  background: rgba(244, 239, 230, 0.22);
+  cursor: pointer;
+}
+
+.carousel-dots button.is-on {
+  width: 22px;
+  background: var(--gold);
+}
+
+.carousel-miss {
+  margin-top: 28px;
 }
 
 .pick {
@@ -1270,18 +1333,24 @@ body:has(#precios:target, #cobros:target, #arca:target, #hosting:target, #extras
   min-width: 0;
   min-height: 0;
   border: 1px solid var(--line);
+  border-top: 3px solid var(--line);
   background: var(--bg-2);
   transition: background 0.2s ease;
 }
 
 .pick-hero {
   grid-row: 1 / -1;
-  border-top: 3px solid #5a7fa0;
 }
 
-.pick-side[data-cat="comercio"] { border-top: 3px solid #e59c3a; }
-.pick-side[data-cat="servicios"] { border-top: 3px solid #6b9b7f; }
-.pick-side[data-cat="automotriz"] { border-top: 3px solid #6b8999; }
+.pick[data-cat="comercio"] { border-top-color: #e59c3a; }
+.pick[data-cat="servicios"] { border-top-color: #6b9b7f; }
+.pick[data-cat="gastronomia"] { border-top-color: #c45c26; }
+.pick[data-cat="automotriz"] { border-top-color: #6b8999; }
+.pick[data-cat="turismo"] { border-top-color: #4a9b9b; }
+.pick[data-cat="construccion"] { border-top-color: #8b6b4a; }
+.pick[data-cat="inmuebles"] { border-top-color: #5a7fa0; }
+.pick[data-cat="cultura"] { border-top-color: #9b7fa0; }
+.pick[data-cat="legal"] { border-top-color: #8a8f99; }
 
 .pick-hero .pick-media {
   flex: 1;
@@ -3112,6 +3181,16 @@ body:has(#precios:target, #cobros:target, #arca:target, #hosting:target, #extras
   .picks-wrap,
   .examples { padding-left: 20px; padding-right: 20px; }
   .examples .bar { margin-left: -20px; margin-right: -20px; }
+  .examples-carousel {
+    grid-template-columns: 1fr 1fr;
+    grid-template-areas:
+      "picks picks"
+      "prev next";
+    justify-items: center;
+  }
+  .examples-carousel .picks { grid-area: picks; width: 100%; }
+  .carousel-prev { grid-area: prev; justify-self: end; }
+  .carousel-next { grid-area: next; justify-self: start; }
   .catalog { grid-template-columns: 1fr; padding: 18px 20px 32px; gap: 18px; }
   .sistemas-gestion { padding: 8px 20px 36px; }
   .sistemas-gestion > .sistemas-more summary { padding: 14px 16px; }

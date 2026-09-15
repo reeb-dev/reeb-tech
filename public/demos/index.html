@@ -55,7 +55,7 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,560;9..144,650&family=Outfit:wght@400;600;650;700&display=swap" onload="this.onload=null;this.rel='stylesheet'">
   <noscript><link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,560;9..144,650&family=Outfit:wght@400;600;650;700&display=swap" rel="stylesheet"></noscript>
-  <link rel="stylesheet" href="/demos/hub.css?v=hub61">
+  <link rel="stylesheet" href="/demos/hub.css?v=hub62">
   <script type="application/ld+json">
   {
     "@context": "https://schema.org",
@@ -343,38 +343,7 @@
     <div class="examples-head">
       <p class="badge" data-tone="gold">Ejemplos</p>
       <h2>Elija un ejemplo</h2>
-      <p>Abra la página o el panel. Datos de muestra.</p>
-    </div>
-    <div class="picks">
-      <article class="pick pick-hero" data-cat="inmuebles" data-search="inmobiliaria inmuebles venta alquiler propiedades visitas nahuel huapi">
-        <div class="pick-media"><img src="/demos/hub-img/inmobiliaria.webp" alt="Lago Nahuel Huapi y la península de Llao Llao" width="720" height="480" loading="eager" decoding="async"></div>
-        <div class="pick-copy">
-          <h3>Nahuel Huapi</h3>
-          <p>Casas, cabañas y lotes en Bariloche.</p>
-          <a class="btn btn-primary" href="/demos/inmobiliaria/">Ver</a>
-        </div>
-      </article>
-      <article class="pick pick-side" data-cat="comercio" data-search="almacen del barrio comercio pedidos proveedores gondola caja">
-        <div class="pick-media"><img src="/demos/hub-img/comercio.webp" alt="Góndola de almacén" width="240" height="160" loading="lazy" decoding="async"></div>
-        <div class="pick-copy">
-          <h3>Almacén del Barrio</h3>
-          <a class="btn btn-primary" href="/demos/comercio/">Ver</a>
-        </div>
-      </article>
-      <article class="pick pick-side" data-cat="servicios" data-search="gimnasio gym fitness gfc entrenamiento funcional coronel suarez">
-        <div class="pick-media"><img src="/demos/hub-img/gimnasio.jpg" alt="Fachada de Gym Fitness Center en Coronel Suárez" width="240" height="160" loading="lazy" decoding="async"></div>
-        <div class="pick-copy">
-          <h3>Gym Fitness Center</h3>
-          <a class="btn btn-primary" href="https://gymfitnesscenter.com/" target="_blank" rel="noopener noreferrer">Ver</a>
-        </div>
-      </article>
-      <article class="pick pick-side" data-cat="automotriz" data-search="taller mecanico automotriz ordenes diagnostico presupuesto repuestos">
-        <div class="pick-media"><img src="/demos/hub-img/taller.webp" alt="Trabajo en un taller mecánico" width="240" height="160" loading="lazy" decoding="async"></div>
-        <div class="pick-copy">
-          <h3>Taller Mecánico</h3>
-          <a class="btn btn-primary" href="/demos/taller/">Ver</a>
-        </div>
-      </article>
+      <p>Un ejemplo grande y tres compactos. Use las flechas para ver más rubros.</p>
     </div>
 
   <div class="bar">
@@ -400,196 +369,23 @@
     </div>
   </div>
 
-  <div class="catalog">
-  <article class="row is-flip" data-cat="comercio" data-search="kiosco lo de pedro comercio stock gondola fiado reposicion">
-    <div class="row-media"><img src="/demos/hub-img/kiosco.webp" alt="Fachada de kiosco de barrio" loading="lazy" decoding="async"></div>
-    <div class="row-copy">
-      <h3>Kiosco Lo de Pedro</h3>
-      <p>Stock, alertas de reposición y libreta de fiado.</p>
-      <a class="btn btn-primary" href="/demos/kiosco/">Ver</a>
+    <div class="examples-carousel">
+      <button type="button" class="carousel-nav carousel-prev" aria-label="Ejemplos anteriores">
+        <span aria-hidden="true">‹</span>
+      </button>
+      <div class="picks" id="examples-picks"></div>
+      <button type="button" class="carousel-nav carousel-next" aria-label="Más ejemplos">
+        <span aria-hidden="true">›</span>
+      </button>
     </div>
-  </article>
-
-  <article class="row" data-cat="gastronomia" data-search="parrilla don ernesto restaurante gastronomia mesas comandas cocina factura">
-    <div class="row-media"><img src="/demos/hub-img/restaurante.webp" alt="Mesa de parrilla servida" loading="lazy" decoding="async"></div>
-    <div class="row-copy">
-      <h3>Parrilla Don Ernesto</h3>
-      <p>Mesas, comandas y cierre de cuenta.</p>
-      <a class="btn btn-primary" href="/demos/restaurante/">Ver</a>
-    </div>
-  </article>
-
-  <article class="row is-flip" data-cat="servicios" data-search="salon camelia peluqueria servicios turnos agenda profesionales cobro">
-    <div class="row-media"><img src="/demos/hub-img/peluqueria.webp" alt="Interior de un salón de peluquería" loading="lazy" decoding="async"></div>
-    <div class="row-copy">
-      <h3>Salón Camelia</h3>
-      <p>Agenda de turnos, servicios y profesionales.</p>
-      <a class="btn btn-primary" href="/demos/peluqueria/">Ver</a>
-    </div>
-  </article>
-
-  <article class="row" data-cat="servicios" data-search="tu ingles online clases ingles escuela videollamada sierra de la ventana educacion">
-    <div class="row-media"><img src="/demos/hub-img/ingles.jpg" alt="Tu Inglés Online: clases de inglés por videollamada" loading="lazy" decoding="async"></div>
-    <div class="row-copy">
-      <h3>Tu Inglés Online</h3>
-      <p>Clases de inglés por videollamada con prueba.</p>
-      <div class="ctas">
-        <a class="btn btn-primary" href="https://tuinglesonline.com/" target="_blank" rel="noopener noreferrer">Ver página pública</a>
+    <div class="carousel-dots" id="examples-dots" role="tablist" aria-label="Páginas de ejemplos"></div>
+    <aside class="catalog-miss carousel-miss" aria-label="Si no ve su rubro">
+      <div class="catalog-miss-copy">
+        <p class="catalog-miss-kicker">¿No está su rubro?</p>
+        <h3>Si no ve su rubro, igual se puede hacer</h3>
+        <p>Estos son ejemplos por rubro. Si su oficio no está en la lista, se arma una página equivalente a su medida.</p>
       </div>
-    </div>
-  </article>
-
-  <article hidden class="row" data-extra="1" data-cat="servicios" data-search="el quebracho carpinteria servicios muebles presupuesto sena entrega">
-    <div class="row-media"><img src="/demos/hub-img/carpinteria.webp" alt="Taller de carpintería" loading="lazy" decoding="async"></div>
-    <div class="row-copy">
-      <h3>El Quebracho</h3>
-      <p>Muebles a medida: materiales, presupuesto, seña y fecha de entrega.</p>
-      <a class="btn btn-primary" href="/demos/carpinteria/">Ver</a>
-    </div>
-  </article>
-
-  <article hidden class="row is-flip" data-extra="1" data-cat="comercio" data-search="libro facturacion comercio comprobantes factura notas credito cobro">
-    <div class="row-media"><img src="/demos/hub-img/facturacion.webp" alt="Comprobantes y calculadora" loading="lazy" decoding="async"></div>
-    <div class="row-copy">
-      <h3>Libro</h3>
-      <p>Comprobantes A, B y notas de crédito, con vencimientos y cobro.</p>
-      <a class="btn btn-primary" href="/demos/facturacion/">Ver</a>
-    </div>
-  </article>
-
-  <article class="row" data-cat="comercio" data-search="stock facturacion comercio inventario movimientos arca electronica">
-    <div class="row-media"><img src="/demos/hub-img/stockfacturacion.webp" alt="Depósito con mercadería" loading="lazy" decoding="async"></div>
-    <div class="row-copy">
-      <h3>Stock y Facturación</h3>
-      <p>Inventario y facturación electrónica (ARCA).</p>
-      <a class="btn btn-primary" href="/demos/stockfacturacion/">Ver</a>
-    </div>
-  </article>
-
-  <article hidden class="row is-flip" data-extra="1" data-cat="comercio" data-search="libreria rivadavia comercio catalogo pedidos sena stock">
-    <div class="row-media"><img src="/demos/hub-img/libreria.webp" alt="Estantería de librería" loading="lazy" decoding="async"></div>
-    <div class="row-copy">
-      <h3>Librería Rivadavia</h3>
-      <p>Catálogo de mostrador, pedidos especiales con seña y control de stock.</p>
-      <a class="btn btn-primary" href="/demos/libreria/">Ver</a>
-    </div>
-  </article>
-
-  <article hidden class="row" data-extra="1" data-cat="cultura" data-search="biblioteca publica almagro cultura prestamos socios devoluciones multas">
-    <div class="row-media"><img src="/demos/hub-img/biblioteca.webp" alt="Sala de una biblioteca pública" loading="lazy" decoding="async"></div>
-    <div class="row-copy">
-      <h3>Biblioteca Pública Almagro</h3>
-      <p>Préstamos a socios, devoluciones, renovaciones y control de multas.</p>
-      <a class="btn btn-primary" href="/demos/biblioteca/">Ver</a>
-    </div>
-  </article>
-
-  <article class="row" data-cat="gastronomia" data-search="rotiseria gastronomia produccion mostrador delivery pedidos">
-    <div class="row-media"><img src="/demos/hub-img/rotiseria.webp" alt="Pollo asado de rotisería" loading="lazy" decoding="async"></div>
-    <div class="row-copy">
-      <h3>Rotisería</h3>
-      <p>Producción del día, pedidos de mostrador y delivery con seguimiento.</p>
-      <a class="btn btn-primary" href="/demos/rotiseria/">Ver</a>
-    </div>
-  </article>
-
-  <article hidden class="row" data-extra="1" data-cat="comercio" data-search="feria marketplace comercio publicaciones ventas preguntas envios">
-    <div class="row-media"><img src="/demos/hub-img/marketplace.webp" alt="Pago en mostrador" loading="lazy" decoding="async"></div>
-    <div class="row-copy">
-      <h3>Feria</h3>
-      <p>Marketplace: publicaciones, ventas y envíos.</p>
-      <a class="btn btn-primary" href="/demos/marketplace/">Ver</a>
-    </div>
-  </article>
-
-  <article hidden class="row is-flip" data-extra="1" data-cat="automotriz" data-search="automotores automotriz 0km usados financiacion permuta">
-    <div class="row-media"><img src="/demos/hub-img/automotores.webp" alt="Toyota Corolla en concesionaria" loading="lazy" decoding="async"></div>
-    <div class="row-copy">
-      <h3>Automotores</h3>
-      <p>Stock de 0km y usados, con financiación y permuta de ejemplo.</p>
-      <a class="btn btn-primary" href="/demos/automotores/">Ver</a>
-    </div>
-  </article>
-
-  <div class="band" data-band="turismo">
-    <h2>Turismo</h2>
-    <p>Tres ejemplos en Sierra de la Ventana (Buenos Aires).</p>
-  </div>
-
-  <article class="row" data-cat="turismo" data-search="hospedaje cabanas del sauce villa ventana turismo reservas calendario factura sierra de la ventana">
-    <div class="row-media"><img src="/demos/hub-img/hospedaje.webp" alt="Cabañas con pileta y las sierras de Ventania" loading="lazy" decoding="async"></div>
-    <div class="row-copy">
-      <h3>Cabañas del Sauce</h3>
-      <p>Cabañas entre sierras en Villa Ventana: predio, qué visitar cerca y reserva de fechas.</p>
-      <a class="btn btn-primary" href="/demos/hospedaje/">Ver</a>
-    </div>
-  </article>
-
-  <article hidden class="row is-flip" data-extra="1" data-cat="turismo" data-search="excursiones senderos tornquist turismo cupos guias salidas cerro ventana garganta cueva sierra de la ventana">
-    <div class="row-media"><img src="/demos/hub-img/excursiones.webp" alt="Cerro Ventana en el Parque Tornquist" loading="lazy" decoding="async"></div>
-    <div class="row-copy">
-      <h3>Senderos Tornquist</h3>
-      <p>Tours al Cerro Ventana, Garganta del Diablo y Cueva del Toro, con foto, duración y dificultad.</p>
-      <a class="btn btn-primary" href="/demos/excursiones/">Ver</a>
-    </div>
-  </article>
-
-  <article hidden class="row" data-extra="1" data-cat="turismo" data-search="complejo el palomar turismo habitaciones spa actividades paquetes predio sierra de la ventana">
-    <div class="row-media"><img src="/demos/hub-img/complejo.webp" alt="Campo de golf con sierras al fondo" loading="lazy" decoding="async"></div>
-    <div class="row-copy">
-      <h3>Complejo El Palomar</h3>
-      <p>Predio de ejemplo: golf, spa, pileta y paisajes del Parque Tornquist.</p>
-      <a class="btn btn-primary" href="/demos/complejo/">Ver</a>
-    </div>
-  </article>
-
-  <div class="band" data-band="construccion">
-    <h2>Construcción</h2>
-    <p>Arquitectura, corralón de materiales y vivienda steel frame.</p>
-  </div>
-
-  <article class="row is-flip" data-cat="construccion" data-search="estudio loma arquitectura construccion casa reforma ph planos obra renders palermo">
-    <div class="row-media"><img src="/demos/hub-img/arquitectura.webp" alt="Arquitecto trabajando sobre un plano" loading="lazy" decoding="async"></div>
-    <div class="row-copy">
-      <h3>Estudio Loma</h3>
-      <p>Casa, reforma o PH: proyectos, dirección de obra y consulta de presupuesto.</p>
-      <a class="btn btn-primary" href="/demos/arquitectura/">Ver</a>
-    </div>
-  </article>
-
-  <article hidden class="row" data-extra="1" data-cat="construccion" data-search="corralon el arido materiales construccion cemento ladrillo hierro arena stock pedido obra">
-    <div class="row-media"><img src="/demos/hub-img/materiales.webp" alt="Depósito de materiales de obra" loading="lazy" decoding="async"></div>
-    <div class="row-copy">
-      <h3>Corralón El Árido</h3>
-      <p>Cemento, ladrillo, hierro y arena: catálogo con stock y pedido a obra.</p>
-      <a class="btn btn-primary" href="/demos/materiales/">Ver</a>
-    </div>
-  </article>
-
-  <article hidden class="row is-flip" data-extra="1" data-cat="construccion" data-search="framehaus steelframe steel frame construccion vivienda modelos duplex ph ampliacion fabricacion montaje">
-    <div class="row-media"><img src="/demos/hub-img/steelframe.webp" alt="Casas contemporáneas de steel frame" loading="lazy" decoding="async"></div>
-    <div class="row-copy">
-      <h3>Framehaus</h3>
-      <p>Modelos de vivienda steel frame: casa, dúplex, PH y ampliación, con obras en taller.</p>
-      <a class="btn btn-primary" href="/demos/steelframe/">Ver</a>
-    </div>
-  </article>
-  <article hidden class="row" data-extra="1" data-cat="legal" data-search="estudio norte legal abogado expedientes plazos escritos mesa de entradas">
-    <div class="row-media"><img src="/demos/hub-img/estudio.webp" alt="Mesa de un estudio jurídico" loading="lazy" decoding="async"></div>
-    <div class="row-copy">
-      <h3>Estudio Norte</h3>
-      <p>Expedientes, plazos y escritos en la misma ficha.</p>
-      <a class="btn btn-primary" href="/demos/estudio/">Ver</a>
-    </div>
-  </article>
-  <aside class="catalog-miss" aria-label="Si no ve su rubro">
-    <div class="catalog-miss-copy">
-      <p class="catalog-miss-kicker">¿No está su rubro?</p>
-      <h3>Si no ve su rubro, igual se puede hacer</h3>
-      <p>Estos son ejemplos por rubro. Si su oficio no está en la lista, se arma una página equivalente a su medida.</p>
-    </div>
-  </aside>
-  </div>
+    </aside>
   </section>
 
   <section class="testimonials" id="testimonios">
@@ -825,13 +621,32 @@
   <script src="/demos/contacto.js?v=wa12" data-phone="5492915757934" data-text="Hola, vi REEB. Tengo un negocio y quisiera saber qué solución me recomienda." data-subject="Consulta por software a medida" data-title="Contacto" data-place="hub" data-email="manuelreeb@icloud.com"></script>
   <script>
     (function () {
+      var EXAMPLES = [
+        { cat: "inmuebles", title: "Nahuel Huapi", lead: "Casas, cabañas y lotes en Bariloche.", href: "/demos/inmobiliaria/", img: "/demos/hub-img/inmobiliaria.webp", alt: "Lago Nahuel Huapi y la península de Llao Llao", search: "inmobiliaria inmuebles venta alquiler propiedades visitas nahuel huapi" },
+        { cat: "comercio", title: "Almacén del Barrio", href: "/demos/comercio/", img: "/demos/hub-img/comercio.webp", alt: "Góndola de almacén", search: "almacen del barrio comercio pedidos proveedores gondola caja" },
+        { cat: "servicios", title: "Gym Fitness Center", href: "https://gymfitnesscenter.com/", external: true, img: "/demos/hub-img/gimnasio.jpg", alt: "Fachada de Gym Fitness Center en Coronel Suárez", search: "gimnasio gym fitness gfc coronel suarez" },
+        { cat: "automotriz", title: "Taller Mecánico", href: "/demos/taller/", img: "/demos/hub-img/taller.webp", alt: "Trabajo en un taller mecánico", search: "taller mecanico automotriz ordenes diagnostico presupuesto" },
+        { cat: "gastronomia", title: "Parrilla Don Ernesto", lead: "Mesas, comandas y cierre de cuenta.", href: "/demos/restaurante/", img: "/demos/hub-img/restaurante.webp", alt: "Mesa de parrilla servida", search: "parrilla don ernesto restaurante gastronomia mesas comandas" },
+        { cat: "comercio", title: "Kiosco Lo de Pedro", href: "/demos/kiosco/", img: "/demos/hub-img/kiosco.webp", alt: "Fachada de kiosco de barrio", search: "kiosco lo de pedro comercio stock gondola fiado" },
+        { cat: "servicios", title: "Salón Camelia", href: "/demos/peluqueria/", img: "/demos/hub-img/peluqueria.webp", alt: "Interior de un salón de peluquería", search: "salon camelia peluqueria servicios turnos agenda" },
+        { cat: "servicios", title: "Tu Inglés Online", href: "https://tuinglesonline.com/", external: true, img: "/demos/hub-img/ingles.jpg", alt: "Tu Inglés Online: clases de inglés por videollamada", search: "tu ingles online clases escuela videollamada" },
+        { cat: "comercio", title: "Stock y Facturación", lead: "Inventario y facturación electrónica.", href: "/demos/stockfacturacion/", img: "/demos/hub-img/stockfacturacion.webp", alt: "Depósito con mercadería", search: "stock facturacion comercio inventario arca" },
+        { cat: "gastronomia", title: "Rotisería", href: "/demos/rotiseria/", img: "/demos/hub-img/rotiseria.webp", alt: "Pollo asado de rotisería", search: "rotiseria gastronomia produccion mostrador delivery" },
+        { cat: "turismo", title: "Cabañas del Sauce", href: "/demos/hospedaje/", img: "/demos/hub-img/hospedaje.webp", alt: "Cabañas con pileta y las sierras de Ventania", search: "hospedaje cabanas del sauce villa ventana turismo" },
+        { cat: "construccion", title: "Estudio Loma", href: "/demos/arquitectura/", img: "/demos/hub-img/arquitectura.webp", alt: "Arquitecto trabajando sobre un plano", search: "estudio loma arquitectura construccion planos obra" },
+        { cat: "legal", title: "Estudio Norte", href: "/demos/estudio/", img: "/demos/hub-img/estudio.webp", alt: "Mesa de un estudio jurídico", search: "estudio norte legal abogado expedientes plazos" },
+        { cat: "automotriz", title: "Automotores", href: "/demos/automotores/", img: "/demos/hub-img/automotores.webp", alt: "Toyota Corolla en concesionaria", search: "automotores automotriz 0km usados financiacion" },
+        { cat: "turismo", title: "Senderos Tornquist", href: "/demos/excursiones/", img: "/demos/hub-img/excursiones.webp", alt: "Cerro Ventana en el Parque Tornquist", search: "excursiones senderos tornquist turismo cerro ventana" },
+        { cat: "construccion", title: "Framehaus", href: "/demos/steelframe/", img: "/demos/hub-img/steelframe.webp", alt: "Casas contemporáneas de steel frame", search: "framehaus steelframe construccion vivienda" }
+      ];
+
       var buttons = document.querySelectorAll(".filter[data-filter]");
-      var items = document.querySelectorAll("[data-cat]");
-      var bands = document.querySelectorAll("[data-band]");
       var examplesHead = document.querySelector("#ejemplos .examples-head");
-      var picksWrap = document.querySelector("#ejemplos .picks");
-      var gestionEl = document.getElementById("gestion");
-      var catalogEl = document.querySelector("#ejemplos .catalog");
+      var picksWrap = document.getElementById("examples-picks");
+      var dotsWrap = document.getElementById("examples-dots");
+      var prevBtn = document.querySelector(".carousel-prev");
+      var nextBtn = document.querySelector(".carousel-next");
+      var carousel = document.querySelector(".examples-carousel");
       var whoEl = document.getElementById("quien");
       var sistemasEl = document.getElementById("sistemas");
       var pricesEl = document.getElementById("precios");
@@ -840,6 +655,8 @@
       var moreBtn = document.getElementById("filters-more-btn");
       var moreBox = document.getElementById("filters-more");
       var activeFilter = "all";
+      var page = 0;
+      var PAGE_SIZE = 4;
 
       function fold(s) {
         return String(s || "")
@@ -852,49 +669,110 @@
         return fold((searchEl && searchEl.value) || "").trim();
       }
 
-      function apply() {
+      function filtered() {
         var filter = activeFilter;
         var q = query();
-        var visible = 0;
-        var visiblePicks = 0;
-        var visibleRows = 0;
-        items.forEach(function (el) {
-          var cat = el.getAttribute("data-cat");
-          var catOk = filter === "all" || cat === filter;
-          var hay = fold((el.getAttribute("data-search") || "") + " " + (el.textContent || ""));
-          var searchOk = !q || hay.indexOf(q) !== -1;
-          var extraOk = !el.hasAttribute("data-extra") || filter !== "all" || !!q;
-          var show = catOk && searchOk && extraOk;
-          el.hidden = !show;
-          if (show) {
-            visible += 1;
-            if (el.classList.contains("pick")) visiblePicks += 1;
-            else if (el.classList.contains("row")) visibleRows += 1;
-          }
+        return EXAMPLES.filter(function (item) {
+          var catOk = filter === "all" || item.cat === filter;
+          var hay = fold(item.title + " " + (item.search || "") + " " + (item.lead || ""));
+          return catOk && (!q || hay.indexOf(q) !== -1);
         });
+      }
 
-        if (examplesHead) examplesHead.hidden = visible === 0;
-        if (picksWrap) picksWrap.hidden = visiblePicks === 0;
-        if (catalogEl) catalogEl.hidden = visibleRows === 0;
-        var browsing = filter !== "all" || !!q;
-        if (gestionEl) {
-          var gKeys = ["gestion", "panel", "stock", "mercaderia", "codigo", "clientes", "mapa", "administracion", "deposito"];
-          var gHit = !!q && gKeys.some(function (k) { return q.indexOf(k) !== -1 || k.indexOf(q) !== -1; });
-          gestionEl.hidden = browsing && !gHit;
+      function pagesOf(list) {
+        var pages = [];
+        var i;
+        if (!list.length) return pages;
+        for (i = 0; i < list.length; i += PAGE_SIZE) pages.push(list.slice(i, i + PAGE_SIZE));
+        return pages;
+      }
+
+      function pickHtml(item, hero) {
+        var ext = item.external
+          ? ' target="_blank" rel="noopener noreferrer"'
+          : "";
+        var lead = hero && item.lead ? "<p>" + item.lead + "</p>" : "";
+        var eager = hero ? ' loading="eager"' : ' loading="lazy"';
+        return (
+          '<article class="pick ' + (hero ? "pick-hero" : "pick-side") + '" data-cat="' + item.cat + '">' +
+          '<div class="pick-media"><img src="' + item.img + '" alt="' + item.alt + '"' + eager + ' decoding="async"></div>' +
+          '<div class="pick-copy"><h3>' + item.title + "</h3>" + lead +
+          '<a class="btn btn-primary" href="' + item.href + '"' + ext + ">Ver</a></div></article>"
+        );
+      }
+
+      function render() {
+        var list = filtered();
+        var pages = pagesOf(list);
+        var browsing = activeFilter !== "all" || !!query();
+        if (page >= pages.length) page = Math.max(0, pages.length - 1);
+        var slide = pages[page] || [];
+        if (picksWrap) {
+          picksWrap.classList.toggle("is-solo", slide.length === 1);
+          picksWrap.classList.toggle("is-empty", slide.length === 0);
+          picksWrap.style.gridTemplateRows = slide.length <= 1
+            ? ""
+            : "repeat(" + Math.max(1, slide.length - 1) + ", minmax(112px, 1fr))";
+          picksWrap.innerHTML = slide.map(function (item, i) {
+            return pickHtml(item, i === 0);
+          }).join("");
         }
+        if (dotsWrap) {
+          dotsWrap.hidden = pages.length < 2;
+          dotsWrap.innerHTML = pages.map(function (_, i) {
+            return '<button type="button" role="tab" aria-label="Página ' + (i + 1) + '"' +
+              (i === page ? ' class="is-on" aria-selected="true"' : ' aria-selected="false"') +
+              ' data-page="' + i + '"></button>';
+          }).join("");
+        }
+        if (prevBtn) prevBtn.disabled = pages.length < 2;
+        if (nextBtn) nextBtn.disabled = pages.length < 2;
+        if (carousel) carousel.hidden = slide.length === 0;
+        if (examplesHead) examplesHead.hidden = false;
+        if (emptyEl) emptyEl.hidden = list.length !== 0;
         if (whoEl) whoEl.hidden = browsing;
         if (sistemasEl) sistemasEl.hidden = browsing;
         if (pricesEl) pricesEl.hidden = browsing;
-        bands.forEach(function (band) {
-          var key = band.getAttribute("data-band");
-          var n = 0;
-          items.forEach(function (el) {
-            if (!el.hidden && el.getAttribute("data-cat") === key) n += 1;
-          });
-          band.hidden = n === 0;
-        });
-        if (emptyEl) emptyEl.hidden = visible !== 0;
       }
+
+      function apply() {
+        page = 0;
+        render();
+      }
+
+      function go(delta) {
+        var pages = pagesOf(filtered());
+        if (pages.length < 2) return;
+        page = (page + delta + pages.length) % pages.length;
+        render();
+      }
+
+      if (prevBtn) prevBtn.addEventListener("click", function () { go(-1); });
+      if (nextBtn) nextBtn.addEventListener("click", function () { go(1); });
+      if (dotsWrap) {
+        dotsWrap.addEventListener("click", function (e) {
+          var btn = e.target.closest("[data-page]");
+          if (!btn) return;
+          page = Number(btn.getAttribute("data-page")) || 0;
+          render();
+        });
+      }
+      if (picksWrap) {
+        var startX = 0;
+        picksWrap.addEventListener("touchstart", function (e) {
+          startX = e.changedTouches[0].screenX;
+        }, { passive: true });
+        picksWrap.addEventListener("touchend", function (e) {
+          var dx = e.changedTouches[0].screenX - startX;
+          if (dx > 48) go(-1);
+          else if (dx < -48) go(1);
+        });
+      }
+      document.addEventListener("keydown", function (e) {
+        if (!carousel || carousel.hidden) return;
+        if (e.key === "ArrowLeft") go(-1);
+        if (e.key === "ArrowRight") go(1);
+      });
 
       buttons.forEach(function (btn) {
         btn.addEventListener("click", function () {
@@ -907,7 +785,6 @@
               moreBtn.setAttribute("aria-expanded", "true");
               moreBtn.classList.add("is-open");
             } else {
-              // Filtro principal: cerrar "Más rubros" para que no quede siempre abierto
               moreBox.hidden = true;
               moreBtn.setAttribute("aria-expanded", "false");
               moreBtn.classList.remove("is-open");
@@ -947,6 +824,8 @@
           if (a.getAttribute("href") === "#funciones") openFunciones();
         });
       });
+
+      apply();
 
       function openFunciones() {
         var box = document.getElementById("funciones");
