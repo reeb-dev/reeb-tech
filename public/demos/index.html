@@ -55,7 +55,7 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,560;9..144,650&family=Outfit:wght@400;600;650;700&display=swap" onload="this.onload=null;this.rel='stylesheet'">
   <noscript><link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,560;9..144,650&family=Outfit:wght@400;600;650;700&display=swap" rel="stylesheet"></noscript>
-  <link rel="stylesheet" href="/demos/hub.css?v=hub64">
+  <link rel="stylesheet" href="/demos/hub.css?v=hub65">
   <script type="application/ld+json">
   {
     "@context": "https://schema.org",
@@ -92,9 +92,9 @@
   <header class="nav">
     <a class="nav-brand" href="/" aria-label="REEB"><span class="nav-mark">REEB</span></a>
     <nav class="nav-links" aria-label="Navegación principal">
-      <a class="nav-link" href="/soluciones/">Soluciones</a>
+      <a class="nav-link" href="#soluciones">Soluciones</a>
       <a class="nav-link" href="#rubros">Rubros</a>
-      <a class="nav-link" href="#sistemas">Panel</a>
+      <a class="nav-link" href="#recorrido">Panel</a>
       <a class="nav-link" href="#ejemplos">Ejemplos</a>
       <a class="nav-link" href="#precios">Precios</a>
       <a class="nav-link" href="#contacto">Contacto</a>
@@ -894,8 +894,17 @@
 
       if (searchEl) searchEl.addEventListener("input", apply);
 
-      document.querySelectorAll('a[href="#quien"], a[href="#sistemas"], a[href="#ejemplos"], a[href="#destacados"], a[href="#catalogo"], a[href="#funciones"], a[href="#precios"], a[href="#cobros"], a[href="#arca"]').forEach(function (a) {
-        a.addEventListener("click", function () {
+      document.querySelectorAll('a[href^="#"]').forEach(function (a) {
+        var id = (a.getAttribute("href") || "").replace("#", "");
+        var known = {
+          quien: 1, sistemas: 1, ejemplos: 1, destacados: 1, catalogo: 1,
+          funciones: 1, precios: 1, cobros: 1, arca: 1, contacto: 1,
+          rubros: 1, soluciones: 1, recorrido: 1, testimonios: 1,
+          integraciones: 1
+        };
+        if (!known[id]) return;
+        a.addEventListener("click", function (event) {
+          event.preventDefault();
           activeFilter = "all";
           if (searchEl) searchEl.value = "";
           buttons.forEach(function (b) {
@@ -907,7 +916,10 @@
             moreBtn.classList.remove("is-open");
           }
           apply();
-          if (a.getAttribute("href") === "#funciones") openFunciones();
+          if (id === "funciones") openFunciones();
+          if (history.replaceState) history.replaceState(null, "", "#" + id);
+          else location.hash = id;
+          requestAnimationFrame(alignHash);
         });
       });
 
@@ -923,10 +935,13 @@
         if (!id) return;
         if (id === "funciones") openFunciones();
         var el = document.getElementById(id);
-        var bar = document.querySelector(".bar");
         if (!el) return;
-        var barIsSticky = bar && getComputedStyle(bar).position === "sticky";
-        var offset = (barIsSticky ? bar.offsetHeight : 0) + 12;
+        var offset = 16;
+        var bar = document.querySelector("#ejemplos .bar");
+        var examples = document.getElementById("ejemplos");
+        if (bar && examples && el !== examples && examples.contains(el)) {
+          offset = bar.offsetHeight + 12;
+        }
         var top = el.getBoundingClientRect().top + window.pageYOffset - offset;
         window.scrollTo(0, Math.max(0, top));
       }

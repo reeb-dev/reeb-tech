@@ -1876,8 +1876,13 @@ body:has(#precios:target, #cobros:target, #arca:target, #hosting:target, #extras
 #arca,
 #catalogo,
 #testimonios,
+#soluciones,
+#rubros,
+#recorrido,
+#como-funciona,
+#integraciones,
 #contacto {
-  scroll-margin-top: 200px;
+  scroll-margin-top: 20px;
 }
 
 .sistemas {
@@ -3383,6 +3388,7 @@ body:has(#precios:target, #cobros:target, #arca:target, #hosting:target, #extras
   #ejemplos,
   #soluciones,
   #rubros,
+  #recorrido,
   #como-funciona,
   #integraciones,
   #quien,
@@ -3393,7 +3399,7 @@ body:has(#precios:target, #cobros:target, #arca:target, #hosting:target, #extras
   #arca,
   #catalogo,
   #contacto {
-    scroll-margin-top: 340px;
+    scroll-margin-top: 16px;
   }
 
   .sistemas,
