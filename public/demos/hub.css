@@ -1697,6 +1697,7 @@ body:has(#precios:target, #cobros:target, #arca:target, #hosting:target, #extras
 #cobros,
 #arca,
 #catalogo,
+#testimonios,
 #contacto {
   scroll-margin-top: 200px;
 }
@@ -3178,6 +3179,120 @@ body:has(#precios:target, #cobros:target, #arca:target, #hosting:target, #extras
   .pricing-details > details > summary {
     grid-template-columns: 1fr;
     gap: 5px;
+  }
+}
+
+/* Testimonios */
+.testimonials {
+  max-width: 1120px;
+  margin: 0 auto;
+  padding: 72px 36px;
+}
+
+.testimonials-inner {
+  text-align: center;
+}
+
+.testimonials-inner .badge {
+  margin: 0 auto 16px;
+}
+
+.testimonials-inner h2 {
+  font-family: Fraunces, Georgia, serif;
+  font-size: clamp(34px, 4.8vw, 48px);
+  font-weight: 560;
+  line-height: 1.08;
+  letter-spacing: -0.02em;
+  margin-bottom: 48px;
+}
+
+.testimonials-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+  gap: 24px;
+  margin-bottom: 40px;
+}
+
+.testimonial {
+  background: var(--bg-2);
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  padding: 28px 24px 24px;
+  text-align: left;
+}
+
+.testimonial blockquote {
+  margin: 0 0 20px;
+}
+
+.testimonial blockquote p {
+  font-size: 16px;
+  line-height: 1.5;
+  color: var(--ink);
+  margin: 0;
+}
+
+.testimonial blockquote p::before {
+  content: '"';
+  color: var(--gold);
+  font-size: 28px;
+  line-height: 0;
+  margin-right: 4px;
+}
+
+.testimonial footer {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.testimonial footer strong {
+  font-size: 15px;
+  font-weight: 650;
+  color: var(--gold);
+}
+
+.testimonial footer span {
+  font-size: 13px;
+  color: var(--muted);
+}
+
+.testimonials-trust {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 20px 32px;
+  padding-top: 16px;
+  border-top: 1px solid var(--line);
+}
+
+.testimonials-trust span {
+  font-size: 14px;
+  color: var(--muted);
+}
+
+@media (max-width: 860px) {
+  .testimonials {
+    padding: 48px 20px;
+  }
+  
+  .testimonials-inner h2 {
+    margin-bottom: 32px;
+  }
+  
+  .testimonials-grid {
+    grid-template-columns: 1fr;
+    gap: 16px;
+  }
+  
+  .testimonial {
+    padding: 22px 18px 20px;
+  }
+  
+  .testimonials-trust {
+    flex-direction: column;
+    gap: 8px;
+    text-align: center;
   }
 }
 
