@@ -1262,6 +1262,7 @@ body:has(#precios:target, #cobros:target, #arca:target, #hosting:target, #extras
   gap: 14px;
   margin-bottom: 0;
   min-height: 480px;
+  transition: opacity 0.35s ease;
 }
 
 .picks.is-solo {

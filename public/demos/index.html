@@ -343,7 +343,7 @@
     <div class="examples-head">
       <p class="badge" data-tone="gold">Ejemplos</p>
       <h2>Elija un ejemplo</h2>
-      <p>Un ejemplo grande y tres compactos. Use las flechas para ver más rubros.</p>
+      <p>Un ejemplo grande y tres compactos. El recuadro avanza solo.</p>
     </div>
 
   <div class="bar">
@@ -657,6 +657,10 @@
       var activeFilter = "all";
       var page = 0;
       var PAGE_SIZE = 4;
+      var INTERVAL = 5500;
+      var timer = null;
+      var paused = false;
+      var reduceMotion = window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 
       function fold(s) {
         return String(s || "")
@@ -735,16 +739,34 @@
         if (pricesEl) pricesEl.hidden = browsing;
       }
 
+      function stopTimer() {
+        if (timer) {
+          clearInterval(timer);
+          timer = null;
+        }
+      }
+
+      function startTimer() {
+        stopTimer();
+        if (reduceMotion || paused || document.hidden) return;
+        if (pagesOf(filtered()).length < 2) return;
+        timer = setInterval(function () {
+          go(1, true);
+        }, INTERVAL);
+      }
+
       function apply() {
         page = 0;
         render();
+        startTimer();
       }
 
-      function go(delta) {
+      function go(delta, fromAuto) {
         var pages = pagesOf(filtered());
         if (pages.length < 2) return;
         page = (page + delta + pages.length) % pages.length;
         render();
+        if (!fromAuto) startTimer();
       }
 
       if (prevBtn) prevBtn.addEventListener("click", function () { go(-1); });
@@ -755,19 +777,46 @@
           if (!btn) return;
           page = Number(btn.getAttribute("data-page")) || 0;
           render();
+          startTimer();
         });
       }
       if (picksWrap) {
         var startX = 0;
         picksWrap.addEventListener("touchstart", function (e) {
           startX = e.changedTouches[0].screenX;
+          paused = true;
+          stopTimer();
         }, { passive: true });
         picksWrap.addEventListener("touchend", function (e) {
           var dx = e.changedTouches[0].screenX - startX;
+          paused = false;
           if (dx > 48) go(-1);
           else if (dx < -48) go(1);
+          else startTimer();
         });
       }
+      if (carousel) {
+        carousel.addEventListener("mouseenter", function () {
+          paused = true;
+          stopTimer();
+        });
+        carousel.addEventListener("mouseleave", function () {
+          paused = false;
+          startTimer();
+        });
+        carousel.addEventListener("focusin", function () {
+          paused = true;
+          stopTimer();
+        });
+        carousel.addEventListener("focusout", function () {
+          paused = false;
+          startTimer();
+        });
+      }
+      document.addEventListener("visibilitychange", function () {
+        if (document.hidden) stopTimer();
+        else startTimer();
+      });
       document.addEventListener("keydown", function (e) {
         if (!carousel || carousel.hidden) return;
         if (e.key === "ArrowLeft") go(-1);
