@@ -3599,6 +3599,10 @@ body:has(#precios:target, #cobros:target, #arca:target, #hosting:target, #extras
   background: #201a16;
 }
 
+.publicada-media.is-portrait img {
+  object-position: 50% 12%;
+}
+
 .publicada-copy {
   display: grid;
   align-content: start;
