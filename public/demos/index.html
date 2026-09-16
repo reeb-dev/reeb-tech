@@ -55,7 +55,7 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,560;9..144,650&family=Outfit:wght@400;600;650;700&display=swap" onload="this.onload=null;this.rel='stylesheet'">
   <noscript><link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,560;9..144,650&family=Outfit:wght@400;600;650;700&display=swap" rel="stylesheet"></noscript>
-  <link rel="stylesheet" href="/demos/hub.css?v=hub65">
+  <link rel="stylesheet" href="/demos/hub.css?v=hub66">
   <script type="application/ld+json">
   {
     "@context": "https://schema.org",
@@ -96,6 +96,7 @@
       <a class="nav-link" href="#rubros">Rubros</a>
       <a class="nav-link" href="#recorrido">Panel</a>
       <a class="nav-link" href="#ejemplos">Ejemplos</a>
+      <a class="nav-link" href="#publicadas">En el aire</a>
       <a class="nav-link" href="#precios">Precios</a>
       <a class="nav-link" href="#contacto">Contacto</a>
       <a class="nav-link nav-link-more" href="/cv/">Sitio personal</a>
@@ -318,6 +319,7 @@
       <a href="/demos/peluqueria/"><strong>Salones</strong><span>Servicios, profesionales y turnos</span></a>
       <a href="https://gymfitnesscenter.com/"><strong>Gimnasios</strong><span>Landing, horarios, mapa y WhatsApp</span></a>
       <a href="https://tuinglesonline.com/"><strong>Escuelas de inglés</strong><span>Clases online, prueba y WhatsApp</span></a>
+      <a href="https://clavitoactis.com/"><strong>Música</strong><span>Página de banda, fotos y contacto</span></a>
       <a href="/demos/restaurante/"><strong>Gastronomía</strong><span>Carta, mesas, comandas y cocina</span></a>
     </div>
   </section>
@@ -389,6 +391,49 @@
         <p>Estos son ejemplos por rubro. Si su oficio no está en la lista, se arma una página equivalente a su medida.</p>
       </div>
     </aside>
+  </section>
+
+  <section class="publicadas" id="publicadas">
+    <div class="section-heading">
+      <p class="badge" data-tone="gold">En el aire</p>
+      <h2>Páginas con dominio propio</h2>
+      <p>Sitios ya publicados para clientes, cada uno con su dirección. Distintos de los ejemplos por rubro.</p>
+    </div>
+    <div class="publicadas-grid">
+      <a class="publicada" href="https://gymfitnesscenter.com/" target="_blank" rel="noopener noreferrer">
+        <div class="publicada-media">
+          <img src="/demos/hub-img/gimnasio.jpg" alt="Fachada de Gym Fitness Center en Coronel Suárez" loading="lazy" decoding="async">
+        </div>
+        <div class="publicada-copy">
+          <span class="publicada-domain">gymfitnesscenter.com</span>
+          <h3>Gym Fitness Center</h3>
+          <p>Gimnasio en Coronel Suárez: horarios, máquinas, mapa y consulta por WhatsApp.</p>
+          <span class="publicada-cta">Ver página</span>
+        </div>
+      </a>
+      <a class="publicada" href="https://tuinglesonline.com/" target="_blank" rel="noopener noreferrer">
+        <div class="publicada-media">
+          <img src="/demos/hub-img/ingles.jpg" alt="Tu Inglés Online: clases de inglés por videollamada" loading="lazy" decoding="async">
+        </div>
+        <div class="publicada-copy">
+          <span class="publicada-domain">tuinglesonline.com</span>
+          <h3>Tu Inglés Online</h3>
+          <p>Clases de inglés por videollamada, prueba y contacto directo.</p>
+          <span class="publicada-cta">Ver página</span>
+        </div>
+      </a>
+      <a class="publicada" href="https://clavitoactis.com/" target="_blank" rel="noopener noreferrer">
+        <div class="publicada-media">
+          <img src="/demos/hub-img/clavito.jpg" alt="Clavito Actis con el bajo, Clavos Band" loading="lazy" decoding="async">
+        </div>
+        <div class="publicada-copy">
+          <span class="publicada-domain">clavitoactis.com</span>
+          <h3>Clavito Actis</h3>
+          <p>Clavos Band. Blues-rock argentino desde 1992: música, fotos y contacto.</p>
+          <span class="publicada-cta">Ver página</span>
+        </div>
+      </a>
+    </div>
   </section>
 
   <section class="testimonials" id="testimonios">
@@ -613,6 +658,7 @@
     <p class="footer-links">
       <a href="/soluciones/">Todas las soluciones</a>
       <a href="#sistemas">Funciones</a>
+      <a href="#publicadas">Páginas publicadas</a>
       <a href="#precios">Precios</a>
       <a href="/cv/">Sitio personal</a>
       <a href="https://www.linkedin.com/in/manuel-jesus-reeb" target="_blank" rel="noopener noreferrer">LinkedIn</a>
@@ -627,12 +673,10 @@
       var EXAMPLES = [
         { cat: "inmuebles", title: "Nahuel Huapi", lead: "Casas, cabañas y lotes en Bariloche.", href: "/demos/inmobiliaria/", img: "/demos/hub-img/inmobiliaria.webp", alt: "Lago Nahuel Huapi y la península de Llao Llao", search: "inmobiliaria inmuebles venta alquiler propiedades visitas nahuel huapi" },
         { cat: "comercio", title: "Almacén del Barrio", href: "/demos/comercio/", img: "/demos/hub-img/comercio.webp", alt: "Góndola de almacén", search: "almacen del barrio comercio pedidos proveedores gondola caja" },
-        { cat: "servicios", title: "Gym Fitness Center", href: "https://gymfitnesscenter.com/", external: true, img: "/demos/hub-img/gimnasio.jpg", alt: "Fachada de Gym Fitness Center en Coronel Suárez", search: "gimnasio gym fitness gfc coronel suarez" },
         { cat: "automotriz", title: "Taller Mecánico", href: "/demos/taller/", img: "/demos/hub-img/taller.webp", alt: "Trabajo en un taller mecánico", search: "taller mecanico automotriz ordenes diagnostico presupuesto" },
         { cat: "gastronomia", title: "Parrilla Don Ernesto", lead: "Mesas, comandas y cierre de cuenta.", href: "/demos/restaurante/", img: "/demos/hub-img/restaurante.webp", alt: "Mesa de parrilla servida", search: "parrilla don ernesto restaurante gastronomia mesas comandas" },
         { cat: "comercio", title: "Kiosco Lo de Pedro", href: "/demos/kiosco/", img: "/demos/hub-img/kiosco.webp", alt: "Fachada de kiosco de barrio", search: "kiosco lo de pedro comercio stock gondola fiado" },
         { cat: "servicios", title: "Salón Camelia", href: "/demos/peluqueria/", img: "/demos/hub-img/peluqueria.webp", alt: "Interior de un salón de peluquería", search: "salon camelia peluqueria servicios turnos agenda" },
-        { cat: "servicios", title: "Tu Inglés Online", href: "https://tuinglesonline.com/", external: true, img: "/demos/hub-img/ingles.jpg", alt: "Tu Inglés Online: clases de inglés por videollamada", search: "tu ingles online clases escuela videollamada" },
         { cat: "comercio", title: "Stock y Facturación", lead: "Inventario y facturación electrónica.", href: "/demos/stockfacturacion/", img: "/demos/hub-img/stockfacturacion.webp", alt: "Depósito con mercadería", search: "stock facturacion comercio inventario arca" },
         { cat: "gastronomia", title: "Rotisería", href: "/demos/rotiseria/", img: "/demos/hub-img/rotiseria.webp", alt: "Pollo asado de rotisería", search: "rotiseria gastronomia produccion mostrador delivery" },
         { cat: "turismo", title: "Cabañas del Sauce", href: "/demos/hospedaje/", img: "/demos/hub-img/hospedaje.webp", alt: "Cabañas con pileta y las sierras de Ventania", search: "hospedaje cabanas del sauce villa ventana turismo" },
@@ -900,7 +944,7 @@
           quien: 1, sistemas: 1, ejemplos: 1, destacados: 1, catalogo: 1,
           funciones: 1, precios: 1, cobros: 1, arca: 1, contacto: 1,
           rubros: 1, soluciones: 1, recorrido: 1, testimonios: 1,
-          integraciones: 1
+          publicadas: 1, integraciones: 1
         };
         if (!known[id]) return;
         a.addEventListener("click", function (event) {
