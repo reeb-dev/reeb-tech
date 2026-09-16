@@ -1,4 +1,6 @@
 User-agent: *
 Allow: /
+Disallow: /demos/sistemas-ui/
+Disallow: /*/panel.html
 
 Sitemap: https://webconreeb.com/sitemap.xml
