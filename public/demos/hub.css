@@ -2506,8 +2506,43 @@ body:has(#precios:target, #cobros:target, #arca:target, #hosting:target, #extras
   line-height: 1.5;
 }
 
+.promo-banner {
+  margin: 22px 0 4px;
+  padding: 18px 22px;
+  border: 1px solid rgba(227, 196, 138, 0.45);
+  border-radius: 14px;
+  background:
+    linear-gradient(135deg, rgba(196, 92, 38, 0.14), transparent 55%),
+    linear-gradient(150deg, rgba(227, 196, 138, 0.08), transparent 60%),
+    var(--bg-2);
+}
+
+.promo-banner-kicker {
+  margin: 0 0 4px;
+  font-size: 11px;
+  font-weight: 750;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--ember);
+}
+
+.promo-banner-title {
+  margin: 0 0 6px;
+  font-family: Fraunces, Georgia, serif;
+  font-size: clamp(22px, 2.4vw, 28px);
+  color: var(--ink);
+}
+
+.promo-banner-text {
+  margin: 0;
+  max-width: 52rem;
+  line-height: 1.55;
+  color: var(--muted);
+  font-size: 15px;
+}
+
 .pricing-amount {
-  margin: 23px 0 20px;
+  margin: 23px 0 8px;
   color: var(--ink);
   font-family: Fraunces, Georgia, serif;
   font-size: clamp(28px, 3.4vw, 38px);
@@ -2533,6 +2568,24 @@ body:has(#precios:target, #cobros:target, #arca:target, #hosting:target, #extras
   font-weight: 700;
   letter-spacing: 0.12em;
   text-transform: uppercase;
+}
+
+.pricing-old {
+  display: block;
+  margin-bottom: 4px;
+  font-size: 16px;
+  font-weight: 400;
+  color: var(--muted);
+  font-family: Outfit, system-ui, sans-serif;
+  letter-spacing: 0;
+  text-decoration: line-through;
+}
+
+.pricing-promo {
+  margin: 0 0 18px;
+  font-size: 13px;
+  font-weight: 650;
+  color: var(--ember);
 }
 
 .pricing-card > ul {
