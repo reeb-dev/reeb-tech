@@ -270,6 +270,7 @@
         '"><span><strong>Correo</strong><em>' +
         mail +
         "</em></span></a>" +
+        '<a class="demo-contacto-mail" href="https://www.instagram.com/reeb.patagonia/" target="_blank" rel="noopener noreferrer"><span><strong>Instagram</strong><em>@reeb.patagonia</em></span></a>' +
         '<p class="demo-contacto-trust">Trato directo con Manuel Reeb.</p>' +
         "</div>"
       : "";

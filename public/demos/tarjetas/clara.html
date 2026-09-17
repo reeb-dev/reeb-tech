@@ -1,0 +1,520 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="robots" content="noindex,nofollow">
+  <title>Tarjeta clara · networking REEB</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;600&family=Outfit:wght@400;600;700&display=swap" rel="stylesheet">
+  <style>
+/* Tarjetas networking REEB — estilo Patagonia claro */
+:root {
+  --bg: #f4efe6;
+  --bg-2: #ebe3d4;
+  --ink: #2d4f4b;
+  --muted: #5c6f6a;
+  --line: rgba(45, 79, 75, 0.14);
+  --ember: #c45c26;
+  --gold: #8a6a28;
+  --cream: #fff9e5;
+  --sage: #4a6762;
+  --card-w: 85mm;
+  --card-h: 55mm;
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+  font-family: Outfit, "Segoe UI", system-ui, sans-serif;
+  background:
+    radial-gradient(ellipse 70% 40% at 80% 0%, rgba(212, 181, 106, 0.22), transparent 55%),
+    var(--bg);
+  color: var(--ink);
+  line-height: 1.45;
+  min-height: 100vh;
+}
+
+a { color: inherit; }
+
+.screen-bar {
+  position: sticky;
+  top: 0;
+  z-index: 20;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px 16px;
+  align-items: center;
+  justify-content: space-between;
+  padding: 14px 20px;
+  background: rgba(244, 239, 230, 0.94);
+  border-bottom: 1px solid var(--line);
+  backdrop-filter: blur(8px);
+}
+
+.screen-bar strong {
+  font-family: Fraunces, Georgia, serif;
+  font-weight: 600;
+  color: var(--ink);
+}
+
+.screen-bar nav {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  font-size: 13px;
+}
+
+.screen-bar a {
+  color: var(--muted);
+  text-decoration: none;
+  font-weight: 600;
+}
+
+.screen-bar a:hover,
+.screen-bar a.is-on {
+  color: var(--ember);
+}
+
+.btn-print {
+  appearance: none;
+  border: 0;
+  cursor: pointer;
+  padding: 10px 16px;
+  border-radius: 999px;
+  background: var(--ember);
+  color: #fff;
+  font: inherit;
+  font-size: 13px;
+  font-weight: 700;
+}
+
+.btn-print:hover { filter: brightness(1.06); }
+
+.hint {
+  max-width: 720px;
+  margin: 18px 20px 8px;
+  color: var(--muted);
+  font-size: 14px;
+}
+
+.sheet {
+  width: 210mm;
+  min-height: 297mm;
+  margin: 16px auto 40px;
+  padding: 10mm;
+  background: #fffef9;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  display: grid;
+  grid-template-columns: repeat(2, var(--card-w));
+  grid-auto-rows: var(--card-h);
+  gap: 6mm;
+  justify-content: center;
+  align-content: start;
+}
+
+.card {
+  width: var(--card-w);
+  height: var(--card-h);
+  padding: 5.5mm 6mm;
+  border-radius: 2.5mm;
+  border: 0.3mm solid rgba(45, 79, 75, 0.18);
+  background:
+    linear-gradient(160deg, #fff9e5, #f4efe6 55%, #e8efe9);
+  color: var(--ink);
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  overflow: hidden;
+  position: relative;
+}
+
+.card::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: 38%;
+  background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 400 120' preserveAspectRatio='none'%3E%3Cpath fill='%23cbb89a' opacity='0.55' d='M0 70 L60 40 L120 65 L190 30 L260 60 L330 28 L400 50 L400 120 L0 120Z'/%3E%3Cpath fill='%234a6762' opacity='0.45' d='M0 90 L80 58 L160 85 L240 55 L320 80 L400 62 L400 120 L0 120Z'/%3E%3C/svg%3E") center bottom / 100% 100% no-repeat;
+  opacity: 0.55;
+  pointer-events: none;
+}
+
+.card::after {
+  content: "";
+  position: absolute;
+  inset: 1.2mm;
+  border: 0.2mm solid rgba(45, 79, 75, 0.1);
+  border-radius: 1.6mm;
+  pointer-events: none;
+}
+
+.card-top,
+.card-pitch,
+.card-foot {
+  position: relative;
+  z-index: 1;
+}
+
+.card-top {
+  display: flex;
+  align-items: center;
+  gap: 3.2mm;
+}
+
+.card-mark {
+  width: 9mm;
+  height: 9mm;
+  flex-shrink: 0;
+  border-radius: 50%;
+  display: block;
+  overflow: hidden;
+  border: 0.25mm solid rgba(138, 106, 40, 0.35);
+}
+
+.card-mark img,
+.card-mark svg {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.card-brand {
+  font-family: Fraunces, Georgia, serif;
+  font-size: 15px;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  color: var(--ink);
+  line-height: 1.1;
+}
+
+.card-brand small {
+  display: block;
+  margin-top: 1mm;
+  font-family: Outfit, system-ui, sans-serif;
+  font-size: 8px;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+.card-pitch {
+  font-size: 10.5px;
+  line-height: 1.35;
+  color: var(--ink);
+  max-width: 58mm;
+}
+
+.card-pitch strong {
+  color: var(--ember);
+  font-weight: 650;
+}
+
+.card-foot {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  gap: 3mm;
+  font-size: 8.5px;
+  color: var(--muted);
+}
+
+.card-foot span { display: block; line-height: 1.35; }
+
+.card-foot .web {
+  color: var(--gold);
+  font-weight: 700;
+  letter-spacing: 0.02em;
+}
+
+/* compat: variantes antiguas usan estas clases */
+.card-light { /* mismo look claro base */ }
+
+.card-back {
+  background: linear-gradient(160deg, #fff9e5, #eef3ef);
+}
+
+.card-back::before { opacity: 0.35; }
+
+.card-back-inner {
+  display: grid;
+  grid-template-columns: 22mm 1fr;
+  gap: 4mm;
+  align-items: center;
+  height: 100%;
+  position: relative;
+  z-index: 1;
+}
+
+.card-qr {
+  width: 22mm;
+  height: 22mm;
+  border-radius: 1.5mm;
+  background: #fff;
+  padding: 1.2mm;
+  object-fit: contain;
+  border: 0.2mm solid rgba(45, 79, 75, 0.12);
+}
+
+.card-back h2 {
+  font-family: Fraunces, Georgia, serif;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--ink);
+  margin-bottom: 1.5mm;
+}
+
+.card-back p {
+  font-size: 8.5px;
+  color: var(--muted);
+  line-height: 1.4;
+}
+
+.card-back .links {
+  margin-top: 2.5mm;
+  font-size: 8.5px;
+  color: var(--ink);
+  line-height: 1.45;
+}
+
+.card-back-light { /* alias */ }
+
+.gallery {
+  max-width: 920px;
+  margin: 0 auto;
+  padding: 24px 20px 60px;
+}
+
+.gallery h1 {
+  font-family: Fraunces, Georgia, serif;
+  font-size: clamp(28px, 4vw, 40px);
+  margin-bottom: 8px;
+  color: var(--ink);
+}
+
+.gallery > p {
+  color: var(--muted);
+  margin-bottom: 16px;
+  max-width: 40rem;
+}
+
+.gallery code {
+  font-size: 12px;
+  background: rgba(45, 79, 75, 0.08);
+  padding: 2px 6px;
+  border-radius: 4px;
+}
+
+.demo-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  gap: 16px;
+  margin-top: 24px;
+}
+
+.demo-card {
+  display: block;
+  padding: 20px 18px;
+  border-radius: 14px;
+  border: 1px solid var(--line);
+  background: #fffef9;
+  text-decoration: none;
+  transition: border-color 0.2s, transform 0.2s;
+}
+
+.demo-card:hover {
+  border-color: rgba(196, 92, 38, 0.4);
+  transform: translateY(-2px);
+}
+
+.demo-card h2 {
+  font-family: Fraunces, Georgia, serif;
+  font-size: 22px;
+  color: var(--ink);
+  margin-bottom: 8px;
+}
+
+.demo-card p {
+  font-size: 14px;
+  color: var(--muted);
+}
+
+.demo-card .tag {
+  display: inline-block;
+  margin-top: 14px;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--ember);
+}
+
+@media print {
+  @page {
+    size: A4;
+    margin: 10mm;
+  }
+
+  body { background: #fff; }
+
+  .screen-bar,
+  .hint,
+  .no-print {
+    display: none !important;
+  }
+
+  .sheet {
+    margin: 0;
+    padding: 0;
+    width: auto;
+    min-height: 0;
+    border: 0;
+    border-radius: 0;
+    background: transparent;
+    gap: 6mm;
+    page-break-after: always;
+  }
+
+  .sheet:last-child { page-break-after: auto; }
+
+  .card {
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
+  }
+}
+
+  </style>
+</head>
+<body>
+  <header class="screen-bar">
+    <strong>Presentación clara</strong>
+    <nav>
+      <a href="index.html">Índice</a>
+      <a href="presentacion.html">Oscura</a>
+      <a class="is-on" href="clara.html">Clara</a>
+      <a href="dorso.html">Con dorso QR</a>
+    </nav>
+    <button type="button" class="btn-print" onclick="window.print()">Imprimir / PDF</button>
+  </header>
+
+  <p class="hint">Misma pieza en fondo claro. Probá cuál se lee mejor en papel mate o brillante.</p>
+
+  <section class="sheet sheet-backs" aria-label="Hoja de tarjetas claras">
+    <article class="card card-light">
+      <div class="card-top">
+        <img class="card-mark" src="/brand/reeb-patagonia-avatar-clara.png?v=20260917" alt="" width="72" height="72">
+        <div class="card-brand">REEB<small>@reeb.patagonia</small></div>
+      </div>
+      <p class="card-pitch">Productos y soluciones web para negocios.<br><strong>Una carga, varios destinos.</strong></p>
+      <div class="card-foot">
+        <span><span class="web">webconreeb.com</span><br>WhatsApp · +54 9 291 575-7934</span>
+        <span><a href="https://www.instagram.com/reeb.patagonia/" style="color:inherit;text-decoration:none">@reeb.patagonia</a><br>manuelreeb@icloud.com</span>
+      </div>
+    </article>
+    <article class="card card-light">
+      <div class="card-top">
+        <img class="card-mark" src="/brand/reeb-patagonia-avatar-clara.png?v=20260917" alt="" width="72" height="72">
+        <div class="card-brand">REEB<small>@reeb.patagonia</small></div>
+      </div>
+      <p class="card-pitch">Productos y soluciones web para negocios.<br><strong>Una carga, varios destinos.</strong></p>
+      <div class="card-foot">
+        <span><span class="web">webconreeb.com</span><br>WhatsApp · +54 9 291 575-7934</span>
+        <span><a href="https://www.instagram.com/reeb.patagonia/" style="color:inherit;text-decoration:none">@reeb.patagonia</a><br>manuelreeb@icloud.com</span>
+      </div>
+    </article>
+    <article class="card card-light">
+      <div class="card-top">
+        <img class="card-mark" src="/brand/reeb-patagonia-avatar-clara.png?v=20260917" alt="" width="72" height="72">
+        <div class="card-brand">REEB<small>@reeb.patagonia</small></div>
+      </div>
+      <p class="card-pitch">Productos y soluciones web para negocios.<br><strong>Una carga, varios destinos.</strong></p>
+      <div class="card-foot">
+        <span><span class="web">webconreeb.com</span><br>WhatsApp · +54 9 291 575-7934</span>
+        <span><a href="https://www.instagram.com/reeb.patagonia/" style="color:inherit;text-decoration:none">@reeb.patagonia</a><br>manuelreeb@icloud.com</span>
+      </div>
+    </article>
+    <article class="card card-light">
+      <div class="card-top">
+        <img class="card-mark" src="/brand/reeb-patagonia-avatar-clara.png?v=20260917" alt="" width="72" height="72">
+        <div class="card-brand">REEB<small>@reeb.patagonia</small></div>
+      </div>
+      <p class="card-pitch">Productos y soluciones web para negocios.<br><strong>Una carga, varios destinos.</strong></p>
+      <div class="card-foot">
+        <span><span class="web">webconreeb.com</span><br>WhatsApp · +54 9 291 575-7934</span>
+        <span><a href="https://www.instagram.com/reeb.patagonia/" style="color:inherit;text-decoration:none">@reeb.patagonia</a><br>manuelreeb@icloud.com</span>
+      </div>
+    </article>
+    <article class="card card-light">
+      <div class="card-top">
+        <img class="card-mark" src="/brand/reeb-patagonia-avatar-clara.png?v=20260917" alt="" width="72" height="72">
+        <div class="card-brand">REEB<small>@reeb.patagonia</small></div>
+      </div>
+      <p class="card-pitch">Productos y soluciones web para negocios.<br><strong>Una carga, varios destinos.</strong></p>
+      <div class="card-foot">
+        <span><span class="web">webconreeb.com</span><br>WhatsApp · +54 9 291 575-7934</span>
+        <span><a href="https://www.instagram.com/reeb.patagonia/" style="color:inherit;text-decoration:none">@reeb.patagonia</a><br>manuelreeb@icloud.com</span>
+      </div>
+    </article>
+    <article class="card card-light">
+      <div class="card-top">
+        <img class="card-mark" src="/brand/reeb-patagonia-avatar-clara.png?v=20260917" alt="" width="72" height="72">
+        <div class="card-brand">REEB<small>@reeb.patagonia</small></div>
+      </div>
+      <p class="card-pitch">Productos y soluciones web para negocios.<br><strong>Una carga, varios destinos.</strong></p>
+      <div class="card-foot">
+        <span><span class="web">webconreeb.com</span><br>WhatsApp · +54 9 291 575-7934</span>
+        <span><a href="https://www.instagram.com/reeb.patagonia/" style="color:inherit;text-decoration:none">@reeb.patagonia</a><br>manuelreeb@icloud.com</span>
+      </div>
+    </article>
+    <article class="card card-light">
+      <div class="card-top">
+        <img class="card-mark" src="/brand/reeb-patagonia-avatar-clara.png?v=20260917" alt="" width="72" height="72">
+        <div class="card-brand">REEB<small>@reeb.patagonia</small></div>
+      </div>
+      <p class="card-pitch">Productos y soluciones web para negocios.<br><strong>Una carga, varios destinos.</strong></p>
+      <div class="card-foot">
+        <span><span class="web">webconreeb.com</span><br>WhatsApp · +54 9 291 575-7934</span>
+        <span><a href="https://www.instagram.com/reeb.patagonia/" style="color:inherit;text-decoration:none">@reeb.patagonia</a><br>manuelreeb@icloud.com</span>
+      </div>
+    </article>
+    <article class="card card-light">
+      <div class="card-top">
+        <img class="card-mark" src="/brand/reeb-patagonia-avatar-clara.png?v=20260917" alt="" width="72" height="72">
+        <div class="card-brand">REEB<small>@reeb.patagonia</small></div>
+      </div>
+      <p class="card-pitch">Productos y soluciones web para negocios.<br><strong>Una carga, varios destinos.</strong></p>
+      <div class="card-foot">
+        <span><span class="web">webconreeb.com</span><br>WhatsApp · +54 9 291 575-7934</span>
+        <span><a href="https://www.instagram.com/reeb.patagonia/" style="color:inherit;text-decoration:none">@reeb.patagonia</a><br>manuelreeb@icloud.com</span>
+      </div>
+    </article>
+    <article class="card card-light">
+      <div class="card-top">
+        <img class="card-mark" src="/brand/reeb-patagonia-avatar-clara.png?v=20260917" alt="" width="72" height="72">
+        <div class="card-brand">REEB<small>@reeb.patagonia</small></div>
+      </div>
+      <p class="card-pitch">Productos y soluciones web para negocios.<br><strong>Una carga, varios destinos.</strong></p>
+      <div class="card-foot">
+        <span><span class="web">webconreeb.com</span><br>WhatsApp · +54 9 291 575-7934</span>
+        <span><a href="https://www.instagram.com/reeb.patagonia/" style="color:inherit;text-decoration:none">@reeb.patagonia</a><br>manuelreeb@icloud.com</span>
+      </div>
+    </article>
+    <article class="card card-light">
+      <div class="card-top">
+        <img class="card-mark" src="/brand/reeb-patagonia-avatar-clara.png?v=20260917" alt="" width="72" height="72">
+        <div class="card-brand">REEB<small>@reeb.patagonia</small></div>
+      </div>
+      <p class="card-pitch">Productos y soluciones web para negocios.<br><strong>Una carga, varios destinos.</strong></p>
+      <div class="card-foot">
+        <span><span class="web">webconreeb.com</span><br>WhatsApp · +54 9 291 575-7934</span>
+        <span><a href="https://www.instagram.com/reeb.patagonia/" style="color:inherit;text-decoration:none">@reeb.patagonia</a><br>manuelreeb@icloud.com</span>
+      </div>
+    </article>
+  </section>
+</body>
+</html>
