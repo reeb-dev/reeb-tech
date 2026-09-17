@@ -25,7 +25,7 @@ const PUBLIC_TOP_FILES = new Set([
   'sitemap.xml',
   'og.png',
   'og.jpg',
-  'og-webconreeb.jpg',
+  'og-patagonia.jpg',
   'og-cv.png',
   'logo.svg',
   'bp4.png',
