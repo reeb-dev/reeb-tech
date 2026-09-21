@@ -44,3 +44,7 @@ Thumbs.db
 
 # Presupuestos privados: no se publican ni se suben
 /private/
+
+# Python cache from Cursor skills
+**/__pycache__/
+*.py[cod]
