@@ -1,4 +1,106 @@
 {
   "$schema": "https://opencode.ai/config.json",
-  "instructions": ["AGENTS.md", ".agents/PROYECTOS.md", ".agents/README.md"]
+  "instructions": [
+    "AGENTS.md",
+    ".agents/PROYECTOS.md",
+    ".agents/README.md",
+    ".cursor/SISTEMAS.md"
+  ],
+  "mcp": {
+    "context7": {
+      "type": "remote",
+      "url": "https://mcp.context7.com/mcp",
+      "enabled": true,
+      "oauth": false,
+      "headers": {
+        "CONTEXT7_API_KEY": "{env:CONTEXT7_API_KEY}"
+      }
+    },
+    "playwright": {
+      "type": "local",
+      "command": ["npx", "-y", "@playwright/mcp@latest"],
+      "enabled": true,
+      "timeout": 120000
+    },
+    "github": {
+      "type": "local",
+      "command": ["npx", "-y", "@modelcontextprotocol/server-github"],
+      "enabled": true,
+      "timeout": 120000,
+      "environment": {
+        "GITHUB_PERSONAL_ACCESS_TOKEN": "{env:GITHUB_PERSONAL_ACCESS_TOKEN}"
+      }
+    },
+    "postgres": {
+      "type": "local",
+      "command": ["uvx", "postgres-mcp", "--access-mode=restricted"],
+      "enabled": true,
+      "timeout": 120000,
+      "environment": {
+        "DATABASE_URI": "{env:DATABASE_URI}"
+      }
+    },
+    "chrome-devtools": {
+      "type": "local",
+      "command": ["npx", "-y", "chrome-devtools-mcp@latest"],
+      "enabled": true,
+      "timeout": 120000
+    },
+    "figma": {
+      "type": "remote",
+      "url": "https://mcp.figma.com/mcp",
+      "enabled": true,
+      "oauth": {}
+    },
+    "filesystem": {
+      "type": "local",
+      "command": [
+        "npx",
+        "-y",
+        "@modelcontextprotocol/server-filesystem",
+        "{env:PWD}"
+      ],
+      "enabled": true,
+      "timeout": 120000
+    },
+    "sentry": {
+      "type": "remote",
+      "url": "https://mcp.sentry.dev/mcp",
+      "enabled": true,
+      "oauth": {}
+    },
+    "neon": {
+      "type": "remote",
+      "url": "https://mcp.neon.tech/mcp?readonly=true",
+      "enabled": true,
+      "oauth": {}
+    },
+    "postman": {
+      "type": "remote",
+      "url": "https://mcp.postman.com/code",
+      "enabled": true,
+      "oauth": {}
+    },
+    "notion": {
+      "type": "remote",
+      "url": "https://mcp.notion.com/mcp",
+      "enabled": true,
+      "oauth": {}
+    },
+    "stripe": {
+      "type": "remote",
+      "url": "https://mcp.stripe.com",
+      "enabled": true,
+      "oauth": {}
+    },
+    "browserbase": {
+      "type": "remote",
+      "url": "https://mcp.browserbase.com/mcp",
+      "enabled": true,
+      "oauth": false,
+      "headers": {
+        "Authorization": "Bearer {env:BROWSERBASE_API_KEY}"
+      }
+    }
+  }
 }
