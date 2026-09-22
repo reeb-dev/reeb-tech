@@ -4,6 +4,8 @@ Inventario compartido por Cursor y OpenCode. Fuente: repos públicos de https://
 
 Repo de trabajo de este clon: `reeb-dev/reeb-tech`.
 
+Para tener **todas las carpetas juntas en el Mac** (GitHub + lo local), usá `~/proyectos` con `scripts/clonar-proyectos.sh`. El mapa está en `.agents/CARPETA-COMUN.md`. No mezclar clones adentro de este repo.
+
 ## Marca y sitio
 
 | Repo | Qué es | URL |
