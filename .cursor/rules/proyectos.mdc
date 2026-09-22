@@ -1,0 +1,6 @@
+---
+description: Inventario único de repos, compartido con OpenCode
+alwaysApply: true
+---
+
+El inventario de proyectos está en `.agents/PROYECTOS.md` (la misma carpeta que usa OpenCode). Antes de nombrar, clonar o mezclar repos, leé ese archivo. No inventes proyectos ni dupliques la lista en otro lado.

@@ -1,3 +1,8 @@
+---
+name: ui-ux-pro-max
+description: Guía de diseño UI/UX (estilos, paletas, tipografía, accesibilidad y stacks). Usarla al cambiar interfaz, layout o coherencia visual.
+---
+
 # ui-ux-pro-max
 
 Comprehensive design guide for web and mobile applications. Contains 67 styles, 96 color palettes, 57 font pairings, 99 UX guidelines, and 25 chart types across 13 technology stacks. Searchable database with priority-based recommendations.
