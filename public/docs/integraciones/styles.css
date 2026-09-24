@@ -907,3 +907,108 @@ footer {
   font-size: 0.9rem;
   color: var(--muted);
 }
+
+/* —— Tema: guía “cómo hacer andar el webservice en TU API” —— */
+body.theme-howto {
+  --bg: #f3f5f2;
+  --bg-2: #e4ebe6;
+  --cream: #fafcf9;
+  --ink: #14261c;
+  --muted: #4d6356;
+  --line: rgba(20, 38, 28, 0.14);
+  --accent: #0f5c45;
+  --accent-soft: rgba(15, 92, 69, 0.1);
+  --ember: #1a7a5c;
+  --ember-soft: rgba(26, 122, 92, 0.14);
+  --sage: #3d6b55;
+  --card: #ffffff;
+  --code-bg: #0f241c;
+  --code: #d8eee4;
+  --info: #0f5c45;
+  --info-soft: rgba(15, 92, 69, 0.1);
+  --shadow: 0 10px 30px rgba(15, 92, 69, 0.08);
+  --shadow-lg: 0 18px 40px rgba(15, 92, 69, 0.1);
+}
+
+body.theme-howto {
+  background:
+    radial-gradient(900px 420px at 10% -8%, rgba(26, 122, 92, 0.14), transparent 55%),
+    radial-gradient(700px 380px at 100% 0%, rgba(15, 92, 69, 0.1), transparent 50%),
+    var(--bg);
+}
+
+body.theme-howto .hero {
+  background:
+    linear-gradient(135deg, rgba(15, 92, 69, 0.12), rgba(255, 255, 255, 0.95) 50%),
+    var(--cream);
+  border-color: rgba(15, 92, 69, 0.22);
+}
+
+body.theme-howto .jump {
+  background: var(--accent);
+}
+
+body.theme-howto .method.post { background: #0f5c45; }
+body.theme-howto .method.get { background: #1a7a5c; }
+
+body.theme-howto .code-block .label {
+  background: #0a1a14;
+  color: #8fcbb0;
+}
+
+.recipe {
+  display: grid;
+  gap: 0.75rem;
+  margin: 1.25rem 0;
+}
+
+.recipe-step {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: 0.85rem;
+  padding: 1rem 1.05rem;
+  border-radius: 14px;
+  border: 1px solid var(--line);
+  background: #fff;
+  box-shadow: var(--shadow);
+}
+
+.recipe-step .n {
+  width: 2rem;
+  height: 2rem;
+  border-radius: 50%;
+  display: grid;
+  place-items: center;
+  background: var(--accent);
+  color: #fff;
+  font-weight: 700;
+  font-size: 0.9rem;
+}
+
+.recipe-step h3 {
+  margin: 0 0 0.35rem;
+  font-size: 1.05rem;
+}
+
+.recipe-step p {
+  margin: 0;
+  color: var(--muted);
+  font-size: 0.95rem;
+}
+
+.ws-meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.45rem;
+  margin: 0.5rem 0 0;
+  font-size: 0.8rem;
+}
+
+.ws-meta span {
+  background: var(--accent-soft);
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  padding: 0.2rem 0.55rem;
+  font-family: "IBM Plex Mono", ui-monospace, monospace;
+  color: var(--accent);
+}

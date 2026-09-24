@@ -15,8 +15,8 @@
     <nav class="top" aria-label="Integraciones">
       <a class="brand" href="index.html">Integraciones FE / pagos</a>
       <a href="arca-fuentes.html">ARCA · Fuentes</a>
-      <a href="arca-implementacion.html">Guía ARCA</a>
-      <a class="is-active" href="arca-api.html" aria-current="page">API Reference</a>
+      <a href="arca-implementacion.html">Webservices</a>
+      <a class="is-active" href="arca-api.html" aria-current="page">API REST (Postman)</a>
       <a href="mercadopago.html">Mercado Pago</a>
     </nav>
 
@@ -59,9 +59,9 @@
         <section class="tldr" id="idea">
           <h2>Qué estás viendo</h2>
           <ol>
-            <li><strong>Esta página = tu “Postman docs”.</strong> Es la API que el panel llama para estado ARCA y solicitar CAE.</li>
-            <li><strong>ARCA/AFIP por detrás es SOAP</strong> (WSAA + WSFEv1). Tu backend habla SOAP; el front / Postman habla REST contra <em>tu</em> servidor.</li>
-            <li><strong>Si armás tu propia API</strong> en otro stack, podés copiar este contrato o el flujo SOAP de la <a href="arca-implementacion.html">guía</a>.</li>
+            <li><strong>Esta página (azul) = REST del producto</strong> para probar con Postman/curl.</li>
+            <li><strong>La página verde</strong> <a href="arca-implementacion.html">Webservices</a> explica cómo hablar SOAP con ARCA y armar tu propia API.</li>
+            <li>ARCA/AFIP por detrás es SOAP. Este REST es la capa que stock-local expone encima.</li>
           </ol>
         </section>
 
