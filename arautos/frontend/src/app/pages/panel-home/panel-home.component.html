@@ -35,12 +35,17 @@
     <div class="field"><label>WhatsApp</label>
       <input [(ngModel)]="profileForm.whatsapp" name="pwa" required [disabled]="!!stats()?.readOnly" />
     </div>
-    <div class="field"><label>Provincia</label>
-      <input [(ngModel)]="profileForm.province" name="pprov" required [disabled]="!!stats()?.readOnly" />
-    </div>
-    <div class="field"><label>Ciudad</label>
-      <input [(ngModel)]="profileForm.city" name="pcity" required [disabled]="!!stats()?.readOnly" />
-    </div>
+    <app-geo-select
+      class="geo-inline"
+      [(province)]="profileForm.province"
+      [(locality)]="profileForm.city"
+      [required]="true"
+      [disabled]="!!stats()?.readOnly"
+      [allowEmptyProvince]="false"
+      [allowEmptyLocality]="false"
+      localityLabel="Localidad / ciudad"
+      namePrefix="profile">
+    </app-geo-select>
     <div class="field"><label>Dirección</label>
       <input [(ngModel)]="profileForm.address" name="paddr" [disabled]="!!stats()?.readOnly" />
     </div>
@@ -100,6 +105,17 @@
         <option value="ARS">ARS</option>
       </select>
     </div>
+    <app-geo-select
+      class="geo-inline"
+      [(province)]="form.province"
+      [(locality)]="form.city"
+      [required]="true"
+      [disabled]="!!stats()?.readOnly"
+      [allowEmptyProvince]="false"
+      [allowEmptyLocality]="false"
+      localityLabel="Localidad / ciudad"
+      namePrefix="vehicle">
+    </app-geo-select>
     <div class="field"><label>Foto (URL)</label>
       <input [(ngModel)]="photoUrl" name="photo" placeholder="/assets/cars/…" />
     </div>

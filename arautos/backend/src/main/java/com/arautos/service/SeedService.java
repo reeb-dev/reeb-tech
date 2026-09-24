@@ -65,7 +65,7 @@ public class SeedService implements ApplicationRunner {
         "Patagonia Motors",
         "patagonia-motors",
         "Río Negro",
-        "Bariloche",
+        "San Carlos de Bariloche",
         "Av. Bustillo 5100",
         "5492944123456",
         "contacto@patagoniamotors.example",

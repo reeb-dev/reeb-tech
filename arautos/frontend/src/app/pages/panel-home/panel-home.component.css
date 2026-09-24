@@ -9,4 +9,7 @@ h2 { margin-top: 1.75rem; font-size: 1.35rem; }
 .profile-form input[type="color"] {
   height: 2.5rem; padding: .25rem; cursor: pointer;
 }
+.form-grid app-geo-select.geo-inline {
+  display: contents;
+}
 code { font-size: .85em; background: #eef2f6; padding: .1rem .35rem; border-radius: 4px; }

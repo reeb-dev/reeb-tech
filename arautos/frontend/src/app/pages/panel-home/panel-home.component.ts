@@ -6,11 +6,12 @@ import { ApiService } from '../../core/api.service';
 import { AuthService } from '../../core/auth.service';
 import { ProfileUpdateRequest, Stats, TenantProfile, VehiclePanel, VehicleRequest } from '../../core/models';
 import { formatPrice, typeLabel } from '../../core/format';
+import { GeoSelectComponent } from '../../shared/geo-select.component';
 
 @Component({
   selector: 'app-panel-home',
   standalone: true,
-  imports: [CommonModule, FormsModule, RouterLink],
+  imports: [CommonModule, FormsModule, RouterLink, GeoSelectComponent],
   templateUrl: './panel-home.component.html',
   styleUrl: './panel-home.component.css'
 })

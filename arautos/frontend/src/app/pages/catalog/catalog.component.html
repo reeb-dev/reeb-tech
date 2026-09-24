@@ -1,8 +1,11 @@
 <section class="container">
   <div class="hero">
-    <p class="eyebrow">Marketplace automotor · Argentina</p>
+    <p class="eyebrow">
+      <img class="logo-flag-sm" src="/assets/bandera-argentina.svg" width="40" height="27" alt="" aria-hidden="true" />
+      Marketplace automotor · Argentina
+    </p>
     <h1>Encontrá tu próximo auto</h1>
-    <p>0 km y usados de concesionarias de todo el país. Filtrá por provincia, moneda y consultá por WhatsApp.</p>
+    <p>0 km y usados de concesionarias de todo el país. Filtrá por provincia y localidad, moneda y consultá por WhatsApp.</p>
   </div>
 
   <div class="filters">
@@ -10,19 +13,19 @@
       <label>Marca</label>
       <input [(ngModel)]="brand" placeholder="Toyota, Ford, Fiat…" (keyup.enter)="load()" />
     </div>
-    <div class="field">
-      <label>Provincia</label>
-      <select [(ngModel)]="province">
-        <option value="">Todas</option>
-        <option value="Buenos Aires">Buenos Aires</option>
-        <option value="CABA">CABA</option>
-        <option value="Córdoba">Córdoba</option>
-        <option value="Santa Fe">Santa Fe</option>
-        <option value="Mendoza">Mendoza</option>
-        <option value="Río Negro">Río Negro</option>
-        <option value="Neuquén">Neuquén</option>
-      </select>
-    </div>
+    <app-geo-select
+      class="geo-filters"
+      [(province)]="province"
+      [(locality)]="city"
+      [allowEmptyProvince]="true"
+      [allowEmptyLocality]="true"
+      emptyProvinceLabel="Todas"
+      emptyLocalityLabel="Todas"
+      localityLabel="Localidad"
+      namePrefix="catalog"
+      (provinceChange)="onGeoChange()"
+      (localityChange)="onGeoChange()">
+    </app-geo-select>
     <div class="field">
       <label>Tipo</label>
       <select [(ngModel)]="type">

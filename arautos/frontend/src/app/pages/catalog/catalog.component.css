@@ -6,6 +6,16 @@
   letter-spacing: .08em;
   text-transform: uppercase;
   color: var(--celeste);
+  display: inline-flex;
+  align-items: center;
+  gap: .5rem;
+}
+.logo-flag-sm {
+  width: 40px;
+  height: 27px;
+  border-radius: 3px;
+  box-shadow: 0 0 0 1px rgba(15, 39, 68, 0.14);
+  flex-shrink: 0;
 }
 .hero h1 {
   font-family: var(--font-display);
@@ -18,3 +28,6 @@
 .hero p { color: var(--muted); margin: 0; max-width: 40rem; font-size: 1.05rem; }
 .card-vehicle a { text-decoration: none; color: inherit; }
 .card-vehicle h3 a:hover { color: var(--celeste); }
+.filters app-geo-select.geo-filters {
+  display: contents;
+}

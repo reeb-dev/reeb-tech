@@ -3,11 +3,12 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Router, RouterLink } from '@angular/router';
 import { AuthService } from '../../core/auth.service';
+import { GeoSelectComponent } from '../../shared/geo-select.component';
 
 @Component({
   selector: 'app-panel-login',
   standalone: true,
-  imports: [CommonModule, FormsModule, RouterLink],
+  imports: [CommonModule, FormsModule, RouterLink, GeoSelectComponent],
   templateUrl: './panel-login.component.html',
   styleUrl: './panel-login.component.css'
 })

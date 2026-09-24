@@ -35,8 +35,9 @@ public class PublicCatalogController {
       @RequestParam(required = false) BigDecimal priceMax,
       @RequestParam(required = false) CurrencyCode currency,
       @RequestParam(required = false) String province,
+      @RequestParam(required = false) String city,
       @RequestParam(required = false) VehicleType type) {
-    return catalogService.search(brand, model, yearMin, yearMax, kmMax, priceMin, priceMax, currency, province, type);
+    return catalogService.search(brand, model, yearMin, yearMax, kmMax, priceMin, priceMax, currency, province, city, type);
   }
 
   @GetMapping("/vehicles/{id}")

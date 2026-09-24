@@ -1,6 +1,9 @@
 <header class="top">
   <div class="container top-inner">
-    <a class="brand" routerLink="/">ArAutos<small>Autos en Argentina</small></a>
+    <a class="brand" routerLink="/" aria-label="ArAutos — inicio">
+      <img class="logo-flag" src="/assets/bandera-argentina.svg" width="56" height="37" alt="Bandera de Argentina" />
+      <span class="brand-text">ArAutos<small>Autos en Argentina</small></span>
+    </a>
     <nav>
       <a routerLink="/">Catálogo</a>
       <a routerLink="/panel">Mi concesionaria</a>
@@ -11,5 +14,8 @@
   <router-outlet />
 </main>
 <footer class="foot">
-  <div class="container">ArAutos — catálogo de concesionarias en Argentina (MVP)</div>
+  <div class="container foot-inner">
+    <span>ArAutos — catálogo de concesionarias en Argentina</span>
+    <span class="malvinas" aria-label="Afirmación soberana">{{ lemaMalvinas() }}</span>
+  </div>
 </footer>
