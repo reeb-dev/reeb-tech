@@ -1,11 +1,17 @@
-
 <section class="container narrow">
-  <h1>Panel concesionaria</h1>
-  <p class="meta">Seed: demo1&#64;patagonia-motors.example / demo123</p>
+  <h1>Panel de su concesionaria</h1>
+  <p class="meta">Ingrese con el email de su local. Si aún no tiene cuenta, solicite el alta.</p>
+
+  <div class="seed-hints">
+    <span class="meta">Cuentas de prueba:</span>
+    <button type="button" class="seed-btn" (click)="useSeed('demo')">Dueño demo</button>
+    <button type="button" class="seed-btn" (click)="useSeed('agent')">Agente</button>
+    <button type="button" class="seed-btn" (click)="useSeed('admin')">Admin plataforma</button>
+  </div>
 
   <div class="tabs">
     <button type="button" [class.active]="mode==='login'" (click)="mode='login'">Ingresar</button>
-    <button type="button" [class.active]="mode==='register'" (click)="mode='register'">Alta</button>
+    <button type="button" [class.active]="mode==='register'" (click)="mode='register'">Solicitar alta</button>
   </div>
 
   <form (ngSubmit)="submit()">
@@ -13,8 +19,15 @@
     <div class="field"><label>Contraseña</label><input [(ngModel)]="password" name="password" type="password" required /></div>
     @if (mode === 'register') {
       <div class="field"><label>Nombre del local</label><input [(ngModel)]="dealerName" name="dealerName" required /></div>
-      <div class="field"><label>Provincia</label><input [(ngModel)]="province" name="province" required /></div>
-      <div class="field"><label>Ciudad</label><input [(ngModel)]="city" name="city" required /></div>
+      <app-geo-select
+        [(province)]="province"
+        [(locality)]="city"
+        [required]="true"
+        [allowEmptyProvince]="false"
+        [allowEmptyLocality]="false"
+        localityLabel="Localidad / ciudad"
+        namePrefix="register">
+      </app-geo-select>
       <div class="field"><label>WhatsApp</label><input [(ngModel)]="whatsapp" name="whatsapp" placeholder="54911..." required /></div>
     }
     <button class="btn" type="submit">{{ mode === 'login' ? 'Entrar' : 'Solicitar alta' }}</button>

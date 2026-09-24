@@ -30,6 +30,15 @@ arautos:
     name: ${ARAUTOS_PLAN_NAME:Starter}
     price-usd: ${ARAUTOS_PLAN_PRICE_USD:}
     price-ars: ${ARAUTOS_PLAN_PRICE_ARS:}
+  mercado-pago:
+    enabled: ${ARAUTOS_MP_ENABLED:false}
+    access-token: ${ARAUTOS_MP_ACCESS_TOKEN:}
+    public-key: ${ARAUTOS_MP_PUBLIC_KEY:}
+    webhook-secret: ${ARAUTOS_MP_WEBHOOK_SECRET:}
+    success-url: ${ARAUTOS_MP_SUCCESS_URL:http://localhost:4200/panel?mp=success}
+    pending-url: ${ARAUTOS_MP_PENDING_URL:http://localhost:4200/panel?mp=pending}
+    failure-url: ${ARAUTOS_MP_FAILURE_URL:http://localhost:4200/panel?mp=failure}
+    notification-url: ${ARAUTOS_MP_NOTIFICATION_URL:http://localhost:8080/api/public/mp/webhook}
   cors-origins: ${ARAUTOS_CORS_ORIGINS:http://localhost:4200,http://127.0.0.1:4200}
   seed: ${ARAUTOS_SEED:true}
 

@@ -1,15 +1,27 @@
-
 <section class="container">
   <div class="head">
     <div>
-      <h1>Panel</h1>
-      <p class="meta" *ngIf="auth.session() as s">
-        {{ s.tenantName }} · {{ s.email }}
-        <span *ngIf="profile() as p"> · {{ p.subscriptionStatus }}</span>
-        <a *ngIf="profile() as p" [routerLink]="['/c', p.slug]"> ver perfil público</a>
-      </p>
+      <h1>Panel de su concesionaria</h1>
+      @if (auth.session(); as s) {
+        <p class="meta session-line">
+          <span class="role-pill">{{ auth.roleLabel(s.role) }}</span>
+          @if (s.tenantName) {
+            <span class="tenant-name">{{ s.tenantName }}</span>
+          }
+          · {{ s.email }}
+          @if (profile(); as p) {
+            · {{ p.subscriptionStatus }}
+            · <a [routerLink]="['/c', p.slug]">página pública</a>
+          }
+        </p>
+      }
     </div>
-    <button class="btn secondary" type="button" (click)="logout()">Salir</button>
+    <div class="head-actions">
+      @if (auth.isPlatformAdmin()) {
+        <a class="btn secondary" routerLink="/panel/admin">Administración</a>
+      }
+      <button class="btn secondary" type="button" (click)="logout()">Cerrar sesión</button>
+    </div>
   </div>
 
   @if (stats(); as st) {
@@ -24,7 +36,179 @@
     }
   }
 
+  @if (billing(); as bill) {
+    <section class="billing-block">
+      <h2>Suscripción</h2>
+      <p class="meta">
+        Plan {{ bill.planName }} · estado {{ bill.subscriptionStatus }}
+        @if (bill.trialEndsAt) {
+          · trial hasta {{ bill.trialEndsAt | date: 'dd/MM/yyyy' }}
+        }
+      </p>
+      @if (bill.planPriceArs || bill.planPriceUsd) {
+        <p class="meta">
+          @if (bill.planPriceArs) { Monto ARS (env): {{ bill.planPriceArs }} }
+          @if (bill.planPriceUsd) { · USD (env): {{ bill.planPriceUsd }} }
+        </p>
+      } @else {
+        <p class="meta">Montos del plan: a configurar (no se publican cifras inventadas).</p>
+      }
+      <p class="meta">{{ bill.message }}</p>
+      <button
+        class="btn"
+        type="button"
+        (click)="startCheckout()"
+        [disabled]="checkoutBusy">
+        {{ checkoutBusy ? 'Preparando…' : (bill.mpConfigured ? 'Pagar / renovar con Mercado Pago' : 'Probar checkout (scaffolding)') }}
+      </button>
+    </section>
+  }
+
+  @if (ranking(); as rk) {
+    <section class="ranking-block">
+      <h2>Ranking en {{ rk.province }}</h2>
+      <p class="meta">Criterio: clics de WhatsApp entre concesionarias de su provincia (solo panel).</p>
+      @if (rk.entries.length) {
+        <table class="table">
+          <thead>
+            <tr><th>#</th><th>Concesionaria</th><th>Clics WA</th></tr>
+          </thead>
+          <tbody>
+            @for (e of rk.entries; track e.tenantId) {
+              <tr [class.is-self]="e.self">
+                <td>{{ e.rank }}</td>
+                <td>{{ e.name }}@if (e.self) { <span class="you"> (usted)</span> }</td>
+                <td>{{ e.waClicks }}</td>
+              </tr>
+            }
+          </tbody>
+        </table>
+      } @else {
+        <p class="meta">Todavía no hay pares en esta provincia.</p>
+      }
+    </section>
+  }
+
   @if (error()) { <div class="alert">{{ error() }}</div> }
+  @if (ok()) { <div class="alert ok">{{ ok() }}</div> }
+
+  @if (auth.isTenantAdmin()) {
+    <section class="users-block">
+      <h2>Usuarios de su local</h2>
+      <p class="meta">
+        Dé de alta agentes u otros administradores. Ellos usan el mismo panel con el rol que usted asigne.
+      </p>
+
+      <form class="form-grid invite-form" (ngSubmit)="inviteUser()">
+        <div class="field">
+          <label>Email</label>
+          <input [(ngModel)]="invite.email" name="uemail" type="email" required autocomplete="off" />
+        </div>
+        <div class="field">
+          <label>Contraseña temporal</label>
+          <input [(ngModel)]="invite.password" name="upass" type="text" required minlength="6" autocomplete="off" />
+        </div>
+        <div class="field">
+          <label>Rol</label>
+          <select [(ngModel)]="invite.role" name="urole">
+            <option value="TENANT_AGENT">Agente</option>
+            <option value="TENANT_ADMIN">Administrador del local</option>
+          </select>
+        </div>
+        <button class="btn" type="submit" [disabled]="!!stats()?.readOnly">Dar de alta</button>
+      </form>
+
+      <table class="table users-table">
+        <thead>
+          <tr>
+            <th>Email</th>
+            <th>Rol</th>
+            <th>Estado</th>
+            <th></th>
+          </tr>
+        </thead>
+        <tbody>
+          @for (u of users(); track u.id) {
+            <tr [class.inactive]="!u.active">
+              <td>
+                {{ u.email }}
+                @if (isSelf(u)) { <span class="you"> (usted)</span> }
+              </td>
+              <td>
+                @if (isSelf(u) || !!stats()?.readOnly) {
+                  {{ auth.roleLabel(u.role) }}
+                } @else {
+                  <select
+                    [ngModel]="u.role"
+                    (ngModelChange)="changeRole(u, $event)"
+                    [name]="'role-' + u.id">
+                    <option value="TENANT_AGENT">Agente</option>
+                    <option value="TENANT_ADMIN">Administrador del local</option>
+                  </select>
+                }
+              </td>
+              <td>{{ u.active ? 'Activo' : 'Desactivado' }}</td>
+              <td class="user-actions">
+                @if (!isSelf(u) && !stats()?.readOnly) {
+                  <button class="btn secondary" type="button" (click)="toggleActive(u)">
+                    {{ u.active ? 'Desactivar' : 'Reactivar' }}
+                  </button>
+                  <button class="btn secondary danger-btn" type="button" (click)="removeUser(u)">
+                    Borrar
+                  </button>
+                }
+              </td>
+            </tr>
+          }
+        </tbody>
+      </table>
+    </section>
+  } @else if (auth.session()?.role === 'TENANT_AGENT') {
+    <p class="meta agent-note">
+      Usted ingresó como agente. La gestión de usuarios la realiza el administrador del local.
+    </p>
+  }
+
+  <h2>Perfil de la concesionaria</h2>
+  <p class="meta">Estos datos personalizan su página pública en <code>/c/{{ profileForm.slug || '…' }}</code>.</p>
+  <form class="form-grid profile-form" (ngSubmit)="saveProfile()">
+    <div class="field"><label>Nombre comercial</label>
+      <input [(ngModel)]="profileForm.name" name="pname" required [disabled]="!!stats()?.readOnly" />
+    </div>
+    <div class="field"><label>WhatsApp</label>
+      <input [(ngModel)]="profileForm.whatsapp" name="pwa" required [disabled]="!!stats()?.readOnly" />
+    </div>
+    <app-geo-select
+      class="geo-inline"
+      [(province)]="profileForm.province"
+      [(locality)]="profileForm.city"
+      [required]="true"
+      [disabled]="!!stats()?.readOnly"
+      [allowEmptyProvince]="false"
+      [allowEmptyLocality]="false"
+      localityLabel="Localidad / ciudad"
+      namePrefix="profile">
+    </app-geo-select>
+    <div class="field"><label>Dirección</label>
+      <input [(ngModel)]="profileForm.address" name="paddr" [disabled]="!!stats()?.readOnly" />
+    </div>
+    <div class="field"><label>Email de contacto</label>
+      <input [(ngModel)]="profileForm.email" name="pemail" [disabled]="!!stats()?.readOnly" />
+    </div>
+    <div class="field"><label>URL del logo</label>
+      <input [(ngModel)]="profileForm.logoUrl" name="plogo" placeholder="/assets/dealers/…" [disabled]="!!stats()?.readOnly" />
+    </div>
+    <div class="field"><label>Color principal</label>
+      <input type="color" [(ngModel)]="profileForm.primaryColor" name="pprim" [disabled]="!!stats()?.readOnly" />
+    </div>
+    <div class="field"><label>Color de acento</label>
+      <input type="color" [(ngModel)]="profileForm.accentColor" name="pacc" [disabled]="!!stats()?.readOnly" />
+    </div>
+    <div class="field" style="grid-column:1/-1"><label>Descripción pública</label>
+      <textarea rows="3" [(ngModel)]="profileForm.description" name="pdesc" [disabled]="!!stats()?.readOnly"></textarea>
+    </div>
+    <button class="btn" type="submit" [disabled]="!!stats()?.readOnly">Guardar perfil</button>
+  </form>
 
   <h2>Stock</h2>
   <table class="table">
@@ -39,7 +223,7 @@
           <td>{{ v.status }}</td>
           <td>{{ v.views }}</td>
           <td>{{ v.waClicks }}</td>
-          <td><button class="btn secondary" type="button" (click)="remove(v.id)" [disabled]="stats()?.readOnly">Borrar</button></td>
+          <td><button class="btn secondary" type="button" (click)="remove(v.id)" [disabled]="!!stats()?.readOnly">Borrar</button></td>
         </tr>
       }
     </tbody>
@@ -64,6 +248,20 @@
         <option value="ARS">ARS</option>
       </select>
     </div>
+    <app-geo-select
+      class="geo-inline"
+      [(province)]="form.province"
+      [(locality)]="form.city"
+      [required]="true"
+      [disabled]="!!stats()?.readOnly"
+      [allowEmptyProvince]="false"
+      [allowEmptyLocality]="false"
+      localityLabel="Localidad / ciudad"
+      namePrefix="vehicle">
+    </app-geo-select>
+    <div class="field"><label>Foto (URL)</label>
+      <input [(ngModel)]="photoUrl" name="photo" placeholder="/assets/cars/…" />
+    </div>
     <div class="field"><label>Estado</label>
       <select [(ngModel)]="form.status" name="status">
         <option value="PUBLICADO">Publicado</option>
@@ -75,6 +273,6 @@
     <div class="field" style="grid-column:1/-1"><label>Descripción</label>
       <textarea rows="3" [(ngModel)]="form.description" name="description"></textarea>
     </div>
-    <button class="btn" type="submit" [disabled]="stats()?.readOnly">Publicar</button>
+    <button class="btn" type="submit" [disabled]="!!stats()?.readOnly">Publicar</button>
   </form>
 </section>

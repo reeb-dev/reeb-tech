@@ -37,7 +37,7 @@ public class CatalogService {
   public List<VehicleDtos.VehiclePublicDto> search(
       String brand, String model, Integer yearMin, Integer yearMax, Integer kmMax,
       BigDecimal priceMin, BigDecimal priceMax, CurrencyCode currency,
-      String province, VehicleType type) {
+      String province, String city, VehicleType type) {
     Specification<Vehicle> spec = (root, query, cb) -> {
       List<Predicate> preds = new ArrayList<>();
       if (query.getResultType() != Long.class && query.getResultType() != long.class) {
@@ -58,6 +58,9 @@ public class CatalogService {
       if (currency != null) preds.add(cb.equal(root.get("currency"), currency));
       if (province != null && !province.isBlank()) {
         preds.add(cb.equal(cb.lower(root.get("province")), province.toLowerCase()));
+      }
+      if (city != null && !city.isBlank()) {
+        preds.add(cb.equal(cb.lower(root.get("city")), city.toLowerCase()));
       }
       if (type != null) preds.add(cb.equal(root.get("type"), type));
       query.distinct(true);
@@ -116,6 +119,8 @@ public class CatalogService {
         tenant.getName(),
         tenant.getSlug(),
         tenant.getLogoUrl(),
+        tenant.getPrimaryColor(),
+        tenant.getAccentColor(),
         tenant.getProvince(),
         tenant.getCity(),
         tenant.getAddress(),

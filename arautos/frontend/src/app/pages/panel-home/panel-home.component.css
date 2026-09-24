@@ -1,8 +1,52 @@
-
 .head { display: flex; justify-content: space-between; gap: 1rem; align-items: flex-start; margin-bottom: 1rem; }
-h1, h2 { font-family: var(--font-display); font-weight: 400; }
-h2 { margin-top: 1.75rem; font-size: 1.5rem; }
+.head-actions { display: flex; flex-wrap: wrap; gap: .5rem; }
+.session-line {
+  display: flex; flex-wrap: wrap; align-items: center; gap: .35rem; margin-top: .35rem;
+}
+.role-pill {
+  display: inline-block; font-size: .75rem; font-weight: 700;
+  padding: .2rem .55rem; border-radius: 6px; background: #e0eaf8; color: var(--navy-soft);
+}
+.tenant-name { font-weight: 700; color: var(--navy); }
+h1, h2 { font-family: var(--font-display); font-weight: 700; color: var(--navy); }
+h2 { margin-top: 1.75rem; font-size: 1.35rem; }
+.users-block, .agent-note {
+  margin: 1.25rem 0;
+  padding: 1rem 1.1rem;
+  background: #fff;
+  border: 1px solid var(--line);
+  border-radius: 14px;
+  box-shadow: var(--shadow);
+}
+.users-block h2 { margin-top: 0; }
+.invite-form { margin: 1rem 0; }
+.users-table select {
+  background: #fff; border: 1px solid var(--line); border-radius: 8px; padding: .4rem .55rem;
+}
+.users-table .inactive { opacity: .65; }
+.user-actions { display: flex; flex-wrap: wrap; gap: .35rem; justify-content: flex-end; }
+.danger-btn { color: var(--danger) !important; border-color: #f1c5c5 !important; }
+.you { color: var(--celeste); font-weight: 700; }
 .form-grid {
   display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap: .75rem;
-  padding: 1rem; border: 1px solid var(--line); border-radius: 14px; background: rgba(21,32,28,.7);
+  padding: 1rem; border: 1px solid var(--line); border-radius: 14px; background: #fff;
+  box-shadow: var(--shadow);
 }
+.profile-form input[type="color"] {
+  height: 2.5rem; padding: .25rem; cursor: pointer;
+}
+.form-grid app-geo-select.geo-inline {
+  display: contents;
+}
+code { font-size: .85em; background: #eef2f6; padding: .1rem .35rem; border-radius: 4px; }
+.billing-block, .ranking-block {
+  margin: 1.25rem 0;
+  padding: 1rem 1.1rem;
+  background: #fff;
+  border: 1px solid var(--line);
+  border-radius: 14px;
+  box-shadow: var(--shadow);
+}
+.billing-block h2, .ranking-block h2 { margin-top: 0; }
+.ranking-block .is-self { background: #eef5ff; }
+.ranking-block .you { color: var(--celeste); font-weight: 700; }

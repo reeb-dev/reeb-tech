@@ -5,11 +5,12 @@ import { RouterLink } from '@angular/router';
 import { ApiService } from '../../core/api.service';
 import { VehiclePublic } from '../../core/models';
 import { formatPrice, typeLabel } from '../../core/format';
+import { GeoSelectComponent } from '../../shared/geo-select.component';
 
 @Component({
   selector: 'app-catalog',
   standalone: true,
-  imports: [CommonModule, FormsModule, RouterLink],
+  imports: [CommonModule, FormsModule, RouterLink, GeoSelectComponent],
   templateUrl: './catalog.component.html',
   styleUrl: './catalog.component.css'
 })
@@ -18,6 +19,7 @@ export class CatalogComponent implements OnInit {
   error = signal('');
   brand = '';
   province = '';
+  city = '';
   type = '';
   currency = '';
   formatPrice = formatPrice;
@@ -27,11 +29,16 @@ export class CatalogComponent implements OnInit {
 
   ngOnInit() { this.load(); }
 
+  onGeoChange() {
+    // provincia nueva limpia localidad vía geo-select; no auto-buscar
+  }
+
   load() {
     this.error.set('');
     this.api.catalog({
       brand: this.brand || undefined,
       province: this.province || undefined,
+      city: this.city || undefined,
       type: this.type || undefined,
       currency: this.currency || undefined
     }).subscribe({

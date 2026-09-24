@@ -1,0 +1,64 @@
+.head {
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+  align-items: flex-start;
+  margin-bottom: 1rem;
+}
+.head-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: .5rem;
+}
+h1, h2 {
+  font-family: var(--font-display);
+  font-weight: 700;
+  color: var(--navy);
+}
+h2 {
+  margin-top: 0;
+  font-size: 1.35rem;
+}
+.session-line {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: .35rem;
+  margin-top: .35rem;
+}
+.role-pill {
+  display: inline-block;
+  font-size: .75rem;
+  font-weight: 700;
+  padding: .2rem .55rem;
+  border-radius: 6px;
+  background: #e0eaf8;
+  color: var(--navy-soft);
+}
+.admin-block {
+  margin: 1.25rem 0;
+  padding: 1rem 1.1rem;
+  background: #fff;
+  border: 1px solid var(--line);
+  border-radius: 14px;
+  box-shadow: var(--shadow);
+}
+.admin-block .empty { margin: .75rem 0 0; }
+.actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: .4rem;
+  justify-content: flex-end;
+}
+.status {
+  font-size: .8rem;
+  font-weight: 700;
+}
+.status[data-status='PENDIENTE'] { color: var(--ember); }
+.status[data-status='ACTIVA'] { color: var(--ok); }
+.status[data-status='SUSPENDIDA'] { color: var(--danger); }
+
+@media (max-width: 720px) {
+  .head { flex-direction: column; }
+  .actions { justify-content: flex-start; }
+}

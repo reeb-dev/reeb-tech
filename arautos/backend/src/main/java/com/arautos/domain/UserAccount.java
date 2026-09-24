@@ -27,6 +27,10 @@ public class UserAccount {
   @Column(nullable = false, length = 32)
   private UserRole role = UserRole.TENANT_ADMIN;
 
+  /** Si es false, no puede iniciar sesión. */
+  @Column(nullable = false, columnDefinition = "boolean default true")
+  private boolean active = true;
+
   @Column(nullable = false)
   private Instant createdAt = Instant.now();
 
@@ -40,6 +44,8 @@ public class UserAccount {
   public void setPasswordHash(String passwordHash) { this.passwordHash = passwordHash; }
   public UserRole getRole() { return role; }
   public void setRole(UserRole role) { this.role = role; }
+  public boolean isActive() { return active; }
+  public void setActive(boolean active) { this.active = active; }
   public Instant getCreatedAt() { return createdAt; }
   public void setCreatedAt(Instant createdAt) { this.createdAt = createdAt; }
 }

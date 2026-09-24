@@ -1,0 +1,125 @@
+<section class="container">
+  <div class="head">
+    <div>
+      <h1>Administración de plataforma</h1>
+      @if (auth.session(); as s) {
+        <p class="meta session-line">
+          <span class="role-pill">{{ auth.roleLabel(s.role) }}</span>
+          · {{ s.email }}
+        </p>
+      }
+    </div>
+    <div class="head-actions">
+      <a class="btn secondary" routerLink="/">Ver catálogo</a>
+      <button class="btn secondary" type="button" (click)="logout()">Cerrar sesión</button>
+    </div>
+  </div>
+
+  @if (error()) { <div class="alert">{{ error() }}</div> }
+  @if (ok()) { <div class="alert ok">{{ ok() }}</div> }
+
+  <section class="admin-block">
+    <h2>Altas pendientes</h2>
+    <p class="meta">Solicitudes de concesionarias que esperan su aprobación para iniciar el trial.</p>
+    @if (pending().length === 0) {
+      <p class="meta empty">No hay altas pendientes.</p>
+    } @else {
+      <table class="table">
+        <thead>
+          <tr>
+            <th>Local</th>
+            <th>Ubicación</th>
+            <th>Contacto</th>
+            <th></th>
+          </tr>
+        </thead>
+        <tbody>
+          @for (t of pending(); track t.id) {
+            <tr>
+              <td>
+                <strong>{{ t.name }}</strong>
+                <div class="meta">/c/{{ t.slug }}</div>
+              </td>
+              <td>{{ t.city }}, {{ t.province }}</td>
+              <td>
+                <div>{{ t.whatsapp }}</div>
+                <div class="meta">{{ t.email }}</div>
+              </td>
+              <td class="actions">
+                <button
+                  class="btn"
+                  type="button"
+                  (click)="approve(t.id)"
+                  [disabled]="busyId() === t.id">
+                  Aprobar
+                </button>
+                <button
+                  class="btn secondary"
+                  type="button"
+                  (click)="suspend(t.id)"
+                  [disabled]="busyId() === t.id">
+                  Suspender
+                </button>
+              </td>
+            </tr>
+          }
+        </tbody>
+      </table>
+    }
+  </section>
+
+  <section class="admin-block">
+    <h2>Concesionarias</h2>
+    <p class="meta">Listado completo. Puede suspender un local que abuse del servicio.</p>
+    <table class="table">
+      <thead>
+        <tr>
+          <th>Local</th>
+          <th>Ubicación</th>
+          <th>Moderación</th>
+          <th>Suscripción</th>
+          <th></th>
+        </tr>
+      </thead>
+      <tbody>
+        @for (t of tenants(); track t.id) {
+          <tr>
+            <td>
+              <strong>{{ t.name }}</strong>
+              <div class="meta">
+                <a [routerLink]="['/c', t.slug]">/c/{{ t.slug }}</a>
+              </div>
+            </td>
+            <td>{{ t.city }}, {{ t.province }}</td>
+            <td>
+              <span class="status" [attr.data-status]="t.moderationStatus">
+                {{ moderationLabel(t.moderationStatus) }}
+              </span>
+            </td>
+            <td>{{ subscriptionLabel(t.subscriptionStatus) }}</td>
+            <td class="actions">
+              @if (t.moderationStatus === 'PENDIENTE') {
+                <button
+                  class="btn"
+                  type="button"
+                  (click)="approve(t.id)"
+                  [disabled]="busyId() === t.id">
+                  Aprobar
+                </button>
+              }
+              @if (t.moderationStatus !== 'SUSPENDIDA') {
+                <button
+                  class="btn secondary"
+                  type="button"
+                  (click)="suspend(t.id)"
+                  [disabled]="busyId() === t.id">
+                  Suspender
+                </button>
+              }
+            </td>
+          </tr>
+        }
+      </tbody>
+    </table>
+  </section>
+</section>

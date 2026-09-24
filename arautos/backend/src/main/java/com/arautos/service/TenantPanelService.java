@@ -43,6 +43,8 @@ public class TenantPanelService {
     }
     if (req.name() != null && !req.name().isBlank()) t.setName(req.name());
     if (req.logoUrl() != null) t.setLogoUrl(req.logoUrl());
+    if (req.primaryColor() != null) t.setPrimaryColor(normalizeHex(req.primaryColor()));
+    if (req.accentColor() != null) t.setAccentColor(normalizeHex(req.accentColor()));
     if (req.province() != null && !req.province().isBlank()) t.setProvince(req.province());
     if (req.city() != null && !req.city().isBlank()) t.setCity(req.city());
     if (req.address() != null) t.setAddress(req.address());
@@ -72,6 +74,8 @@ public class TenantPanelService {
         t.getName(),
         t.getSlug(),
         t.getLogoUrl(),
+        t.getPrimaryColor(),
+        t.getAccentColor(),
         t.getProvince(),
         t.getCity(),
         t.getAddress(),
@@ -90,6 +94,17 @@ public class TenantPanelService {
 
   private static String blankToNull(String s) {
     return s == null || s.isBlank() ? null : s;
+  }
+
+  /** Acepta #RGB / #RRGGBB; vacío limpia el color. */
+  private static String normalizeHex(String raw) {
+    if (raw == null || raw.isBlank()) return null;
+    String v = raw.trim();
+    if (!v.startsWith("#")) v = "#" + v;
+    if (!v.matches("(?i)^#([0-9a-f]{3}|[0-9a-f]{6})$")) {
+      throw new ApiException(HttpStatus.BAD_REQUEST, "Color inválido (use hex, ej. #0B3D4A)");
+    }
+    return v.toUpperCase();
   }
 
   private Tenant require(UserPrincipal principal) {

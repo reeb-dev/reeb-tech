@@ -1,0 +1,18 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 36 24" role="img" aria-label="Bandera de Argentina — logo ArAutos">
+  <rect width="36" height="8" y="0" fill="#74ACDF"/>
+  <rect width="36" height="8" y="8" fill="#FFFFFF"/>
+  <rect width="36" height="8" y="16" fill="#74ACDF"/>
+  <g transform="translate(18 12)">
+    <circle r="3.2" fill="#F6B40E" stroke="#C9890A" stroke-width="0.35"/>
+    <g fill="#F6B40E" stroke="#C9890A" stroke-width="0.2">
+      <path d="M0 -5.4 L0.55 -3.7 L-0.55 -3.7 Z"/>
+      <path d="M0 5.4 L-0.55 3.7 L0.55 3.7 Z"/>
+      <path d="M5.4 0 L3.7 0.55 L3.7 -0.55 Z"/>
+      <path d="M-5.4 0 L-3.7 -0.55 L-3.7 0.55 Z"/>
+      <path d="M3.82 -3.82 L2.2 -2.95 L3.07 -2.08 Z"/>
+      <path d="M-3.82 3.82 L-2.2 2.95 L-3.07 2.08 Z"/>
+      <path d="M3.82 3.82 L3.07 2.08 L2.2 2.95 Z"/>
+      <path d="M-3.82 -3.82 L-3.07 -2.08 L-2.2 -2.95 Z"/>
+    </g>
+  </g>
+</svg>

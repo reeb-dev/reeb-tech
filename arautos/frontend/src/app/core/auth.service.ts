@@ -33,6 +33,44 @@ export class AuthService {
     return this.session()?.token ?? null;
   }
 
+  role(): string | null {
+    return this.session()?.role ?? null;
+  }
+
+  isLoggedIn(): boolean {
+    return !!this.session()?.token;
+  }
+
+  isPlatformAdmin(): boolean {
+    return this.role() === 'PLATFORM_ADMIN';
+  }
+
+  isTenantAdmin(): boolean {
+    return this.role() === 'TENANT_ADMIN';
+  }
+
+  isTenantUser(): boolean {
+    const r = this.role();
+    return r === 'TENANT_ADMIN' || r === 'TENANT_AGENT';
+  }
+
+  roleLabel(role?: string | null): string {
+    switch (role || this.role()) {
+      case 'PLATFORM_ADMIN':
+        return 'Administrador de plataforma';
+      case 'TENANT_ADMIN':
+        return 'Administrador del local';
+      case 'TENANT_AGENT':
+        return 'Agente';
+      default:
+        return role || 'Usuario';
+    }
+  }
+
+  homePath(): string {
+    return this.isPlatformAdmin() ? '/panel/admin' : '/panel';
+  }
+
   private persist(res: AuthResponse) {
     localStorage.setItem(KEY, JSON.stringify(res));
     this.session.set(res);
