@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Mercado Pago — Checkout Pro</title>
+  <meta name="description" content="Guía de integración Checkout Pro, webhooks y seguridad">
+  <meta name="robots" content="noindex, follow">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <div class="wrap">
+    <nav class="top">
+  <a class="brand" href="index.html">Integraciones FE / pagos</a>
+  <a href="arca-fuentes.html">ARCA · Fuentes</a>
+  <a href="arca-implementacion.html">ARCA · Implementación</a>
+  <a href="mercadopago.html">Mercado Pago</a>
+</nav>
+    <article>
+<h1>Mercado Pago — Checkout Pro (guía de integración)</h1>
+<p>Documento para integrar <strong>cobros online</strong> vía Checkout Pro en un sistema de stock/ventas (single-tenant).</p>
+<p><strong>Extra cotizado.</strong> Sin el <code>ACCESS_TOKEN</code> de la <strong>cuenta del comercio</strong> no se crean cobros.<br />
+No inventa precios de suscripción: el cobro es del comercio con su propia cuenta MP.</p>
+<p>Documentación oficial:</p>
+<table>
+<thead>
+<tr>
+<th>Recurso</th>
+<th>URL</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Checkout Pro (overview)</td>
+<td>https://www.mercadopago.com.ar/developers/es/docs/checkout-pro/landing</td>
+</tr>
+<tr>
+<td>Crear preferencia</td>
+<td>https://www.mercadopago.com.ar/developers/es/docs/checkout-pro/create-payment-preference</td>
+</tr>
+<tr>
+<td>Webhooks / notificaciones</td>
+<td>https://www.mercadopago.com.ar/developers/es/docs/your-integrations/notifications/webhooks</td>
+</tr>
+<tr>
+<td>Credenciales (test/prod)</td>
+<td>https://www.mercadopago.com.ar/developers/panel/app</td>
+</tr>
+<tr>
+<td>SDK / API reference</td>
+<td>https://www.mercadopago.com.ar/developers/es/reference</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2>Variables de entorno (servidor)</h2>
+<pre><code class="language-bash">MP_ENABLED=true
+MP_ACCESS_TOKEN=APP_USR-...          # token de la cuenta del comercio (nunca en el front)
+MP_PUBLIC_KEY=APP_USR-...            # opcional (front / bricks futuros)
+MP_NOTIFICATION_URL=https://tu-dominio/api/mercadopago/webhooks
+MP_SUCCESS_URL=https://tu-dominio/panel
+MP_FAILURE_URL=https://tu-dominio/panel
+MP_PENDING_URL=https://tu-dominio/panel
+MP_CURRENCY_ID=ARS
+</code></pre>
+<p>Seguridad:</p>
+<ul>
+<li>El <strong>Access Token</strong> vive solo en el servidor (env / secrets). Nunca en git ni en el navegador.</li>
+<li>Usar HTTPS en producción.</li>
+<li>Validar notificaciones (consultar el pago por API con el <code>id</code> del webhook antes de marcar la venta como pagada).</li>
+</ul>
+<hr />
+<h2>API típica del producto (ejemplo)</h2>
+<table>
+<thead>
+<tr>
+<th>Método</th>
+<th>Ruta</th>
+<th>Uso</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>GET</td>
+<td><code>/api/mercadopago/status</code></td>
+<td>¿Configurado?</td>
+</tr>
+<tr>
+<td>POST</td>
+<td><code>/api/mercadopago/preferences/{saleId}</code></td>
+<td>Crea preferencia Checkout Pro</td>
+</tr>
+<tr>
+<td>GET</td>
+<td><code>/api/mercadopago/checkouts/{saleId}</code></td>
+<td>Links / estados</td>
+</tr>
+<tr>
+<td>POST/GET</td>
+<td><code>/api/mercadopago/webhooks</code></td>
+<td>IPN / webhook (público)</td>
+</tr>
+</tbody>
+</table>
+<p>Flujo:</p>
+<ol>
+<li>Cerrar venta en el panel.</li>
+<li>Crear preferencia → obtener <code>init_point</code> (prod) o <code>sandbox_init_point</code> (test).</li>
+<li>Abrir el link / QR para que el cliente pague.</li>
+<li>Webhook actualiza estado; el panel muestra pagado / pendiente / fallido.</li>
+</ol>
+<p>En el panel: <strong>Ventas → Link MP</strong>.</p>
+<hr />
+<h2>Checklist de aceptación</h2>
+<ul>
+<li>[ ] Credenciales de <strong>prueba</strong> generan preferencia y pago sandbox.</li>
+<li>[ ] Webhook marca la venta sin intervención manual.</li>
+<li>[ ] Credenciales de <strong>producción</strong> solo con OK del comercio.</li>
+<li>[ ] Token no aparece en logs de front ni en repositorio.</li>
+</ul>
+    </article>
+    <footer>
+      Documentación técnica de integración (ARCA / AFIP y Mercado Pago). Extra cotizado; sin precios inventados.
+      Fuentes oficiales prevalecen ante este resumen. Abrí en el navegador (no como blob de GitHub).
+    </footer>
+  </div>
+</body>
+</html>

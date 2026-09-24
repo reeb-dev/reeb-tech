@@ -1,0 +1,55 @@
+
+:root {
+  --ink: #0f172a; --muted: #475569; --line: #e2e8f0; --bg: #f1f5f9;
+  --card: #fff; --accent: #0f766e; --accent-soft: #f0fdfa;
+  --code-bg: #0f172a; --code: #e2e8f0;
+}
+* { box-sizing: border-box; }
+body {
+  margin: 0; font-family: "Segoe UI", system-ui, -apple-system, sans-serif;
+  color: var(--ink); background: var(--bg); line-height: 1.65; font-size: 17px;
+}
+.wrap { max-width: 900px; margin: 0 auto; padding: 1.5rem 1.25rem 4rem; }
+nav.top {
+  display: flex; flex-wrap: wrap; gap: 0.75rem 1.25rem; align-items: center;
+  background: var(--card); border: 1px solid var(--line); border-radius: 12px;
+  padding: 0.85rem 1.1rem; margin-bottom: 1.25rem;
+}
+nav.top a { color: var(--accent); font-weight: 600; text-decoration: none; }
+nav.top a:hover { text-decoration: underline; }
+nav.top .brand { color: var(--ink); font-weight: 700; margin-right: auto; }
+article {
+  background: var(--card); border: 1px solid var(--line); border-radius: 16px;
+  padding: 1.75rem 1.5rem;
+}
+h1,h2,h3 { line-height: 1.25; }
+h1 { font-size: 1.75rem; margin-top: 0; }
+h2 { font-size: 1.25rem; margin-top: 2rem; border-bottom: 1px solid var(--line); padding-bottom: 0.35rem; }
+h3 { font-size: 1.05rem; }
+a { color: var(--accent); }
+p, li { color: var(--ink); }
+.muted { color: var(--muted); font-size: 0.95rem; }
+table { width: 100%; border-collapse: collapse; margin: 1rem 0; font-size: 0.95rem; }
+th, td { border: 1px solid var(--line); padding: 0.5rem 0.65rem; text-align: left; vertical-align: top; }
+th { background: var(--accent-soft); }
+code { font-family: ui-monospace, SFMono-Regular, Menlo, monospace; font-size: 0.88em;
+  background: #e2e8f0; padding: 0.1em 0.35em; border-radius: 4px; }
+pre { background: var(--code-bg); color: var(--code); padding: 1rem 1.1rem; border-radius: 10px;
+  overflow-x: auto; font-size: 0.85rem; }
+pre code { background: transparent; color: inherit; padding: 0; }
+.note {
+  background: var(--accent-soft); border: 1px solid #99f6e4; border-radius: 10px;
+  padding: 0.85rem 1rem; margin: 1rem 0; font-size: 0.95rem;
+}
+.cards { display: grid; gap: 1rem; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); }
+.card {
+  display: block; background: var(--card); border: 1px solid var(--line); border-radius: 14px;
+  padding: 1.25rem; text-decoration: none; color: inherit;
+}
+.card:hover { border-color: var(--accent); }
+.card h2 { margin: 0 0 0.4rem; font-size: 1.1rem; border: 0; color: var(--accent); }
+footer { margin-top: 1.5rem; color: var(--muted); font-size: 0.9rem; }
+@media (max-width: 640px) {
+  article { padding: 1.25rem 1rem; }
+  body { font-size: 16px; }
+}

@@ -10,6 +10,9 @@ Si lo vas a **mandar por mail**, usá la nota corta: [LEEME-PARA-ENVIAR.md](LEEM
 
 ## Página pública
 
+También: [Integraciones ARCA + Mercado Pago](https://webconreeb.com/docs/integraciones/) (`docs/integraciones/`).
+
+
 En GitHub Pages (no el blob del repo):
 
 - Hub: https://webconreeb.com/docs/guia-inicio.html
