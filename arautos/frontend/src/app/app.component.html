@@ -1,10 +1,20 @@
 <header class="top">
   <div class="container top-inner">
     <a class="brand" routerLink="/" aria-label="ArAutos — inicio">
-      <img class="logo-flag" src="/assets/bandera-argentina.svg" width="56" height="37" alt="Bandera de Argentina" />
-      <span class="brand-text">ArAutos<small>Autos en Argentina</small></span>
+      <img
+        class="logo-malvinas"
+        src="/assets/logo-malvinas-ar.png"
+        width="200"
+        height="123"
+        alt="Islas Malvinas con la bandera argentina"
+      />
+      <span class="brand-text">
+        ArAutos
+        <small>Autos en Argentina</small>
+      </span>
+      <span class="brand-lema">{{ lemaMalvinas() }}</span>
     </a>
-    <nav>
+    <nav aria-label="Principal">
       <a routerLink="/">Catálogo</a>
       <a routerLink="/panel">Mi concesionaria</a>
     </nav>

@@ -1,52 +1,83 @@
 .top {
-  position: sticky; top: 0; z-index: 20;
-  background: linear-gradient(135deg, var(--navy) 0%, var(--navy-soft) 100%);
-  border-bottom: 1px solid rgba(255,255,255,.08);
+  position: sticky;
+  top: 0;
+  z-index: 20;
+  background: linear-gradient(180deg, var(--navy) 0%, var(--navy-soft) 100%);
+  border-bottom: 3px solid #74acdf;
   color: #fff;
+  box-shadow: 0 8px 24px rgba(15, 39, 68, 0.28);
 }
 .top-inner {
-  display: flex; align-items: center; justify-content: space-between;
-  padding: .85rem 0;
-  gap: 1rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: .55rem;
+  padding: .9rem 0 1rem;
+  text-align: center;
 }
 .brand {
-  display: inline-flex;
+  display: flex;
+  flex-direction: column;
   align-items: center;
-  gap: .75rem;
+  gap: .3rem;
   color: #fff;
   text-decoration: none;
+  max-width: 22rem;
 }
-.logo-flag {
-  width: 56px;
-  height: 37px;
-  border-radius: 4px;
-  box-shadow: 0 0 0 1px rgba(255,255,255,.28), 0 4px 12px rgba(0,0,0,.25);
-  flex-shrink: 0;
-  object-fit: cover;
+.brand:hover { text-decoration: none; color: #fff; }
+.logo-malvinas {
+  width: min(200px, 52vw);
+  height: auto;
+  display: block;
+  filter: drop-shadow(0 2px 8px rgba(0, 0, 0, 0.35));
 }
 .brand-text {
   font-family: var(--font-display);
-  font-size: 1.45rem;
+  font-size: 1.55rem;
   letter-spacing: .01em;
   font-weight: 700;
   line-height: 1.1;
 }
-.brand small {
+.brand-text small {
   display: block;
   font-family: var(--font-body);
   font-size: .68rem;
   font-weight: 600;
-  letter-spacing: .08em;
+  letter-spacing: .1em;
   text-transform: uppercase;
-  opacity: .75;
+  opacity: .78;
+  margin-top: .12rem;
 }
-nav { display: flex; gap: 1rem; align-items: center; }
-nav a { color: rgba(255,255,255,.85); font-weight: 600; text-decoration: none; }
-nav a:hover { color: #fff; text-decoration: none; }
+.brand-lema {
+  font-size: .78rem;
+  font-weight: 700;
+  letter-spacing: .04em;
+  color: #cfe4f7;
+}
+nav {
+  display: flex;
+  gap: .35rem 1.1rem;
+  align-items: center;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+nav a {
+  color: rgba(255, 255, 255, .88);
+  font-weight: 600;
+  text-decoration: none;
+  font-size: .95rem;
+  padding: .2rem .1rem;
+  border-bottom: 2px solid transparent;
+}
+nav a:hover {
+  color: #fff;
+  text-decoration: none;
+  border-bottom-color: #74acdf;
+}
 main { min-height: 70vh; padding: 1.5rem 0 3rem; }
 .foot {
   border-top: 1px solid var(--line);
-  padding: 1.1rem 0 1.6rem;
+  padding: 1.15rem 0 1.65rem;
   color: var(--muted);
   font-size: .9rem;
   background: #fff;
@@ -64,7 +95,7 @@ main { min-height: 70vh; padding: 1.5rem 0 3rem; }
   letter-spacing: .02em;
 }
 @media (max-width: 560px) {
-  .logo-flag { width: 48px; height: 32px; }
-  .brand-text { font-size: 1.25rem; }
+  .logo-malvinas { width: min(168px, 58vw); }
+  .brand-text { font-size: 1.3rem; }
   .foot-inner { flex-direction: column; gap: .35rem; }
 }

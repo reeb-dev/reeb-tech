@@ -1,31 +1,31 @@
-.hero { margin-bottom: .75rem; }
+.hero {
+  margin-bottom: 1rem;
+  padding: .15rem 0 .25rem;
+}
 .eyebrow {
-  margin: 0 0 .4rem;
+  margin: 0 0 .45rem;
   font-size: .78rem;
   font-weight: 700;
-  letter-spacing: .08em;
+  letter-spacing: .1em;
   text-transform: uppercase;
   color: var(--celeste);
-  display: inline-flex;
-  align-items: center;
-  gap: .5rem;
-}
-.logo-flag-sm {
-  width: 40px;
-  height: 27px;
-  border-radius: 3px;
-  box-shadow: 0 0 0 1px rgba(15, 39, 68, 0.14);
-  flex-shrink: 0;
 }
 .hero h1 {
   font-family: var(--font-display);
-  font-size: clamp(2rem, 5vw, 3rem);
-  margin: 0 0 .4rem;
+  font-size: clamp(1.85rem, 4.5vw, 2.65rem);
+  margin: 0 0 .45rem;
   font-weight: 700;
   color: var(--navy);
   letter-spacing: -0.02em;
+  line-height: 1.15;
 }
-.hero p { color: var(--muted); margin: 0; max-width: 40rem; font-size: 1.05rem; }
+.hero p {
+  color: var(--muted);
+  margin: 0;
+  max-width: 38rem;
+  font-size: 1.02rem;
+  line-height: 1.45;
+}
 .card-vehicle a { text-decoration: none; color: inherit; }
 .card-vehicle h3 a:hover { color: var(--celeste); }
 .filters app-geo-select.geo-filters {
