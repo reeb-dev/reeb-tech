@@ -1,0 +1,80 @@
+
+<section class="container">
+  <div class="head">
+    <div>
+      <h1>Panel</h1>
+      <p class="meta" *ngIf="auth.session() as s">
+        {{ s.tenantName }} · {{ s.email }}
+        <span *ngIf="profile() as p"> · {{ p.subscriptionStatus }}</span>
+        <a *ngIf="profile() as p" [routerLink]="['/c', p.slug]"> ver perfil público</a>
+      </p>
+    </div>
+    <button class="btn secondary" type="button" (click)="logout()">Salir</button>
+  </div>
+
+  @if (stats(); as st) {
+    <div class="stats">
+      <div class="stat"><strong>{{ st.activeListings }}</strong><span>Avisos publicados</span></div>
+      <div class="stat"><strong>{{ st.totalViews }}</strong><span>Vistas</span></div>
+      <div class="stat"><strong>{{ st.totalWaClicks }}</strong><span>Clics WhatsApp</span></div>
+      <div class="stat"><strong>{{ st.readOnly ? 'Sí' : 'No' }}</strong><span>Solo lectura</span></div>
+    </div>
+    @if (st.readOnly) {
+      <div class="alert">Cuenta vencida o suspendida: el catálogo no lista sus avisos y el panel está en solo lectura.</div>
+    }
+  }
+
+  @if (error()) { <div class="alert">{{ error() }}</div> }
+
+  <h2>Stock</h2>
+  <table class="table">
+    <thead>
+      <tr><th>Vehículo</th><th>Precio</th><th>Estado</th><th>Vistas</th><th>WA</th><th></th></tr>
+    </thead>
+    <tbody>
+      @for (v of vehicles(); track v.id) {
+        <tr>
+          <td>{{ v.brand }} {{ v.model }} {{ v.year }}</td>
+          <td>{{ formatPrice(v.price, v.currency) }}</td>
+          <td>{{ v.status }}</td>
+          <td>{{ v.views }}</td>
+          <td>{{ v.waClicks }}</td>
+          <td><button class="btn secondary" type="button" (click)="remove(v.id)" [disabled]="stats()?.readOnly">Borrar</button></td>
+        </tr>
+      }
+    </tbody>
+  </table>
+
+  <h2>Nuevo aviso</h2>
+  <form class="form-grid" (ngSubmit)="create()">
+    <div class="field"><label>Marca</label><input [(ngModel)]="form.brand" name="brand" required /></div>
+    <div class="field"><label>Modelo</label><input [(ngModel)]="form.model" name="model" required /></div>
+    <div class="field"><label>Año</label><input type="number" [(ngModel)]="form.year" name="year" required /></div>
+    <div class="field"><label>Km</label><input type="number" [(ngModel)]="form.km" name="km" required /></div>
+    <div class="field"><label>Tipo</label>
+      <select [(ngModel)]="form.type" name="type">
+        <option value="CERO_KM">0 Km</option>
+        <option value="USADO">Usado</option>
+      </select>
+    </div>
+    <div class="field"><label>Precio</label><input type="number" [(ngModel)]="form.price" name="price" required /></div>
+    <div class="field"><label>Moneda</label>
+      <select [(ngModel)]="form.currency" name="currency">
+        <option value="USD">USD</option>
+        <option value="ARS">ARS</option>
+      </select>
+    </div>
+    <div class="field"><label>Estado</label>
+      <select [(ngModel)]="form.status" name="status">
+        <option value="PUBLICADO">Publicado</option>
+        <option value="BORRADOR">Borrador</option>
+        <option value="OCULTO">Oculto</option>
+        <option value="VENDIDO">Vendido</option>
+      </select>
+    </div>
+    <div class="field" style="grid-column:1/-1"><label>Descripción</label>
+      <textarea rows="3" [(ngModel)]="form.description" name="description"></textarea>
+    </div>
+    <button class="btn" type="submit" [disabled]="stats()?.readOnly">Publicar</button>
+  </form>
+</section>

@@ -1,0 +1,31 @@
+
+<section class="container" *ngIf="dealer() as d">
+  <div class="profile-head">
+    <div>
+      <h1>{{ d.name }}</h1>
+      <p class="meta">{{ d.address ? d.address + ' · ' : '' }}{{ d.city }}, {{ d.province }}</p>
+      <p>{{ d.description }}</p>
+    </div>
+    <button class="btn wa" type="button" (click)="wa(d)">WhatsApp</button>
+  </div>
+
+  <h2>Stock publicado</h2>
+  <div class="grid-cards">
+    @for (v of d.vehicles; track v.id) {
+      <article class="card-vehicle">
+        <a [routerLink]="['/aviso', v.id]" class="media">
+          <img [src]="v.photos[0] || 'https://placehold.co/800x500'" [alt]="v.brand + ' ' + v.model" />
+        </a>
+        <div class="body">
+          <span class="badge">{{ typeLabel(v.type) }}</span>
+          <h3><a [routerLink]="['/aviso', v.id]">{{ v.brand }} {{ v.model }}</a></h3>
+          <div class="meta">{{ v.year }} · {{ v.km | number }} km</div>
+          <div class="price">{{ formatPrice(v.price, v.currency) }}</div>
+        </div>
+      </article>
+    } @empty {
+      <p class="meta">Sin avisos publicados.</p>
+    }
+  </div>
+</section>
+@if (error()) { <div class="container alert">{{ error() }}</div> }

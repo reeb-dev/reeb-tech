@@ -1,0 +1,33 @@
+services:
+  postgres:
+    image: postgres:16-alpine
+    container_name: arautos-postgres
+    environment:
+      POSTGRES_DB: arautos
+      POSTGRES_USER: arautos
+      POSTGRES_PASSWORD: arautos
+    ports:
+      - "5432:5432"
+    volumes:
+      - arautos_pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U arautos -d arautos"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+  # API opcional (requiere imagen build). Para desarrollo local preferí `mvn spring-boot:run`.
+  # api:
+  #   build: ./backend
+  #   ports:
+  #     - "8080:8080"
+  #   environment:
+  #     DATABASE_URL: jdbc:postgresql://postgres:5432/arautos
+  #     DATABASE_USER: arautos
+  #     DATABASE_PASSWORD: arautos
+  #   depends_on:
+  #     postgres:
+  #       condition: service_healthy
+
+volumes:
+  arautos_pgdata:

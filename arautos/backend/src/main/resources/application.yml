@@ -1,0 +1,38 @@
+server:
+  port: ${SERVER_PORT:8080}
+
+spring:
+  application:
+    name: arautos
+  autoconfigure:
+    exclude: org.springframework.boot.autoconfigure.security.servlet.UserDetailsServiceAutoConfiguration
+  datasource:
+    url: ${DATABASE_URL:jdbc:postgresql://localhost:5432/arautos}
+    username: ${DATABASE_USER:arautos}
+    password: ${DATABASE_PASSWORD:arautos}
+  jpa:
+    hibernate:
+      ddl-auto: update
+    open-in-view: false
+    properties:
+      hibernate:
+        jdbc:
+          time_zone: UTC
+
+arautos:
+  jwt:
+    secret: ${ARAUTOS_JWT_SECRET:arautos-dev-secret-change-me-32chars-min!!}
+    expiration-ms: ${ARAUTOS_JWT_EXPIRATION_MS:86400000}
+  trial-days: ${ARAUTOS_TRIAL_DAYS:14}
+  # Placeholders de plan — NO montos públicos inventados
+  plan:
+    id: ${ARAUTOS_PLAN_ID:starter}
+    name: ${ARAUTOS_PLAN_NAME:Starter}
+    price-usd: ${ARAUTOS_PLAN_PRICE_USD:}
+    price-ars: ${ARAUTOS_PLAN_PRICE_ARS:}
+  cors-origins: ${ARAUTOS_CORS_ORIGINS:http://localhost:4200,http://127.0.0.1:4200}
+  seed: ${ARAUTOS_SEED:true}
+
+logging:
+  level:
+    org.springframework.security: INFO

@@ -1,0 +1,10 @@
+
+.hero { margin-bottom: .5rem; }
+.hero h1 {
+  font-family: var(--font-display);
+  font-size: clamp(2.4rem, 6vw, 3.6rem);
+  margin: 0 0 .35rem;
+  font-weight: 400;
+}
+.hero p { color: var(--muted); margin: 0; max-width: 36rem; }
+.card-vehicle a { text-decoration: none; color: inherit; }

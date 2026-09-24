@@ -1,0 +1,26 @@
+
+<section class="container narrow">
+  <h1>Panel concesionaria</h1>
+  <p class="meta">Seed: demo1&#64;patagonia-motors.example / demo123</p>
+
+  <div class="tabs">
+    <button type="button" [class.active]="mode==='login'" (click)="mode='login'">Ingresar</button>
+    <button type="button" [class.active]="mode==='register'" (click)="mode='register'">Alta</button>
+  </div>
+
+  <form (ngSubmit)="submit()">
+    <div class="field"><label>Email</label><input [(ngModel)]="email" name="email" type="email" required /></div>
+    <div class="field"><label>Contraseña</label><input [(ngModel)]="password" name="password" type="password" required /></div>
+    @if (mode === 'register') {
+      <div class="field"><label>Nombre del local</label><input [(ngModel)]="dealerName" name="dealerName" required /></div>
+      <div class="field"><label>Provincia</label><input [(ngModel)]="province" name="province" required /></div>
+      <div class="field"><label>Ciudad</label><input [(ngModel)]="city" name="city" required /></div>
+      <div class="field"><label>WhatsApp</label><input [(ngModel)]="whatsapp" name="whatsapp" placeholder="54911..." required /></div>
+    }
+    <button class="btn" type="submit">{{ mode === 'login' ? 'Entrar' : 'Solicitar alta' }}</button>
+  </form>
+
+  @if (error()) { <div class="alert">{{ error() }}</div> }
+  @if (message()) { <div class="alert ok">{{ message() }}</div> }
+  <p class="meta"><a routerLink="/">Volver al catálogo</a></p>
+</section>
