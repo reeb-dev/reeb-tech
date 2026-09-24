@@ -241,4 +241,4 @@ Prod: solo con OK del contador del cliente.
 ## 10. Relación con hosted / piloto
 
 En plan mensual cada suscriptor aporta **su** CUIT y certificado (o alta asistida cotizada).  
-
+Ver [PLAN-MENSUAL-HOSTED.md](./PLAN-MENSUAL-HOSTED.md), [MAPA-PILOTO.md](./MAPA-PILOTO.md), [ARQUITECTURA.md](./ARQUITECTURA.md).

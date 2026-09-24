@@ -3,8 +3,8 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Mercado Pago — Checkout Pro</title>
-  <meta name="description" content="Guía de integración Checkout Pro, webhooks y seguridad">
+  <title>Mercado Pago — API y Checkout Pro</title>
+  <meta name="description" content="API Reference + guía usuario/código">
   <meta name="robots" content="noindex, follow">
   <link rel="stylesheet" href="styles.css">
 </head>
@@ -17,60 +17,149 @@
   <a href="mercadopago.html">Mercado Pago</a>
 </nav>
     <article>
-<h1>Mercado Pago — Checkout Pro (guía de integración)</h1>
-<p>Documento para integrar <strong>cobros online</strong> vía Checkout Pro en un sistema de stock/ventas (single-tenant).</p>
-<p><strong>Extra cotizado.</strong> Sin el <code>ACCESS_TOKEN</code> de la <strong>cuenta del comercio</strong> no se crean cobros.<br />
+<h1>Mercado Pago — guía de implementación (Checkout Pro + API)</h1>
+<p>Extra cotizado. Sin el <strong>Access Token de la cuenta del comercio</strong> no se crean cobros.<br />
 No inventa precios de suscripción: el cobro es del comercio con su propia cuenta MP.</p>
-<p>Documentación oficial:</p>
+<p>Fuente de verdad (API): <a href="https://www.mercadopago.com.ar/developers/es/reference">https://www.mercadopago.com.ar/developers/es/reference</a><br />
+Base URL: <code>https://api.mercadopago.com</code><br />
+Checkout Pro (producto): <a href="https://www.mercadopago.com.ar/developers/es/docs/checkout-pro/landing">landing</a></p>
+<hr />
+<h2>1. Para el usuario (comercio)</h2>
+<ol>
+<li>Crear cuenta de vendedor en Mercado Pago.  </li>
+<li>Ir a <strong>Tus integraciones</strong> → crear aplicación.  </li>
+<li>Copiar credenciales:<br />
+   - <strong>Access Token</strong> (servidor; test y prod son distintos).<br />
+   - <strong>Public Key</strong> (opcional hoy; bricks / front futuro).  </li>
+<li>Entregar a REEB solo por canal seguro (1Password / mensaje cifrado). Nunca por issue público.  </li>
+<li>En producción hace falta <strong>HTTPS</strong> en la URL del local (MP descarta <code>back_urls</code> con <code>http://</code>).  </li>
+<li>Probar un pago de prueba → ver estado en el panel (Ventas → Link MP).  </li>
+<li>Producción: cambiar a token prod solo con OK del dueño.</li>
+</ol>
+<p>Extras ARCA (CAE) son independientes: ver <a href="arca-implementacion.html">Guía de implementación</a> y <a href="arca-fuentes.html">Fuentes oficiales</a>.</p>
+<hr />
+<h2>2. Autenticación (todas las llamadas)</h2>
+<pre><code class="language-http">Authorization: Bearer &lt;ACCESS_TOKEN&gt;
+</code></pre>
+<ul>
+<li>Solo HTTPS.  </li>
+<li>Nunca exponer el Access Token en el front ni en git.  </li>
+<li>Panel de credenciales: <a href="https://www.mercadopago.com.ar/developers/panel/app">developers panel</a>.</li>
+</ul>
+<p>Ejemplo:</p>
+<pre><code class="language-bash">curl -H 'Authorization: Bearer &lt;ENV_ACCESS_TOKEN&gt;' \
+  https://api.mercadopago.com/v1/payments/&lt;PAYMENT_ID&gt;
+</code></pre>
+<hr />
+<h2>3. Endpoints que usa este producto</h2>
 <table>
 <thead>
 <tr>
-<th>Recurso</th>
-<th>URL</th>
+<th>Uso</th>
+<th>Método</th>
+<th>Path</th>
+<th>Doc oficial</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td>Checkout Pro (overview)</td>
-<td>https://www.mercadopago.com.ar/developers/es/docs/checkout-pro/landing</td>
+<td>Crear preferencia Checkout Pro</td>
+<td><code>POST</code></td>
+<td><code>/checkout/preferences</code></td>
+<td><a href="https://www.mercadopago.com.ar/developers/es/reference/online-payments/checkout-pro/preferences/create-preference/post">Crear preferencia</a></td>
 </tr>
 <tr>
-<td>Crear preferencia</td>
-<td>https://www.mercadopago.com.ar/developers/es/docs/checkout-pro/create-payment-preference</td>
-</tr>
-<tr>
-<td>Webhooks / notificaciones</td>
-<td>https://www.mercadopago.com.ar/developers/es/docs/your-integrations/notifications/webhooks</td>
-</tr>
-<tr>
-<td>Credenciales (test/prod)</td>
-<td>https://www.mercadopago.com.ar/developers/panel/app</td>
-</tr>
-<tr>
-<td>SDK / API reference</td>
-<td>https://www.mercadopago.com.ar/developers/es/reference</td>
+<td>Consultar pago (webhook)</td>
+<td><code>GET</code></td>
+<td><code>/v1/payments/{id}</code></td>
+<td><a href="https://www.mercadopago.com.ar/developers/es/reference/online-payments/checkout-api-payments/get-payment/get">Obtener pago</a></td>
 </tr>
 </tbody>
 </table>
+<p>Notificaciones: <a href="https://www.mercadopago.com.ar/developers/es/docs/your-integrations/notifications/webhooks">Webhooks</a>.</p>
+<p>Colección Postman: enlazada desde la <a href="https://www.mercadopago.com.ar/developers/es/reference">API Reference</a>.</p>
 <hr />
-<h2>Variables de entorno (servidor)</h2>
+<h2>4. Crear preferencia — campos relevantes</h2>
+<p>Body mínimo útil:</p>
+<table>
+<thead>
+<tr>
+<th>Campo</th>
+<th>Obligatorio práctico</th>
+<th>Notas</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>items[]</code></td>
+<td>Sí</td>
+<td><code>title</code>, <code>quantity</code>, <code>unit_price</code>, <code>currency_id</code> (<code>ARS</code>)</td>
+</tr>
+<tr>
+<td><code>external_reference</code></td>
+<td>Sí (nuestro)</td>
+<td>Ej. <code>sale-&lt;uuid&gt;</code> para reconciliar</td>
+</tr>
+<tr>
+<td><code>back_urls.success/failure/pending</code></td>
+<td>Recomendado</td>
+<td><strong>HTTPS obligatorio</strong>; HTTP se descarta</td>
+</tr>
+<tr>
+<td><code>auto_return</code></td>
+<td>Opcional</td>
+<td><code>approved</code> redirige al éxito</td>
+</tr>
+<tr>
+<td><code>notification_url</code></td>
+<td>Recomendado</td>
+<td>URL pública HTTPS del webhook</td>
+</tr>
+</tbody>
+</table>
+<p>Respuesta clave:</p>
+<table>
+<thead>
+<tr>
+<th>Campo</th>
+<th>Uso</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>id</code></td>
+<td>Preference id</td>
+</tr>
+<tr>
+<td><code>init_point</code></td>
+<td>URL de cobro (usar también en pruebas según doc actual)</td>
+</tr>
+<tr>
+<td><code>sandbox_init_point</code></td>
+<td>La doc indica <strong>no usarlo</strong>; preferir <code>init_point</code></td>
+</tr>
+</tbody>
+</table>
+<p>Referencia completa de request/response: link “Crear preferencia” arriba.</p>
+<hr />
+<h2>5. Obtener pago — estados</h2>
+<p>Tras el webhook, el servidor <strong>debe</strong> consultar <code>GET /v1/payments/{id}</code> (no confiar solo en el body crudo).</p>
+<p>Estados habituales (<code>status</code>): <code>pending</code>, <code>approved</code>, <code>authorized</code>, <code>in_process</code>, <code>in_mediation</code>, <code>rejected</code>, <code>cancelled</code>, <code>refunded</code>, <code>charged_back</code>.</p>
+<p>Campos útiles: <code>id</code>, <code>status</code>, <code>external_reference</code>, montos, medio de pago.</p>
+<hr />
+<h2>6. Variables de entorno (servidor)</h2>
 <pre><code class="language-bash">MP_ENABLED=true
-MP_ACCESS_TOKEN=APP_USR-...          # token de la cuenta del comercio (nunca en el front)
-MP_PUBLIC_KEY=APP_USR-...            # opcional (front / bricks futuros)
+MP_ACCESS_TOKEN=APP_USR-...          # cuenta del comercio
+MP_PUBLIC_KEY=APP_USR-...            # opcional
 MP_NOTIFICATION_URL=https://tu-dominio/api/mercadopago/webhooks
 MP_SUCCESS_URL=https://tu-dominio/panel
 MP_FAILURE_URL=https://tu-dominio/panel
 MP_PENDING_URL=https://tu-dominio/panel
 MP_CURRENCY_ID=ARS
 </code></pre>
-<p>Seguridad:</p>
-<ul>
-<li>El <strong>Access Token</strong> vive solo en el servidor (env / secrets). Nunca en git ni en el navegador.</li>
-<li>Usar HTTPS en producción.</li>
-<li>Validar notificaciones (consultar el pago por API con el <code>id</code> del webhook antes de marcar la venta como pagada).</li>
-</ul>
+<p>En hosted: van en <code>ops/instances/&lt;slug&gt;/.env</code> (gitignored).</p>
 <hr />
-<h2>API típica del producto (ejemplo)</h2>
+<h2>7. API interna del panel</h2>
 <table>
 <thead>
 <tr>
@@ -88,7 +177,7 @@ MP_CURRENCY_ID=ARS
 <tr>
 <td>POST</td>
 <td><code>/api/mercadopago/preferences/{saleId}</code></td>
-<td>Crea preferencia Checkout Pro</td>
+<td>Crea preferencia</td>
 </tr>
 <tr>
 <td>GET</td>
@@ -98,30 +187,77 @@ MP_CURRENCY_ID=ARS
 <tr>
 <td>POST/GET</td>
 <td><code>/api/mercadopago/webhooks</code></td>
-<td>IPN / webhook (público)</td>
+<td>Notificación (público)</td>
 </tr>
 </tbody>
 </table>
-<p>Flujo:</p>
-<ol>
-<li>Cerrar venta en el panel.</li>
-<li>Crear preferencia → obtener <code>init_point</code> (prod) o <code>sandbox_init_point</code> (test).</li>
-<li>Abrir el link / QR para que el cliente pague.</li>
-<li>Webhook actualiza estado; el panel muestra pagado / pendiente / fallido.</li>
-</ol>
-<p>En el panel: <strong>Ventas → Link MP</strong>.</p>
+<p>Flujo: venta → preferencia → abrir <code>init_point</code> → webhook → <code>GET /v1/payments/{id}</code> → actualizar checkout local.</p>
+<p>Código: <code>application/mercadopago</code> + <code>infrastructure/mercadopago</code>.</p>
 <hr />
-<h2>Checklist de aceptación</h2>
+<h2>8. Gaps vs API Reference (para A3)</h2>
+<table>
+<thead>
+<tr>
+<th>Gap</th>
+<th>Riesgo</th>
+<th>Acción</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>UI usa a veces <code>sandbox_init_point</code></td>
+<td>Doc actual: no usarlo</td>
+<td>Preferir siempre <code>init_point</code></td>
+</tr>
+<tr>
+<td><code>back_urls</code> en localhost HTTP</td>
+<td>MP las descarta</td>
+<td>Solo HTTPS en piloto real</td>
+</tr>
+<tr>
+<td>Webhook sin firma / secret validado</td>
+<td>Spoofing</td>
+<td>Validar según guía webhooks + siempre GET pago</td>
+</tr>
+<tr>
+<td>Venta local no siempre refleja “pagada”</td>
+<td>Confusión en caja</td>
+<td>Mapear <code>approved</code> → estado de venta (A3)</td>
+</tr>
+<tr>
+<td>Sin tests WireMock</td>
+<td>Regresiones</td>
+<td>Mock preferencia + payment</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2>9. Checklist de aceptación</h2>
+<h3>Usuario / comercio</h3>
 <ul>
-<li>[ ] Credenciales de <strong>prueba</strong> generan preferencia y pago sandbox.</li>
-<li>[ ] Webhook marca la venta sin intervención manual.</li>
-<li>[ ] Credenciales de <strong>producción</strong> solo con OK del comercio.</li>
-<li>[ ] Token no aparece en logs de front ni en repositorio.</li>
+<li>[ ] App creada; token test entregado por canal seguro.  </li>
+<li>[ ] Un pago de prueba completo (preferencia → checkout → webhook).  </li>
+<li>[ ] Token prod solo tras OK explícito.</li>
+</ul>
+<h3>Código / ops</h3>
+<ul>
+<li>[ ] <code>MP_*</code> en secrets del servidor; no en git.  </li>
+<li>[ ] <code>notification_url</code> y <code>back_urls</code> en HTTPS.  </li>
+<li>[ ] Logs sin Access Token.  </li>
+<li>[ ] Test unit/integration del mapeo <code>external_reference</code> → venta.</li>
+</ul>
+<hr />
+<h2>10. Fuera de alcance por defecto</h2>
+<ul>
+<li>Mercado Pago <strong>Suscripciones</strong> (cobro del plan REEB al comercio) — cobro del plan = transferencia o link manual al inicio (ver piloto A0).  </li>
+<li>Checkout Bricks / Card Form embebido (otro afluente si se cotiza).  </li>
+<li>Split / marketplace fee.</li>
 </ul>
     </article>
     <footer>
-      Documentación técnica de integración (ARCA / AFIP y Mercado Pago). Extra cotizado; sin precios inventados.
-      Fuentes oficiales prevalecen ante este resumen. Abrí en el navegador (no como blob de GitHub).
+      Documentación técnica (ARCA/AFIP y Mercado Pago API Reference). Extra cotizado; sin precios inventados.
+      Fuentes oficiales prevalecen. <a href="https://www.mercadopago.com.ar/developers/es/reference">API MP</a> ·
+      <a href="https://www.afip.gob.ar/ws/documentacion/homologacion-externa.asp">Homologación ARCA</a>.
     </footer>
   </div>
 </body>
