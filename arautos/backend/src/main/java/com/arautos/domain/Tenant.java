@@ -46,6 +46,31 @@ public class Tenant {
   @Column(length = 1000)
   private String description;
 
+  /** Página de Facebook conectada (publicación orgánica). Null = no conectada. */
+  @Column(length = 64)
+  private String metaPageId;
+
+  @Column(length = 200)
+  private String metaPageName;
+
+  /** Token de página cifrado (AES). Nunca devolver en API. */
+  @Column(length = 4000)
+  private String metaPageTokenEnc;
+
+  @Column(length = 64)
+  private String metaInstagramId;
+
+  @Column(length = 120)
+  private String metaInstagramUsername;
+
+  /** Token de usuario Meta pendiente de elegir página (cifrado, TTL corto). */
+  @Column(length = 4000)
+  private String metaPendingUserTokenEnc;
+
+  private Instant metaPendingExpiresAt;
+
+  private Instant metaConnectedAt;
+
   @Enumerated(EnumType.STRING)
   @Column(nullable = false, length = 32)
   private SubscriptionStatus subscriptionStatus = SubscriptionStatus.PENDIENTE_PAGO;
@@ -94,6 +119,22 @@ public class Tenant {
   public void setEmail(String email) { this.email = email; }
   public String getDescription() { return description; }
   public void setDescription(String description) { this.description = description; }
+  public String getMetaPageId() { return metaPageId; }
+  public void setMetaPageId(String metaPageId) { this.metaPageId = metaPageId; }
+  public String getMetaPageName() { return metaPageName; }
+  public void setMetaPageName(String metaPageName) { this.metaPageName = metaPageName; }
+  public String getMetaPageTokenEnc() { return metaPageTokenEnc; }
+  public void setMetaPageTokenEnc(String metaPageTokenEnc) { this.metaPageTokenEnc = metaPageTokenEnc; }
+  public String getMetaInstagramId() { return metaInstagramId; }
+  public void setMetaInstagramId(String metaInstagramId) { this.metaInstagramId = metaInstagramId; }
+  public String getMetaInstagramUsername() { return metaInstagramUsername; }
+  public void setMetaInstagramUsername(String metaInstagramUsername) { this.metaInstagramUsername = metaInstagramUsername; }
+  public String getMetaPendingUserTokenEnc() { return metaPendingUserTokenEnc; }
+  public void setMetaPendingUserTokenEnc(String metaPendingUserTokenEnc) { this.metaPendingUserTokenEnc = metaPendingUserTokenEnc; }
+  public Instant getMetaPendingExpiresAt() { return metaPendingExpiresAt; }
+  public void setMetaPendingExpiresAt(Instant metaPendingExpiresAt) { this.metaPendingExpiresAt = metaPendingExpiresAt; }
+  public Instant getMetaConnectedAt() { return metaConnectedAt; }
+  public void setMetaConnectedAt(Instant metaConnectedAt) { this.metaConnectedAt = metaConnectedAt; }
   public SubscriptionStatus getSubscriptionStatus() { return subscriptionStatus; }
   public void setSubscriptionStatus(SubscriptionStatus subscriptionStatus) { this.subscriptionStatus = subscriptionStatus; }
   public Instant getTrialEndsAt() { return trialEndsAt; }

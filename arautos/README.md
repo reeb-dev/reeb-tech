@@ -98,6 +98,21 @@ Endpoints:
 
 **Bloqueo actual:** sin `ARAUTOS_MP_*` + monto ARS, el checkout devuelve `configured:false` y un mensaje claro. No hardcodear tokens.
 
+## Meta — Login vs Conectar redes
+
+Dos flujos distintos (no un token global para todos):
+
+| Flujo | Callback | Uso |
+| --- | --- | --- |
+| Ingresar con Facebook | `/api/auth/oauth/facebook/callback` | Cuenta AR Autos |
+| Conectar Meta | `/api/panel/social/meta/callback` | Página + Instagram de **esa** concesionaria |
+
+Env (ver `.env.example`): `ARAUTOS_OAUTH_FACEBOOK_ENABLED`, `CLIENT_ID`, `CLIENT_SECRET`, redirect URIs. Sin secret: botones apagados / `configured:false`.
+
+Panel: **Conectar Meta** → elegir Página → tokens cifrados por tenant → **Difusión** con vista previa y publicación FB/IG. Las fotos deben ser HTTPS públicas.
+
+Playbook: Agent Store `docs/meta-conectar-redes.md`.
+
 ## Fase 1c — Ranking panel
 
 - `GET /api/panel/ranking?province=` — ranking por provincia, criterio **clics WhatsApp**
@@ -111,9 +126,12 @@ Endpoints:
 - `POST /api/public/vehicles/{id}/wa-click`
 - `GET /api/public/c/{slug}`
 - `POST /api/auth/login` · `POST /api/auth/register`
+- `GET /api/auth/oauth/providers` · `GET /api/auth/oauth/facebook/start|callback`
 - `GET|POST|PUT|DELETE /api/panel/vehicles`
 - `GET|PUT /api/panel/profile` · `GET /api/panel/stats`
 - `GET /api/panel/billing/status` · `POST /api/panel/billing/checkout`
+- `GET /api/panel/social/meta/status|start|pages` · `POST .../select-page` · `DELETE .../meta`
+- `GET /api/panel/social/publish/preview` · `POST /api/panel/social/publish`
 - `GET /api/panel/ranking`
 - `GET /api/admin/tenants/pending` · `POST .../approve` · `POST .../suspend`
 

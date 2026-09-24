@@ -23,6 +23,10 @@ public class UserAccount {
   @Column(nullable = false)
   private String passwordHash;
 
+  /** ID de usuario Facebook (login OAuth). Null si solo email/password. */
+  @Column(length = 64, unique = true)
+  private String facebookUserId;
+
   @Enumerated(EnumType.STRING)
   @Column(nullable = false, length = 32)
   private UserRole role = UserRole.TENANT_ADMIN;
@@ -42,6 +46,8 @@ public class UserAccount {
   public void setEmail(String email) { this.email = email; }
   public String getPasswordHash() { return passwordHash; }
   public void setPasswordHash(String passwordHash) { this.passwordHash = passwordHash; }
+  public String getFacebookUserId() { return facebookUserId; }
+  public void setFacebookUserId(String facebookUserId) { this.facebookUserId = facebookUserId; }
   public UserRole getRole() { return role; }
   public void setRole(UserRole role) { this.role = role; }
   public boolean isActive() { return active; }

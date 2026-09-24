@@ -5,6 +5,7 @@ import { DealerProfileComponent } from './pages/dealer-profile/dealer-profile.co
 import { PanelLoginComponent } from './pages/panel-login/panel-login.component';
 import { PanelHomeComponent } from './pages/panel-home/panel-home.component';
 import { PanelAdminComponent } from './pages/panel-admin/panel-admin.component';
+import { OAuthCallbackComponent } from './pages/oauth-callback/oauth-callback.component';
 import { platformAdminGuard, tenantPanelGuard } from './core/auth.guard';
 
 export const routes: Routes = [
@@ -12,6 +13,7 @@ export const routes: Routes = [
   { path: 'aviso/:id', component: VehicleDetailComponent },
   { path: 'c/:slug', component: DealerProfileComponent },
   { path: 'panel/login', component: PanelLoginComponent },
+  { path: 'panel/oauth/callback', component: OAuthCallbackComponent },
   { path: 'panel/admin', component: PanelAdminComponent, canActivate: [platformAdminGuard] },
   { path: 'panel', component: PanelHomeComponent, canActivate: [tenantPanelGuard] },
   { path: '**', redirectTo: '' }

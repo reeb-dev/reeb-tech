@@ -8,18 +8,23 @@ public class ArautosProperties {
   private int trialDays = 14;
   private final Plan plan = new Plan();
   private final MercadoPago mercadoPago = new MercadoPago();
+  private final FacebookOAuth facebookOAuth = new FacebookOAuth();
   private String corsOrigins = "http://localhost:4200";
   private boolean seed = true;
+  private String publicBaseUrl = "http://localhost:4200";
 
   public Jwt getJwt() { return jwt; }
   public int getTrialDays() { return trialDays; }
   public void setTrialDays(int trialDays) { this.trialDays = trialDays; }
   public Plan getPlan() { return plan; }
   public MercadoPago getMercadoPago() { return mercadoPago; }
+  public FacebookOAuth getFacebookOAuth() { return facebookOAuth; }
   public String getCorsOrigins() { return corsOrigins; }
   public void setCorsOrigins(String corsOrigins) { this.corsOrigins = corsOrigins; }
   public boolean isSeed() { return seed; }
   public void setSeed(boolean seed) { this.seed = seed; }
+  public String getPublicBaseUrl() { return publicBaseUrl; }
+  public void setPublicBaseUrl(String publicBaseUrl) { this.publicBaseUrl = publicBaseUrl; }
 
   public static class Jwt {
     private String secret;
@@ -80,6 +85,47 @@ public class ArautosProperties {
       return enabled
           && accessToken != null && !accessToken.isBlank()
           && publicKey != null && !publicKey.isBlank();
+    }
+  }
+
+  /**
+   * Facebook Login (cuenta AR Autos) y Meta Connect (páginas/IG por tenant).
+   * Dos redirect URI distintos; sin client secret no se habilita.
+   */
+  public static class FacebookOAuth {
+    private boolean enabled = false;
+    private String clientId = "";
+    private String clientSecret = "";
+    private String loginRedirectUri = "http://localhost:8080/api/auth/oauth/facebook/callback";
+    private String connectRedirectUri = "http://localhost:8080/api/panel/social/meta/callback";
+    private String frontendLoginSuccessUrl = "http://localhost:4200/panel/oauth/callback";
+    private String frontendConnectSuccessUrl = "http://localhost:4200/panel?meta=connected";
+    private String frontendConnectSelectUrl = "http://localhost:4200/panel?meta=select";
+    private String graphVersion = "v21.0";
+
+    public boolean isEnabled() { return enabled; }
+    public void setEnabled(boolean enabled) { this.enabled = enabled; }
+    public String getClientId() { return clientId; }
+    public void setClientId(String clientId) { this.clientId = clientId; }
+    public String getClientSecret() { return clientSecret; }
+    public void setClientSecret(String clientSecret) { this.clientSecret = clientSecret; }
+    public String getLoginRedirectUri() { return loginRedirectUri; }
+    public void setLoginRedirectUri(String loginRedirectUri) { this.loginRedirectUri = loginRedirectUri; }
+    public String getConnectRedirectUri() { return connectRedirectUri; }
+    public void setConnectRedirectUri(String connectRedirectUri) { this.connectRedirectUri = connectRedirectUri; }
+    public String getFrontendLoginSuccessUrl() { return frontendLoginSuccessUrl; }
+    public void setFrontendLoginSuccessUrl(String frontendLoginSuccessUrl) { this.frontendLoginSuccessUrl = frontendLoginSuccessUrl; }
+    public String getFrontendConnectSuccessUrl() { return frontendConnectSuccessUrl; }
+    public void setFrontendConnectSuccessUrl(String frontendConnectSuccessUrl) { this.frontendConnectSuccessUrl = frontendConnectSuccessUrl; }
+    public String getFrontendConnectSelectUrl() { return frontendConnectSelectUrl; }
+    public void setFrontendConnectSelectUrl(String frontendConnectSelectUrl) { this.frontendConnectSelectUrl = frontendConnectSelectUrl; }
+    public String getGraphVersion() { return graphVersion; }
+    public void setGraphVersion(String graphVersion) { this.graphVersion = graphVersion; }
+
+    public boolean isConfigured() {
+      return enabled
+          && clientId != null && !clientId.isBlank()
+          && clientSecret != null && !clientSecret.isBlank();
     }
   }
 }

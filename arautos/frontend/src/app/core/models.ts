@@ -122,6 +122,55 @@ export interface RankingResponse {
   criterion: string;
 }
 
+export interface OAuthProviderStatus {
+  id: string;
+  enabled: boolean;
+  configured: boolean;
+  note: string;
+}
+
+export interface MetaStatus {
+  configured: boolean;
+  facebookConnected: boolean;
+  instagramConnected: boolean;
+  pageId?: string | null;
+  pageName?: string | null;
+  instagramUsername?: string | null;
+  connectedAt?: string | null;
+  pendingPageSelection: boolean;
+  message: string;
+}
+
+export interface MetaPageOption {
+  id: string;
+  name: string;
+  hasInstagram: boolean;
+  instagramUsername?: string | null;
+}
+
+export interface PublishPreview {
+  vehicleId: string;
+  title: string;
+  caption: string;
+  priceLabel: string;
+  location: string;
+  publicUrl: string;
+  imageUrl?: string | null;
+  imagePublicHttps: boolean;
+  facebookReady: boolean;
+  instagramReady: boolean;
+  warning?: string | null;
+}
+
+export interface PublicationResult {
+  channel: string;
+  status: string;
+  postId?: string | null;
+  postUrl?: string | null;
+  errorMessage?: string | null;
+  createdAt: string;
+}
+
 export interface TenantProfile {
   id: string;
   name: string;

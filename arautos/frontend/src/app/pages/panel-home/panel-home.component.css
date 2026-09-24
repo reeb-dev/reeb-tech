@@ -27,6 +27,32 @@ h2 { margin-top: 1.75rem; font-size: 1.35rem; }
 .user-actions { display: flex; flex-wrap: wrap; gap: .35rem; justify-content: flex-end; }
 .danger-btn { color: var(--danger) !important; border-color: #f1c5c5 !important; }
 .you { color: var(--celeste); font-weight: 700; }
+.meta-block, .difusion-block, .billing-block, .ranking-block {
+  margin: 1.25rem 0;
+  padding: 1rem 1.1rem;
+  background: #fff;
+  border: 1px solid var(--line);
+  border-radius: 14px;
+  box-shadow: var(--shadow);
+}
+.meta-block h2, .difusion-block h2 { margin-top: 0; }
+.meta-badges { display: flex; flex-wrap: wrap; gap: .5rem; margin: .75rem 0; }
+.meta-badges .badge {
+  font-size: .8rem; font-weight: 700; padding: .35rem .65rem;
+  border-radius: 8px; background: #f0f2f5; color: var(--muted);
+}
+.meta-badges .badge.on { background: #e6f4ea; color: #137333; }
+.meta-actions, .page-list { display: flex; flex-wrap: wrap; gap: .5rem; margin-top: .75rem; list-style: none; padding: 0; }
+.difusion-form { margin-top: .75rem; }
+.check-row { display: flex; gap: 1rem; align-items: center; }
+.preview-card {
+  margin-top: 1rem; padding: 1rem; border: 1px dashed var(--line); border-radius: 12px; background: #f8fafc;
+}
+.preview-card h3 { margin: 0 0 .35rem; color: var(--navy); }
+.caption {
+  white-space: pre-wrap; font-family: inherit; font-size: .9rem;
+  background: #fff; border: 1px solid var(--line); border-radius: 8px; padding: .75rem;
+}
 .form-grid {
   display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap: .75rem;
   padding: 1rem; border: 1px solid var(--line); border-radius: 14px; background: #fff;

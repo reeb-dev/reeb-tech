@@ -17,3 +17,7 @@ h1 { font-family: var(--font-display); font-weight: 700; color: var(--navy); }
   border-radius: 8px; padding: .3rem .55rem;
 }
 .seed-btn:hover { background: #e0ebfa; }
+.oauth-row { margin: 1rem 0 .5rem; }
+.oauth-fb { width: 100%; }
+.oauth-or { text-align: center; margin: .75rem 0; }
+button:disabled { opacity: .55; cursor: not-allowed; }

@@ -1,9 +1,12 @@
-import { Component, signal } from '@angular/core';
+import { Component, OnInit, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Router, RouterLink } from '@angular/router';
 import { AuthService } from '../../core/auth.service';
+import { ApiService } from '../../core/api.service';
 import { GeoSelectComponent } from '../../shared/geo-select.component';
+import { OAuthProviderStatus } from '../../core/models';
+import { environment } from '../../../environments/environment';
 
 @Component({
   selector: 'app-panel-login',
@@ -12,7 +15,7 @@ import { GeoSelectComponent } from '../../shared/geo-select.component';
   templateUrl: './panel-login.component.html',
   styleUrl: './panel-login.component.css'
 })
-export class PanelLoginComponent {
+export class PanelLoginComponent implements OnInit {
   mode: 'login' | 'register' = 'login';
   email = 'demo1@patagonia-motors.example';
   password = 'demo123';
@@ -22,11 +25,31 @@ export class PanelLoginComponent {
   whatsapp = '';
   message = signal('');
   error = signal('');
+  facebook = signal<OAuthProviderStatus | null>(null);
 
-  constructor(private auth: AuthService, private router: Router) {
+  constructor(private auth: AuthService, private api: ApiService, private router: Router) {
     if (auth.session()) {
       this.router.navigateByUrl(auth.homePath());
     }
+  }
+
+  ngOnInit() {
+    this.api.oauthProviders().subscribe({
+      next: (res) => {
+        const fb = res.providers.find((p) => p.id === 'facebook') || null;
+        this.facebook.set(fb);
+      },
+      error: () => this.facebook.set(null)
+    });
+  }
+
+  startFacebook() {
+    const fb = this.facebook();
+    if (!fb?.configured) {
+      this.error.set(fb?.note || 'Facebook Login no configurado.');
+      return;
+    }
+    window.location.href = `${environment.apiUrl}/auth/oauth/facebook/start`;
   }
 
   useSeed(kind: 'demo' | 'agent' | 'admin') {

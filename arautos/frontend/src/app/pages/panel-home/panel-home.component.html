@@ -210,6 +210,106 @@
     <button class="btn" type="submit" [disabled]="!!stats()?.readOnly">Guardar perfil</button>
   </form>
 
+  <section class="meta-block">
+    <h2>Conectar Meta</h2>
+    <p class="meta">
+      Autoriza a AR Autos a publicar en la Página de Facebook y el Instagram profesional
+      <strong>de esta concesionaria</strong>. No es el mismo flujo que «Ingresar con Facebook».
+    </p>
+    @if (meta(); as m) {
+      <p class="meta">{{ m.message }}</p>
+      <div class="meta-badges">
+        <span class="badge" [class.on]="m.facebookConnected">Facebook {{ m.facebookConnected ? 'conectado' : 'sin conectar' }}</span>
+        <span class="badge" [class.on]="m.instagramConnected">Instagram {{ m.instagramConnected ? ('@' + (m.instagramUsername || 'ok')) : 'sin conectar' }}</span>
+      </div>
+      @if (m.pageName) {
+        <p class="meta">Página: {{ m.pageName }}</p>
+      }
+      @if (m.pendingPageSelection && metaPages().length) {
+        <p class="meta">Elija la Página de su local:</p>
+        <ul class="page-list">
+          @for (p of metaPages(); track p.id) {
+            <li>
+              <button type="button" class="btn secondary" (click)="selectMetaPage(p.id)" [disabled]="!!stats()?.readOnly">
+                {{ p.name }}@if (p.hasInstagram) { · IG {{ p.instagramUsername || 'vinculado' }} }
+              </button>
+            </li>
+          }
+        </ul>
+      }
+      <div class="meta-actions">
+        @if (!m.facebookConnected) {
+          <button class="btn" type="button" (click)="connectMeta()" [disabled]="metaBusy || !m.configured || !!stats()?.readOnly">
+            {{ metaBusy ? 'Abriendo Meta…' : 'Conectar Meta' }}
+          </button>
+        } @else {
+          <button class="btn secondary" type="button" (click)="disconnectMeta()" [disabled]="!!stats()?.readOnly">Desconectar</button>
+          <button class="btn secondary" type="button" (click)="connectMeta()" [disabled]="metaBusy || !!stats()?.readOnly">Reconectar</button>
+        }
+      </div>
+    } @else {
+      <p class="meta">No se pudo consultar el estado de Meta.</p>
+    }
+  </section>
+
+  <section class="difusion-block">
+    <h2>Difusión</h2>
+    <p class="meta">
+      Genere texto y foto del aviso, revise la vista previa y confirme. WhatsApp solo se puede compartir a mano (no publica estados ni grupos).
+      Las fotos deben ser URL HTTPS públicas (Meta no lee localhost).
+    </p>
+    <div class="form-grid difusion-form">
+      <div class="field">
+        <label>Vehículo</label>
+        <select [(ngModel)]="selectedVehicleId" name="diffVeh">
+          <option value="">Elegir…</option>
+          @for (v of vehicles(); track v.id) {
+            @if (v.status === 'PUBLICADO') {
+              <option [value]="v.id">{{ v.brand }} {{ v.model }} {{ v.year }}</option>
+            }
+          }
+        </select>
+      </div>
+      <div class="field check-row">
+        <label><input type="checkbox" [(ngModel)]="publishFacebook" name="pubFb" /> Facebook</label>
+        <label><input type="checkbox" [(ngModel)]="publishInstagram" name="pubIg" /> Instagram</label>
+      </div>
+      <button class="btn secondary" type="button" (click)="loadPreview()" [disabled]="!!stats()?.readOnly">Vista previa</button>
+      <button class="btn" type="button" (click)="confirmPublish()" [disabled]="publishBusy || !!stats()?.readOnly">
+        {{ publishBusy ? 'Publicando…' : 'Confirmar publicación' }}
+      </button>
+    </div>
+    @if (preview(); as prev) {
+      <div class="preview-card">
+        <h3>{{ prev.title }}</h3>
+        <p class="meta">{{ prev.priceLabel }} · {{ prev.location }}</p>
+        <pre class="caption">{{ prev.caption }}</pre>
+        @if (prev.imageUrl) {
+          <p class="meta">Foto: {{ prev.imageUrl }} {{ prev.imagePublicHttps ? '(HTTPS ok)' : '(no pública HTTPS)' }}</p>
+        }
+        @if (prev.warning) {
+          <div class="alert">{{ prev.warning }}</div>
+        }
+      </div>
+    }
+    @if (publications().length) {
+      <h3>Últimas publicaciones</h3>
+      <table class="table">
+        <thead><tr><th>Canal</th><th>Estado</th><th>Enlace</th><th>Fecha</th></tr></thead>
+        <tbody>
+          @for (p of publications(); track p.createdAt + p.channel) {
+            <tr>
+              <td>{{ p.channel }}</td>
+              <td>{{ p.status }}@if (p.errorMessage) { — {{ p.errorMessage }} }</td>
+              <td>@if (p.postUrl) { <a [href]="p.postUrl" target="_blank" rel="noopener">Ver</a> }</td>
+              <td>{{ p.createdAt | date: 'dd/MM/yyyy HH:mm' }}</td>
+            </tr>
+          }
+        </tbody>
+      </table>
+    }
+  </section>
+
   <h2>Stock</h2>
   <table class="table">
     <thead>

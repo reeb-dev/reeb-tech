@@ -76,6 +76,23 @@ export class AuthService {
     this.session.set(res);
   }
 
+  /** Persiste JWT recibido del callback OAuth (Facebook Login). */
+  acceptToken(token: string, extras?: Partial<AuthResponse>) {
+    const res: AuthResponse = {
+      token,
+      userId: extras?.userId || '',
+      email: extras?.email || '',
+      role: extras?.role || 'TENANT_ADMIN',
+      tenantId: extras?.tenantId,
+      tenantSlug: extras?.tenantSlug,
+      tenantName: extras?.tenantName,
+      subscriptionStatus: extras?.subscriptionStatus,
+      moderationStatus: extras?.moderationStatus,
+      message: extras?.message
+    };
+    this.persist(res);
+  }
+
   private read(): AuthResponse | null {
     try {
       const raw = localStorage.getItem(KEY);

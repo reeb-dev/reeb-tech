@@ -1,7 +1,7 @@
 import { Component, OnInit, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { Router, RouterLink } from '@angular/router';
+import { Router, RouterLink, ActivatedRoute } from '@angular/router';
 import { ApiService } from '../../core/api.service';
 import { AuthService } from '../../core/auth.service';
 import {
@@ -13,7 +13,11 @@ import {
   VehiclePanel,
   VehicleRequest,
   BillingStatus,
-  RankingResponse
+  RankingResponse,
+  MetaStatus,
+  MetaPageOption,
+  PublishPreview,
+  PublicationResult
 } from '../../core/models';
 import { formatPrice, typeLabel } from '../../core/format';
 import { GeoSelectComponent } from '../../shared/geo-select.component';
@@ -32,12 +36,21 @@ export class PanelHomeComponent implements OnInit {
   billing = signal<BillingStatus | null>(null);
   ranking = signal<RankingResponse | null>(null);
   users = signal<PanelUser[]>([]);
+  meta = signal<MetaStatus | null>(null);
+  metaPages = signal<MetaPageOption[]>([]);
+  preview = signal<PublishPreview | null>(null);
+  publications = signal<PublicationResult[]>([]);
   error = signal('');
   ok = signal('');
   formatPrice = formatPrice;
   typeLabel = typeLabel;
   photoUrl = '';
   checkoutBusy = false;
+  metaBusy = false;
+  publishBusy = false;
+  selectedVehicleId = '';
+  publishFacebook = true;
+  publishInstagram = true;
 
   invite: CreatePanelUserRequest = {
     email: '',
@@ -58,10 +71,22 @@ export class PanelHomeComponent implements OnInit {
     description: '', status: 'PUBLICADO'
   };
 
-  constructor(private api: ApiService, public auth: AuthService, private router: Router) {}
+  constructor(
+    private api: ApiService,
+    public auth: AuthService,
+    private router: Router,
+    private route: ActivatedRoute
+  ) {}
 
   ngOnInit() {
     this.reload();
+    const meta = this.route.snapshot.queryParamMap.get('meta');
+    if (meta === 'select' || meta === 'connected') {
+      this.loadMeta(true);
+    }
+    if (this.route.snapshot.queryParamMap.get('oauth_error')) {
+      this.error.set('No se pudo completar la conexión con Meta. Intente de nuevo.');
+    }
   }
 
   reload() {
@@ -69,6 +94,8 @@ export class PanelHomeComponent implements OnInit {
     this.api.stats().subscribe({ next: (s) => this.stats.set(s) });
     this.api.billingStatus().subscribe({ next: (b) => this.billing.set(b) });
     this.api.ranking().subscribe({ next: (r) => this.ranking.set(r), error: () => this.ranking.set(null) });
+    this.loadMeta(false);
+    this.api.socialPublications().subscribe({ next: (p) => this.publications.set(p), error: () => this.publications.set([]) });
     this.api.profile().subscribe({
       next: (p) => {
         this.profile.set(p);
@@ -92,6 +119,105 @@ export class PanelHomeComponent implements OnInit {
     if (this.auth.isTenantAdmin()) {
       this.loadUsers();
     }
+  }
+
+  loadMeta(loadPages: boolean) {
+    this.api.metaStatus().subscribe({
+      next: (m) => {
+        this.meta.set(m);
+        if (loadPages || m.pendingPageSelection) {
+          this.api.metaPages().subscribe({
+            next: (res) => this.metaPages.set(res.pages),
+            error: () => this.metaPages.set([])
+          });
+        }
+      },
+      error: () => this.meta.set(null)
+    });
+  }
+
+  connectMeta() {
+    this.error.set('');
+    this.metaBusy = true;
+    this.api.metaStart().subscribe({
+      next: (res) => {
+        this.metaBusy = false;
+        if (res.authorizeUrl) {
+          window.location.href = res.authorizeUrl;
+          return;
+        }
+        this.error.set(res.message || 'No se pudo iniciar Conectar Meta');
+      },
+      error: (e) => {
+        this.metaBusy = false;
+        this.error.set(e.error?.error || 'Meta no disponible');
+      }
+    });
+  }
+
+  selectMetaPage(pageId: string) {
+    this.error.set('');
+    this.ok.set('');
+    this.api.metaSelectPage(pageId).subscribe({
+      next: (m) => {
+        this.meta.set(m);
+        this.metaPages.set([]);
+        this.ok.set(m.message);
+        this.router.navigate([], { queryParams: { meta: 'connected' }, queryParamsHandling: 'merge' });
+      },
+      error: (e) => this.error.set(e.error?.error || 'No se pudo seleccionar la Página')
+    });
+  }
+
+  disconnectMeta() {
+    if (!confirm('¿Desconectar Facebook e Instagram de esta concesionaria? Se borrarán los tokens guardados.')) {
+      return;
+    }
+    this.api.metaDisconnect().subscribe({
+      next: (m) => {
+        this.meta.set(m);
+        this.ok.set('Redes desconectadas.');
+      },
+      error: (e) => this.error.set(e.error?.error || 'No se pudo desconectar')
+    });
+  }
+
+  loadPreview() {
+    this.error.set('');
+    this.preview.set(null);
+    if (!this.selectedVehicleId) {
+      this.error.set('Elija un vehículo');
+      return;
+    }
+    this.api.publishPreview(this.selectedVehicleId).subscribe({
+      next: (p) => this.preview.set(p),
+      error: (e) => this.error.set(e.error?.error || 'No se pudo generar la vista previa')
+    });
+  }
+
+  confirmPublish() {
+    this.error.set('');
+    this.ok.set('');
+    if (!this.selectedVehicleId) {
+      this.error.set('Elija un vehículo');
+      return;
+    }
+    this.publishBusy = true;
+    this.api.publishSocial({
+      vehicleId: this.selectedVehicleId,
+      facebook: this.publishFacebook,
+      instagram: this.publishInstagram
+    }).subscribe({
+      next: (res) => {
+        this.publishBusy = false;
+        this.ok.set(res.message);
+        this.publications.set([...res.results, ...this.publications()]);
+      },
+      error: (e) => {
+        this.publishBusy = false;
+        this.error.set(e.error?.error || 'No se pudo publicar');
+      }
+    });
   }
 
   loadUsers() {
