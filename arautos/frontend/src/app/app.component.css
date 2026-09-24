@@ -28,12 +28,15 @@
 .brand:hover { text-decoration: none; color: #fff; }
 .logo-malvinas {
   width: auto;
-  height: 52px;
-  max-height: 52px;
+  height: 56px;
+  max-height: 56px;
   object-fit: contain;
   object-position: left center;
   display: block;
   flex-shrink: 0;
+  /* SVG vector — sin glow ni filtros que ablanden bordes */
+  filter: none;
+  image-rendering: auto;
 }
 .brand-text {
   display: flex;
@@ -135,8 +138,8 @@ main { min-height: 70vh; padding: 1.5rem 0 3rem; }
     padding: .55rem 0;
   }
   .logo-malvinas {
-    height: 42px;
-    max-height: 42px;
+    height: 44px;
+    max-height: 44px;
   }
   .brand-text strong { font-size: 1.1rem; }
   .brand-text small {
