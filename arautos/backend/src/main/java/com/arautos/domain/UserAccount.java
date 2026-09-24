@@ -31,6 +31,10 @@ public class UserAccount {
   @Column(length = 64, unique = true)
   private String googleUserId;
 
+  /** Nombre visible del perfil (persona del equipo). */
+  @Column(length = 120)
+  private String displayName;
+
   @Enumerated(EnumType.STRING)
   @Column(nullable = false, length = 32)
   private UserRole role = UserRole.TENANT_ADMIN;
@@ -54,6 +58,8 @@ public class UserAccount {
   public void setFacebookUserId(String facebookUserId) { this.facebookUserId = facebookUserId; }
   public String getGoogleUserId() { return googleUserId; }
   public void setGoogleUserId(String googleUserId) { this.googleUserId = googleUserId; }
+  public String getDisplayName() { return displayName; }
+  public void setDisplayName(String displayName) { this.displayName = displayName; }
   public UserRole getRole() { return role; }
   public void setRole(UserRole role) { this.role = role; }
   public boolean isActive() { return active; }

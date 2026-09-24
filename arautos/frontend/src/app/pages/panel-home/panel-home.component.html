@@ -110,11 +110,11 @@
               <span class="shortcut-title">Difundir</span>
               <span class="meta">Facebook / Instagram</span>
             </button>
-            <button type="button" class="shortcut" (click)="go('perfil')">
-              <span class="shortcut-title">Página pública</span>
-              <span class="meta">Datos del local</span>
+            <button type="button" class="shortcut" (click)="openMiLocal('datos')">
+              <span class="shortcut-title">Mi local</span>
+              <span class="meta">Página, equipo y redes</span>
             </button>
-            <button type="button" class="shortcut" (click)="go('redes')">
+            <button type="button" class="shortcut" (click)="openMiLocal('redes')">
               <span class="shortcut-title">Conectar Meta</span>
               <span class="meta">{{ meta()?.facebookConnected ? 'Redes listas' : 'Pendiente' }}</span>
             </button>
@@ -227,155 +227,196 @@
     </section>
   }
 
-  @if (section() === 'usuarios') {
-    @if (auth.isTenantAdmin()) {
-      <section class="dash-section panel-card">
-        <h2>Usuarios de su local</h2>
-        <p class="meta">Dé de alta agentes u otros administradores. Ellos usan el mismo panel con el rol que usted asigne.</p>
-
-        <form class="form-grid invite-form" (ngSubmit)="inviteUser()">
-          <div class="field">
-            <label>Email</label>
-            <input [(ngModel)]="invite.email" name="uemail" type="email" required autocomplete="off" />
-          </div>
-          <div class="field">
-            <label>Contraseña temporal</label>
-            <input [(ngModel)]="invite.password" name="upass" type="text" required minlength="6" autocomplete="off" />
-          </div>
-          <div class="field">
-            <label>Rol</label>
-            <select [(ngModel)]="invite.role" name="urole">
-              <option value="TENANT_AGENT">Agente</option>
-              <option value="TENANT_ADMIN">Administrador del local</option>
-            </select>
-          </div>
-          <button class="btn" type="submit" [disabled]="!!stats()?.readOnly">Dar de alta</button>
-        </form>
-
-        <table class="table users-table">
-          <thead>
-            <tr><th>Email</th><th>Rol</th><th>Estado</th><th></th></tr>
-          </thead>
-          <tbody>
-            @for (u of users(); track u.id) {
-              <tr [class.inactive]="!u.active">
-                <td>{{ u.email }}@if (isSelf(u)) { <span class="you"> (usted)</span> }</td>
-                <td>
-                  @if (isSelf(u) || !!stats()?.readOnly) {
-                    {{ auth.roleLabel(u.role) }}
-                  } @else {
-                    <select [ngModel]="u.role" (ngModelChange)="changeRole(u, $event)" [name]="'role-' + u.id">
-                      <option value="TENANT_AGENT">Agente</option>
-                      <option value="TENANT_ADMIN">Administrador del local</option>
-                    </select>
-                  }
-                </td>
-                <td>{{ u.active ? 'Activo' : 'Desactivado' }}</td>
-                <td class="user-actions">
-                  @if (!isSelf(u) && !stats()?.readOnly) {
-                    <button class="btn secondary" type="button" (click)="toggleActive(u)">
-                      {{ u.active ? 'Desactivar' : 'Reactivar' }}
-                    </button>
-                    <button class="btn secondary danger-btn" type="button" (click)="removeUser(u)">Borrar</button>
-                  }
-                </td>
-              </tr>
-            }
-          </tbody>
-        </table>
-      </section>
-    } @else {
-      <p class="meta agent-note panel-card">
-        Usted ingresó como agente. La gestión de usuarios la realiza el administrador del local.
-      </p>
-    }
-  }
-
-  @if (section() === 'perfil') {
-    <section class="dash-section panel-card">
-      <h2>Página pública</h2>
-      <p class="meta">Estos datos personalizan su página en <code>/c/{{ profileForm.slug || '…' }}</code>.</p>
-      <form class="form-grid profile-form flat" (ngSubmit)="saveProfile()">
-        <div class="field"><label>Nombre comercial</label>
-          <input [(ngModel)]="profileForm.name" name="pname" required [disabled]="!!stats()?.readOnly" />
-        </div>
-        <div class="field"><label>WhatsApp</label>
-          <input [(ngModel)]="profileForm.whatsapp" name="pwa" required [disabled]="!!stats()?.readOnly" />
-        </div>
-        <app-geo-select
-          class="geo-inline"
-          [(province)]="profileForm.province"
-          [(locality)]="profileForm.city"
-          [required]="true"
-          [disabled]="!!stats()?.readOnly"
-          [allowEmptyProvince]="false"
-          [allowEmptyLocality]="false"
-          localityLabel="Localidad / ciudad"
-          namePrefix="profile">
-        </app-geo-select>
-        <div class="field"><label>Dirección</label>
-          <input [(ngModel)]="profileForm.address" name="paddr" [disabled]="!!stats()?.readOnly" />
-        </div>
-        <div class="field"><label>Email de contacto</label>
-          <input [(ngModel)]="profileForm.email" name="pemail" [disabled]="!!stats()?.readOnly" />
-        </div>
-        <div class="field"><label>URL del logo</label>
-          <input [(ngModel)]="profileForm.logoUrl" name="plogo" placeholder="/assets/dealers/…" [disabled]="!!stats()?.readOnly" />
-        </div>
-        <div class="field"><label>Color principal</label>
-          <input type="color" [(ngModel)]="profileForm.primaryColor" name="pprim" [disabled]="!!stats()?.readOnly" />
-        </div>
-        <div class="field"><label>Color de acento</label>
-          <input type="color" [(ngModel)]="profileForm.accentColor" name="pacc" [disabled]="!!stats()?.readOnly" />
-        </div>
-        <div class="field" style="grid-column:1/-1"><label>Descripción pública</label>
-          <textarea rows="3" [(ngModel)]="profileForm.description" name="pdesc" [disabled]="!!stats()?.readOnly"></textarea>
-        </div>
-        <button class="btn" type="submit" [disabled]="!!stats()?.readOnly">Guardar perfil</button>
-      </form>
-    </section>
-  }
-
-  @if (section() === 'redes') {
-    <section class="dash-section panel-card">
-      <h2>Conectar Meta</h2>
+  @if (section() === 'mi-local') {
+    <section class="dash-section panel-card mi-local">
+      <h2>Mi local</h2>
       <p class="meta">
-        Autoriza a AR Autos a publicar en la Página de Facebook y el Instagram profesional
-        <strong>de esta concesionaria</strong>. No es el mismo flujo que «Ingresar con Facebook».
+        Un solo lugar para la página web del local, los perfiles del equipo y las redes.
+        Agregue solo las personas que necesite para manejar su web.
       </p>
-      @if (meta(); as m) {
-        <p class="meta">{{ m.message }}</p>
-        <div class="meta-badges">
-          <span class="badge" [class.on]="m.facebookConnected">Facebook {{ m.facebookConnected ? 'conectado' : 'sin conectar' }}</span>
-          <span class="badge" [class.on]="m.instagramConnected">Instagram {{ m.instagramConnected ? ('@' + (m.instagramUsername || 'ok')) : 'sin conectar' }}</span>
+
+      <div class="subtabs" role="tablist" aria-label="Secciones de Mi local">
+        @for (t of miLocalTabs; track t.id) {
+          <button
+            type="button"
+            class="subtab"
+            role="tab"
+            [class.active]="miLocalTab() === t.id"
+            (click)="setMiLocalTab(t.id)">
+            {{ t.label }}
+          </button>
+        }
+      </div>
+
+      @if (miLocalTab() === 'datos') {
+        <div class="subpanel">
+          <h3 class="subhead">Datos de la página</h3>
+          <p class="meta">Estos datos se muestran en <code>/c/{{ profileForm.slug || '…' }}</code>.</p>
+          <form class="form-grid profile-form flat" (ngSubmit)="saveProfile()">
+            <div class="field"><label>Nombre comercial</label>
+              <input [(ngModel)]="profileForm.name" name="pname" required [disabled]="!!stats()?.readOnly" />
+            </div>
+            <div class="field"><label>WhatsApp</label>
+              <input [(ngModel)]="profileForm.whatsapp" name="pwa" required [disabled]="!!stats()?.readOnly" />
+            </div>
+            <app-geo-select
+              class="geo-inline"
+              [(province)]="profileForm.province"
+              [(locality)]="profileForm.city"
+              [required]="true"
+              [disabled]="!!stats()?.readOnly"
+              [allowEmptyProvince]="false"
+              [allowEmptyLocality]="false"
+              localityLabel="Localidad / ciudad"
+              namePrefix="profile">
+            </app-geo-select>
+            <div class="field"><label>Dirección</label>
+              <input [(ngModel)]="profileForm.address" name="paddr" [disabled]="!!stats()?.readOnly" />
+            </div>
+            <div class="field"><label>Email de contacto</label>
+              <input [(ngModel)]="profileForm.email" name="pemail" [disabled]="!!stats()?.readOnly" />
+            </div>
+            <div class="field"><label>URL del logo</label>
+              <input [(ngModel)]="profileForm.logoUrl" name="plogo" placeholder="/assets/dealers/…" [disabled]="!!stats()?.readOnly" />
+            </div>
+            <div class="field"><label>Color principal</label>
+              <input type="color" [(ngModel)]="profileForm.primaryColor" name="pprim" [disabled]="!!stats()?.readOnly" />
+            </div>
+            <div class="field"><label>Color de acento</label>
+              <input type="color" [(ngModel)]="profileForm.accentColor" name="pacc" [disabled]="!!stats()?.readOnly" />
+            </div>
+            <div class="field" style="grid-column:1/-1"><label>Descripción pública</label>
+              <textarea rows="3" [(ngModel)]="profileForm.description" name="pdesc" [disabled]="!!stats()?.readOnly"></textarea>
+            </div>
+            <button class="btn" type="submit" [disabled]="!!stats()?.readOnly">Guardar datos de la página</button>
+          </form>
         </div>
-        @if (m.pageName) {
-          <p class="meta">Página: {{ m.pageName }}</p>
-        }
-        @if (m.pendingPageSelection && metaPages().length) {
-          <p class="meta">Elija la Página de su local:</p>
-          <ul class="page-list">
-            @for (p of metaPages(); track p.id) {
-              <li>
-                <button type="button" class="btn secondary" (click)="selectMetaPage(p.id)" [disabled]="!!stats()?.readOnly">
-                  {{ p.name }}@if (p.hasInstagram) { · IG {{ p.instagramUsername || 'vinculado' }} }
-                </button>
-              </li>
-            }
-          </ul>
-        }
-        <div class="meta-actions">
-          @if (!m.facebookConnected) {
-            <button class="btn" type="button" (click)="connectMeta()" [disabled]="metaBusy || !m.configured || !!stats()?.readOnly">
-              {{ metaBusy ? 'Abriendo Meta…' : 'Conectar Meta' }}
-            </button>
+      }
+
+      @if (miLocalTab() === 'equipo') {
+        <div class="subpanel">
+          <h3 class="subhead">Equipo / perfiles</h3>
+          @if (auth.isTenantAdmin()) {
+            <p class="meta">
+              Agregue un perfil por cada persona que va a usar el panel (administrador o agente/vendedor).
+              No hace falta crear más tipos: con estos dos roles alcanza para manejar su web.
+            </p>
+
+            <form class="form-grid invite-form flat" (ngSubmit)="inviteUser()">
+              <div class="field">
+                <label>Nombre del perfil</label>
+                <input [(ngModel)]="invite.displayName" name="uname" placeholder="Ej. María — ventas" required autocomplete="off" />
+              </div>
+              <div class="field">
+                <label>Email de acceso</label>
+                <input [(ngModel)]="invite.email" name="uemail" type="email" required autocomplete="off" />
+              </div>
+              <div class="field">
+                <label>Contraseña temporal</label>
+                <input [(ngModel)]="invite.password" name="upass" type="text" required minlength="6" autocomplete="off" />
+              </div>
+              <div class="field">
+                <label>Rol</label>
+                <select [(ngModel)]="invite.role" name="urole">
+                  <option value="TENANT_AGENT">Agente / vendedor</option>
+                  <option value="TENANT_ADMIN">Administrador</option>
+                </select>
+              </div>
+              <button class="btn" type="submit" [disabled]="!!stats()?.readOnly">Agregar perfil</button>
+            </form>
+
+            <table class="table users-table">
+              <thead>
+                <tr><th>Perfil</th><th>Email</th><th>Rol</th><th>Estado</th><th></th></tr>
+              </thead>
+              <tbody>
+                @for (u of users(); track u.id) {
+                  <tr [class.inactive]="!u.active">
+                    <td>
+                      @if (isSelf(u) || !!stats()?.readOnly) {
+                        {{ personLabel(u) }}@if (isSelf(u)) { <span class="you"> (usted)</span> }
+                      } @else {
+                        <input
+                          class="inline-name"
+                          [ngModel]="u.displayName || ''"
+                          (ngModelChange)="u.displayName = $event"
+                          (blur)="savePersonName(u, u.displayName || '')"
+                          [name]="'dname-' + u.id"
+                          placeholder="Nombre" />
+                      }
+                    </td>
+                    <td>{{ u.email }}</td>
+                    <td>
+                      @if (isSelf(u) || !!stats()?.readOnly) {
+                        {{ auth.roleLabel(u.role) }}
+                      } @else {
+                        <select [ngModel]="u.role" (ngModelChange)="changeRole(u, $event)" [name]="'role-' + u.id">
+                          <option value="TENANT_AGENT">Agente / vendedor</option>
+                          <option value="TENANT_ADMIN">Administrador</option>
+                        </select>
+                      }
+                    </td>
+                    <td>{{ u.active ? 'Activo' : 'Desactivado' }}</td>
+                    <td class="user-actions">
+                      @if (!isSelf(u) && !stats()?.readOnly) {
+                        <button class="btn secondary" type="button" (click)="toggleActive(u)">
+                          {{ u.active ? 'Desactivar' : 'Reactivar' }}
+                        </button>
+                        <button class="btn secondary danger-btn" type="button" (click)="removeUser(u)">Borrar</button>
+                      }
+                    </td>
+                  </tr>
+                }
+              </tbody>
+            </table>
           } @else {
-            <button class="btn secondary" type="button" (click)="disconnectMeta()" [disabled]="!!stats()?.readOnly">Desconectar</button>
-            <button class="btn secondary" type="button" (click)="connectMeta()" [disabled]="metaBusy || !!stats()?.readOnly">Reconectar</button>
+            <p class="meta">Usted ingresó como agente. Solo el administrador puede agregar o quitar perfiles.</p>
           }
         </div>
-      } @else {
-        <p class="meta">No se pudo consultar el estado de Meta.</p>
+      }
+
+      @if (miLocalTab() === 'redes') {
+        <div class="subpanel">
+          <h3 class="subhead">Redes sociales</h3>
+          <p class="meta">
+            Conecte la Página de Facebook y el Instagram profesional <strong>de este local</strong>
+            para difundir avisos. No es el mismo flujo que «Ingresar con Facebook».
+          </p>
+          @if (meta(); as m) {
+            <p class="meta">{{ m.message }}</p>
+            <div class="meta-badges">
+              <span class="badge" [class.on]="m.facebookConnected">Facebook {{ m.facebookConnected ? 'conectado' : 'sin conectar' }}</span>
+              <span class="badge" [class.on]="m.instagramConnected">Instagram {{ m.instagramConnected ? ('@' + (m.instagramUsername || 'ok')) : 'sin conectar' }}</span>
+            </div>
+            @if (m.pageName) {
+              <p class="meta">Página: {{ m.pageName }}</p>
+            }
+            @if (m.pendingPageSelection && metaPages().length) {
+              <p class="meta">Elija la Página de su local:</p>
+              <ul class="page-list">
+                @for (p of metaPages(); track p.id) {
+                  <li>
+                    <button type="button" class="btn secondary" (click)="selectMetaPage(p.id)" [disabled]="!!stats()?.readOnly">
+                      {{ p.name }}@if (p.hasInstagram) { · IG {{ p.instagramUsername || 'vinculado' }} }
+                    </button>
+                  </li>
+                }
+              </ul>
+            }
+            <div class="meta-actions">
+              @if (!m.facebookConnected) {
+                <button class="btn" type="button" (click)="connectMeta()" [disabled]="metaBusy || !m.configured || !!stats()?.readOnly">
+                  {{ metaBusy ? 'Abriendo Meta…' : 'Conectar Meta' }}
+                </button>
+              } @else {
+                <button class="btn secondary" type="button" (click)="disconnectMeta()" [disabled]="!!stats()?.readOnly">Desconectar</button>
+                <button class="btn secondary" type="button" (click)="connectMeta()" [disabled]="metaBusy || !!stats()?.readOnly">Reconectar</button>
+              }
+            </div>
+          } @else {
+            <p class="meta">No se pudo consultar el estado de Meta.</p>
+          }
+        </div>
       }
     </section>
   }

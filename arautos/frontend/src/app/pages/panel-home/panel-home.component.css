@@ -226,6 +226,27 @@ code { font-size: .85em; background: #eef2f6; padding: .1rem .35rem; border-radi
 .empty-hint { margin: .75rem 0 0; }
 .agent-note { margin: 0; }
 
+.subtabs {
+  display: flex; flex-wrap: wrap; gap: .4rem;
+  margin: 1rem 0 .25rem; padding-bottom: .75rem;
+  border-bottom: 1px solid var(--line);
+}
+.subtab {
+  border: 1px solid var(--line); background: #f7fafc; color: var(--muted);
+  font-weight: 700; font-size: .88rem; border-radius: 999px;
+  padding: .4rem .85rem; cursor: pointer;
+}
+.subtab:hover { color: var(--navy); background: #fff; }
+.subtab.active {
+  color: #fff; background: var(--navy); border-color: var(--navy);
+}
+.subpanel { margin-top: .35rem; }
+.inline-name {
+  width: 100%; max-width: 180px;
+  border: 1px solid var(--line); border-radius: 8px;
+  padding: .4rem .55rem; background: #fff;
+}
+
 @media (max-width: 900px) {
   .panel-layout { grid-template-columns: 1fr; }
   .panel-sidebar {

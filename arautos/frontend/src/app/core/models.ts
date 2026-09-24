@@ -65,6 +65,7 @@ export interface AuthResponse {
 export interface PanelUser {
   id: string;
   email: string;
+  displayName?: string | null;
   role: UserRole | string;
   active: boolean;
   createdAt: string;
@@ -73,6 +74,7 @@ export interface PanelUser {
 export interface CreatePanelUserRequest {
   email: string;
   password: string;
+  displayName?: string;
   role: 'TENANT_ADMIN' | 'TENANT_AGENT';
 }
 

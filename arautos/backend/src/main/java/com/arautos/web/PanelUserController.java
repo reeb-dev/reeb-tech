@@ -44,6 +44,14 @@ public class PanelUserController {
     return service.updateRole(principal, id, req);
   }
 
+  @PutMapping("/{id}")
+  public UserDtos.UserDto updateProfile(
+      @AuthenticationPrincipal UserPrincipal principal,
+      @PathVariable UUID id,
+      @RequestBody UserDtos.UpdateProfileRequest req) {
+    return service.updateProfile(principal, id, req);
+  }
+
   @PostMapping("/{id}/deactivate")
   public UserDtos.UserDto deactivate(
       @AuthenticationPrincipal UserPrincipal principal,

@@ -10,6 +10,7 @@ public final class UserDtos {
   public record UserDto(
       UUID id,
       String email,
+      String displayName,
       UserRole role,
       boolean active,
       Instant createdAt) {}
@@ -17,7 +18,10 @@ public final class UserDtos {
   public record CreateUserRequest(
       String email,
       String password,
+      String displayName,
       UserRole role) {}
 
   public record UpdateRoleRequest(UserRole role) {}
+
+  public record UpdateProfileRequest(String displayName, UserRole role) {}
 }

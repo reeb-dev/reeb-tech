@@ -59,9 +59,9 @@ export class AuthService {
       case 'PLATFORM_ADMIN':
         return 'Administrador de plataforma';
       case 'TENANT_ADMIN':
-        return 'Administrador del local';
+        return 'Administrador';
       case 'TENANT_AGENT':
-        return 'Agente';
+        return 'Agente / vendedor';
       default:
         return role || 'Usuario';
     }

@@ -105,6 +105,10 @@ export class ApiService {
     return this.http.put<PanelUser>(`${environment.apiUrl}/panel/users/${id}/role`, { role });
   }
 
+  updatePanelUser(id: string, body: { displayName?: string; role?: 'TENANT_ADMIN' | 'TENANT_AGENT' }) {
+    return this.http.put<PanelUser>(`${environment.apiUrl}/panel/users/${id}`, body);
+  }
+
   deactivatePanelUser(id: string) {
     return this.http.post<PanelUser>(`${environment.apiUrl}/panel/users/${id}/deactivate`, {});
   }

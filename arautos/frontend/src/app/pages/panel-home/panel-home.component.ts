@@ -25,11 +25,11 @@ import { GeoSelectComponent } from '../../shared/geo-select.component';
 export type PanelSection =
   | 'resumen'
   | 'stock'
-  | 'perfil'
+  | 'mi-local'
   | 'difusion'
-  | 'redes'
-  | 'usuarios'
   | 'suscripcion';
+
+export type MiLocalTab = 'datos' | 'equipo' | 'redes';
 
 @Component({
   selector: 'app-panel-home',
@@ -52,6 +52,7 @@ export class PanelHomeComponent implements OnInit {
   error = signal('');
   ok = signal('');
   section = signal<PanelSection>('resumen');
+  miLocalTab = signal<MiLocalTab>('datos');
   sidebarOpen = signal(false);
   formatPrice = formatPrice;
   typeLabel = typeLabel;
@@ -63,19 +64,24 @@ export class PanelHomeComponent implements OnInit {
   publishFacebook = true;
   publishInstagram = true;
 
-  readonly nav: { id: PanelSection; label: string; hint: string; adminOnly?: boolean }[] = [
+  readonly nav: { id: PanelSection; label: string; hint: string }[] = [
     { id: 'resumen', label: 'Resumen', hint: 'Vista general' },
     { id: 'stock', label: 'Stock', hint: 'Avisos del local' },
-    { id: 'perfil', label: 'Página pública', hint: 'Datos y marca' },
+    { id: 'mi-local', label: 'Mi local', hint: 'Página, equipo y redes' },
     { id: 'difusion', label: 'Difusión', hint: 'Publicar en redes' },
-    { id: 'redes', label: 'Redes Meta', hint: 'Conectar FB / IG' },
-    { id: 'usuarios', label: 'Usuarios', hint: 'Equipo del local', adminOnly: true },
     { id: 'suscripcion', label: 'Suscripción', hint: 'Plan y ranking' }
+  ];
+
+  readonly miLocalTabs: { id: MiLocalTab; label: string }[] = [
+    { id: 'datos', label: 'Datos de la página' },
+    { id: 'equipo', label: 'Equipo / perfiles' },
+    { id: 'redes', label: 'Redes sociales' }
   ];
 
   invite: CreatePanelUserRequest = {
     email: '',
     password: '',
+    displayName: '',
     role: 'TENANT_AGENT'
   };
 
@@ -103,17 +109,35 @@ export class PanelHomeComponent implements OnInit {
     this.reload();
     const meta = this.route.snapshot.queryParamMap.get('meta');
     if (meta === 'select' || meta === 'connected') {
-      this.section.set('redes');
+      this.openMiLocal('redes');
       this.loadMeta(true);
     }
     if (this.route.snapshot.queryParamMap.get('oauth_error')) {
-      this.section.set('redes');
+      this.openMiLocal('redes');
       this.error.set('No se pudo completar la conexión con Meta. Intente de nuevo.');
     }
-    const tab = this.route.snapshot.queryParamMap.get('tab') as PanelSection | null;
-    if (tab && this.nav.some((n) => n.id === tab)) {
-      this.section.set(tab);
-    }
+    this.applyTabFromQuery();
+  }
+
+  private applyTabFromQuery() {
+    const raw = this.route.snapshot.queryParamMap.get('tab');
+    const legacy: Record<string, { section: PanelSection; sub?: MiLocalTab }> = {
+      perfil: { section: 'mi-local', sub: 'datos' },
+      usuarios: { section: 'mi-local', sub: 'equipo' },
+      redes: { section: 'mi-local', sub: 'redes' },
+      'mi-local': { section: 'mi-local' },
+      resumen: { section: 'resumen' },
+      stock: { section: 'stock' },
+      difusion: { section: 'difusion' },
+      suscripcion: { section: 'suscripcion' }
+    };
+    if (!raw) return;
+    const mapped = legacy[raw];
+    if (!mapped) return;
+    this.section.set(mapped.section);
+    const sub = this.route.snapshot.queryParamMap.get('sub') as MiLocalTab | null;
+    if (mapped.sub) this.miLocalTab.set(mapped.sub);
+    if (sub && this.miLocalTabs.some((t) => t.id === sub)) this.miLocalTab.set(sub);
   }
 
   go(section: PanelSection) {
@@ -121,12 +145,44 @@ export class PanelHomeComponent implements OnInit {
     this.sidebarOpen.set(false);
     this.error.set('');
     this.ok.set('');
+    const params: Record<string, string> = { tab: section };
+    if (section === 'mi-local') {
+      params['sub'] = this.miLocalTab();
+      if (this.miLocalTab() === 'equipo' && this.auth.isTenantAdmin()) this.loadUsers();
+      if (this.miLocalTab() === 'redes') this.loadMeta(false);
+    }
     this.router.navigate([], {
       relativeTo: this.route,
-      queryParams: { tab: section },
+      queryParams: params,
       queryParamsHandling: 'merge',
       replaceUrl: true
     });
+  }
+
+  openMiLocal(sub: MiLocalTab) {
+    this.miLocalTab.set(sub);
+    this.section.set('mi-local');
+    this.sidebarOpen.set(false);
+    this.router.navigate([], {
+      relativeTo: this.route,
+      queryParams: { tab: 'mi-local', sub },
+      queryParamsHandling: 'merge',
+      replaceUrl: true
+    });
+  }
+
+  setMiLocalTab(sub: MiLocalTab) {
+    this.miLocalTab.set(sub);
+    this.error.set('');
+    this.ok.set('');
+    this.router.navigate([], {
+      relativeTo: this.route,
+      queryParams: { tab: 'mi-local', sub },
+      queryParamsHandling: 'merge',
+      replaceUrl: true
+    });
+    if (sub === 'equipo' && this.auth.isTenantAdmin()) this.loadUsers();
+    if (sub === 'redes') this.loadMeta(false);
   }
 
   toggleSidebar() {
@@ -138,11 +194,19 @@ export class PanelHomeComponent implements OnInit {
   }
 
   sectionLabel(): string {
+    if (this.section() === 'mi-local') {
+      const sub = this.miLocalTabs.find((t) => t.id === this.miLocalTab());
+      return sub ? `Mi local · ${sub.label}` : 'Mi local';
+    }
     return this.nav.find((n) => n.id === this.section())?.label || 'Panel';
   }
 
   visibleNav() {
-    return this.nav.filter((n) => !n.adminOnly || this.auth.isTenantAdmin());
+    return this.nav;
+  }
+
+  personLabel(u: PanelUser): string {
+    return (u.displayName && u.displayName.trim()) || u.email;
   }
 
   publishedCount(): number {
@@ -303,23 +367,30 @@ export class PanelHomeComponent implements OnInit {
     this.ok.set('');
     this.api.createPanelUser(this.invite).subscribe({
       next: () => {
-        this.ok.set('Usuario dado de alta. Entregue el email y la contraseña a la persona.');
-        this.invite = { email: '', password: '', role: 'TENANT_AGENT' };
+        this.ok.set('Perfil agregado. Entregue el email y la contraseña a esa persona.');
+        this.invite = { email: '', password: '', displayName: '', role: 'TENANT_AGENT' };
         this.loadUsers();
       },
-      error: (e) => this.error.set(e.error?.error || 'No se pudo dar de alta el usuario')
+      error: (e) => this.error.set(e.error?.error || 'No se pudo dar de alta el perfil')
     });
   }
 
   changeRole(user: PanelUser, role: 'TENANT_ADMIN' | 'TENANT_AGENT') {
     this.error.set('');
     this.ok.set('');
-    this.api.updatePanelUserRole(user.id, role).subscribe({
+    this.api.updatePanelUser(user.id, { role, displayName: user.displayName || undefined }).subscribe({
       next: () => {
-        this.ok.set('Rol actualizado.');
+        this.ok.set('Perfil actualizado.');
         this.loadUsers();
       },
       error: (e) => this.error.set(e.error?.error || 'No se pudo cambiar el rol')
+    });
+  }
+
+  savePersonName(user: PanelUser, name: string) {
+    this.api.updatePanelUser(user.id, { displayName: name }).subscribe({
+      next: () => this.loadUsers(),
+      error: (e) => this.error.set(e.error?.error || 'No se pudo guardar el nombre')
     });
   }
 
