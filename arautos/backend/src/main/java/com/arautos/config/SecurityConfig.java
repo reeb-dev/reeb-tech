@@ -41,6 +41,7 @@ public class SecurityConfig {
         .authorizeHttpRequests(auth -> auth
             .requestMatchers("/api/auth/**").permitAll()
             .requestMatchers("/api/public/**").permitAll()
+            .requestMatchers("/api/panel/social/meta/callback").permitAll()
             .requestMatchers("/actuator/health").permitAll()
             .requestMatchers("/api/admin/**").hasRole("PLATFORM_ADMIN")
             .requestMatchers("/api/panel/**").hasAnyRole("TENANT_ADMIN", "TENANT_AGENT", "PLATFORM_ADMIN")

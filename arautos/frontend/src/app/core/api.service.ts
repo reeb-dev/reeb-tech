@@ -13,7 +13,12 @@ import {
   BillingStatus,
   CheckoutResponse,
   RankingResponse,
-  PanelUser
+  PanelUser,
+  MetaStatus,
+  MetaPageOption,
+  PublishPreview,
+  PublicationResult,
+  OAuthProviderStatus
 } from './models';
 
 @Injectable({ providedIn: 'root' })
@@ -100,6 +105,10 @@ export class ApiService {
     return this.http.put<PanelUser>(`${environment.apiUrl}/panel/users/${id}/role`, { role });
   }
 
+  updatePanelUser(id: string, body: { displayName?: string; role?: 'TENANT_ADMIN' | 'TENANT_AGENT' }) {
+    return this.http.put<PanelUser>(`${environment.apiUrl}/panel/users/${id}`, body);
+  }
+
   deactivatePanelUser(id: string) {
     return this.http.post<PanelUser>(`${environment.apiUrl}/panel/users/${id}/deactivate`, {});
   }
@@ -110,6 +119,51 @@ export class ApiService {
 
   deletePanelUser(id: string) {
     return this.http.delete(`${environment.apiUrl}/panel/users/${id}`);
+  }
+
+  oauthProviders() {
+    return this.http.get<{ providers: OAuthProviderStatus[] }>(`${environment.apiUrl}/auth/oauth/providers`);
+  }
+
+  metaStatus() {
+    return this.http.get<MetaStatus>(`${environment.apiUrl}/panel/social/meta/status`);
+  }
+
+  metaStart() {
+    return this.http.get<{ authorizeUrl: string; message?: string }>(
+      `${environment.apiUrl}/panel/social/meta/start`
+    );
+  }
+
+  metaPages() {
+    return this.http.get<{ pages: MetaPageOption[]; message: string }>(
+      `${environment.apiUrl}/panel/social/meta/pages`
+    );
+  }
+
+  metaSelectPage(pageId: string) {
+    return this.http.post<MetaStatus>(`${environment.apiUrl}/panel/social/meta/select-page`, { pageId });
+  }
+
+  metaDisconnect() {
+    return this.http.delete<MetaStatus>(`${environment.apiUrl}/panel/social/meta`);
+  }
+
+  publishPreview(vehicleId: string) {
+    return this.http.get<PublishPreview>(`${environment.apiUrl}/panel/social/publish/preview`, {
+      params: { vehicleId }
+    });
+  }
+
+  publishSocial(body: { vehicleId: string; facebook: boolean; instagram: boolean }) {
+    return this.http.post<{ results: PublicationResult[]; message: string }>(
+      `${environment.apiUrl}/panel/social/publish`,
+      body
+    );
+  }
+
+  socialPublications() {
+    return this.http.get<PublicationResult[]>(`${environment.apiUrl}/panel/social/publications`);
   }
 
   adminPendingTenants() {

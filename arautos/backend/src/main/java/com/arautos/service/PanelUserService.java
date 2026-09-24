@@ -52,9 +52,31 @@ public class PanelUserService {
     user.setTenant(tenant);
     user.setEmail(email);
     user.setPasswordHash(passwordEncoder.encode(req.password()));
+    user.setDisplayName(normalizeName(req.displayName(), email));
     user.setRole(role);
     user.setActive(true);
     return toDto(users.save(user));
+  }
+
+  @Transactional
+  public UserDtos.UserDto updateProfile(UserPrincipal principal, UUID userId, UserDtos.UpdateProfileRequest req) {
+    Tenant tenant = requireTenantAdmin(principal);
+    UserAccount target = users.findByIdAndTenant_Id(userId, tenant.getId())
+        .orElseThrow(() -> new ApiException(HttpStatus.NOT_FOUND, "Perfil no encontrado en su local"));
+    if (req.displayName() != null) {
+      target.setDisplayName(normalizeName(req.displayName(), target.getEmail()));
+    }
+    if (req.role() != null) {
+      UserRole newRole = normalizeTenantRole(req.role());
+      if (target.getId().equals(principal.getUserId()) && newRole != UserRole.TENANT_ADMIN) {
+        throw new ApiException(HttpStatus.BAD_REQUEST, "No puede quitarse el rol de administrador a sí mismo");
+      }
+      if (target.getRole() == UserRole.TENANT_ADMIN && newRole != UserRole.TENANT_ADMIN) {
+        ensureAnotherAdmin(tenant.getId(), target.getId());
+      }
+      target.setRole(newRole);
+    }
+    return toDto(target);
   }
 
   @Transactional
@@ -137,7 +159,21 @@ public class PanelUserService {
         .orElseThrow(() -> new ApiException(HttpStatus.NOT_FOUND, "Concesionaria no encontrada"));
   }
 
+  private String normalizeName(String raw, String emailFallback) {
+    if (raw != null && !raw.isBlank()) {
+      return raw.trim();
+    }
+    int at = emailFallback.indexOf('@');
+    return at > 0 ? emailFallback.substring(0, at) : emailFallback;
+  }
+
   private UserDtos.UserDto toDto(UserAccount u) {
-    return new UserDtos.UserDto(u.getId(), u.getEmail(), u.getRole(), u.isActive(), u.getCreatedAt());
+    return new UserDtos.UserDto(
+        u.getId(),
+        u.getEmail(),
+        u.getDisplayName(),
+        u.getRole(),
+        u.isActive(),
+        u.getCreatedAt());
   }
 }

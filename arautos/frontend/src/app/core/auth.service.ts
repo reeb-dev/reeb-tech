@@ -59,9 +59,9 @@ export class AuthService {
       case 'PLATFORM_ADMIN':
         return 'Administrador de plataforma';
       case 'TENANT_ADMIN':
-        return 'Administrador del local';
+        return 'Administrador';
       case 'TENANT_AGENT':
-        return 'Agente';
+        return 'Agente / vendedor';
       default:
         return role || 'Usuario';
     }
@@ -74,6 +74,23 @@ export class AuthService {
   private persist(res: AuthResponse) {
     localStorage.setItem(KEY, JSON.stringify(res));
     this.session.set(res);
+  }
+
+  /** Persiste JWT recibido del callback OAuth (Facebook Login). */
+  acceptToken(token: string, extras?: Partial<AuthResponse>) {
+    const res: AuthResponse = {
+      token,
+      userId: extras?.userId || '',
+      email: extras?.email || '',
+      role: extras?.role || 'TENANT_ADMIN',
+      tenantId: extras?.tenantId,
+      tenantSlug: extras?.tenantSlug,
+      tenantName: extras?.tenantName,
+      subscriptionStatus: extras?.subscriptionStatus,
+      moderationStatus: extras?.moderationStatus,
+      message: extras?.message
+    };
+    this.persist(res);
   }
 
   private read(): AuthResponse | null {

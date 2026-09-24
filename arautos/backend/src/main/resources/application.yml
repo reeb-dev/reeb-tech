@@ -39,6 +39,25 @@ arautos:
     pending-url: ${ARAUTOS_MP_PENDING_URL:http://localhost:4200/panel?mp=pending}
     failure-url: ${ARAUTOS_MP_FAILURE_URL:http://localhost:4200/panel?mp=failure}
     notification-url: ${ARAUTOS_MP_NOTIFICATION_URL:http://localhost:8080/api/public/mp/webhook}
+  # Facebook Login (cuenta) ≠ Meta Connect (páginas/IG por tenant). Sin secret = botones apagados.
+  facebook-oauth:
+    enabled: ${ARAUTOS_OAUTH_FACEBOOK_ENABLED:false}
+    client-id: ${ARAUTOS_OAUTH_FACEBOOK_CLIENT_ID:}
+    client-secret: ${ARAUTOS_OAUTH_FACEBOOK_CLIENT_SECRET:}
+    login-redirect-uri: ${ARAUTOS_OAUTH_FACEBOOK_REDIRECT_URI:http://localhost:8080/api/auth/oauth/facebook/callback}
+    connect-redirect-uri: ${ARAUTOS_OAUTH_META_CONNECT_REDIRECT_URI:http://localhost:8080/api/panel/social/meta/callback}
+    frontend-login-success-url: ${ARAUTOS_OAUTH_FRONTEND_LOGIN_URL:http://localhost:4200/panel/oauth/callback}
+    frontend-connect-success-url: ${ARAUTOS_OAUTH_FRONTEND_CONNECT_URL:http://localhost:4200/panel?meta=connected}
+    frontend-connect-select-url: ${ARAUTOS_OAUTH_FRONTEND_SELECT_URL:http://localhost:4200/panel?meta=select}
+    graph-version: ${ARAUTOS_OAUTH_GRAPH_VERSION:v21.0}
+  google-oauth:
+    enabled: ${ARAUTOS_OAUTH_GOOGLE_ENABLED:false}
+    client-id: ${ARAUTOS_OAUTH_GOOGLE_CLIENT_ID:}
+    client-secret: ${ARAUTOS_OAUTH_GOOGLE_CLIENT_SECRET:}
+    # Debe coincidir EXACTO con Authorized redirect URIs en Google Cloud (sin slash final).
+    redirect-uri: ${ARAUTOS_OAUTH_GOOGLE_REDIRECT_URI:http://localhost:8080/api/auth/oauth/google/callback}
+    frontend-success-url: ${ARAUTOS_OAUTH_FRONTEND_LOGIN_URL:http://localhost:4200/panel/oauth/callback}
+  public-base-url: ${ARAUTOS_PUBLIC_BASE_URL:http://localhost:4200}
   cors-origins: ${ARAUTOS_CORS_ORIGINS:http://localhost:4200,http://127.0.0.1:4200}
   seed: ${ARAUTOS_SEED:true}
 

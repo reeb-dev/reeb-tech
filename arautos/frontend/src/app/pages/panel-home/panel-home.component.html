@@ -1,278 +1,569 @@
-<section class="container">
-  <div class="head">
-    <div>
-      <h1>Panel de su concesionaria</h1>
-      @if (auth.session(); as s) {
-        <p class="meta session-line">
-          <span class="role-pill">{{ auth.roleLabel(s.role) }}</span>
-          @if (s.tenantName) {
-            <span class="tenant-name">{{ s.tenantName }}</span>
-          }
-          · {{ s.email }}
-          @if (profile(); as p) {
-            · {{ p.subscriptionStatus }}
-            · <a [routerLink]="['/c', p.slug]">página pública</a>
-          }
-        </p>
-      }
-    </div>
-    <div class="head-actions">
-      @if (auth.isPlatformAdmin()) {
-        <a class="btn secondary" routerLink="/panel/admin">Administración</a>
-      }
-      <button class="btn secondary" type="button" (click)="logout()">Cerrar sesión</button>
-    </div>
-  </div>
-
-  @if (stats(); as st) {
-    <div class="stats">
-      <div class="stat"><strong>{{ st.activeListings }}</strong><span>Avisos publicados</span></div>
-      <div class="stat"><strong>{{ st.totalViews }}</strong><span>Vistas</span></div>
-      <div class="stat"><strong>{{ st.totalWaClicks }}</strong><span>Clics WhatsApp</span></div>
-      <div class="stat"><strong>{{ st.readOnly ? 'Sí' : 'No' }}</strong><span>Solo lectura</span></div>
-    </div>
-    @if (st.readOnly) {
-      <div class="alert">Cuenta vencida o suspendida: el catálogo no lista sus avisos y el panel está en solo lectura.</div>
-    }
-  }
-
-  @if (billing(); as bill) {
-    <section class="billing-block">
-      <h2>Suscripción</h2>
-      <p class="meta">
-        Plan {{ bill.planName }} · estado {{ bill.subscriptionStatus }}
-        @if (bill.trialEndsAt) {
-          · trial hasta {{ bill.trialEndsAt | date: 'dd/MM/yyyy' }}
+<section class="panel-shell">
+  <div class="panel-layout" [class.sidebar-open]="sidebarOpen()">
+    <aside class="panel-sidebar" aria-label="Menú del panel">
+      <div class="sidebar-brand">
+        <p class="eyebrow">Panel</p>
+        <strong>{{ profile()?.name || auth.session()?.tenantName || 'Su local' }}</strong>
+        @if (auth.session(); as s) {
+          <span class="sidebar-role">{{ auth.roleLabel(s.role) }}</span>
         }
-      </p>
-      @if (bill.planPriceArs || bill.planPriceUsd) {
-        <p class="meta">
-          @if (bill.planPriceArs) { Monto ARS (env): {{ bill.planPriceArs }} }
-          @if (bill.planPriceUsd) { · USD (env): {{ bill.planPriceUsd }} }
-        </p>
-      } @else {
-        <p class="meta">Montos del plan: a configurar (no se publican cifras inventadas).</p>
+      </div>
+      <nav class="side-nav">
+        @for (item of visibleNav(); track item.id) {
+          <button
+            type="button"
+            class="side-item"
+            [class.active]="section() === item.id"
+            (click)="go(item.id)">
+            <span class="side-label">{{ item.label }}</span>
+            <span class="side-hint">{{ item.hint }}</span>
+          </button>
+        }
+      </nav>
+      <div class="sidebar-foot">
+        @if (profile(); as p) {
+          <a class="side-link" [routerLink]="['/c', p.slug]">Ver página pública</a>
+        }
+        @if (auth.isPlatformAdmin()) {
+          <a class="side-link" routerLink="/panel/admin">Administración</a>
+        }
+        <button class="btn secondary side-logout" type="button" (click)="logout()">Cerrar sesión</button>
+      </div>
+    </aside>
+
+    @if (sidebarOpen()) {
+      <button type="button" class="sidebar-backdrop" aria-label="Cerrar menú" (click)="closeSidebar()"></button>
+    }
+
+    <div class="panel-main">
+      <header class="dash-head">
+        <div class="dash-head-left">
+          <button type="button" class="menu-toggle" (click)="toggleSidebar()" aria-label="Abrir menú">
+            Menú
+          </button>
+          <div>
+            <p class="eyebrow">{{ sectionLabel() }}</p>
+            <h1>{{ profile()?.name || auth.session()?.tenantName || 'Su concesionaria' }}</h1>
+            @if (auth.session(); as s) {
+              <p class="meta session-line">
+                <span class="role-pill">{{ auth.roleLabel(s.role) }}</span>
+                <span>{{ s.email }}</span>
+                @if (profile(); as p) {
+                  <span class="status-dot" [class.warn]="p.subscriptionStatus !== 'ACTIVA' && p.subscriptionStatus !== 'TRIAL'">
+                    {{ p.subscriptionStatus }}
+                  </span>
+                }
+              </p>
+            }
+          </div>
+        </div>
+        <div class="head-actions">
+          @if (profile(); as p) {
+            <a class="btn secondary head-public" [routerLink]="['/c', p.slug]">Página pública</a>
+          }
+          <button class="btn secondary head-logout" type="button" (click)="logout()">Cerrar sesión</button>
+        </div>
+      </header>
+
+      @if (error()) { <div class="alert">{{ error() }}</div> }
+      @if (ok()) { <div class="alert ok">{{ ok() }}</div> }
+
+      @if (stats()?.readOnly) {
+        <div class="alert">Cuenta vencida o suspendida: el catálogo no lista sus avisos y el panel está en solo lectura.</div>
       }
-      <p class="meta">{{ bill.message }}</p>
-      <button
-        class="btn"
-        type="button"
-        (click)="startCheckout()"
-        [disabled]="checkoutBusy">
-        {{ checkoutBusy ? 'Preparando…' : (bill.mpConfigured ? 'Pagar / renovar con Mercado Pago' : 'Probar checkout (scaffolding)') }}
-      </button>
+
+      <div class="panel-content">
+
+  @if (section() === 'resumen') {
+    <section class="dash-section">
+      <div class="kpi-row">
+        @if (stats(); as st) {
+          <button type="button" class="kpi" (click)="go('stock')">
+            <strong>{{ st.activeListings }}</strong>
+            <span>Avisos publicados</span>
+          </button>
+          <div class="kpi">
+            <strong>{{ st.totalViews }}</strong>
+            <span>Vistas</span>
+          </div>
+          <div class="kpi">
+            <strong>{{ st.totalWaClicks }}</strong>
+            <span>Clics WhatsApp</span>
+          </div>
+          <button type="button" class="kpi" (click)="go('stock')">
+            <strong>{{ draftCount() }}</strong>
+            <span>Borradores</span>
+          </button>
+        }
+      </div>
+
+      <div class="dash-grid">
+        <div class="panel-card">
+          <h2>Atajos</h2>
+          <p class="meta">Lo que más usa en el día a día.</p>
+          <div class="shortcut-grid">
+            <button type="button" class="shortcut" (click)="go('stock')">
+              <span class="shortcut-title">Cargar aviso</span>
+              <span class="meta">Alta de stock</span>
+            </button>
+            <button type="button" class="shortcut" (click)="go('difusion')">
+              <span class="shortcut-title">Difundir</span>
+              <span class="meta">Facebook / Instagram</span>
+            </button>
+            <button type="button" class="shortcut" (click)="openMiLocal('datos')">
+              <span class="shortcut-title">Mi local</span>
+              <span class="meta">Página, equipo y redes</span>
+            </button>
+            <button type="button" class="shortcut" (click)="openMiLocal('redes')">
+              <span class="shortcut-title">Conectar Meta</span>
+              <span class="meta">{{ meta()?.facebookConnected ? 'Redes listas' : 'Pendiente' }}</span>
+            </button>
+          </div>
+        </div>
+
+        <div class="panel-card">
+          <h2>Estado rápido</h2>
+          <ul class="status-list">
+            <li>
+              <span>Suscripción</span>
+              <strong>{{ billing()?.subscriptionStatus || '—' }}</strong>
+            </li>
+            <li>
+              <span>Ranking</span>
+              <strong>{{ selfRank() }}</strong>
+            </li>
+            <li>
+              <span>Facebook</span>
+              <strong [class.ok-text]="meta()?.facebookConnected">{{ meta()?.facebookConnected ? 'Conectado' : 'Sin conectar' }}</strong>
+            </li>
+            <li>
+              <span>Instagram</span>
+              <strong [class.ok-text]="meta()?.instagramConnected">{{ meta()?.instagramConnected ? ('@' + (meta()?.instagramUsername || 'ok')) : 'Sin conectar' }}</strong>
+            </li>
+            <li>
+              <span>Stock</span>
+              <strong>{{ publishedCount() }} publicados · {{ vehicles().length }} total</strong>
+            </li>
+          </ul>
+          <div class="card-actions">
+            <button class="btn secondary" type="button" (click)="go('suscripcion')">Ver suscripción</button>
+            @if (profile(); as p) {
+              <a class="btn secondary" [routerLink]="['/c', p.slug]">Abrir página</a>
+            }
+          </div>
+        </div>
+
+        @if (ranking(); as rk) {
+          <div class="panel-card span-2">
+            <div class="card-head">
+              <h2>Ranking en {{ rk.province }}</h2>
+              <p class="meta">Por clics de WhatsApp (solo panel).</p>
+            </div>
+            @if (rk.entries.length) {
+              <table class="table compact">
+                <thead>
+                  <tr><th>#</th><th>Concesionaria</th><th>Clics WA</th></tr>
+                </thead>
+                <tbody>
+                  @for (e of rk.entries; track e.tenantId) {
+                    <tr [class.is-self]="e.self">
+                      <td>{{ e.rank }}</td>
+                      <td>{{ e.name }}@if (e.self) { <span class="you"> (usted)</span> }</td>
+                      <td>{{ e.waClicks }}</td>
+                    </tr>
+                  }
+                </tbody>
+              </table>
+            } @else {
+              <p class="meta">Todavía no hay pares en esta provincia.</p>
+            }
+          </div>
+        }
+      </div>
     </section>
   }
 
-  @if (ranking(); as rk) {
-    <section class="ranking-block">
-      <h2>Ranking en {{ rk.province }}</h2>
-      <p class="meta">Criterio: clics de WhatsApp entre concesionarias de su provincia (solo panel).</p>
-      @if (rk.entries.length) {
+  @if (section() === 'suscripcion') {
+    <section class="dash-section panel-card">
+      <h2>Suscripción</h2>
+      @if (billing(); as bill) {
+        <p class="meta">
+          Plan {{ bill.planName }} · estado {{ bill.subscriptionStatus }}
+          @if (bill.trialEndsAt) {
+            · trial hasta {{ bill.trialEndsAt | date: 'dd/MM/yyyy' }}
+          }
+        </p>
+        @if (bill.planPriceArs || bill.planPriceUsd) {
+          <p class="meta">
+            @if (bill.planPriceArs) { Monto ARS (env): {{ bill.planPriceArs }} }
+            @if (bill.planPriceUsd) { · USD (env): {{ bill.planPriceUsd }} }
+          </p>
+        } @else {
+          <p class="meta">Montos del plan: a configurar (no se publican cifras inventadas).</p>
+        }
+        <p class="meta">{{ bill.message }}</p>
+        <button class="btn" type="button" (click)="startCheckout()" [disabled]="checkoutBusy">
+          {{ checkoutBusy ? 'Preparando…' : (bill.mpConfigured ? 'Pagar / renovar con Mercado Pago' : 'Probar checkout (scaffolding)') }}
+        </button>
+      }
+      @if (ranking(); as rk) {
+        <h3 class="subhead">Ranking en {{ rk.province }}</h3>
+        <p class="meta">Criterio: clics de WhatsApp entre concesionarias de su provincia.</p>
+        @if (rk.entries.length) {
+          <table class="table">
+            <thead><tr><th>#</th><th>Concesionaria</th><th>Clics WA</th></tr></thead>
+            <tbody>
+              @for (e of rk.entries; track e.tenantId) {
+                <tr [class.is-self]="e.self">
+                  <td>{{ e.rank }}</td>
+                  <td>{{ e.name }}@if (e.self) { <span class="you"> (usted)</span> }</td>
+                  <td>{{ e.waClicks }}</td>
+                </tr>
+              }
+            </tbody>
+          </table>
+        }
+      }
+    </section>
+  }
+
+  @if (section() === 'mi-local') {
+    <section class="dash-section panel-card mi-local">
+      <h2>Mi local</h2>
+      <p class="meta">
+        Un solo lugar para la página web del local, los perfiles del equipo y las redes.
+        Agregue solo las personas que necesite para manejar su web.
+      </p>
+
+      <div class="subtabs" role="tablist" aria-label="Secciones de Mi local">
+        @for (t of miLocalTabs; track t.id) {
+          <button
+            type="button"
+            class="subtab"
+            role="tab"
+            [class.active]="miLocalTab() === t.id"
+            (click)="setMiLocalTab(t.id)">
+            {{ t.label }}
+          </button>
+        }
+      </div>
+
+      @if (miLocalTab() === 'datos') {
+        <div class="subpanel">
+          <h3 class="subhead">Datos de la página</h3>
+          <p class="meta">Estos datos se muestran en <code>/c/{{ profileForm.slug || '…' }}</code>.</p>
+          <form class="form-grid profile-form flat" (ngSubmit)="saveProfile()">
+            <div class="field"><label>Nombre comercial</label>
+              <input [(ngModel)]="profileForm.name" name="pname" required [disabled]="!!stats()?.readOnly" />
+            </div>
+            <div class="field"><label>WhatsApp</label>
+              <input [(ngModel)]="profileForm.whatsapp" name="pwa" required [disabled]="!!stats()?.readOnly" />
+            </div>
+            <app-geo-select
+              class="geo-inline"
+              [(province)]="profileForm.province"
+              [(locality)]="profileForm.city"
+              [required]="true"
+              [disabled]="!!stats()?.readOnly"
+              [allowEmptyProvince]="false"
+              [allowEmptyLocality]="false"
+              localityLabel="Localidad / ciudad"
+              namePrefix="profile">
+            </app-geo-select>
+            <div class="field"><label>Dirección</label>
+              <input [(ngModel)]="profileForm.address" name="paddr" [disabled]="!!stats()?.readOnly" />
+            </div>
+            <div class="field"><label>Email de contacto</label>
+              <input [(ngModel)]="profileForm.email" name="pemail" [disabled]="!!stats()?.readOnly" />
+            </div>
+            <div class="field"><label>URL del logo</label>
+              <input [(ngModel)]="profileForm.logoUrl" name="plogo" placeholder="/assets/dealers/…" [disabled]="!!stats()?.readOnly" />
+            </div>
+            <div class="field"><label>Color principal</label>
+              <input type="color" [(ngModel)]="profileForm.primaryColor" name="pprim" [disabled]="!!stats()?.readOnly" />
+            </div>
+            <div class="field"><label>Color de acento</label>
+              <input type="color" [(ngModel)]="profileForm.accentColor" name="pacc" [disabled]="!!stats()?.readOnly" />
+            </div>
+            <div class="field" style="grid-column:1/-1"><label>Descripción pública</label>
+              <textarea rows="3" [(ngModel)]="profileForm.description" name="pdesc" [disabled]="!!stats()?.readOnly"></textarea>
+            </div>
+            <button class="btn" type="submit" [disabled]="!!stats()?.readOnly">Guardar datos de la página</button>
+          </form>
+        </div>
+      }
+
+      @if (miLocalTab() === 'equipo') {
+        <div class="subpanel">
+          <h3 class="subhead">Equipo / perfiles</h3>
+          @if (auth.isTenantAdmin()) {
+            <p class="meta">
+              Agregue un perfil por cada persona que va a usar el panel (administrador o agente/vendedor).
+              No hace falta crear más tipos: con estos dos roles alcanza para manejar su web.
+            </p>
+
+            <form class="form-grid invite-form flat" (ngSubmit)="inviteUser()">
+              <div class="field">
+                <label>Nombre del perfil</label>
+                <input [(ngModel)]="invite.displayName" name="uname" placeholder="Ej. María — ventas" required autocomplete="off" />
+              </div>
+              <div class="field">
+                <label>Email de acceso</label>
+                <input [(ngModel)]="invite.email" name="uemail" type="email" required autocomplete="off" />
+              </div>
+              <div class="field">
+                <label>Contraseña temporal</label>
+                <input [(ngModel)]="invite.password" name="upass" type="text" required minlength="6" autocomplete="off" />
+              </div>
+              <div class="field">
+                <label>Rol</label>
+                <select [(ngModel)]="invite.role" name="urole">
+                  <option value="TENANT_AGENT">Agente / vendedor</option>
+                  <option value="TENANT_ADMIN">Administrador</option>
+                </select>
+              </div>
+              <button class="btn" type="submit" [disabled]="!!stats()?.readOnly">Agregar perfil</button>
+            </form>
+
+            <table class="table users-table">
+              <thead>
+                <tr><th>Perfil</th><th>Email</th><th>Rol</th><th>Estado</th><th></th></tr>
+              </thead>
+              <tbody>
+                @for (u of users(); track u.id) {
+                  <tr [class.inactive]="!u.active">
+                    <td>
+                      @if (isSelf(u) || !!stats()?.readOnly) {
+                        {{ personLabel(u) }}@if (isSelf(u)) { <span class="you"> (usted)</span> }
+                      } @else {
+                        <input
+                          class="inline-name"
+                          [ngModel]="u.displayName || ''"
+                          (ngModelChange)="u.displayName = $event"
+                          (blur)="savePersonName(u, u.displayName || '')"
+                          [name]="'dname-' + u.id"
+                          placeholder="Nombre" />
+                      }
+                    </td>
+                    <td>{{ u.email }}</td>
+                    <td>
+                      @if (isSelf(u) || !!stats()?.readOnly) {
+                        {{ auth.roleLabel(u.role) }}
+                      } @else {
+                        <select [ngModel]="u.role" (ngModelChange)="changeRole(u, $event)" [name]="'role-' + u.id">
+                          <option value="TENANT_AGENT">Agente / vendedor</option>
+                          <option value="TENANT_ADMIN">Administrador</option>
+                        </select>
+                      }
+                    </td>
+                    <td>{{ u.active ? 'Activo' : 'Desactivado' }}</td>
+                    <td class="user-actions">
+                      @if (!isSelf(u) && !stats()?.readOnly) {
+                        <button class="btn secondary" type="button" (click)="toggleActive(u)">
+                          {{ u.active ? 'Desactivar' : 'Reactivar' }}
+                        </button>
+                        <button class="btn secondary danger-btn" type="button" (click)="removeUser(u)">Borrar</button>
+                      }
+                    </td>
+                  </tr>
+                }
+              </tbody>
+            </table>
+          } @else {
+            <p class="meta">Usted ingresó como agente. Solo el administrador puede agregar o quitar perfiles.</p>
+          }
+        </div>
+      }
+
+      @if (miLocalTab() === 'redes') {
+        <div class="subpanel">
+          <h3 class="subhead">Redes sociales</h3>
+          <p class="meta">
+            Conecte la Página de Facebook y el Instagram profesional <strong>de este local</strong>
+            para difundir avisos. No es el mismo flujo que «Ingresar con Facebook».
+          </p>
+          @if (meta(); as m) {
+            <p class="meta">{{ m.message }}</p>
+            <div class="meta-badges">
+              <span class="badge" [class.on]="m.facebookConnected">Facebook {{ m.facebookConnected ? 'conectado' : 'sin conectar' }}</span>
+              <span class="badge" [class.on]="m.instagramConnected">Instagram {{ m.instagramConnected ? ('@' + (m.instagramUsername || 'ok')) : 'sin conectar' }}</span>
+            </div>
+            @if (m.pageName) {
+              <p class="meta">Página: {{ m.pageName }}</p>
+            }
+            @if (m.pendingPageSelection && metaPages().length) {
+              <p class="meta">Elija la Página de su local:</p>
+              <ul class="page-list">
+                @for (p of metaPages(); track p.id) {
+                  <li>
+                    <button type="button" class="btn secondary" (click)="selectMetaPage(p.id)" [disabled]="!!stats()?.readOnly">
+                      {{ p.name }}@if (p.hasInstagram) { · IG {{ p.instagramUsername || 'vinculado' }} }
+                    </button>
+                  </li>
+                }
+              </ul>
+            }
+            <div class="meta-actions">
+              @if (!m.facebookConnected) {
+                <button class="btn" type="button" (click)="connectMeta()" [disabled]="metaBusy || !m.configured || !!stats()?.readOnly">
+                  {{ metaBusy ? 'Abriendo Meta…' : 'Conectar Meta' }}
+                </button>
+              } @else {
+                <button class="btn secondary" type="button" (click)="disconnectMeta()" [disabled]="!!stats()?.readOnly">Desconectar</button>
+                <button class="btn secondary" type="button" (click)="connectMeta()" [disabled]="metaBusy || !!stats()?.readOnly">Reconectar</button>
+              }
+            </div>
+          } @else {
+            <p class="meta">No se pudo consultar el estado de Meta.</p>
+          }
+        </div>
+      }
+    </section>
+  }
+
+  @if (section() === 'difusion') {
+    <section class="dash-section panel-card">
+      <h2>Difusión</h2>
+      <p class="meta">
+        Genere texto y foto del aviso, revise la vista previa y confirme. WhatsApp solo se puede compartir a mano.
+        Las fotos deben ser URL HTTPS públicas (Meta no lee localhost).
+      </p>
+      <div class="form-grid difusion-form flat">
+        <div class="field">
+          <label>Vehículo</label>
+          <select [(ngModel)]="selectedVehicleId" name="diffVeh">
+            <option value="">Elegir…</option>
+            @for (v of vehicles(); track v.id) {
+              @if (v.status === 'PUBLICADO') {
+                <option [value]="v.id">{{ v.brand }} {{ v.model }} {{ v.year }}</option>
+              }
+            }
+          </select>
+        </div>
+        <div class="field check-row">
+          <label><input type="checkbox" [(ngModel)]="publishFacebook" name="pubFb" /> Facebook</label>
+          <label><input type="checkbox" [(ngModel)]="publishInstagram" name="pubIg" /> Instagram</label>
+        </div>
+        <button class="btn secondary" type="button" (click)="loadPreview()" [disabled]="!!stats()?.readOnly">Vista previa</button>
+        <button class="btn" type="button" (click)="confirmPublish()" [disabled]="publishBusy || !!stats()?.readOnly">
+          {{ publishBusy ? 'Publicando…' : 'Confirmar publicación' }}
+        </button>
+      </div>
+      @if (preview(); as prev) {
+        <div class="preview-card">
+          <h3>{{ prev.title }}</h3>
+          <p class="meta">{{ prev.priceLabel }} · {{ prev.location }}</p>
+          <pre class="caption">{{ prev.caption }}</pre>
+          @if (prev.imageUrl) {
+            <p class="meta">Foto: {{ prev.imageUrl }} {{ prev.imagePublicHttps ? '(HTTPS ok)' : '(no pública HTTPS)' }}</p>
+          }
+          @if (prev.warning) {
+            <div class="alert">{{ prev.warning }}</div>
+          }
+        </div>
+      }
+      @if (publications().length) {
+        <h3 class="subhead">Últimas publicaciones</h3>
         <table class="table">
-          <thead>
-            <tr><th>#</th><th>Concesionaria</th><th>Clics WA</th></tr>
-          </thead>
+          <thead><tr><th>Canal</th><th>Estado</th><th>Enlace</th><th>Fecha</th></tr></thead>
           <tbody>
-            @for (e of rk.entries; track e.tenantId) {
-              <tr [class.is-self]="e.self">
-                <td>{{ e.rank }}</td>
-                <td>{{ e.name }}@if (e.self) { <span class="you"> (usted)</span> }</td>
-                <td>{{ e.waClicks }}</td>
+            @for (p of publications(); track p.createdAt + p.channel) {
+              <tr>
+                <td>{{ p.channel }}</td>
+                <td>{{ p.status }}@if (p.errorMessage) { — {{ p.errorMessage }} }</td>
+                <td>@if (p.postUrl) { <a [href]="p.postUrl" target="_blank" rel="noopener">Ver</a> }</td>
+                <td>{{ p.createdAt | date: 'dd/MM/yyyy HH:mm' }}</td>
               </tr>
             }
           </tbody>
         </table>
-      } @else {
-        <p class="meta">Todavía no hay pares en esta provincia.</p>
       }
     </section>
   }
 
-  @if (error()) { <div class="alert">{{ error() }}</div> }
-  @if (ok()) { <div class="alert ok">{{ ok() }}</div> }
-
-  @if (auth.isTenantAdmin()) {
-    <section class="users-block">
-      <h2>Usuarios de su local</h2>
-      <p class="meta">
-        Dé de alta agentes u otros administradores. Ellos usan el mismo panel con el rol que usted asigne.
-      </p>
-
-      <form class="form-grid invite-form" (ngSubmit)="inviteUser()">
-        <div class="field">
-          <label>Email</label>
-          <input [(ngModel)]="invite.email" name="uemail" type="email" required autocomplete="off" />
+  @if (section() === 'stock') {
+    <section class="dash-section">
+      <div class="panel-card">
+        <div class="card-head row">
+          <div>
+            <h2>Stock</h2>
+            <p class="meta">{{ vehicles().length }} avisos · {{ publishedCount() }} publicados</p>
+          </div>
         </div>
-        <div class="field">
-          <label>Contraseña temporal</label>
-          <input [(ngModel)]="invite.password" name="upass" type="text" required minlength="6" autocomplete="off" />
-        </div>
-        <div class="field">
-          <label>Rol</label>
-          <select [(ngModel)]="invite.role" name="urole">
-            <option value="TENANT_AGENT">Agente</option>
-            <option value="TENANT_ADMIN">Administrador del local</option>
-          </select>
-        </div>
-        <button class="btn" type="submit" [disabled]="!!stats()?.readOnly">Dar de alta</button>
-      </form>
+        @if (!vehicles().length) {
+          <p class="meta empty-hint">Todavía no hay avisos. Cargue el primero abajo.</p>
+        } @else {
+          <table class="table">
+            <thead>
+              <tr><th>Vehículo</th><th>Precio</th><th>Estado</th><th>Vistas</th><th>WA</th><th></th></tr>
+            </thead>
+            <tbody>
+              @for (v of vehicles(); track v.id) {
+                <tr>
+                  <td>{{ v.brand }} {{ v.model }} {{ v.year }}</td>
+                  <td>{{ formatPrice(v.price, v.currency) }}</td>
+                  <td><span class="status-chip">{{ v.status }}</span></td>
+                  <td>{{ v.views }}</td>
+                  <td>{{ v.waClicks }}</td>
+                  <td><button class="btn secondary" type="button" (click)="remove(v.id)" [disabled]="!!stats()?.readOnly">Borrar</button></td>
+                </tr>
+              }
+            </tbody>
+          </table>
+        }
+      </div>
 
-      <table class="table users-table">
-        <thead>
-          <tr>
-            <th>Email</th>
-            <th>Rol</th>
-            <th>Estado</th>
-            <th></th>
-          </tr>
-        </thead>
-        <tbody>
-          @for (u of users(); track u.id) {
-            <tr [class.inactive]="!u.active">
-              <td>
-                {{ u.email }}
-                @if (isSelf(u)) { <span class="you"> (usted)</span> }
-              </td>
-              <td>
-                @if (isSelf(u) || !!stats()?.readOnly) {
-                  {{ auth.roleLabel(u.role) }}
-                } @else {
-                  <select
-                    [ngModel]="u.role"
-                    (ngModelChange)="changeRole(u, $event)"
-                    [name]="'role-' + u.id">
-                    <option value="TENANT_AGENT">Agente</option>
-                    <option value="TENANT_ADMIN">Administrador del local</option>
-                  </select>
-                }
-              </td>
-              <td>{{ u.active ? 'Activo' : 'Desactivado' }}</td>
-              <td class="user-actions">
-                @if (!isSelf(u) && !stats()?.readOnly) {
-                  <button class="btn secondary" type="button" (click)="toggleActive(u)">
-                    {{ u.active ? 'Desactivar' : 'Reactivar' }}
-                  </button>
-                  <button class="btn secondary danger-btn" type="button" (click)="removeUser(u)">
-                    Borrar
-                  </button>
-                }
-              </td>
-            </tr>
-          }
-        </tbody>
-      </table>
+      <div class="panel-card">
+        <h2>Nuevo aviso</h2>
+        <form class="form-grid flat" (ngSubmit)="create()">
+          <div class="field"><label>Marca</label><input [(ngModel)]="form.brand" name="brand" required /></div>
+          <div class="field"><label>Modelo</label><input [(ngModel)]="form.model" name="model" required /></div>
+          <div class="field"><label>Año</label><input type="number" [(ngModel)]="form.year" name="year" required /></div>
+          <div class="field"><label>Km</label><input type="number" [(ngModel)]="form.km" name="km" required /></div>
+          <div class="field"><label>Tipo</label>
+            <select [(ngModel)]="form.type" name="type">
+              <option value="CERO_KM">0 Km</option>
+              <option value="USADO">Usado</option>
+            </select>
+          </div>
+          <div class="field"><label>Precio</label><input type="number" [(ngModel)]="form.price" name="price" required /></div>
+          <div class="field"><label>Moneda</label>
+            <select [(ngModel)]="form.currency" name="currency">
+              <option value="USD">USD</option>
+              <option value="ARS">ARS</option>
+            </select>
+          </div>
+          <app-geo-select
+            class="geo-inline"
+            [(province)]="form.province"
+            [(locality)]="form.city"
+            [required]="true"
+            [disabled]="!!stats()?.readOnly"
+            [allowEmptyProvince]="false"
+            [allowEmptyLocality]="false"
+            localityLabel="Localidad / ciudad"
+            namePrefix="vehicle">
+          </app-geo-select>
+          <div class="field"><label>Foto (URL)</label>
+            <input [(ngModel)]="photoUrl" name="photo" placeholder="/assets/cars/…" />
+          </div>
+          <div class="field"><label>Estado</label>
+            <select [(ngModel)]="form.status" name="status">
+              <option value="PUBLICADO">Publicado</option>
+              <option value="BORRADOR">Borrador</option>
+              <option value="OCULTO">Oculto</option>
+              <option value="VENDIDO">Vendido</option>
+            </select>
+          </div>
+          <div class="field" style="grid-column:1/-1"><label>Descripción</label>
+            <textarea rows="3" [(ngModel)]="form.description" name="description"></textarea>
+          </div>
+          <button class="btn" type="submit" [disabled]="!!stats()?.readOnly">Publicar</button>
+        </form>
+      </div>
     </section>
-  } @else if (auth.session()?.role === 'TENANT_AGENT') {
-    <p class="meta agent-note">
-      Usted ingresó como agente. La gestión de usuarios la realiza el administrador del local.
-    </p>
   }
-
-  <h2>Perfil de la concesionaria</h2>
-  <p class="meta">Estos datos personalizan su página pública en <code>/c/{{ profileForm.slug || '…' }}</code>.</p>
-  <form class="form-grid profile-form" (ngSubmit)="saveProfile()">
-    <div class="field"><label>Nombre comercial</label>
-      <input [(ngModel)]="profileForm.name" name="pname" required [disabled]="!!stats()?.readOnly" />
+      </div>
     </div>
-    <div class="field"><label>WhatsApp</label>
-      <input [(ngModel)]="profileForm.whatsapp" name="pwa" required [disabled]="!!stats()?.readOnly" />
-    </div>
-    <app-geo-select
-      class="geo-inline"
-      [(province)]="profileForm.province"
-      [(locality)]="profileForm.city"
-      [required]="true"
-      [disabled]="!!stats()?.readOnly"
-      [allowEmptyProvince]="false"
-      [allowEmptyLocality]="false"
-      localityLabel="Localidad / ciudad"
-      namePrefix="profile">
-    </app-geo-select>
-    <div class="field"><label>Dirección</label>
-      <input [(ngModel)]="profileForm.address" name="paddr" [disabled]="!!stats()?.readOnly" />
-    </div>
-    <div class="field"><label>Email de contacto</label>
-      <input [(ngModel)]="profileForm.email" name="pemail" [disabled]="!!stats()?.readOnly" />
-    </div>
-    <div class="field"><label>URL del logo</label>
-      <input [(ngModel)]="profileForm.logoUrl" name="plogo" placeholder="/assets/dealers/…" [disabled]="!!stats()?.readOnly" />
-    </div>
-    <div class="field"><label>Color principal</label>
-      <input type="color" [(ngModel)]="profileForm.primaryColor" name="pprim" [disabled]="!!stats()?.readOnly" />
-    </div>
-    <div class="field"><label>Color de acento</label>
-      <input type="color" [(ngModel)]="profileForm.accentColor" name="pacc" [disabled]="!!stats()?.readOnly" />
-    </div>
-    <div class="field" style="grid-column:1/-1"><label>Descripción pública</label>
-      <textarea rows="3" [(ngModel)]="profileForm.description" name="pdesc" [disabled]="!!stats()?.readOnly"></textarea>
-    </div>
-    <button class="btn" type="submit" [disabled]="!!stats()?.readOnly">Guardar perfil</button>
-  </form>
-
-  <h2>Stock</h2>
-  <table class="table">
-    <thead>
-      <tr><th>Vehículo</th><th>Precio</th><th>Estado</th><th>Vistas</th><th>WA</th><th></th></tr>
-    </thead>
-    <tbody>
-      @for (v of vehicles(); track v.id) {
-        <tr>
-          <td>{{ v.brand }} {{ v.model }} {{ v.year }}</td>
-          <td>{{ formatPrice(v.price, v.currency) }}</td>
-          <td>{{ v.status }}</td>
-          <td>{{ v.views }}</td>
-          <td>{{ v.waClicks }}</td>
-          <td><button class="btn secondary" type="button" (click)="remove(v.id)" [disabled]="!!stats()?.readOnly">Borrar</button></td>
-        </tr>
-      }
-    </tbody>
-  </table>
-
-  <h2>Nuevo aviso</h2>
-  <form class="form-grid" (ngSubmit)="create()">
-    <div class="field"><label>Marca</label><input [(ngModel)]="form.brand" name="brand" required /></div>
-    <div class="field"><label>Modelo</label><input [(ngModel)]="form.model" name="model" required /></div>
-    <div class="field"><label>Año</label><input type="number" [(ngModel)]="form.year" name="year" required /></div>
-    <div class="field"><label>Km</label><input type="number" [(ngModel)]="form.km" name="km" required /></div>
-    <div class="field"><label>Tipo</label>
-      <select [(ngModel)]="form.type" name="type">
-        <option value="CERO_KM">0 Km</option>
-        <option value="USADO">Usado</option>
-      </select>
-    </div>
-    <div class="field"><label>Precio</label><input type="number" [(ngModel)]="form.price" name="price" required /></div>
-    <div class="field"><label>Moneda</label>
-      <select [(ngModel)]="form.currency" name="currency">
-        <option value="USD">USD</option>
-        <option value="ARS">ARS</option>
-      </select>
-    </div>
-    <app-geo-select
-      class="geo-inline"
-      [(province)]="form.province"
-      [(locality)]="form.city"
-      [required]="true"
-      [disabled]="!!stats()?.readOnly"
-      [allowEmptyProvince]="false"
-      [allowEmptyLocality]="false"
-      localityLabel="Localidad / ciudad"
-      namePrefix="vehicle">
-    </app-geo-select>
-    <div class="field"><label>Foto (URL)</label>
-      <input [(ngModel)]="photoUrl" name="photo" placeholder="/assets/cars/…" />
-    </div>
-    <div class="field"><label>Estado</label>
-      <select [(ngModel)]="form.status" name="status">
-        <option value="PUBLICADO">Publicado</option>
-        <option value="BORRADOR">Borrador</option>
-        <option value="OCULTO">Oculto</option>
-        <option value="VENDIDO">Vendido</option>
-      </select>
-    </div>
-    <div class="field" style="grid-column:1/-1"><label>Descripción</label>
-      <textarea rows="3" [(ngModel)]="form.description" name="description"></textarea>
-    </div>
-    <button class="btn" type="submit" [disabled]="!!stats()?.readOnly">Publicar</button>
-  </form>
+  </div>
 </section>

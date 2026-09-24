@@ -14,6 +14,32 @@
     <button type="button" [class.active]="mode==='register'" (click)="mode='register'">Solicitar alta</button>
   </div>
 
+  @if (mode === 'login') {
+    <div class="oauth-row">
+      <button
+        type="button"
+        class="btn secondary oauth-fb"
+        (click)="startGoogle()"
+        [disabled]="!google()?.configured">
+        Ingresar con Google
+      </button>
+      <button
+        type="button"
+        class="btn secondary oauth-fb"
+        (click)="startFacebook()"
+        [disabled]="!facebook()?.configured">
+        Ingresar con Facebook
+      </button>
+      @if (google(); as g) {
+        <p class="meta">{{ g.configured ? 'Google: crea o inicia su cuenta AR Autos.' : g.note }}</p>
+      }
+      @if (facebook(); as fb) {
+        <p class="meta">{{ fb.configured ? 'Facebook: crea o inicia su cuenta (no conecta las redes del local).' : fb.note }}</p>
+      }
+    </div>
+    <p class="meta oauth-or">o con email y contraseña</p>
+  }
+
   <form (ngSubmit)="submit()">
     <div class="field"><label>Email</label><input [(ngModel)]="email" name="email" type="email" required /></div>
     <div class="field"><label>Contraseña</label><input [(ngModel)]="password" name="password" type="password" required /></div>
