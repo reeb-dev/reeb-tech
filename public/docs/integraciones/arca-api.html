@@ -3,8 +3,8 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>ARCA API Reference (estilo Postman) | webconreeb.com</title>
-  <meta name="description" content="Referencia de API REST /api/arca estilo Postman: auth JWT, endpoints, curl, JSON y colección importable. Para implementar o probar en tu instancia.">
+  <title>Docs API ARCA — REST | webconreeb.com</title>
+  <meta name="description" content="Documentación REST para emitir CAE: auth JWT, POST /api/arca/invoices, curl y colección Postman. Sin SOAP en el primer paso.">
   <meta name="robots" content="index, follow">
   <link rel="canonical" href="https://webconreeb.com/docs/integraciones/arca-api.html">
   <link rel="stylesheet" href="styles.css">
@@ -13,111 +13,144 @@
   <a class="skip" href="#contenido">Saltar al contenido</a>
   <div class="wrap">
     <nav class="top" aria-label="Integraciones">
-      <a class="brand" href="index.html">Integraciones FE / pagos</a>
-      <a href="arca-fuentes.html">ARCA · Fuentes</a>
-      <a href="arca-implementacion.html">Webservices</a>
-      <a class="is-active" href="arca-api.html" aria-current="page">API REST (Postman)</a>
+      <a class="brand" href="index.html">Integraciones</a>
+      <a class="is-active" href="arca-api.html" aria-current="page">Docs API</a>
+      <a href="arca-implementacion.html">SOAP avanzado</a>
+      <a href="arca-fuentes.html">PDFs ARCA</a>
       <a href="mercadopago.html">Mercado Pago</a>
     </nav>
 
     <div class="layout">
       <aside class="toc" aria-label="Índice">
-        <h2>En esta página</h2>
+        <h2>Docs</h2>
         <ol>
-          <li><a href="#idea">Idea</a></li>
-          <li><a href="#base">Base URL + auth</a></li>
-          <li><a href="#login">POST login</a></li>
-          <li><a href="#status">GET status</a></li>
-          <li><a href="#post-cae">POST invoice (CAE)</a></li>
-          <li><a href="#get-inv">GET invoice</a></li>
+          <li><a href="#intro">Introducción</a></li>
+          <li><a href="#pasos">Primeros pasos</a></li>
+          <li><a href="#auth">Auth</a></li>
+          <li><a href="#status">Status</a></li>
+          <li><a href="#emitir">Emitir CAE</a></li>
+          <li><a href="#leer">Leer factura</a></li>
           <li><a href="#errores">Errores</a></li>
-          <li><a href="#propia">Armá tu propia API</a></li>
-          <li><a href="#postman">Colección Postman</a></li>
+          <li><a href="#postman">Postman</a></li>
+          <li><a href="#soap">SOAP (opcional)</a></li>
         </ol>
       </aside>
 
       <article id="contenido">
         <header class="hero">
-          <p class="eyebrow">API Reference · estilo Postman</p>
-          <h1>ARCA — endpoints para probar e implementar</h1>
+          <p class="eyebrow">Documentación API · estilo producto</p>
+          <h1>API REST para facturar con ARCA</h1>
           <p class="lead">
-            Contrato REST de la instancia (stock-local): método, ruta, roles, curl y JSON de ejemplo.
-            Importá la colección en Postman/Insomnia o copiá los curl a tu terminal.
+            Registrás el cert del comercio en el servidor, generás un JWT, y emitís con un POST.
+            No montás SOAP a mano en el cliente: eso lo hace el backend.
           </p>
-          <div class="meta-row">
-            <span class="chip">REST JSON</span>
-            <span class="chip">Bearer JWT</span>
-            <span class="chip">/api/arca/*</span>
-          </div>
           <div class="hero-jumps">
-            <a class="jump" href="#postman">Descargar colección</a>
-            <a class="jump ghost" href="#status">Ver endpoints</a>
-            <a class="jump ghost" href="arca-implementacion.html">Guía WSAA/WSFE</a>
+            <a class="jump" href="#emitir">Ver emisión</a>
+            <a class="jump ghost" href="#pasos">Primeros pasos</a>
+            <a class="jump ghost" href="postman/arca-api.postman_collection.json">Importar colección</a>
           </div>
         </header>
 
-        <section class="tldr" id="idea">
-          <h2>Qué estás viendo</h2>
-          <ol>
-            <li><strong>Esta página (azul) = REST del producto</strong> para probar con Postman/curl.</li>
-            <li><strong>La página verde</strong> <a href="arca-implementacion.html">Webservices</a> explica cómo hablar SOAP con ARCA y armar tu propia API.</li>
-            <li>ARCA/AFIP por detrás es SOAP. Este REST es la capa que stock-local expone encima.</li>
-          </ol>
-        </section>
+        <div class="demo-grid">
+          <div class="demo-card">
+            <div class="bar"><span class="dot"></span> Request</div>
+<pre><code>POST /api/arca/invoices/{saleId}
+Authorization: Bearer eyJhbGciOi…
 
-        <h2 id="base">Base URL y autenticación</h2>
+(body vacío — la venta ya tiene importes)</code></pre>
+          </div>
+          <div class="demo-result">
+            <div class="ok-line">201 / 200 · cae listo</div>
+            <div class="cae">
+              result: "A"
+              <small>cae · caeVto · cbteNro · puntoVenta</small>
+            </div>
+          </div>
+        </div>
+
+        <h2 id="intro">Introducción</h2>
+        <p>
+          Esta API es la capa REST de una instancia <strong>single-tenant</strong> (un comercio).
+          Por detrás usa los webservices oficiales WSAA + WSFEv1.
+          Si querés el detalle SOAP, está en <a href="arca-implementacion.html">SOAP avanzado</a>.
+        </p>
+
+        <h2 id="pasos">Primeros pasos</h2>
+        <ol class="steps">
+          <li>
+            <div>
+              <strong>Levantá la instancia</strong>
+              Backend con <code>ARCA_ENABLED=true</code>, CUIT, paths de cert/key y punto de venta.
+            </div>
+          </li>
+          <li>
+            <div>
+              <strong>Homologá el certificado</strong>
+              En ARCA/AFIP (WSASS en homo). PDFs: <a href="arca-fuentes.html">acá</a>.
+            </div>
+          </li>
+          <li>
+            <div>
+              <strong>Login</strong>
+              <code>POST /api/auth/login</code> → guardá el <code>token</code>.
+            </div>
+          </li>
+          <li>
+            <div>
+              <strong>Status</strong>
+              <code>GET /api/arca/status</code> debe decir <code>configured</code>.
+            </div>
+          </li>
+          <li>
+            <div>
+              <strong>Emití</strong>
+              Creá una venta → <code>POST /api/arca/invoices/{saleId}</code> → leé el CAE.
+            </div>
+          </li>
+        </ol>
+
+        <h2 id="base">Base URL</h2>
         <div class="api-base">
-          <div><strong>Base URL (local)</strong> <code class="path">http://localhost:8080</code></div>
-          <div><strong>Base URL (prod)</strong> <code class="path">https://tu-dominio</code></div>
-          <div><strong>Auth</strong> header <code>Authorization: Bearer &lt;JWT&gt;</code> (salvo login)</div>
-          <div><strong>Content-Type</strong> <code>application/json</code></div>
-        </div>
-        <div class="callout tip">
-          <strong>Cómo obtener el JWT.</strong>
-          Primero <code>POST /api/auth/login</code> con email/password de un usuario TITULAR (para pedir CAE).
-          Después pegá el <code>token</code> en Postman → Authorization → Bearer Token.
+          <div><strong>Local</strong> <code class="path">http://localhost:8080</code></div>
+          <div><strong>Prod</strong> <code class="path">https://tu-dominio</code></div>
+          <div><strong>Auth</strong> <code>Authorization: Bearer &lt;JWT&gt;</code></div>
         </div>
 
-        <!-- LOGIN -->
-        <div class="endpoint" id="login">
+        <div class="endpoint" id="auth">
           <div class="endpoint-head">
             <span class="method post">POST</span>
             <span class="endpoint-path">/api/auth/login</span>
             <span class="endpoint-meta">público</span>
           </div>
           <div class="endpoint-body">
-            <p>Devuelve el JWT para el resto de llamadas.</p>
-            <h3>Body</h3>
+            <p>Obtené el JWT. Para pedir CAE necesitás rol <strong>TITULAR</strong>.</p>
             <div class="code-block">
-              <div class="label"><span>Request JSON</span><span>200</span></div>
+              <div class="label"><span>Body</span><span>JSON</span></div>
 <pre><code>{
   "email": "titular@comercio.local",
   "password": "tu-password"
 }</code></pre>
             </div>
-            <h3>Response 200</h3>
             <div class="code-block">
-              <div class="label"><span>Response JSON</span><span>ejemplo</span></div>
+              <div class="label"><span>Response</span><span>200</span></div>
 <pre><code>{
   "token": "eyJhbGciOiJIUzI1NiJ9…",
-  "userId": "11111111-1111-1111-1111-111111111111",
+  "userId": "…",
   "email": "titular@comercio.local",
   "fullName": "Titular Demo",
   "role": "TITULAR"
 }</code></pre>
             </div>
-            <h3>cURL</h3>
             <div class="copy-row"><button type="button" class="copy-btn" data-copy="curl-login">Copiar</button></div>
             <div class="code-block">
-              <div class="label"><span>Terminal</span><span>bash</span></div>
-<pre id="curl-login"><code>curl -s -X POST "http://localhost:8080/api/auth/login" \
+              <div class="label"><span>cURL</span><span>bash</span></div>
+<pre id="curl-login"><code>curl -s -X POST "$BASE/api/auth/login" \
   -H "Content-Type: application/json" \
   -d '{"email":"titular@comercio.local","password":"tu-password"}'</code></pre>
             </div>
           </div>
         </div>
 
-        <!-- STATUS -->
         <div class="endpoint" id="status">
           <div class="endpoint-head">
             <span class="method get">GET</span>
@@ -125,19 +158,9 @@
             <span class="endpoint-meta">TITULAR · OPERADOR</span>
           </div>
           <div class="endpoint-body">
-            <p>¿Está el módulo ARCA habilitado y con cert/key del comercio?</p>
-            <h3>Headers</h3>
-            <div class="table-wrap">
-              <table class="param-table">
-                <thead><tr><th>Header</th><th>Valor</th></tr></thead>
-                <tbody>
-                  <tr><td><code>Authorization</code></td><td><code>Bearer {{token}}</code></td></tr>
-                </tbody>
-              </table>
-            </div>
-            <h3>Response 200 — configurado</h3>
+            <p>¿El módulo está listo para emitir?</p>
             <div class="code-block">
-              <div class="label"><span>Response JSON</span><span>configured</span></div>
+              <div class="label"><span>Response</span><span>configured</span></div>
 <pre><code>{
   "status": "configured",
   "enabled": true,
@@ -150,33 +173,16 @@
   "message": "Listo para CAE en ambiente HOMO. Extra cotizado."
 }</code></pre>
             </div>
-            <h3>Response 200 — sin cert</h3>
-            <div class="code-block">
-              <div class="label"><span>Response JSON</span><span>not_configured</span></div>
-<pre><code>{
-  "status": "not_configured",
-  "enabled": false,
-  "configured": false,
-  "environment": "HOMO",
-  "cuit": null,
-  "puntoVenta": 1,
-  "certPresent": false,
-  "keyPresent": false,
-  "message": "ARCA no configurado. Requiere ARCA_ENABLED, CUIT, cert y clave del comercio…"
-}</code></pre>
-            </div>
-            <h3>cURL</h3>
             <div class="copy-row"><button type="button" class="copy-btn" data-copy="curl-status">Copiar</button></div>
             <div class="code-block">
-              <div class="label"><span>Terminal</span><span>bash</span></div>
-<pre id="curl-status"><code>curl -s "http://localhost:8080/api/arca/status" \
+              <div class="label"><span>cURL</span><span>bash</span></div>
+<pre id="curl-status"><code>curl -s "$BASE/api/arca/status" \
   -H "Authorization: Bearer $TOKEN"</code></pre>
             </div>
           </div>
         </div>
 
-        <!-- POST CAE -->
-        <div class="endpoint" id="post-cae">
+        <div class="endpoint" id="emitir">
           <div class="endpoint-head">
             <span class="method post">POST</span>
             <span class="endpoint-path">/api/arca/invoices/{saleId}</span>
@@ -184,26 +190,12 @@
           </div>
           <div class="endpoint-body">
             <p>
-              Solicita CAE para una venta ya existente. Body vacío.
-              El servidor: WSAA → último nro → <code>FECAESolicitar</code> → persiste resultado.
-              Si ya hay resultado <code>A</code> con CAE, no re-solicita (idempotencia blanda).
+              Emite (o reusa) el CAE de una venta existente.
+              Body vacío: importes y cliente salen de la venta.
+              Idempotente si ya hay <code>result: "A"</code> con CAE.
             </p>
-            <h3>Path params</h3>
-            <div class="table-wrap">
-              <table class="param-table">
-                <thead><tr><th>Nombre</th><th>Tipo</th><th>Descripción</th></tr></thead>
-                <tbody>
-                  <tr>
-                    <td><code>saleId</code></td>
-                    <td>UUID</td>
-                    <td>ID de la venta en el sistema</td>
-                  </tr>
-                </tbody>
-              </table>
-            </div>
-            <h3>Response 200 — aprobado</h3>
             <div class="code-block">
-              <div class="label"><span>Response JSON</span><span>Resultado A</span></div>
+              <div class="label"><span>Response</span><span>200</span></div>
 <pre><code>{
   "id": "aaaaaaaa-bbbb-cccc-dddd-eeeeeeeeeeee",
   "saleId": "22222222-2222-2222-2222-222222222222",
@@ -218,122 +210,78 @@
   "updatedAt": "2026-09-23T22:00:00Z"
 }</code></pre>
             </div>
-            <h3>cURL</h3>
             <div class="copy-row"><button type="button" class="copy-btn" data-copy="curl-cae">Copiar</button></div>
             <div class="code-block">
-              <div class="label"><span>Terminal</span><span>bash</span></div>
-<pre id="curl-cae"><code>curl -s -X POST \
-  "http://localhost:8080/api/arca/invoices/22222222-2222-2222-2222-222222222222" \
+              <div class="label"><span>cURL</span><span>bash</span></div>
+<pre id="curl-cae"><code>curl -s -X POST "$BASE/api/arca/invoices/$SALE_ID" \
   -H "Authorization: Bearer $TOKEN"</code></pre>
             </div>
           </div>
         </div>
 
-        <!-- GET invoice -->
-        <div class="endpoint" id="get-inv">
+        <div class="endpoint" id="leer">
           <div class="endpoint-head">
             <span class="method get">GET</span>
             <span class="endpoint-path">/api/arca/invoices/{saleId}</span>
             <span class="endpoint-meta">TITULAR · OPERADOR · CONTADOR</span>
           </div>
           <div class="endpoint-body">
-            <p>Lee la factura ARCA ya pedida para esa venta (mismo shape que el POST).</p>
-            <h3>cURL</h3>
+            <p>Lee la factura ARCA ya solicitada (mismo JSON que el POST).</p>
             <div class="copy-row"><button type="button" class="copy-btn" data-copy="curl-get">Copiar</button></div>
             <div class="code-block">
-              <div class="label"><span>Terminal</span><span>bash</span></div>
-<pre id="curl-get"><code>curl -s \
-  "http://localhost:8080/api/arca/invoices/22222222-2222-2222-2222-222222222222" \
+              <div class="label"><span>cURL</span><span>bash</span></div>
+<pre id="curl-get"><code>curl -s "$BASE/api/arca/invoices/$SALE_ID" \
   -H "Authorization: Bearer $TOKEN"</code></pre>
             </div>
           </div>
         </div>
 
-        <h2 id="errores">Errores habituales</h2>
+        <h2 id="errores">Errores frecuentes</h2>
         <div class="table-wrap">
           <table>
             <thead>
-              <tr><th>HTTP / caso</th><th>Qué significa</th><th>Qué hacer</th></tr>
+              <tr><th>Caso</th><th>Qué hacer</th></tr>
             </thead>
             <tbody>
-              <tr>
-                <td><span class="status-pill err">401</span> sin token</td>
-                <td>JWT ausente o inválido</td>
-                <td>Volvé a login</td>
-              </tr>
-              <tr>
-                <td><span class="status-pill err">403</span> rol</td>
-                <td>OPERADOR intentó POST CAE</td>
-                <td>Usá usuario TITULAR</td>
-              </tr>
-              <tr>
-                <td>422 / IllegalState “no configurado”</td>
-                <td>Faltan env / cert / key</td>
-                <td>Completá checklist + <code>ARCA_*</code></td>
-              </tr>
-              <tr>
-                <td>Venta no encontrada</td>
-                <td><code>saleId</code> inexistente</td>
-                <td>Creá la venta primero en el panel/API de ventas</td>
-              </tr>
-              <tr>
-                <td><code>result: "R"</code> o ERROR</td>
-                <td>ARCA rechazó o falló SOAP</td>
-                <td>Leé <code>observations</code>; revisá gaps RG 5616 en la guía</td>
-              </tr>
+              <tr><td><span class="status-pill err">401</span></td><td>Volvé a login</td></tr>
+              <tr><td><span class="status-pill err">403</span></td><td>Usá usuario TITULAR para emitir</td></tr>
+              <tr><td><code>not_configured</code></td><td>Completá <code>ARCA_*</code> y cert/key</td></tr>
+              <tr><td><code>result: "R"</code></td><td>Leé <code>observations</code>; revisá RG 5616 en SOAP avanzado</td></tr>
             </tbody>
           </table>
         </div>
 
-        <h2 id="propia">Si querés armar tu propia API</h2>
-        <p>Dos caminos típicos:</p>
-        <div class="mental">
-          <div class="mental-card">
-            <span class="kicker">Opción A</span>
-            <strong>Reusar este contrato REST</strong>
-            <p>Exponé los mismos 3 endpoints en tu backend. El front/Postman no cambia. Adentro seguís haciendo WSAA + WSFE.</p>
-          </div>
-          <div class="mental-card">
-            <span class="kicker">Opción B</span>
-            <strong>Hablar SOAP directo</strong>
-            <p>Tu servicio firma TRA, cachea TA y llama <code>FECAESolicitar</code>. Usá los PDF y la <a href="arca-implementacion.html">guía</a>.</p>
-          </div>
-          <div class="mental-card">
-            <span class="kicker">Opción C</span>
-            <strong>Solo probar contra tu instancia</strong>
-            <p>Importá la colección Postman, seteá <code>baseUrl</code> + login, y pegale a HOMO.</p>
-          </div>
+        <h3>Variables de entorno (servidor)</h3>
+        <div class="env-grid">
+          <div><code>ARCA_ENABLED</code><span>Activa el módulo</span></div>
+          <div><code>ARCA_ENV</code><span><code>HOMO</code> o <code>PROD</code></span></div>
+          <div><code>ARCA_CUIT</code><span>CUIT del comercio</span></div>
+          <div><code>ARCA_CERT_PATH</code><span>Path al certificado</span></div>
+          <div><code>ARCA_KEY_PATH</code><span>Path a la clave privada</span></div>
+          <div><code>ARCA_PTO_VTA</code><span>Punto de venta electrónico</span></div>
         </div>
-        <p class="soap-note">
-          Recordá: ARCA no ofrece REST oficial para CAE. El “estilo Postman” aplica a <em>tu</em> API de producto;
-          hacia AFIP el transporte sigue siendo SOAP/XML.
-        </p>
 
-        <h2 id="postman">Colección Postman / Insomnia</h2>
+        <h2 id="postman">Colección Postman</h2>
         <div class="callout note">
-          <strong>Descargá e importá:</strong>
-          <a href="postman/arca-api.postman_collection.json"><strong>arca-api.postman_collection.json</strong></a>
-          <br>
-          Variables: <code>baseUrl</code> (default <code>http://localhost:8080</code>), <code>token</code> (se puede llenar a mano tras el login), <code>saleId</code>.
+          <strong>Importá:</strong>
+          <a href="postman/arca-api.postman_collection.json">arca-api.postman_collection.json</a>
+          · variables <code>baseUrl</code>, <code>token</code>, <code>saleId</code>.
         </div>
-        <ol class="order-list">
-          <li>Postman → Import → elegí el JSON.</li>
-          <li>Corré <strong>Auth → Login</strong> y copiá <code>token</code> a la variable de colección (o Authorization).</li>
-          <li>Corré <strong>ARCA → Status</strong>.</li>
-          <li>Poné un <code>saleId</code> real → <strong>Request CAE</strong> → <strong>Get invoice</strong>.</li>
-        </ol>
+
+        <h2 id="soap">¿Y el SOAP?</h2>
+        <p>
+          Si estás escribiendo tu propio cliente AFIP (sin este backend), mirá
+          <a href="arca-implementacion.html">SOAP avanzado</a>:
+          TRA, <code>loginCms</code>, <code>FECAESolicitar</code>, XML y URLs homo/prod.
+        </p>
 
         <hr class="hr">
-        <p class="muted">
-          Contrato alineado a <code>ArcaController</code> / <code>ArcaInvoiceService</code> de stock-local.
-          Guía SOAP: <a href="arca-implementacion.html">arca-implementacion.html</a> ·
-          PDFs: <a href="arca-fuentes.html">arca-fuentes.html</a>.
-        </p>
+        <p class="muted">Contrato alineado a stock-local · PDFs: <a href="arca-fuentes.html">arca-fuentes</a></p>
       </article>
     </div>
 
     <footer>
-      API Reference ARCA (REST del producto). Extra cotizado. Fuentes oficiales prevalecen para el contrato SOAP.
+      Docs API ARCA (REST del producto). Extra cotizado. Estilo inspirado en docs REST modernas.
     </footer>
   </div>
   <script>

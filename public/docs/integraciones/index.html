@@ -3,64 +3,120 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Integraciones ARCA y Mercado Pago | webconreeb.com</title>
-  <meta name="description" content="Hub de documentación técnica: API de ARCA para devs y Mercado Pago Checkout Pro.">
+  <title>ARCA en tu sistema — docs REST | webconreeb.com</title>
+  <meta name="description" content="Documentación para integrar facturación electrónica ARCA en tu instancia: API REST simple, sin pelear SOAP en el primer paso.">
   <meta name="robots" content="index, follow">
   <link rel="canonical" href="https://webconreeb.com/docs/integraciones/">
   <link rel="stylesheet" href="styles.css">
 </head>
 <body>
+  <a class="skip" href="#contenido">Saltar al contenido</a>
   <div class="wrap">
     <nav class="top" aria-label="Integraciones">
-      <a class="brand is-active" href="index.html" aria-current="page">Integraciones FE / pagos</a>
-      <a href="arca-fuentes.html">ARCA · Fuentes</a>
-      <a href="arca-implementacion.html">Webservices</a>
-      <a href="arca-api.html">API REST (Postman)</a>
+      <a class="brand is-active" href="index.html" aria-current="page">Integraciones</a>
+      <a href="arca-api.html">Docs API</a>
+      <a href="arca-implementacion.html">SOAP avanzado</a>
+      <a href="arca-fuentes.html">PDFs ARCA</a>
       <a href="mercadopago.html">Mercado Pago</a>
     </nav>
-    <article>
+
+    <article id="contenido">
       <header class="hero">
-        <p class="eyebrow">Documentación técnica</p>
-        <h1>Integraciones: ARCA y Mercado Pago</h1>
-        <p class="lead">Guías para quien implemente o revise la integración. Sin certificados, tokens ni precios. Ante duda, prevalece la documentación oficial.</p>
+        <p class="eyebrow">Extra cotizado · stock single-tenant</p>
+        <h1>Emitís con un POST. El CAE vuelve en JSON.</h1>
+        <p class="lead">
+          Documentación para integrar facturación electrónica ARCA en <strong>tu instancia</strong>.
+          Empezás por una API REST (como en las docs modernas). El SOAP de AFIP queda adentro del servidor.
+        </p>
+        <div class="meta-row">
+          <span class="chip">REST JSON</span>
+          <span class="chip">Bearer JWT</span>
+          <span class="chip">WSFEv1 detrás</span>
+        </div>
+        <div class="hero-jumps">
+          <a class="jump" href="arca-api.html">Abrir Docs API</a>
+          <a class="jump ghost" href="postman/arca-api.postman_collection.json">Colección Postman</a>
+          <a class="jump ghost" href="arca-implementacion.html">Capa SOAP (avanzado)</a>
+        </div>
       </header>
 
-      <div class="callout note">
-        <strong>Cómo usar:</strong>
-        abrí estas páginas en el navegador
-        (<a href="https://webconreeb.com/docs/integraciones/">webconreeb.com/docs/integraciones/</a>).
-        Los PDF oficiales también están hosteados en
-        <a href="pdfs/">/docs/integraciones/pdfs/</a> (con link al original).
+      <div class="demo-grid">
+        <div class="demo-card">
+          <div class="bar"><span class="dot"></span> POST /api/arca/invoices/{saleId}</div>
+<pre><code>curl -X POST "$BASE/api/arca/invoices/$SALE_ID" \
+  -H "Authorization: Bearer $TOKEN"
+
+# Adentro el servidor habla WSAA + WSFEv1.
+# Vos solo mandás el id de la venta.</code></pre>
+        </div>
+        <div class="demo-result">
+          <div class="ok-line">✓ 200 · Resultado A</div>
+          <div class="cae">
+            CAE 75123456789012
+            <small>vence 2026-10-03 · cbteTipo 6 · PV 1</small>
+          </div>
+          <p class="muted" style="margin:0">Misma idea que un facturador API: request simple, respuesta con CAE.</p>
+        </div>
       </div>
 
+      <div class="callout tip">
+        <strong>No es arca.api.com.ar.</strong>
+        Esto documenta el extra ARCA de <em>tu</em> sistema (un comercio, un deploy, cert del cliente).
+        Sin planes multi-CUIT ni precios inventados.
+      </div>
+
+      <h2>Empezá por acá</h2>
       <div class="cards">
-        <a class="card" href="arca-fuentes.html">
-          <h2>ARCA · Fuentes y PDFs</h2>
-          <p class="muted">Índice maestro + descargas locales: WSAA, WSASS, WSFEv1 V.4.8, URLs homo/prod.</p>
+        <a class="card" href="arca-api.html">
+          <h2>Docs API (REST)</h2>
+          <p class="muted">Login → status → solicitar CAE → leer factura. Curl, JSON y colección Postman.</p>
         </a>
         <a class="card" href="arca-implementacion.html">
-          <h2>Webservices (cómo implementar)</h2>
-          <p class="muted">Receta verde: WSAA + WSFEv1, URLs, SOAP XML y cómo envolverlo en tu propia API.</p>
+          <h2>SOAP avanzado</h2>
+          <p class="muted">Si armás tu propio backend: WSAA loginCms, FECompUltimoAutorizado, FECAESolicitar.</p>
         </a>
-        <a class="card" href="arca-api.html">
-          <h2>API REST (Postman)</h2>
-          <p class="muted">Referencia azul: endpoints /api/arca, curl, JSON y colección importable.</p>
+        <a class="card" href="arca-fuentes.html">
+          <h2>PDFs oficiales</h2>
+          <p class="muted">Manuales WSFEv1 / WSAA hosteados + links al sitio ARCA/AFIP.</p>
         </a>
         <a class="card" href="mercadopago.html">
           <h2>Mercado Pago</h2>
-          <p class="muted">Checkout Pro, variables, webhooks, checklist. Links a la doc oficial de MP.</p>
+          <p class="muted">Checkout Pro en la misma instancia (extra aparte).</p>
         </a>
       </div>
 
-      <p class="muted" style="margin-top:1.5rem">También en Markdown:
-        <a href="arca-fuentes.md">arca-fuentes.md</a> ·
-        <a href="arca-implementacion.md">arca-implementacion.md</a> ·
-        <a href="mercadopago.md">mercadopago.md</a>
-      </p>
+      <h2>Cómo funciona (4 pasos)</h2>
+      <ol class="steps">
+        <li>
+          <div>
+            <strong>Configurás el comercio</strong>
+            CUIT + certificado + PV electrónico en el servidor (<code>ARCA_*</code>).
+          </div>
+        </li>
+        <li>
+          <div>
+            <strong>Cerrás una venta</strong>
+            En el panel o vía API de ventas; te queda un <code>saleId</code>.
+          </div>
+        </li>
+        <li>
+          <div>
+            <strong>POST al endpoint de CAE</strong>
+            Tu código (o Postman) llama <code>/api/arca/invoices/{saleId}</code>.
+          </div>
+        </li>
+        <li>
+          <div>
+            <strong>Guardás el CAE</strong>
+            Respuesta JSON con <code>cae</code>, <code>caeVto</code>, <code>result</code>.
+          </div>
+        </li>
+      </ol>
     </article>
+
     <footer>
-      Documentación técnica de integración (ARCA / AFIP y Mercado Pago). Extra cotizado; sin precios inventados.
-      Fuentes oficiales prevalecen ante este resumen.
+      Docs de integración ARCA + Mercado Pago para instancias single-tenant. Extra cotizado.
+      Estilo inspirado en docs REST modernas; contrato real = stock-local.
     </footer>
   </div>
 </body>

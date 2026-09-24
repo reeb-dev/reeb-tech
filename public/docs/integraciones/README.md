@@ -1,11 +1,12 @@
 # Integraciones ARCA + Mercado Pago
 
-Kit HTML para compartir (GitHub Pages):
+Docs al estilo producto REST (inspirado en docs modernas tipo arca.api.com.ar), con el contrato real de stock-local.
 
-- Producción: https://webconreeb.com/docs/integraciones/
-- **API Reference (Postman):** https://webconreeb.com/docs/integraciones/arca-api.html
-- **Guía WSAA/WSFE:** https://webconreeb.com/docs/integraciones/arca-implementacion.html
-- **PDFs locales:** https://webconreeb.com/docs/integraciones/pdfs/
-- Fuente: esta carpeta (`docs/integraciones/`) · deploy copy: `public/docs/integraciones/`
+- Landing: https://webconreeb.com/docs/integraciones/
+- **Docs API (REST):** https://webconreeb.com/docs/integraciones/arca-api.html
+- SOAP avanzado: https://webconreeb.com/docs/integraciones/arca-implementacion.html
+- PDFs: https://webconreeb.com/docs/integraciones/pdfs/
 
-No incluye secretos ni precios. Los PDF son copias de material público ARCA/AFIP.
+Fuente: `docs/integraciones/` · deploy: `public/docs/integraciones/`
+
+Sin secretos ni precios inventados. No es un SaaS multi-CUIT: es el extra de una instancia single-tenant.
