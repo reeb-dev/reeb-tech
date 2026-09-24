@@ -1,10 +1,17 @@
 <section class="container narrow">
-  <h1>Panel concesionaria</h1>
-  <p class="meta">Seed: demo1&#64;patagonia-motors.example / demo123</p>
+  <h1>Panel de su concesionaria</h1>
+  <p class="meta">Ingrese con el email de su local. Si aún no tiene cuenta, solicite el alta.</p>
+
+  <div class="seed-hints">
+    <span class="meta">Cuentas de prueba:</span>
+    <button type="button" class="seed-btn" (click)="useSeed('demo')">Dueño demo</button>
+    <button type="button" class="seed-btn" (click)="useSeed('agent')">Agente</button>
+    <button type="button" class="seed-btn" (click)="useSeed('admin')">Admin plataforma</button>
+  </div>
 
   <div class="tabs">
     <button type="button" [class.active]="mode==='login'" (click)="mode='login'">Ingresar</button>
-    <button type="button" [class.active]="mode==='register'" (click)="mode='register'">Alta</button>
+    <button type="button" [class.active]="mode==='register'" (click)="mode='register'">Solicitar alta</button>
   </div>
 
   <form (ngSubmit)="submit()">

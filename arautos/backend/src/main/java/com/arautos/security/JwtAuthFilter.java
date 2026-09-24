@@ -35,6 +35,9 @@ public class JwtAuthFilter extends OncePerRequestFilter {
         Claims claims = jwtService.parse(token);
         UUID userId = UUID.fromString(claims.getSubject());
         users.findById(userId).ifPresent(user -> {
+          if (!user.isActive()) {
+            return;
+          }
           UUID tenantId = user.getTenant() != null ? user.getTenant().getId() : null;
           UserPrincipal principal = new UserPrincipal(
               user.getId(),

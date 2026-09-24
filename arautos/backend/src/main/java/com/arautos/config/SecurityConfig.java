@@ -43,7 +43,7 @@ public class SecurityConfig {
             .requestMatchers("/api/public/**").permitAll()
             .requestMatchers("/actuator/health").permitAll()
             .requestMatchers("/api/admin/**").hasRole("PLATFORM_ADMIN")
-            .requestMatchers("/api/panel/**").hasAnyRole("TENANT_ADMIN", "PLATFORM_ADMIN")
+            .requestMatchers("/api/panel/**").hasAnyRole("TENANT_ADMIN", "TENANT_AGENT", "PLATFORM_ADMIN")
             .anyRequest().authenticated())
         .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class);
     return http.build();

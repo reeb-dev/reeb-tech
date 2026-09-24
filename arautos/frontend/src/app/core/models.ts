@@ -1,6 +1,7 @@
 export type CurrencyCode = 'USD' | 'ARS';
 export type VehicleType = 'CERO_KM' | 'USADO';
 export type VehicleStatus = 'BORRADOR' | 'PUBLICADO' | 'VENDIDO' | 'OCULTO';
+export type UserRole = 'TENANT_ADMIN' | 'TENANT_AGENT' | 'PLATFORM_ADMIN';
 
 export interface VehiclePublic {
   id: string;
@@ -52,13 +53,27 @@ export interface AuthResponse {
   token: string;
   userId: string;
   email: string;
-  role: string;
+  role: UserRole | string;
   tenantId?: string;
   tenantSlug?: string;
   tenantName?: string;
   subscriptionStatus?: string;
   moderationStatus?: string;
   message?: string;
+}
+
+export interface PanelUser {
+  id: string;
+  email: string;
+  role: UserRole | string;
+  active: boolean;
+  createdAt: string;
+}
+
+export interface CreatePanelUserRequest {
+  email: string;
+  password: string;
+  role: 'TENANT_ADMIN' | 'TENANT_AGENT';
 }
 
 export interface Stats {

@@ -6,3 +6,14 @@ h1 { font-family: var(--font-display); font-weight: 700; color: var(--navy); }
   border-radius: 999px; padding: .4rem .9rem; cursor: pointer;
 }
 .tabs button.active { color: #fff; border-color: var(--celeste); background: var(--celeste); }
+.seed-hints {
+  display: flex; flex-wrap: wrap; align-items: center; gap: .4rem;
+  margin: .75rem 0 0; padding: .65rem .75rem;
+  background: #fff; border: 1px solid var(--line); border-radius: 10px;
+}
+.seed-btn {
+  font-size: .78rem; font-weight: 700; cursor: pointer;
+  background: #eef5ff; border: 1px solid #c5d7f0; color: var(--navy-soft);
+  border-radius: 8px; padding: .3rem .55rem;
+}
+.seed-btn:hover { background: #e0ebfa; }

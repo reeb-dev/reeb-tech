@@ -73,7 +73,8 @@ public class SeedService implements ApplicationRunner {
         "/assets/dealers/patagonia-motors.svg",
         "#0B3D4A",
         "#F59E0B");
-    UserAccount u1 = createUser(t1, "demo1@patagonia-motors.example", "demo123");
+    UserAccount u1 = createUser(t1, "demo1@patagonia-motors.example", "demo123", UserRole.TENANT_ADMIN);
+    createUser(t1, "agente1@patagonia-motors.example", "demo123", UserRole.TENANT_AGENT);
 
     Tenant t2 = createTenant(
         "Centro Automotores",
@@ -87,7 +88,7 @@ public class SeedService implements ApplicationRunner {
         "/assets/dealers/centro-automotores.svg",
         "#1E3A5F",
         "#2563EB");
-    UserAccount u2 = createUser(t2, "demo2@centro-automotores.example", "demo123");
+    UserAccount u2 = createUser(t2, "demo2@centro-automotores.example", "demo123", UserRole.TENANT_ADMIN);
 
     vehicles.save(vehicle(t1, "Toyota", "Corolla", "XEi 2.0 CVT", 2024, 0, VehicleType.CERO_KM,
         new BigDecimal("32000"), CurrencyCode.USD, "nafta", "cvt", "Blanco Perlado",
@@ -153,12 +154,13 @@ public class SeedService implements ApplicationRunner {
     return tenants.save(t);
   }
 
-  private UserAccount createUser(Tenant tenant, String email, String password) {
+  private UserAccount createUser(Tenant tenant, String email, String password, UserRole role) {
     UserAccount u = new UserAccount();
     u.setTenant(tenant);
     u.setEmail(email);
     u.setPasswordHash(passwordEncoder.encode(password));
-    u.setRole(UserRole.TENANT_ADMIN);
+    u.setRole(role);
+    u.setActive(true);
     return users.save(u);
   }
 

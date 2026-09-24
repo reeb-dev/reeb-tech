@@ -4,7 +4,17 @@ import { FormsModule } from '@angular/forms';
 import { Router, RouterLink } from '@angular/router';
 import { ApiService } from '../../core/api.service';
 import { AuthService } from '../../core/auth.service';
-import { ProfileUpdateRequest, Stats, TenantProfile, VehiclePanel, VehicleRequest, BillingStatus, RankingResponse } from '../../core/models';
+import {
+  CreatePanelUserRequest,
+  PanelUser,
+  ProfileUpdateRequest,
+  Stats,
+  TenantProfile,
+  VehiclePanel,
+  VehicleRequest,
+  BillingStatus,
+  RankingResponse
+} from '../../core/models';
 import { formatPrice, typeLabel } from '../../core/format';
 import { GeoSelectComponent } from '../../shared/geo-select.component';
 
@@ -21,12 +31,19 @@ export class PanelHomeComponent implements OnInit {
   profile = signal<TenantProfile | null>(null);
   billing = signal<BillingStatus | null>(null);
   ranking = signal<RankingResponse | null>(null);
+  users = signal<PanelUser[]>([]);
   error = signal('');
   ok = signal('');
   formatPrice = formatPrice;
   typeLabel = typeLabel;
   photoUrl = '';
   checkoutBusy = false;
+
+  invite: CreatePanelUserRequest = {
+    email: '',
+    password: '',
+    role: 'TENANT_AGENT'
+  };
 
   profileForm: ProfileUpdateRequest & { slug?: string } = {
     name: '', logoUrl: '', primaryColor: '#0f2744', accentColor: '#2563eb',
@@ -41,14 +58,9 @@ export class PanelHomeComponent implements OnInit {
     description: '', status: 'PUBLICADO'
   };
 
-  constructor(private api: ApiService, public auth: AuthService, private router: Router) {
-    if (!auth.session()) {
-      this.router.navigateByUrl('/panel/login');
-    }
-  }
+  constructor(private api: ApiService, public auth: AuthService, private router: Router) {}
 
   ngOnInit() {
-    if (!this.auth.session()) return;
     this.reload();
   }
 
@@ -76,6 +88,71 @@ export class PanelHomeComponent implements OnInit {
           slug: p.slug
         };
       }
+    });
+    if (this.auth.isTenantAdmin()) {
+      this.loadUsers();
+    }
+  }
+
+  loadUsers() {
+    this.api.panelUsers().subscribe({
+      next: (list) => this.users.set(list),
+      error: (e) => this.error.set(e.error?.error || 'No se pudieron cargar los usuarios')
+    });
+  }
+
+  inviteUser() {
+    this.error.set('');
+    this.ok.set('');
+    this.api.createPanelUser(this.invite).subscribe({
+      next: () => {
+        this.ok.set('Usuario dado de alta. Entregue el email y la contraseña a la persona.');
+        this.invite = { email: '', password: '', role: 'TENANT_AGENT' };
+        this.loadUsers();
+      },
+      error: (e) => this.error.set(e.error?.error || 'No se pudo dar de alta el usuario')
+    });
+  }
+
+  changeRole(user: PanelUser, role: 'TENANT_ADMIN' | 'TENANT_AGENT') {
+    this.error.set('');
+    this.ok.set('');
+    this.api.updatePanelUserRole(user.id, role).subscribe({
+      next: () => {
+        this.ok.set('Rol actualizado.');
+        this.loadUsers();
+      },
+      error: (e) => this.error.set(e.error?.error || 'No se pudo cambiar el rol')
+    });
+  }
+
+  toggleActive(user: PanelUser) {
+    this.error.set('');
+    this.ok.set('');
+    const req = user.active
+      ? this.api.deactivatePanelUser(user.id)
+      : this.api.activatePanelUser(user.id);
+    req.subscribe({
+      next: () => {
+        this.ok.set(user.active ? 'Usuario desactivado.' : 'Usuario reactivado.');
+        this.loadUsers();
+      },
+      error: (e) => this.error.set(e.error?.error || 'No se pudo cambiar el estado')
+    });
+  }
+
+  removeUser(user: PanelUser) {
+    if (!confirm(`¿Borrar definitivamente a ${user.email}?`)) {
+      return;
+    }
+    this.error.set('');
+    this.ok.set('');
+    this.api.deletePanelUser(user.id).subscribe({
+      next: () => {
+        this.ok.set('Usuario borrado.');
+        this.loadUsers();
+      },
+      error: (e) => this.error.set(e.error?.error || 'No se pudo borrar')
     });
   }
 
@@ -150,5 +227,9 @@ export class PanelHomeComponent implements OnInit {
   logout() {
     this.auth.logout();
     this.router.navigateByUrl('/panel/login');
+  }
+
+  isSelf(user: PanelUser): boolean {
+    return user.id === this.auth.session()?.userId;
   }
 }

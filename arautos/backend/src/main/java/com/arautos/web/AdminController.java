@@ -24,6 +24,11 @@ public class AdminController {
     return adminService.pending();
   }
 
+  @GetMapping("/tenants")
+  public List<TenantDtos.TenantPanelDto> listAll() {
+    return adminService.listAll();
+  }
+
   @PostMapping("/tenants/{id}/approve")
   public TenantDtos.TenantPanelDto approve(@PathVariable UUID id) {
     return adminService.approve(id);

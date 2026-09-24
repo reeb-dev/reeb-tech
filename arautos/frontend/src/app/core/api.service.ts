@@ -1,7 +1,20 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { environment } from '../../environments/environment';
-import { DealerPublic, ProfileUpdateRequest, Stats, TenantProfile, VehiclePanel, VehiclePublic, VehicleRequest, BillingStatus, CheckoutResponse, RankingResponse } from './models';
+import {
+  CreatePanelUserRequest,
+  DealerPublic,
+  ProfileUpdateRequest,
+  Stats,
+  TenantProfile,
+  VehiclePanel,
+  VehiclePublic,
+  VehicleRequest,
+  BillingStatus,
+  CheckoutResponse,
+  RankingResponse,
+  PanelUser
+} from './models';
 
 @Injectable({ providedIn: 'root' })
 export class ApiService {
@@ -73,5 +86,45 @@ export class ApiService {
     let params = new HttpParams();
     if (province) params = params.set('province', province);
     return this.http.get<RankingResponse>(`${environment.apiUrl}/panel/ranking`, { params });
+  }
+
+  panelUsers() {
+    return this.http.get<PanelUser[]>(`${environment.apiUrl}/panel/users`);
+  }
+
+  createPanelUser(body: CreatePanelUserRequest) {
+    return this.http.post<PanelUser>(`${environment.apiUrl}/panel/users`, body);
+  }
+
+  updatePanelUserRole(id: string, role: 'TENANT_ADMIN' | 'TENANT_AGENT') {
+    return this.http.put<PanelUser>(`${environment.apiUrl}/panel/users/${id}/role`, { role });
+  }
+
+  deactivatePanelUser(id: string) {
+    return this.http.post<PanelUser>(`${environment.apiUrl}/panel/users/${id}/deactivate`, {});
+  }
+
+  activatePanelUser(id: string) {
+    return this.http.post<PanelUser>(`${environment.apiUrl}/panel/users/${id}/activate`, {});
+  }
+
+  deletePanelUser(id: string) {
+    return this.http.delete(`${environment.apiUrl}/panel/users/${id}`);
+  }
+
+  adminPendingTenants() {
+    return this.http.get<TenantProfile[]>(`${environment.apiUrl}/admin/tenants/pending`);
+  }
+
+  adminTenants() {
+    return this.http.get<TenantProfile[]>(`${environment.apiUrl}/admin/tenants`);
+  }
+
+  adminApproveTenant(id: string) {
+    return this.http.post<TenantProfile>(`${environment.apiUrl}/admin/tenants/${id}/approve`, {});
+  }
+
+  adminSuspendTenant(id: string) {
+    return this.http.post<TenantProfile>(`${environment.apiUrl}/admin/tenants/${id}/suspend`, {});
   }
 }

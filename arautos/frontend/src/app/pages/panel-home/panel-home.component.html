@@ -1,14 +1,27 @@
 <section class="container">
   <div class="head">
     <div>
-      <h1>Panel</h1>
-      <p class="meta" *ngIf="auth.session() as s">
-        {{ s.tenantName }} · {{ s.email }}
-        <span *ngIf="profile() as p"> · {{ p.subscriptionStatus }}</span>
-        <a *ngIf="profile() as p" [routerLink]="['/c', p.slug]"> ver perfil público</a>
-      </p>
+      <h1>Panel de su concesionaria</h1>
+      @if (auth.session(); as s) {
+        <p class="meta session-line">
+          <span class="role-pill">{{ auth.roleLabel(s.role) }}</span>
+          @if (s.tenantName) {
+            <span class="tenant-name">{{ s.tenantName }}</span>
+          }
+          · {{ s.email }}
+          @if (profile(); as p) {
+            · {{ p.subscriptionStatus }}
+            · <a [routerLink]="['/c', p.slug]">página pública</a>
+          }
+        </p>
+      }
     </div>
-    <button class="btn secondary" type="button" (click)="logout()">Salir</button>
+    <div class="head-actions">
+      @if (auth.isPlatformAdmin()) {
+        <a class="btn secondary" routerLink="/panel/admin">Administración</a>
+      }
+      <button class="btn secondary" type="button" (click)="logout()">Cerrar sesión</button>
+    </div>
   </div>
 
   @if (stats(); as st) {
@@ -78,6 +91,83 @@
 
   @if (error()) { <div class="alert">{{ error() }}</div> }
   @if (ok()) { <div class="alert ok">{{ ok() }}</div> }
+
+  @if (auth.isTenantAdmin()) {
+    <section class="users-block">
+      <h2>Usuarios de su local</h2>
+      <p class="meta">
+        Dé de alta agentes u otros administradores. Ellos usan el mismo panel con el rol que usted asigne.
+      </p>
+
+      <form class="form-grid invite-form" (ngSubmit)="inviteUser()">
+        <div class="field">
+          <label>Email</label>
+          <input [(ngModel)]="invite.email" name="uemail" type="email" required autocomplete="off" />
+        </div>
+        <div class="field">
+          <label>Contraseña temporal</label>
+          <input [(ngModel)]="invite.password" name="upass" type="text" required minlength="6" autocomplete="off" />
+        </div>
+        <div class="field">
+          <label>Rol</label>
+          <select [(ngModel)]="invite.role" name="urole">
+            <option value="TENANT_AGENT">Agente</option>
+            <option value="TENANT_ADMIN">Administrador del local</option>
+          </select>
+        </div>
+        <button class="btn" type="submit" [disabled]="!!stats()?.readOnly">Dar de alta</button>
+      </form>
+
+      <table class="table users-table">
+        <thead>
+          <tr>
+            <th>Email</th>
+            <th>Rol</th>
+            <th>Estado</th>
+            <th></th>
+          </tr>
+        </thead>
+        <tbody>
+          @for (u of users(); track u.id) {
+            <tr [class.inactive]="!u.active">
+              <td>
+                {{ u.email }}
+                @if (isSelf(u)) { <span class="you"> (usted)</span> }
+              </td>
+              <td>
+                @if (isSelf(u) || !!stats()?.readOnly) {
+                  {{ auth.roleLabel(u.role) }}
+                } @else {
+                  <select
+                    [ngModel]="u.role"
+                    (ngModelChange)="changeRole(u, $event)"
+                    [name]="'role-' + u.id">
+                    <option value="TENANT_AGENT">Agente</option>
+                    <option value="TENANT_ADMIN">Administrador del local</option>
+                  </select>
+                }
+              </td>
+              <td>{{ u.active ? 'Activo' : 'Desactivado' }}</td>
+              <td class="user-actions">
+                @if (!isSelf(u) && !stats()?.readOnly) {
+                  <button class="btn secondary" type="button" (click)="toggleActive(u)">
+                    {{ u.active ? 'Desactivar' : 'Reactivar' }}
+                  </button>
+                  <button class="btn secondary danger-btn" type="button" (click)="removeUser(u)">
+                    Borrar
+                  </button>
+                }
+              </td>
+            </tr>
+          }
+        </tbody>
+      </table>
+    </section>
+  } @else if (auth.session()?.role === 'TENANT_AGENT') {
+    <p class="meta agent-note">
+      Usted ingresó como agente. La gestión de usuarios la realiza el administrador del local.
+    </p>
+  }
 
   <h2>Perfil de la concesionaria</h2>
   <p class="meta">Estos datos personalizan su página pública en <code>/c/{{ profileForm.slug || '…' }}</code>.</p>

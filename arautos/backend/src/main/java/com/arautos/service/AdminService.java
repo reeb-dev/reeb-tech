@@ -34,6 +34,14 @@ public class AdminService {
         .toList();
   }
 
+  @Transactional(readOnly = true)
+  public List<TenantDtos.TenantPanelDto> listAll() {
+    return tenants.findAll().stream()
+        .sorted((a, b) -> a.getName().compareToIgnoreCase(b.getName()))
+        .map(this::toDto)
+        .toList();
+  }
+
   @Transactional
   public TenantDtos.TenantPanelDto approve(UUID tenantId) {
     Tenant t = tenants.findById(tenantId)

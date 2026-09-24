@@ -71,6 +71,9 @@ public class AuthService {
   public AuthDtos.AuthResponse login(AuthDtos.LoginRequest req) {
     UserAccount user = users.findByEmailIgnoreCase(req.email())
         .orElseThrow(() -> new ApiException(HttpStatus.UNAUTHORIZED, "Credenciales inválidas"));
+    if (!user.isActive()) {
+      throw new ApiException(HttpStatus.UNAUTHORIZED, "Cuenta desactivada. Consulte al administrador de su local.");
+    }
     if (!passwordEncoder.matches(req.password(), user.getPasswordHash())) {
       throw new ApiException(HttpStatus.UNAUTHORIZED, "Credenciales inválidas");
     }

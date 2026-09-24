@@ -15,7 +15,7 @@
     </a>
     <nav aria-label="Principal">
       <a class="nav-link" routerLink="/">Catálogo</a>
-      <a class="nav-cta" routerLink="/panel">Mi concesionaria</a>
+      <a class="nav-cta" [routerLink]="panelLink()">{{ panelLabel() }}</a>
     </nav>
   </div>
   <div class="lema-bar" aria-label="Afirmación soberana">

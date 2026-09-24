@@ -37,8 +37,9 @@ Seed automático (si `ARAUTOS_SEED=true`):
 | Usuario | Password | Rol |
 | --- | --- | --- |
 | `admin@arautos.local` | `admin123` | PLATFORM_ADMIN |
-| `demo1@patagonia-motors.example` | `demo123` | Patagonia Motors (trial) |
-| `demo2@centro-automotores.example` | `demo123` | Centro Automotores (trial) |
+| `demo1@patagonia-motors.example` | `demo123` | TENANT_ADMIN · Patagonia Motors |
+| `agente1@patagonia-motors.example` | `demo123` | TENANT_AGENT · Patagonia Motors |
+| `demo2@centro-automotores.example` | `demo123` | TENANT_ADMIN · Centro Automotores |
 
 ### 3. Front
 
@@ -56,8 +57,17 @@ Rutas:
 - `/aviso/:id` ficha (galería + lightbox)
 - `/c/:slug` perfil concesionaria
 - `/panel/login` login / alta self-serve
-- `/panel` stock + stats + suscripción + ranking provincia
+- `/panel` panel del local (stock, perfil, usuarios si es admin del local)
+- `/panel/admin` administración de plataforma (solo `PLATFORM_ADMIN`)
 
+APIs de usuarios:
+
+- `GET/POST /api/panel/users` — listar / alta (TENANT_ADMIN)
+- `PUT /api/panel/users/{id}/role` — cambiar rol
+- `POST /api/panel/users/{id}/deactivate|activate`
+- `DELETE /api/panel/users/{id}`
+- `GET /api/admin/tenants` · `GET /api/admin/tenants/pending`
+- `POST /api/admin/tenants/{id}/approve|suspend`
 ## Reglas de suscripción
 
 - Catálogo: solo avisos `PUBLICADO` de tenants con moderación `ACTIVA` y suscripción `TRIAL` vigente o `ACTIVA`.
