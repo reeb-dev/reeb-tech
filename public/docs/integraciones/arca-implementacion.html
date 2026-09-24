@@ -3,378 +3,536 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>ARCA — Guía de implementación</title>
-  <meta name="description" content="WSAA + WSFEv1 CAE">
-  <meta name="robots" content="noindex, follow">
+  <title>API de ARCA para devs — WSAA + WSFEv1 | webconreeb.com</title>
+  <meta name="description" content="Guía práctica para developers: autenticar con WSAA, pedir CAE con WSFEv1, checklist del cliente, env vars, API interna, errores y gaps. Extra cotizado.">
+  <meta name="robots" content="index, follow">
+  <meta name="keywords" content="API ARCA, ARCA para developers, WSAA, WSFEv1, CAE, facturación electrónica, AFIP, WSFE">
+  <link rel="canonical" href="https://webconreeb.com/docs/integraciones/arca-implementacion.html">
   <link rel="stylesheet" href="styles.css">
 </head>
 <body>
+  <a class="skip" href="#contenido">Saltar al contenido</a>
   <div class="wrap">
-    <nav class="top">
-  <a class="brand" href="index.html">Integraciones FE / pagos</a>
-  <a href="arca-fuentes.html">ARCA · Fuentes</a>
-  <a href="arca-implementacion.html">ARCA · Implementación</a>
-  <a href="mercadopago.html">Mercado Pago</a>
-</nav>
-    <article>
-<h1>ARCA — guía de implementación (WSAA + WSFEv1)</h1>
-<p>Documento interno para facturación electrónica en el sistema de stock (single-tenant) (single-tenant).<br />
-<strong>Extra cotizado.</strong> Fuentes: <a href="arca-fuentes.html">Fuentes oficiales</a>.<br />
-Índice maestro: <a href="https://www.afip.gob.ar/ws/documentacion/homologacion-externa.asp">Homologación externa</a> (RG 5616 / manuales vigentes).</p>
-<p>No inventa precios ni asesora fiscalmente.</p>
-<hr />
-<h2>1. Alcance del producto</h2>
-<table>
-<thead>
-<tr>
-<th>Incluido en el piloto</th>
-<th>Fuera de alcance por defecto</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>WSFEv1 CAE (RG 4291) — comprobantes A/B/C sin detalle de ítem</td>
-<td>WSFEX, WSCT, WSMTXCA, WSBFE, WSSEG</td>
-</tr>
-<tr>
-<td>WSAA LoginCms + TA cacheado</td>
-<td>CAEA (contingencia) salvo cotización</td>
-</tr>
-<tr>
-<td>Persistencia CAE / vencimiento en venta</td>
-<td>Libro diario / DDJJ</td>
-</tr>
-</tbody>
-</table>
-<p>Flujo:</p>
-<pre><code class="language-text">Cert X.509 del CUIT del comercio
-        ↓
-WSAA LoginCms (TRA firmado CMS SHA1+RSA, Base64) → TA (token + sign, ~12 h)
-        ↓
-WSFEv1 FECompUltimoAutorizado → nro siguiente
-        ↓
-WSFEv1 FECAESolicitar → Resultado A/R + CAE + CAEFchVto
-        ↓
-Guardar en arca_invoice + sale.cae*
-</code></pre>
-<p>Transporte: <strong>SOAP/XML sobre HTTPS</strong>. No es REST JSON.</p>
-<hr />
-<h2>2. Requisitos del cliente (checklist)</h2>
-<ol>
-<li>CUIT activo y situación fiscal definida con su contador.  </li>
-<li>Clave fiscal.  </li>
-<li>Certificado digital:<br />
-   - <strong>Homo:</strong> WSASS (<a href="https://www.arca.gob.ar/ws/WSASS/WSASS_manual.pdf">manual</a>, <a href="https://www.arca.gob.ar/ws/WSASS/WSASS_como_adherirse.pdf">adhesión</a>).<br />
-   - <strong>Prod:</strong> Administrador de Certificados Digitales + <a href="https://www.arca.gob.ar/ws/WSAA/wsaa_obtener_certificado_produccion.pdf">obtener</a> / <a href="https://www.arca.gob.ar/ws/WSAA/wsaa_asociar_certificado_a_wsn_produccion.pdf">asociar WSN</a>.  </li>
-<li>Asociar el certificado al WSN <strong>Facturación Electrónica (<code>wsfe</code>)</strong>.  </li>
-<li>Punto(s) de venta electrónicos habilitados.  </li>
-<li>Reloj del servidor sincronizado (NTP; el manual cita <code>time.afip.gov.ar</code>, zona GMT-3).  </li>
-<li>Certificado y clave <strong>solo en el servidor</strong> (paths en env). Nunca en git ni en el front.</li>
-</ol>
-<p>Sin certificado + asociación WSFE no hay integración posible.</p>
-<hr />
-<h2>3. WSAA — contrato operativo</h2>
-<p>Fuente: <a href="https://www.arca.gob.ar/ws/WSAA/Especificacion_Tecnica_WSAA_1.2.2.pdf">Especificación técnica</a> + <a href="https://www.arca.gob.ar/ws/WSAA/WSAAmanualDev.pdf">Manual Dev</a>.</p>
-<h3>Pasos</h3>
-<ol>
-<li>Armar <code>LoginTicketRequest</code> (TRA): <code>uniqueId</code>, <code>generationTime</code>, <code>expirationTime</code>, <code>service=wsfe</code>.<br />
-   - <code>source</code> / <code>destination</code> son <strong>opcionales</strong>; el FAQ recomienda omitirlos.  </li>
-<li>Firmar CMS <code>SignedData</code> (SHA1+RSA) con cert + clave privada.  </li>
-<li>Codificar CMS en Base64.  </li>
-<li>Invocar <code>loginCms</code> / <code>LoginCms</code>.  </li>
-<li>Extraer <code>token</code> + <code>sign</code> del TA; respetar <code>expirationTime</code> (~12 h). <strong>Reutilizar</strong> el TA vigente.</li>
-</ol>
-<h3>Errores frecuentes (manual / FAQ)</h3>
-<table>
-<thead>
-<tr>
-<th>Síntoma / código</th>
-<th>Causa típica</th>
-<th>Acción</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>Cert no emitido por AC de confianza</td>
-<td>Cert homo en prod o viceversa</td>
-<td>Usar cert del ambiente correcto</td>
-</tr>
-<tr>
-<td>Computador no autorizado a servicios / al servicio</td>
-<td>Cert sin asociar a WSN o service ID mal</td>
-<td>WSASS (homo) o Admin Relaciones (prod); <code>service=wsfe</code></td>
-</tr>
-<tr>
-<td>CEE ya posee un TA válido</td>
-<td>Pedir TA de nuevo demasiado pronto</td>
-<td>Cachear TA; no re-login mientras viva</td>
-</tr>
-<tr>
-<td>generationTime / expirationTime inválidos</td>
-<td>Reloj desfasado / formato</td>
-<td>NTP; restar unos minutos a generationTime</td>
-</tr>
-<tr>
-<td>Firma inválida / CMS bad</td>
-<td>PEM mal, ambiente cruzado</td>
-<td>Revisar firma y paths</td>
-</tr>
-</tbody>
-</table>
-<p>Retención al pedir TA de más (FAQ): ~10 min testing / ~2 min prod (valores pueden cambiar).</p>
-<h3>URLs</h3>
-<p>Ver <a href="arca-fuentes.html">Fuentes oficiales</a>. Defaults en código: <code>wsaahomo.afip.gov.ar</code> / <code>wsaa.afip.gov.ar</code>.</p>
-<hr />
-<h2>4. WSFEv1 — contrato operativo (RG 4291 V.4.8)</h2>
-<p>Fuente principal: <a href="https://www.afip.gob.ar/fe/ayuda/documentos/wsfev1-RG-4291.pdf">Manual desarrollador V. 4.8</a><br />
-(enlazado desde homologación externa).</p>
-<h3>Auth en cada request</h3>
-<pre><code class="language-xml">&lt;Auth&gt;
+    <nav class="top" aria-label="Integraciones">
+      <a class="brand" href="index.html">Integraciones FE / pagos</a>
+      <a href="arca-fuentes.html">ARCA · Fuentes</a>
+      <a class="is-active" href="arca-implementacion.html" aria-current="page">API de ARCA para devs</a>
+      <a href="mercadopago.html">Mercado Pago</a>
+    </nav>
+
+    <div class="layout">
+      <aside class="toc" aria-label="Índice">
+        <h2>En esta página</h2>
+        <p class="toc-group">Empezá acá</p>
+        <ol>
+          <li><a href="#tldr">En 5 minutos</a></li>
+          <li><a href="#modelo">Modelo mental</a></li>
+          <li><a href="#glosario">Glosario</a></li>
+        </ol>
+        <p class="toc-group">Antes de codear</p>
+        <ol start="4">
+          <li><a href="#alcance">Alcance</a></li>
+          <li><a href="#checklist">Checklist cliente</a></li>
+        </ol>
+        <p class="toc-group">Contratos</p>
+        <ol start="6">
+          <li><a href="#wsaa">WSAA (login)</a></li>
+          <li><a href="#wsfe">WSFEv1 (CAE)</a></li>
+        </ol>
+        <p class="toc-group">En el producto</p>
+        <ol start="8">
+          <li><a href="#stock">stock-local</a></li>
+          <li><a href="#api">API y env</a></li>
+          <li><a href="#gaps">Gaps A2</a></li>
+        </ol>
+        <p class="toc-group">Cierre</p>
+        <ol start="11">
+          <li><a href="#seguridad">Seguridad</a></li>
+          <li><a href="#testing">Testing</a></li>
+          <li><a href="#orden">Orden de trabajo</a></li>
+        </ol>
+      </aside>
+
+      <article id="contenido">
+        <header class="hero">
+          <p class="eyebrow">Documentación técnica · Extra cotizado</p>
+          <h1>API de ARCA para developers</h1>
+          <p class="lead">
+            Cómo hacer que un sistema de stock single-tenant pueda <strong>pedir un CAE</strong>
+            (factura electrónica) hablando con ARCA/AFIP: primero te autenticás (WSAA),
+            después autorizás el comprobante (WSFEv1).
+          </p>
+          <div class="meta-row">
+            <span class="chip">SOAP/XML · no REST</span>
+            <span class="chip">RG 4291 · V.4.8</span>
+            <span class="chip">RG 5616</span>
+            <span class="chip"><a href="arca-fuentes.html">PDFs oficiales</a></span>
+          </div>
+          <div class="hero-jumps">
+            <a class="jump" href="#tldr">Empezar en 5 min</a>
+            <a class="jump ghost" href="#gaps">Ver gaps actuales</a>
+            <a class="jump ghost" href="arca-fuentes.html">Fuentes oficiales</a>
+          </div>
+        </header>
+
+        <div class="callout tip">
+          <strong>Para quién es.</strong>
+          Backend (Java/Spring u otro stack) que implementa o revisa la integración.
+          No es asesoría fiscal ni lista de precios. Si el PDF oficial dice otra cosa, gana el PDF.
+        </div>
+
+        <section class="tldr" id="tldr">
+          <h2>Si solo tenés 5 minutos</h2>
+          <ol>
+            <li><strong>No hay API REST de ARCA.</strong> Es SOAP/XML por HTTPS. Vos firmás un XML, mandás un CMS, recibís un ticket, y con ese ticket pedís el CAE.</li>
+            <li><strong>Sin el certificado del CUIT del comercio</strong> (asociado al WSN <code>wsfe</code>) no arranca nada. REEB no “presta” certificado.</li>
+            <li><strong>Dos pasos siempre:</strong> WSAA te da <code>token</code>+<code>sign</code> (~12 h) → WSFEv1 usa eso en cada request.</li>
+            <li><strong>Hoy el gap crítico</strong> es no enviar <code>CondicionIVAReceptorId</code> (RG 5616): puede rechazar el CAE. Ver <a href="#gaps">gaps</a>.</li>
+          </ol>
+        </section>
+
+        <h2 id="modelo">Modelo mental (antes de mirar XML)</h2>
+        <p class="muted">Pensalo como tres capas. Si mezclás ambientes (homo/prod) o pedís TA de más, fallás antes de llegar al CAE.</p>
+        <div class="mental">
+          <div class="mental-card">
+            <span class="kicker">Capa 1</span>
+            <strong>Identidad del comercio</strong>
+            <p>CUIT + certificado X.509 + clave privada + punto de venta electrónico. Vive solo en el servidor.</p>
+          </div>
+          <div class="mental-card">
+            <span class="kicker">Capa 2</span>
+            <strong>WSAA = “login”</strong>
+            <p>Firmás un TRA, llamás <code>loginCms</code>, cacheás el TA. Sin TA válido, WSFE ni te mira.</p>
+          </div>
+          <div class="mental-card">
+            <span class="kicker">Capa 3</span>
+            <strong>WSFEv1 = “autorizar factura”</strong>
+            <p>Consultás el último número, armás el comprobante, pedís CAE, guardás resultado.</p>
+          </div>
+        </div>
+
+        <h2 id="camino">Camino de punta a punta</h2>
+        <ol class="steps">
+          <li>
+            <div>
+              <strong>Homologación del cliente</strong>
+              CUIT + certificado + asociación al WSN <code>wsfe</code> + PV electrónico.
+              <span class="why">Sin esto, cualquier código “correcto” igual falla.</span>
+            </div>
+          </li>
+          <li>
+            <div>
+              <strong>WSAA → Ticket de acceso (TA)</strong>
+              Firmar TRA (CMS), <code>loginCms</code>, cachear <code>token</code> + <code>sign</code> (~12 h).
+              <span class="why">Reutilizá el TA; no pidas uno nuevo en cada factura.</span>
+            </div>
+          </li>
+          <li>
+            <div>
+              <strong>WSFEv1 → número + CAE</strong>
+              <code>FECompUltimoAutorizado</code> → <code>FECAESolicitar</code> → persistir CAE / vencimiento.
+              <span class="why">El número siguiente sale del último autorizado, no lo inventés.</span>
+            </div>
+          </li>
+          <li>
+            <div>
+              <strong>Cerrar gaps de producto</strong>
+              Sobre todo <code>CondicionIVAReceptorId</code> y DocTipo/DocNro reales.
+              <span class="why">Ver <a href="#gaps">tabla de gaps</a> antes de pasar a producción.</span>
+            </div>
+          </li>
+        </ol>
+
+        <h2 id="glosario">Glosario (sin vueltas)</h2>
+        <div class="glossary">
+          <div><span class="term">WSAA</span><span>Servicio de autenticación. Te entrega el Ticket de Acceso.</span></div>
+          <div><span class="term">TRA</span><span>XML <code>LoginTicketRequest</code> que firmás (CMS) y mandás a WSAA.</span></div>
+          <div><span class="term">TA</span><span><code>token</code> + <code>sign</code> (~12 h). Van en el bloque <code>Auth</code> de cada WSFE.</span></div>
+          <div><span class="term">WSFEv1</span><span>Facturación electrónica con CAE (sin detalle de ítem en el XML).</span></div>
+          <div><span class="term">CAE</span><span>Código de autorización + fecha de vencimiento. Es lo que “habilita” la factura.</span></div>
+          <div><span class="term">Homo / Prod</span><span>Dos mundos. Certificados y URLs no se cruzan. Nunca uses cert de homo en prod.</span></div>
+        </div>
+
+        <h2 id="alcance"><span class="sec-num">1.</span> Alcance del producto</h2>
+        <p>Esto es lo que el piloto contempla hoy. Si el cliente necesita otra cosa (exportación, detalle de ítem, contingencia), se cotiza aparte.</p>
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>Incluido en el piloto</th>
+                <th>Fuera de alcance por defecto</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>WSFEv1 CAE (RG 4291) — comprobantes A/B/C sin detalle de ítem</td>
+                <td>WSFEX, WSCT, WSMTXCA, WSBFE, WSSEG</td>
+              </tr>
+              <tr>
+                <td>WSAA LoginCms + TA cacheado</td>
+                <td>CAEA (contingencia) salvo cotización</td>
+              </tr>
+              <tr>
+                <td>Persistencia CAE / vencimiento en la venta</td>
+                <td>Libro diario / DDJJ</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div class="callout info">
+          <strong>Transporte.</strong>
+          SOAP/XML sobre HTTPS hacia ARCA. No existe un endpoint JSON “oficial” de facturación para este flujo.
+        </div>
+
+        <h3>Secuencia al emitir un CAE</h3>
+        <div class="flow" aria-label="Flujo CAE">
+          <div class="flow-step">
+            <span class="n">1</span>
+            <div>
+              <strong>Certificado del comercio</strong>
+              <span class="detail">Paths a cert + key en el servidor (env). CUIT del titular del cert.</span>
+            </div>
+          </div>
+          <div class="flow-step">
+            <span class="n">2</span>
+            <div>
+              <strong>WSAA <code>LoginCms</code></strong>
+              <span class="detail">TRA firmado CMS (SHA1+RSA), Base64 → TA (<code>token</code> + <code>sign</code>).</span>
+            </div>
+          </div>
+          <div class="flow-step">
+            <span class="n">3</span>
+            <div>
+              <strong>WSFE <code>FECompUltimoAutorizado</code></strong>
+              <span class="detail">Último nro por PtoVta + CbteTipo → calculás el siguiente.</span>
+            </div>
+          </div>
+          <div class="flow-step">
+            <span class="n">4</span>
+            <div>
+              <strong>WSFE <code>FECAESolicitar</code></strong>
+              <span class="detail">Resultado A/R + CAE + <code>CAEFchVto</code> (+ observaciones/errores).</span>
+            </div>
+          </div>
+          <div class="flow-step">
+            <span class="n">5</span>
+            <div>
+              <strong>Persistir</strong>
+              <span class="detail"><code>arca_invoice</code> + campos CAE de la venta. No re-solicitar si ya hay <code>A</code>.</span>
+            </div>
+          </div>
+        </div>
+
+        <h2 id="checklist"><span class="sec-num">2.</span> Checklist del cliente (bloqueante)</h2>
+        <p>Marcá esto con el comercio / contador <em>antes</em> de pelear contra el SOAP. Si falta un ítem, el código no va a “arreglarlo”.</p>
+        <ul class="checklist">
+          <li><span class="box" aria-hidden="true"></span><div>CUIT activo y situación fiscal definida con su contador.</div></li>
+          <li><span class="box" aria-hidden="true"></span><div>Clave fiscal operativa.</div></li>
+          <li>
+            <span class="box" aria-hidden="true"></span>
+            <div>
+              Certificado digital del ambiente correcto:
+              <ul>
+                <li><strong>Homo:</strong> WSASS (<a href="pdfs/WSASS_manual.pdf">manual</a>, <a href="pdfs/WSASS_como_adherirse.pdf">adhesión</a>).</li>
+                <li><strong>Prod:</strong> Admin. de Certificados + <a href="pdfs/wsaa_obtener_certificado_produccion.pdf">obtener</a> / <a href="pdfs/wsaa_asociar_certificado_a_wsn_produccion.pdf">asociar WSN</a>.</li>
+              </ul>
+            </div>
+          </li>
+          <li><span class="box" aria-hidden="true"></span><div>Certificado asociado al WSN <strong>Facturación Electrónica (<code>wsfe</code>)</strong>.</div></li>
+          <li><span class="box" aria-hidden="true"></span><div>Punto(s) de venta electrónicos habilitados (el mismo que vas a poner en <code>ARCA_PTO_VTA</code>).</div></li>
+          <li><span class="box" aria-hidden="true"></span><div>Reloj del servidor sincronizado (NTP; el manual cita <code>time.afip.gov.ar</code>, zona GMT-3).</div></li>
+          <li><span class="box" aria-hidden="true"></span><div>Cert + clave <strong>solo en el servidor</strong> (paths en secrets). Nunca en git ni en el front.</div></li>
+        </ul>
+        <div class="callout warn">
+          <strong>Sin certificado + asociación WSFE no hay integración posible.</strong>
+          El producto no presta un certificado de REEB a terceros.
+        </div>
+
+        <h2 id="wsaa"><span class="sec-num">3.</span> WSAA — el “login”</h2>
+        <p>
+          Objetivo: obtener un TA usable. Fuentes:
+          <a href="pdfs/Especificacion_Tecnica_WSAA_1.2.2.pdf">Especificación técnica</a>
+          ·
+          <a href="pdfs/WSAAmanualDev.pdf">Manual Dev</a>
+          (oficial en <a href="arca-fuentes.html">fuentes</a>).
+        </p>
+
+        <h3>Pasos (en orden)</h3>
+        <ol>
+          <li>Armar <code>LoginTicketRequest</code> (TRA): <code>uniqueId</code>, <code>generationTime</code>, <code>expirationTime</code>, <code>service=wsfe</code>.
+            <ul><li><code>source</code> / <code>destination</code> son <strong>opcionales</strong>; el FAQ recomienda omitirlos.</li></ul>
+          </li>
+          <li>Firmar CMS <code>SignedData</code> (SHA1+RSA) con cert + clave privada.</li>
+          <li>Codificar el CMS en Base64.</li>
+          <li>Invocar <code>loginCms</code> / <code>LoginCms</code>.</li>
+          <li>Extraer <code>token</code> + <code>sign</code>; respetar <code>expirationTime</code> (~12 h). <strong>Reutilizar</strong> el TA vigente.</li>
+        </ol>
+
+        <h3>Cuando falla el login (lo más común)</h3>
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>Qué ves</th>
+                <th>Causa típica</th>
+                <th>Qué hacer</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>Cert no emitido por AC de confianza</td>
+                <td>Cert homo en prod (o al revés)</td>
+                <td>Usar el cert del ambiente correcto</td>
+              </tr>
+              <tr>
+                <td>Computador no autorizado a servicios / al servicio</td>
+                <td>Cert sin asociar a WSN, o <code>service</code> mal</td>
+                <td>WSASS (homo) o Admin Relaciones (prod); <code>service=wsfe</code></td>
+              </tr>
+              <tr>
+                <td>CEE ya posee un TA válido</td>
+                <td>Pediste TA de nuevo demasiado pronto</td>
+                <td>Cachear TA; no re-login mientras viva</td>
+              </tr>
+              <tr>
+                <td><code>generationTime</code> / <code>expirationTime</code> inválidos</td>
+                <td>Reloj desfasado o formato</td>
+                <td>NTP; restar unos minutos a <code>generationTime</code></td>
+              </tr>
+              <tr>
+                <td>Firma inválida / CMS bad</td>
+                <td>PEM mal, ambiente cruzado</td>
+                <td>Revisar firma, encoding y paths</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        <p class="muted">Retención al pedir TA de más (FAQ): ~10 min testing / ~2 min prod (puede cambiar). URLs en <a href="arca-fuentes.html">Fuentes oficiales</a>. Defaults en código: <code>wsaahomo.afip.gov.ar</code> / <code>wsaa.afip.gov.ar</code>.</p>
+
+        <h2 id="wsfe"><span class="sec-num">4.</span> WSFEv1 — pedir el CAE</h2>
+        <p>
+          Manual principal:
+          <a href="pdfs/wsfev1-RG-4291.pdf">WSFEv1 RG 4291 V. 4.8</a>
+          (copia local; oficial en homologación externa).
+        </p>
+
+        <h3>Auth en cada request</h3>
+        <p>El TA de WSAA viaja así en el SOAP:</p>
+        <div class="code-block">
+          <div class="label"><span>Auth (cada WSFE)</span><span>XML</span></div>
+<pre><code>&lt;Auth&gt;
   &lt;Token&gt;…&lt;/Token&gt;
   &lt;Sign&gt;…&lt;/Sign&gt;
   &lt;Cuit&gt;…&lt;/Cuit&gt;   &lt;!-- CUIT representado --&gt;
-&lt;/Auth&gt;
-</code></pre>
-<p>Errores de infraestructura citados en el manual: <code>600</code> token/firma, <code>601</code> CUIT no en token, <code>500</code>/<code>501</code>/<code>502</code> internos.</p>
-<h3>Métodos CAE (mínimo útil)</h3>
-<table>
-<thead>
-<tr>
-<th>Método</th>
-<th>Uso</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td><code>FEDummy</code></td>
-<td>Salud infra</td>
-</tr>
-<tr>
-<td><code>FECompUltimoAutorizado</code></td>
-<td>Último nro por PtoVta + CbteTipo → siguiente</td>
-</tr>
-<tr>
-<td><code>FECAESolicitar</code></td>
-<td>Autorizar comprobante/lote</td>
-</tr>
-<tr>
-<td><code>FECompConsultar</code></td>
-<td>Consultar emitido</td>
-</tr>
-<tr>
-<td><code>FEParamGetTiposCbte</code> / <code>TiposDoc</code> / <code>TiposIva</code> / <code>TiposConcepto</code> / <code>PtosVenta</code></td>
-<td>Tablas de referencia</td>
-</tr>
-<tr>
-<td><code>FEParamGetCondicionIvaReceptor</code></td>
-<td>Códigos condición IVA receptor (RG 5616)</td>
-</tr>
-</tbody>
-</table>
-<p>CAEA (<code>FECAEA*</code>) fuera del piloto salvo cotización.</p>
-<h3>FECAESolicitar — campos clave del detalle</h3>
-<p>Cabecera: <code>CantReg</code>, <code>PtoVta</code>, <code>CbteTipo</code>.<br />
-Detalle (<code>FECAEDetRequest</code>), entre otros:</p>
-<ul>
-<li><code>Concepto</code> (1 productos / 2 servicios / 3 productos y servicios)  </li>
-<li><code>DocTipo</code> / <code>DocNro</code> (receptor)  </li>
-<li><code>CbteDesde</code> / <code>CbteHasta</code> / <code>CbteFch</code> (<code>yyyyMMdd</code>)  </li>
-<li><code>ImpTotal</code>, <code>ImpTotConc</code>, <code>ImpNeto</code>, <code>ImpOpEx</code>, <code>ImpTrib</code>, <code>ImpIVA</code>  </li>
-<li><code>MonId</code> (<code>PES</code>) / <code>MonCotiz</code>  </li>
-<li><code>Iva</code> → <code>AlicIva</code> (<code>Id</code>, <code>BaseImp</code>, <code>Importe</code>) — <strong>no informar</strong> en comprobantes tipo C (según manual)  </li>
-<li><strong><code>CondicionIVAReceptorId</code></strong> — ver §4.1  </li>
-</ul>
-<p>Resultados: aprobado; aprobado con observaciones (validaciones no excluyentes); rechazado (excluyentes).<br />
-Persistir <code>CAE</code>, <code>CAEFchVto</code>, <code>Resultado</code>, observaciones/<code>Errors</code>.</p>
-<h3>4.1 CondicionIVAReceptorId (RG 5616)</h3>
-<p>Según historial del manual V.4.x:</p>
-<ul>
-<li>Campo agregado junto con <code>CanMisMonExt</code>.  </li>
-<li>Desde <strong>6 abr 2025</strong> pudo enviarse <strong>opcional</strong>; al entrar en vigencia la obligatoriedad de la <strong>RG 5616</strong>, la emisión <strong>sin</strong> el dato <strong>rechaza</strong>.  </li>
-<li>Valores: método <code>FEParamGetCondicionIvaReceptor</code>.  </li>
-<li>Si el valor es inválido: CAE rechaza; si no existe: rechaza.</li>
-</ul>
-<p><strong>Gap actual en el sistema de stock (single-tenant):</strong> el cliente WSFE <strong>no envía</strong> <code>CondicionIVAReceptorId</code> (ver §6). Prioridad A2.</p>
-<h3>4.2 Alícuotas (ejemplos del manual)</h3>
-<p>En ejemplos SOAP: <code>Id=5</code> → 21 %, <code>Id=4</code> → 10,5 %, <code>Id=3</code> → 0 %, <code>Id=6</code> → 27 %.<br />
-Catálogo vivo: <code>FEParamGetTiposIva</code> (no hardcodear a ciegas en prod).</p>
-<h3>4.3 Tipos de comprobante (mapeo local habitual)</h3>
-<table>
-<thead>
-<tr>
-<th>Documento local</th>
-<th>CbteTipo (habitual)</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>Factura A</td>
-<td>1</td>
-</tr>
-<tr>
-<td>Factura B</td>
-<td>6</td>
-</tr>
-<tr>
-<td>Factura C</td>
-<td>11</td>
-</tr>
-</tbody>
-</table>
-<p>Confirmar siempre con <code>FEParamGetTiposCbte</code> / contador del cliente.</p>
-<hr />
-<h2>5. Qué hay implementado en el sistema de stock (single-tenant)</h2>
-<pre><code class="language-text">infrastructure/arca
+&lt;/Auth&gt;</code></pre>
+        </div>
+        <p class="muted">Errores de infra del manual: <code>600</code> token/firma · <code>601</code> CUIT no en token · <code>500</code>/<code>501</code>/<code>502</code> internos.</p>
+
+        <h3>Métodos que vas a tocar</h3>
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr><th>Método</th><th>Para qué sirve</th></tr>
+            </thead>
+            <tbody>
+              <tr><td><code>FEDummy</code></td><td>¿La infra responde?</td></tr>
+              <tr><td><code>FECompUltimoAutorizado</code></td><td>Último nro por PtoVta + CbteTipo → siguiente</td></tr>
+              <tr><td><code>FECAESolicitar</code></td><td>Autorizar el comprobante / lote</td></tr>
+              <tr><td><code>FECompConsultar</code></td><td>Releer uno ya emitido</td></tr>
+              <tr><td><code>FEParamGetTiposCbte</code> / <code>TiposDoc</code> / <code>TiposIva</code> / <code>TiposConcepto</code> / <code>PtosVenta</code></td><td>Tablas de referencia (no hardcodear a ciegas)</td></tr>
+              <tr><td><code>FEParamGetCondicionIvaReceptor</code></td><td>Códigos de condición IVA receptor (RG 5616)</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <p class="muted">CAEA (<code>FECAEA*</code>) queda fuera del piloto salvo cotización.</p>
+
+        <h3>FECAESolicitar — qué no puede faltar</h3>
+        <p>Cabecera: <code>CantReg</code>, <code>PtoVta</code>, <code>CbteTipo</code>. En el detalle (<code>FECAEDetRequest</code>), entre otros:</p>
+        <ul>
+          <li><code>Concepto</code> — 1 productos / 2 servicios / 3 ambos</li>
+          <li><code>DocTipo</code> / <code>DocNro</code> — documento del receptor</li>
+          <li><code>CbteDesde</code> / <code>CbteHasta</code> / <code>CbteFch</code> — fecha en <code>yyyyMMdd</code></li>
+          <li>Importes: <code>ImpTotal</code>, <code>ImpTotConc</code>, <code>ImpNeto</code>, <code>ImpOpEx</code>, <code>ImpTrib</code>, <code>ImpIVA</code></li>
+          <li><code>MonId</code> (<code>PES</code>) / <code>MonCotiz</code></li>
+          <li><code>Iva</code> → <code>AlicIva</code> (<code>Id</code>, <code>BaseImp</code>, <code>Importe</code>) — <strong>no informar</strong> en tipo C (según manual)</li>
+          <li><strong><code>CondicionIVAReceptorId</code></strong> — ver abajo</li>
+        </ul>
+        <p>Resultados: aprobado · aprobado con observaciones · rechazado. Persistí <code>CAE</code>, <code>CAEFchVto</code>, <code>Resultado</code> y errores/obs.</p>
+
+        <h3 id="condicion-iva">4.1 CondicionIVAReceptorId (RG 5616)</h3>
+        <ul>
+          <li>Campo agregado junto con <code>CanMisMonExt</code>.</li>
+          <li>Con obligatoriedad RG 5616, emitir <strong>sin</strong> el dato <strong>rechaza</strong>.</li>
+          <li>Valores vivos: <code>FEParamGetCondicionIvaReceptor</code>.</li>
+        </ul>
+        <div class="callout gap">
+          <strong>Gap actual en stock-local:</strong>
+          el cliente WSFE <strong>aún no envía</strong> <code>CondicionIVAReceptorId</code>. Prioridad A2 — ver <a href="#gaps">tabla</a>.
+        </div>
+
+        <h3>4.2 Alícuotas (ejemplos del manual)</h3>
+        <p>En ejemplos SOAP: <code>Id=5</code> → 21&nbsp;% · <code>Id=4</code> → 10,5&nbsp;% · <code>Id=3</code> → 0&nbsp;% · <code>Id=6</code> → 27&nbsp;%.<br>
+        Catálogo vivo: <code>FEParamGetTiposIva</code> (no hardcodear en prod).</p>
+
+        <h3>4.3 Tipos de comprobante (mapeo habitual)</h3>
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr><th>Documento local</th><th>CbteTipo (habitual)</th></tr>
+            </thead>
+            <tbody>
+              <tr><td>Factura A</td><td>1</td></tr>
+              <tr><td>Factura B</td><td>6</td></tr>
+              <tr><td>Factura C</td><td>11</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <p class="muted">Confirmá siempre con <code>FEParamGetTiposCbte</code> y el contador del cliente.</p>
+
+        <h2 id="stock"><span class="sec-num">5.</span> Qué hay en stock-local</h2>
+        <p>Mapa rápido de clases (para ubicar dónde tocar):</p>
+        <div class="code-block">
+          <div class="label"><span>Paquetes</span><span>stock-local</span></div>
+<pre><code>infrastructure/arca
   ArcaProperties   — env HOMO/PROD, CUIT, paths, PtoVta, URLs
   WsaaClient       — TRA + CMS (BouncyCastle) + LoginCms + cache ~11 h
   WsfeClient       — FECompUltimoAutorizado + FECAESolicitar (XML/regex)
 application/arca
   ArcaInvoiceService — status, requestCae, getBySale; mapeo A/B/C → CbteTipo
 presentation/rest
-  ArcaController   — /api/arca/* con @PreAuthorize
-</code></pre>
-<h3>API interna</h3>
-<table>
-<thead>
-<tr>
-<th>Método</th>
-<th>Ruta</th>
-<th>Rol</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>GET</td>
-<td><code>/api/arca/status</code></td>
-<td>TITULAR, OPERADOR</td>
-</tr>
-<tr>
-<td>POST</td>
-<td><code>/api/arca/invoices/{saleId}</code></td>
-<td>TITULAR</td>
-</tr>
-<tr>
-<td>GET</td>
-<td><code>/api/arca/invoices/{saleId}</code></td>
-<td>TITULAR, OPERADOR, CONTADOR</td>
-</tr>
-</tbody>
-</table>
-<p>Variables: <code>ARCA_ENABLED</code>, <code>ARCA_ENV</code> (<code>HOMO</code>/<code>PROD</code>), <code>ARCA_CUIT</code>, <code>ARCA_CERT_PATH</code>, <code>ARCA_KEY_PATH</code>, <code>ARCA_PTO_VTA</code>.</p>
-<p>Sin cert del <strong>comercio</strong>: <code>not_configured</code> / 422 con mensaje claro.</p>
-<h3>Comportamiento actual de <code>FECAESolicitar</code></h3>
-<ul>
-<li>Receptor fijo: <code>DocTipo=99</code>, <code>DocNro=0</code> (consumidor final típico).  </li>
-<li><code>AlicIva Id=5</code> (21 %) si hay IVA; vacío si <code>vatCents=0</code>.  </li>
-<li>Concepto <code>1</code>.  </li>
-<li>Persiste request/response XML en DB (server-side).  </li>
-<li>Idempotencia blanda: si ya hay resultado <code>A</code> con CAE, no re-solicita.</li>
-</ul>
-<hr />
-<h2>6. Gaps vs manual V.4.8 / RG 5616 (para A2)</h2>
-<table>
-<thead>
-<tr>
-<th>Gap</th>
-<th>Riesgo</th>
-<th>Acción A2</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>No envía <code>CondicionIVAReceptorId</code></td>
-<td>Rechazo al ser obligatorio (RG 5616)</td>
-<td>Mapear condición fiscal del cliente → id; llamar <code>FEParamGetCondicionIvaReceptor</code></td>
-</tr>
-<tr>
-<td>Solo DocTipo 99 / DocNro 0</td>
-<td>No factura a RI con CUIT</td>
-<td>Usar DocTipo/DocNro del cliente de la venta</td>
-</tr>
-<tr>
-<td>AlicIva fija Id=5</td>
-<td>Mal si hay 10,5 % / 27 % / exento</td>
-<td>Mapear alícuota producto → Id; multi-alicuota</td>
-</tr>
-<tr>
-<td>No <code>FEDummy</code> / <code>FEParamGet*</code> / <code>FECompConsultar</code></td>
-<td>Difícil diagnosticar y auditar</td>
-<td>Agregar status rico + consulta</td>
-</tr>
-<tr>
-<td>Parser XML por regex</td>
-<td>Frágil ante cambios de envelope</td>
-<td>Preferir XML API / cliente generado del WSDL</td>
-</tr>
-<tr>
-<td>Sin tests automatizados</td>
-<td>Regresiones silenciosas</td>
-<td>Unit mapeos + WireMock SOAP</td>
-</tr>
-<tr>
-<td>XML SOAP en DB puede incluir datos sensibles</td>
-<td>Retención / acceso</td>
-<td>Restringir roles; no exponer al front</td>
-</tr>
-</tbody>
-</table>
-<hr />
-<h2>7. Seguridad</h2>
-<ul>
-<li>Cert/key fuera de git (<code>*.pem</code>, paths en secrets del VPS).  </li>
-<li>Solo TITULAR solicita CAE.  </li>
-<li>No devolver stack traces ni XML crudo al browser.  </li>
-<li>HTTPS obligatorio en prod.  </li>
-<li>Un certificado = un CUIT del <strong>cliente</strong>; nunca un cert “de REEB” para terceros (hosted).</li>
-</ul>
-<hr />
-<h2>8. Testing (estricto)</h2>
-<table>
-<thead>
-<tr>
-<th>Nivel</th>
-<th>Qué</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>Unit</td>
-<td><code>mapDocumentType</code>, dinero centavos↔decimal, mapeo alícuota / CondicionIVAReceptor</td>
-</tr>
-<tr>
-<td>Integration</td>
-<td>Controller + <code>@PreAuthorize</code></td>
-</tr>
-<tr>
-<td>Contrato</td>
-<td>WireMock LoginCms + FECAESolicitar; <strong>sin</strong> certs reales en CI</td>
-</tr>
-<tr>
-<td>Homo manual</td>
-<td>Checklist §2 + un CAE aprobado en ambiente de testing</td>
-</tr>
-</tbody>
-</table>
-<p>DoD homologación: al menos un comprobante con <code>Resultado=A</code> y CAE válido.<br />
-Prod: solo con OK del contador del cliente.</p>
-<hr />
-<h2>9. Orden de trabajo (A2)</h2>
-<ol>
-<li>Completar checklist cliente (homo).  </li>
-<li>Cerrar gaps §6 (empezar por <code>CondicionIVAReceptorId</code> + DocTipo real).  </li>
-<li>UI panel: estado ARCA + “Solicitar CAE” + errores legibles.  </li>
-<li>Ticket/impresión con CAE.  </li>
-<li>Solo entonces PROD.</li>
-</ol>
-<hr />
-<h2>10. Relación con hosted / piloto</h2>
-<p>En plan mensual cada suscriptor aporta <strong>su</strong> CUIT y certificado (o alta asistida cotizada).<br />
-Ver <a href="./PLAN-MENSUAL-HOSTED.md">PLAN-MENSUAL-HOSTED.md</a>, <a href="./MAPA-PILOTO.md">MAPA-PILOTO.md</a>, <a href="./ARQUITECTURA.md">ARQUITECTURA.md</a>.</p>
-    </article>
+  ArcaController   — /api/arca/* con @PreAuthorize</code></pre>
+        </div>
+
+        <h2 id="api"><span class="sec-num">6.</span> API interna y variables</h2>
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr><th>Método</th><th>Ruta</th><th>Quién</th></tr>
+            </thead>
+            <tbody>
+              <tr><td>GET</td><td><code>/api/arca/status</code></td><td>TITULAR, OPERADOR</td></tr>
+              <tr><td>POST</td><td><code>/api/arca/invoices/{saleId}</code></td><td>TITULAR</td></tr>
+              <tr><td>GET</td><td><code>/api/arca/invoices/{saleId}</code></td><td>TITULAR, OPERADOR, CONTADOR</td></tr>
+            </tbody>
+          </table>
+        </div>
+
+        <h3>Variables de entorno</h3>
+        <div class="env-grid">
+          <div><code>ARCA_ENABLED</code><span>Activa el módulo</span></div>
+          <div><code>ARCA_ENV</code><span><code>HOMO</code> o <code>PROD</code></span></div>
+          <div><code>ARCA_CUIT</code><span>CUIT del comercio</span></div>
+          <div><code>ARCA_CERT_PATH</code><span>Path al certificado</span></div>
+          <div><code>ARCA_KEY_PATH</code><span>Path a la clave privada</span></div>
+          <div><code>ARCA_PTO_VTA</code><span>Punto de venta electrónico</span></div>
+        </div>
+        <p class="muted">Sin cert del comercio: status <code>not_configured</code> / 422 con mensaje claro.</p>
+
+        <h3>Comportamiento actual de FECAESolicitar</h3>
+        <ul>
+          <li>Receptor fijo: <code>DocTipo=99</code>, <code>DocNro=0</code> (consumidor final típico).</li>
+          <li><code>AlicIva Id=5</code> (21&nbsp;%) si hay IVA; vacío si <code>vatCents=0</code>.</li>
+          <li>Concepto <code>1</code>.</li>
+          <li>Persiste request/response XML en DB (server-side).</li>
+          <li>Idempotencia blanda: si ya hay resultado <code>A</code> con CAE, no re-solicita.</li>
+        </ul>
+
+        <h2 id="gaps"><span class="sec-num">7.</span> Gaps vs manual (prioridad A2)</h2>
+        <p>Cosas que el manual / la RG ya exigen o conviene cerrar antes de prod. Empezá por las de riesgo alto.</p>
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr><th>Gap</th><th>Riesgo</th><th>Acción</th></tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>No envía <code>CondicionIVAReceptorId</code></td>
+                <td><span class="badge high">Alto</span> rechazo RG 5616</td>
+                <td>Mapear condición fiscal → id; usar <code>FEParamGetCondicionIvaReceptor</code></td>
+              </tr>
+              <tr>
+                <td>Solo DocTipo 99 / DocNro 0</td>
+                <td><span class="badge high">Alto</span> no factura a RI con CUIT</td>
+                <td>Usar DocTipo/DocNro del cliente de la venta</td>
+              </tr>
+              <tr>
+                <td>AlicIva fija Id=5</td>
+                <td><span class="badge med">Medio</span> mal con 10,5 / 27 / exento</td>
+                <td>Mapear alícuota → Id; multi-alícuota</td>
+              </tr>
+              <tr>
+                <td>No <code>FEDummy</code> / <code>FEParamGet*</code> / <code>FECompConsultar</code></td>
+                <td><span class="badge med">Medio</span> difícil diagnosticar</td>
+                <td>Status rico + consulta</td>
+              </tr>
+              <tr>
+                <td>Parser XML por regex</td>
+                <td><span class="badge med">Medio</span> frágil</td>
+                <td>XML API / cliente del WSDL</td>
+              </tr>
+              <tr>
+                <td>Sin tests automatizados</td>
+                <td><span class="badge med">Medio</span> regresiones</td>
+                <td>Unit mapeos + WireMock SOAP</td>
+              </tr>
+              <tr>
+                <td>XML SOAP en DB</td>
+                <td><span class="badge low">Bajo</span> retención / acceso</td>
+                <td>Restringir roles; no exponer al front</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <h2 id="seguridad"><span class="sec-num">8.</span> Seguridad</h2>
+        <ul>
+          <li>Cert/key fuera de git (<code>*.pem</code>, paths en secrets del VPS).</li>
+          <li>Solo TITULAR solicita CAE.</li>
+          <li>No devolver stack traces ni XML crudo al browser.</li>
+          <li>HTTPS obligatorio en prod.</li>
+          <li>Un certificado = un CUIT del <strong>cliente</strong>; nunca un cert “de REEB” para terceros (hosted).</li>
+        </ul>
+
+        <h2 id="testing"><span class="sec-num">9.</span> Testing</h2>
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr><th>Nivel</th><th>Qué probar</th></tr>
+            </thead>
+            <tbody>
+              <tr><td>Unit</td><td>Mapeos (<code>mapDocumentType</code>, centavos↔decimal, alícuota / CondicionIVAReceptor)</td></tr>
+              <tr><td>Integration</td><td>Controller + <code>@PreAuthorize</code></td></tr>
+              <tr><td>Contrato</td><td>WireMock LoginCms + FECAESolicitar; <strong>sin</strong> certs reales en CI</td></tr>
+              <tr><td>Homo manual</td><td>Checklist §2 + un CAE aprobado en testing</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <div class="callout note">
+          <strong>DoD homologación:</strong> al menos un comprobante con <code>Resultado=A</code> y CAE válido.<br>
+          Prod: solo con OK del contador del cliente.
+        </div>
+
+        <h2 id="orden"><span class="sec-num">10.</span> Orden de trabajo recomendado</h2>
+        <ol class="order-list">
+          <li>Completar checklist del cliente (homo).</li>
+          <li>Cerrar gaps §7 (empezar por <code>CondicionIVAReceptorId</code> + DocTipo real).</li>
+          <li>UI panel: estado ARCA + “Solicitar CAE” + errores legibles.</li>
+          <li>Ticket / impresión con CAE.</li>
+          <li>Solo entonces PROD.</li>
+        </ol>
+
+        <h2 id="hosted">Relación con hosted / piloto</h2>
+        <p>En el plan mensual cada suscriptor aporta <strong>su</strong> CUIT y certificado (o alta asistida cotizada). Una instancia = un comercio; no hay certificado compartido multi-tenant.</p>
+
+        <hr class="hr">
+        <p class="muted">También en Markdown: <a href="arca-implementacion.md">arca-implementacion.md</a> · Índice de PDFs: <a href="arca-fuentes.html">arca-fuentes.html</a>.</p>
+      </article>
+    </div>
+
     <footer>
-      Documentación técnica (ARCA/AFIP y Mercado Pago API Reference). Extra cotizado; sin precios inventados.
-      Fuentes oficiales prevalecen. <a href="https://www.mercadopago.com.ar/developers/es/reference">API MP</a> ·
-      <a href="https://www.afip.gob.ar/ws/documentacion/homologacion-externa.asp">Homologación ARCA</a>.
+      API de ARCA para developers — documentación técnica (ARCA / AFIP). Extra cotizado; sin precios inventados.
+      Fuentes oficiales prevalecen ante este resumen.
     </footer>
   </div>
 </body>
