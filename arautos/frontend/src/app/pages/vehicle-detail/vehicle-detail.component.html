@@ -1,27 +1,36 @@
-
-<section class="container" *ngIf="vehicle() as v">
-  <a routerLink="/" class="meta">← Volver al catálogo</a>
+<section class="container detail" *ngIf="vehicle() as v">
+  <a routerLink="/" class="back">← Volver al catálogo</a>
   <div class="layout">
     <div class="gallery">
-      <img [src]="v.photos[0] || 'https://placehold.co/1000x625'" [alt]="v.brand + ' ' + v.model" />
+      <img [src]="v.photos[0] || '/assets/cars/toyota-corolla.jpg'" [alt]="v.brand + ' ' + v.model" />
     </div>
-    <div>
-      <span class="badge">{{ typeLabel(v.type) }}</span>
+    <aside class="summary">
+      <span class="badge" [class.badge-okm]="v.type === 'CERO_KM'" [class.badge-usado]="v.type === 'USADO'">
+        {{ typeLabel(v.type) }}
+      </span>
       <h1>{{ v.brand }} {{ v.model }}</h1>
-      <p class="meta" *ngIf="v.version">{{ v.version }}</p>
+      <p class="version" *ngIf="v.version">{{ v.version }}</p>
       <div class="price">{{ formatPrice(v.price, v.currency) }}</div>
       <ul class="facts">
-        <li><strong>Año</strong> {{ v.year }}</li>
-        <li><strong>Km</strong> {{ v.km | number }}</li>
-        <li><strong>Ubicación</strong> {{ v.city }}, {{ v.province }}</li>
-        <li *ngIf="v.fuel"><strong>Combustible</strong> {{ v.fuel }}</li>
-        <li *ngIf="v.transmission"><strong>Transmisión</strong> {{ v.transmission }}</li>
-        <li *ngIf="v.color"><strong>Color</strong> {{ v.color }}</li>
+        <li><span>Año</span><strong>{{ v.year }}</strong></li>
+        <li><span>Km</span><strong>{{ v.km | number }}</strong></li>
+        <li><span>Ubicación</span><strong>{{ v.city }}, {{ v.province }}</strong></li>
+        <li *ngIf="v.fuel"><span>Combustible</span><strong>{{ v.fuel }}</strong></li>
+        <li *ngIf="v.transmission"><span>Transmisión</span><strong>{{ v.transmission }}</strong></li>
+        <li *ngIf="v.color"><span>Color</span><strong>{{ v.color }}</strong></li>
       </ul>
-      <p>{{ v.description }}</p>
-      <p class="meta">Publicado por <a [routerLink]="['/c', v.dealerSlug]">{{ v.dealerName }}</a></p>
-      <button class="btn wa" type="button" (click)="contactWa()">Consultar por WhatsApp</button>
-    </div>
+      <p class="desc" *ngIf="v.description">{{ v.description }}</p>
+      <p class="dealer">
+        Publicado por <a [routerLink]="['/c', v.dealerSlug]">{{ v.dealerName }}</a>
+      </p>
+      <div class="cta-wrap">
+        <button class="btn wa cta-wa" type="button" (click)="contactWa()">
+          Consultar por WhatsApp
+        </button>
+      </div>
+    </aside>
   </div>
 </section>
-@if (error()) { <div class="container alert">{{ error() }}</div> }
+@if (error()) {
+  <div class="container alert">{{ error() }}</div>
+}
