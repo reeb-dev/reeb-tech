@@ -22,6 +22,15 @@ import {
 import { formatPrice, typeLabel } from '../../core/format';
 import { GeoSelectComponent } from '../../shared/geo-select.component';
 
+export type PanelSection =
+  | 'resumen'
+  | 'stock'
+  | 'perfil'
+  | 'difusion'
+  | 'redes'
+  | 'usuarios'
+  | 'suscripcion';
+
 @Component({
   selector: 'app-panel-home',
   standalone: true,
@@ -42,6 +51,7 @@ export class PanelHomeComponent implements OnInit {
   publications = signal<PublicationResult[]>([]);
   error = signal('');
   ok = signal('');
+  section = signal<PanelSection>('resumen');
   formatPrice = formatPrice;
   typeLabel = typeLabel;
   photoUrl = '';
@@ -51,6 +61,16 @@ export class PanelHomeComponent implements OnInit {
   selectedVehicleId = '';
   publishFacebook = true;
   publishInstagram = true;
+
+  readonly nav: { id: PanelSection; label: string; adminOnly?: boolean }[] = [
+    { id: 'resumen', label: 'Resumen' },
+    { id: 'stock', label: 'Stock' },
+    { id: 'perfil', label: 'Página pública' },
+    { id: 'difusion', label: 'Difusión' },
+    { id: 'redes', label: 'Redes Meta' },
+    { id: 'usuarios', label: 'Usuarios', adminOnly: true },
+    { id: 'suscripcion', label: 'Suscripción' }
+  ];
 
   invite: CreatePanelUserRequest = {
     email: '',
@@ -82,11 +102,48 @@ export class PanelHomeComponent implements OnInit {
     this.reload();
     const meta = this.route.snapshot.queryParamMap.get('meta');
     if (meta === 'select' || meta === 'connected') {
+      this.section.set('redes');
       this.loadMeta(true);
     }
     if (this.route.snapshot.queryParamMap.get('oauth_error')) {
+      this.section.set('redes');
       this.error.set('No se pudo completar la conexión con Meta. Intente de nuevo.');
     }
+    const tab = this.route.snapshot.queryParamMap.get('tab') as PanelSection | null;
+    if (tab && this.nav.some((n) => n.id === tab)) {
+      this.section.set(tab);
+    }
+  }
+
+  go(section: PanelSection) {
+    this.section.set(section);
+    this.error.set('');
+    this.ok.set('');
+    this.router.navigate([], {
+      relativeTo: this.route,
+      queryParams: { tab: section },
+      queryParamsHandling: 'merge',
+      replaceUrl: true
+    });
+  }
+
+  visibleNav() {
+    return this.nav.filter((n) => !n.adminOnly || this.auth.isTenantAdmin());
+  }
+
+  publishedCount(): number {
+    return this.vehicles().filter((v) => v.status === 'PUBLICADO').length;
+  }
+
+  draftCount(): number {
+    return this.vehicles().filter((v) => v.status === 'BORRADOR').length;
+  }
+
+  selfRank(): string {
+    const rk = this.ranking();
+    if (!rk) return '—';
+    const self = rk.entries.find((e) => e.self);
+    return self ? `#${self.rank} en ${rk.province}` : `Sin ranking en ${rk.province}`;
   }
 
   reload() {
