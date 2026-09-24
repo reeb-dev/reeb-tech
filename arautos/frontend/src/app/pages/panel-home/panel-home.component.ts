@@ -52,6 +52,7 @@ export class PanelHomeComponent implements OnInit {
   error = signal('');
   ok = signal('');
   section = signal<PanelSection>('resumen');
+  sidebarOpen = signal(false);
   formatPrice = formatPrice;
   typeLabel = typeLabel;
   photoUrl = '';
@@ -62,14 +63,14 @@ export class PanelHomeComponent implements OnInit {
   publishFacebook = true;
   publishInstagram = true;
 
-  readonly nav: { id: PanelSection; label: string; adminOnly?: boolean }[] = [
-    { id: 'resumen', label: 'Resumen' },
-    { id: 'stock', label: 'Stock' },
-    { id: 'perfil', label: 'Página pública' },
-    { id: 'difusion', label: 'Difusión' },
-    { id: 'redes', label: 'Redes Meta' },
-    { id: 'usuarios', label: 'Usuarios', adminOnly: true },
-    { id: 'suscripcion', label: 'Suscripción' }
+  readonly nav: { id: PanelSection; label: string; hint: string; adminOnly?: boolean }[] = [
+    { id: 'resumen', label: 'Resumen', hint: 'Vista general' },
+    { id: 'stock', label: 'Stock', hint: 'Avisos del local' },
+    { id: 'perfil', label: 'Página pública', hint: 'Datos y marca' },
+    { id: 'difusion', label: 'Difusión', hint: 'Publicar en redes' },
+    { id: 'redes', label: 'Redes Meta', hint: 'Conectar FB / IG' },
+    { id: 'usuarios', label: 'Usuarios', hint: 'Equipo del local', adminOnly: true },
+    { id: 'suscripcion', label: 'Suscripción', hint: 'Plan y ranking' }
   ];
 
   invite: CreatePanelUserRequest = {
@@ -117,6 +118,7 @@ export class PanelHomeComponent implements OnInit {
 
   go(section: PanelSection) {
     this.section.set(section);
+    this.sidebarOpen.set(false);
     this.error.set('');
     this.ok.set('');
     this.router.navigate([], {
@@ -125,6 +127,18 @@ export class PanelHomeComponent implements OnInit {
       queryParamsHandling: 'merge',
       replaceUrl: true
     });
+  }
+
+  toggleSidebar() {
+    this.sidebarOpen.update((v) => !v);
+  }
+
+  closeSidebar() {
+    this.sidebarOpen.set(false);
+  }
+
+  sectionLabel(): string {
+    return this.nav.find((n) => n.id === this.section())?.label || 'Panel';
   }
 
   visibleNav() {

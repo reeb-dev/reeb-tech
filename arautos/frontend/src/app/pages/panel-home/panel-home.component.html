@@ -1,47 +1,78 @@
-<section class="container panel-shell">
-  <header class="dash-head">
-    <div>
-      <p class="eyebrow">Panel</p>
-      <h1>{{ profile()?.name || auth.session()?.tenantName || 'Su concesionaria' }}</h1>
-      @if (auth.session(); as s) {
-        <p class="meta session-line">
-          <span class="role-pill">{{ auth.roleLabel(s.role) }}</span>
-          <span>{{ s.email }}</span>
-          @if (profile(); as p) {
-            <span class="status-dot" [class.warn]="p.subscriptionStatus !== 'ACTIVA' && p.subscriptionStatus !== 'TRIAL'">
-              {{ p.subscriptionStatus }}
-            </span>
-            <a [routerLink]="['/c', p.slug]">Ver página pública</a>
-          }
-        </p>
-      }
-    </div>
-    <div class="head-actions">
-      @if (auth.isPlatformAdmin()) {
-        <a class="btn secondary" routerLink="/panel/admin">Administración</a>
-      }
-      <button class="btn secondary" type="button" (click)="logout()">Cerrar sesión</button>
-    </div>
-  </header>
+<section class="panel-shell">
+  <div class="panel-layout" [class.sidebar-open]="sidebarOpen()">
+    <aside class="panel-sidebar" aria-label="Menú del panel">
+      <div class="sidebar-brand">
+        <p class="eyebrow">Panel</p>
+        <strong>{{ profile()?.name || auth.session()?.tenantName || 'Su local' }}</strong>
+        @if (auth.session(); as s) {
+          <span class="sidebar-role">{{ auth.roleLabel(s.role) }}</span>
+        }
+      </div>
+      <nav class="side-nav">
+        @for (item of visibleNav(); track item.id) {
+          <button
+            type="button"
+            class="side-item"
+            [class.active]="section() === item.id"
+            (click)="go(item.id)">
+            <span class="side-label">{{ item.label }}</span>
+            <span class="side-hint">{{ item.hint }}</span>
+          </button>
+        }
+      </nav>
+      <div class="sidebar-foot">
+        @if (profile(); as p) {
+          <a class="side-link" [routerLink]="['/c', p.slug]">Ver página pública</a>
+        }
+        @if (auth.isPlatformAdmin()) {
+          <a class="side-link" routerLink="/panel/admin">Administración</a>
+        }
+        <button class="btn secondary side-logout" type="button" (click)="logout()">Cerrar sesión</button>
+      </div>
+    </aside>
 
-  <nav class="dash-nav" aria-label="Secciones del panel">
-    @for (item of visibleNav(); track item.id) {
-      <button
-        type="button"
-        class="nav-item"
-        [class.active]="section() === item.id"
-        (click)="go(item.id)">
-        {{ item.label }}
-      </button>
+    @if (sidebarOpen()) {
+      <button type="button" class="sidebar-backdrop" aria-label="Cerrar menú" (click)="closeSidebar()"></button>
     }
-  </nav>
 
-  @if (error()) { <div class="alert">{{ error() }}</div> }
-  @if (ok()) { <div class="alert ok">{{ ok() }}</div> }
+    <div class="panel-main">
+      <header class="dash-head">
+        <div class="dash-head-left">
+          <button type="button" class="menu-toggle" (click)="toggleSidebar()" aria-label="Abrir menú">
+            Menú
+          </button>
+          <div>
+            <p class="eyebrow">{{ sectionLabel() }}</p>
+            <h1>{{ profile()?.name || auth.session()?.tenantName || 'Su concesionaria' }}</h1>
+            @if (auth.session(); as s) {
+              <p class="meta session-line">
+                <span class="role-pill">{{ auth.roleLabel(s.role) }}</span>
+                <span>{{ s.email }}</span>
+                @if (profile(); as p) {
+                  <span class="status-dot" [class.warn]="p.subscriptionStatus !== 'ACTIVA' && p.subscriptionStatus !== 'TRIAL'">
+                    {{ p.subscriptionStatus }}
+                  </span>
+                }
+              </p>
+            }
+          </div>
+        </div>
+        <div class="head-actions">
+          @if (profile(); as p) {
+            <a class="btn secondary head-public" [routerLink]="['/c', p.slug]">Página pública</a>
+          }
+          <button class="btn secondary head-logout" type="button" (click)="logout()">Cerrar sesión</button>
+        </div>
+      </header>
 
-  @if (stats()?.readOnly) {
-    <div class="alert">Cuenta vencida o suspendida: el catálogo no lista sus avisos y el panel está en solo lectura.</div>
-  }
+      @if (error()) { <div class="alert">{{ error() }}</div> }
+      @if (ok()) { <div class="alert ok">{{ ok() }}</div> }
+
+      @if (stats()?.readOnly) {
+        <div class="alert">Cuenta vencida o suspendida: el catálogo no lista sus avisos y el panel está en solo lectura.</div>
+      }
+
+      <div class="panel-content">
 
   @if (section() === 'resumen') {
     <section class="dash-section">
@@ -491,4 +522,7 @@
       </div>
     </section>
   }
+      </div>
+    </div>
+  </div>
 </section>
