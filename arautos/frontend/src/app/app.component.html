@@ -3,21 +3,25 @@
     <a class="brand" routerLink="/" aria-label="ArAutos — inicio">
       <img
         class="logo-malvinas"
-        src="/assets/logo-malvinas-ar.png"
-        width="200"
-        height="123"
+        src="/assets/logo-malvinas-ar.svg"
+        width="90"
+        height="56"
         alt="Islas Malvinas con la bandera argentina"
       />
       <span class="brand-text">
-        ArAutos
+        <strong>ArAutos</strong>
         <small>Autos en Argentina</small>
       </span>
-      <span class="brand-lema">{{ lemaMalvinas() }}</span>
     </a>
     <nav aria-label="Principal">
-      <a routerLink="/">Catálogo</a>
-      <a routerLink="/panel">Mi concesionaria</a>
+      <a class="nav-link" routerLink="/">Catálogo</a>
+      <a class="nav-cta" routerLink="/panel">Mi concesionaria</a>
     </nav>
+  </div>
+  <div class="lema-bar" aria-label="Afirmación soberana">
+    <div class="container">
+      <span class="lema-line">{{ lemaMalvinas() }}</span>
+    </div>
   </div>
 </header>
 <main>
