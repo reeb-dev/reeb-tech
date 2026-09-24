@@ -104,16 +104,50 @@ button, input, select, textarea {
   color: #334155;
 }
 .filters {
-  display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: .8rem;
-  margin: 0 0 .85rem; padding: 1rem 1.05rem; background: #fff;
-  border: 1px solid var(--line); border-radius: 12px;
+  display: grid;
+  grid-template-columns: minmax(9.5rem, 1.35fr) repeat(4, minmax(7.5rem, 1fr)) minmax(6.5rem, auto);
+  gap: .75rem 1rem;
+  align-items: end;
+  margin: 0 0 .85rem;
+  padding: 1rem 1.15rem;
+  background: #fff;
+  border: 1px solid var(--line);
+  border-radius: 12px;
   box-shadow: 0 4px 16px rgba(15, 39, 68, 0.05);
 }
-.filters .field { margin-bottom: 0; }
+.filters .field {
+  margin-bottom: 0;
+  gap: .4rem;
+  min-width: 0;
+}
 .filters .field label {
-  font-size: .72rem;
-  letter-spacing: .06em;
+  display: block;
+  margin: 0;
+  padding: 0;
+  font-size: .7rem;
+  letter-spacing: .07em;
   text-transform: uppercase;
+  color: var(--muted);
+  font-weight: 700;
+  line-height: 1.2;
+}
+.filters .field input,
+.filters .field select {
+  width: 100%;
+  min-height: 2.65rem;
+  padding: .6rem .75rem;
+}
+@media (max-width: 960px) {
+  .filters {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+}
+@media (max-width: 640px) {
+  .filters {
+    grid-template-columns: 1fr;
+    gap: .7rem;
+    padding: .9rem 1rem;
+  }
 }
 .alert {
   padding: .75rem 1rem; border-radius: 10px; margin: .75rem 0;

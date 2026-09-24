@@ -91,23 +91,41 @@ public class SeedService implements ApplicationRunner {
 
     vehicles.save(vehicle(t1, "Toyota", "Corolla", "XEi 2.0 CVT", 2024, 0, VehicleType.CERO_KM,
         new BigDecimal("32000"), CurrencyCode.USD, "nafta", "cvt", "Blanco Perlado",
-        "/assets/cars/toyota-corolla.jpg"));
+        List.of(
+            "/assets/cars/toyota-corolla.jpg",
+            "/assets/cars/jeep-compass.jpg",
+            "/assets/cars/peugeot-208.jpg")));
     vehicles.save(vehicle(t1, "Jeep", "Compass", "Limited 1.3T", 2022, 42000, VehicleType.USADO,
         new BigDecimal("41000"), CurrencyCode.USD, "nafta", "automatica", "Gris",
-        "/assets/cars/jeep-compass.jpg"));
+        List.of(
+            "/assets/cars/jeep-compass.jpg",
+            "/assets/cars/ford-ranger.jpg",
+            "/assets/cars/toyota-corolla.jpg")));
     vehicles.save(vehicle(t1, "Ford", "Ranger", "XLT 3.2 4x4", 2021, 72000, VehicleType.USADO,
         new BigDecimal("38500000"), CurrencyCode.ARS, "diesel", "manual", "Blanco",
-        "/assets/cars/ford-ranger.jpg"));
+        List.of(
+            "/assets/cars/ford-ranger.jpg",
+            "/assets/cars/chevrolet-tracker.jpg",
+            "/assets/cars/jeep-compass.jpg")));
 
     vehicles.save(vehicle(t2, "Fiat", "Cronos", "Precision 1.3", 2023, 18000, VehicleType.USADO,
         new BigDecimal("18500"), CurrencyCode.USD, "nafta", "cvt", "Rojo",
-        "/assets/cars/fiat-cronos.jpg"));
+        List.of(
+            "/assets/cars/fiat-cronos.jpg",
+            "/assets/cars/peugeot-208.jpg",
+            "/assets/cars/toyota-corolla.jpg")));
     vehicles.save(vehicle(t2, "Chevrolet", "Tracker", "Premier 1.2T", 2024, 0, VehicleType.CERO_KM,
         new BigDecimal("29500"), CurrencyCode.USD, "nafta", "automatica", "Negro",
-        "/assets/cars/chevrolet-tracker.jpg"));
+        List.of(
+            "/assets/cars/chevrolet-tracker.jpg",
+            "/assets/cars/fiat-cronos.jpg",
+            "/assets/cars/ford-ranger.jpg")));
     vehicles.save(vehicle(t2, "Peugeot", "208", "Active Pack 1.6", 2020, 55000, VehicleType.USADO,
         new BigDecimal("16200000"), CurrencyCode.ARS, "nafta", "manual", "Gris Plata",
-        "/assets/cars/peugeot-208.jpg"));
+        List.of(
+            "/assets/cars/peugeot-208.jpg",
+            "/assets/cars/toyota-corolla.jpg",
+            "/assets/cars/fiat-cronos.jpg")));
 
     log.info("Seed OK: admin@arautos.local / admin123 | {} / demo123 | {} / demo123",
         u1.getEmail(), u2.getEmail());
@@ -146,7 +164,7 @@ public class SeedService implements ApplicationRunner {
 
   private Vehicle vehicle(Tenant tenant, String brand, String model, String version, int year, int km,
                           VehicleType type, BigDecimal price, CurrencyCode currency,
-                          String fuel, String transmission, String color, String photo) {
+                          String fuel, String transmission, String color, List<String> photos) {
     Vehicle v = new Vehicle();
     v.setTenant(tenant);
     v.setBrand(brand);
@@ -164,7 +182,7 @@ public class SeedService implements ApplicationRunner {
     v.setColor(color);
     v.setDescription(brand + " " + model + " " + version + ". Consultá por WhatsApp.");
     v.setStatus(VehicleStatus.PUBLICADO);
-    v.setPhotos(List.of(photo));
+    v.setPhotos(photos);
     return v;
   }
 }

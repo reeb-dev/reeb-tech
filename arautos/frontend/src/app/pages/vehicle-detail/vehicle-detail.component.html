@@ -2,8 +2,35 @@
   <a routerLink="/" class="back">← Volver al catálogo</a>
   <div class="layout">
     <div class="gallery">
-      <img [src]="v.photos[0] || '/assets/cars/toyota-corolla.jpg'" [alt]="v.brand + ' ' + v.model" />
+      <button
+        type="button"
+        class="main-shot"
+        (click)="openLightbox()"
+        [attr.aria-label]="'Ampliar foto de ' + v.brand + ' ' + v.model">
+        <img
+          [src]="activePhoto()"
+          [alt]="v.brand + ' ' + v.model"
+          (error)="onImgError($event)" />
+        <span class="zoom-hint" aria-hidden="true">Ampliar</span>
+      </button>
+
+      @if (photos().length > 1) {
+        <div class="thumbs" role="listbox" aria-label="Fotos del aviso">
+          @for (photo of photos(); track photo; let i = $index) {
+            <button
+              type="button"
+              class="thumb"
+              role="option"
+              [class.is-active]="i === activeIndex()"
+              [attr.aria-selected]="i === activeIndex()"
+              (click)="selectPhoto(i)">
+              <img [src]="photo" [alt]="'Foto ' + (i + 1)" (error)="onImgError($event)" />
+            </button>
+          }
+        </div>
+      }
     </div>
+
     <aside class="summary">
       <span class="badge" [class.badge-okm]="v.type === 'CERO_KM'" [class.badge-usado]="v.type === 'USADO'">
         {{ typeLabel(v.type) }}
@@ -31,6 +58,33 @@
     </aside>
   </div>
 </section>
+
+@if (lightboxOpen()) {
+  <div
+    class="lightbox"
+    role="dialog"
+    aria-modal="true"
+    aria-label="Visor de fotos"
+    (click)="closeLightbox()">
+    <button type="button" class="lb-close" (click)="closeLightbox()" aria-label="Cerrar">×</button>
+    @if (photos().length > 1) {
+      <button type="button" class="lb-nav lb-prev" (click)="prevPhoto($event)" aria-label="Foto anterior">‹</button>
+      <button type="button" class="lb-nav lb-next" (click)="nextPhoto($event)" aria-label="Foto siguiente">›</button>
+    }
+    <img
+      class="lb-img"
+      [src]="activePhoto()"
+      [alt]="'Foto ampliada'"
+      (click)="$event.stopPropagation()"
+      (error)="onImgError($event)" />
+    @if (photos().length > 1) {
+      <p class="lb-count" (click)="$event.stopPropagation()">
+        {{ activeIndex() + 1 }} / {{ photos().length }}
+      </p>
+    }
+  </div>
+}
+
 @if (error()) {
   <div class="container alert">{{ error() }}</div>
 }

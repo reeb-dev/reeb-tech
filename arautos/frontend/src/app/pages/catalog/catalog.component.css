@@ -31,9 +31,28 @@
 }
 .filters-action {
   align-self: end;
+  min-width: 0;
 }
 .filters-action .btn {
   width: 100%;
+  min-height: 2.65rem;
+  padding: .6rem 1.15rem;
+  white-space: nowrap;
+}
+@media (max-width: 960px) {
+  .filters-action {
+    grid-column: 1 / -1;
+  }
+  .filters-action .btn {
+    width: auto;
+    min-width: 8.5rem;
+    justify-self: start;
+  }
+}
+@media (max-width: 640px) {
+  .filters-action .btn {
+    width: 100%;
+  }
 }
 .sr-only {
   position: absolute;
