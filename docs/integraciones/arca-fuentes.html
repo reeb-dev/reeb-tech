@@ -3,333 +3,301 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>ARCA — Fuentes oficiales</title>
-  <meta name="description" content="Índice de documentación oficial ARCA/AFIP para facturación electrónica">
-  <meta name="robots" content="noindex, follow">
+  <title>ARCA — Fuentes y PDFs | webconreeb.com</title>
+  <meta name="description" content="Índice de documentación oficial ARCA/AFIP con copias locales de los PDF para el kit de facturación electrónica.">
+  <meta name="robots" content="index, follow">
+  <link rel="canonical" href="https://webconreeb.com/docs/integraciones/arca-fuentes.html">
   <link rel="stylesheet" href="styles.css">
 </head>
 <body>
+  <a class="skip" href="#contenido">Saltar al contenido</a>
   <div class="wrap">
-    <nav class="top">
-  <a class="brand" href="index.html">Integraciones FE / pagos</a>
-  <a href="arca-fuentes.html">ARCA · Fuentes</a>
-  <a href="arca-implementacion.html">ARCA · Implementación</a>
-  <a href="mercadopago.html">Mercado Pago</a>
-</nav>
-    <article>
-<h1>ARCA / AFIP — fuentes oficiales (índice)</h1>
-<p>Índice maestro para implementar facturación electrónica en el sistema de stock (single-tenant).<br />
-<strong>No inventa precios ni normativa.</strong> Ante duda, prevalece el PDF vigente en el sitio ARCA/AFIP.</p>
-<p>Extra cotizado: no forma parte del plan base del producto.</p>
-<hr />
-<h2>Índice maestro (homologación externa / RG 5616)</h2>
-<p>Página prioritaria pedida para el piloto:</p>
-<p><strong>https://www.afip.gob.ar/ws/documentacion/homologacion-externa.asp</strong><br />
-(espejo: https://www.arca.gob.ar/ws/documentacion/homologacion-externa.asp)</p>
-<p>Manuales enlazados desde esa página (adecuaciones R.G. N° 5.616/2024):</p>
-<table>
-<thead>
-<tr>
-<th>Servicio</th>
-<th>RG</th>
-<th>Manual enlazado</th>
-<th>¿Lo usamos?</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td><strong>wsfev1</strong></td>
-<td>4.291</td>
-<td><a href="https://www.afip.gob.ar/fe/ayuda/documentos/wsfev1-RG-4291.pdf">Manual desarrollador V. 4.8</a></td>
-<td><strong>Sí</strong> (CAE A/B/C sin detalle de ítem)</td>
-</tr>
-<tr>
-<td>wsseg</td>
-<td>2.668</td>
-<td><a href="https://www.afip.gob.ar/fe/ayuda/documentos/wsseg-RG-2668.pdf">Manual V.1.0</a></td>
-<td>No (seguros de caución)</td>
-</tr>
-<tr>
-<td>wsmtxca</td>
-<td>2.904</td>
-<td><a href="https://www.afip.gob.ar/fe/ayuda/documentos/Web-Service-MTXCA-Homo-Externa.pdf">Manual V 0.25.8</a></td>
-<td>No (con detalle de ítem / MTX)</td>
-</tr>
-<tr>
-<td>wsbfev1</td>
-<td>5427 / 2.861</td>
-<td><a href="https://www.afip.gob.ar/fe/ayuda/documentos/wsbfev1-RG-5427-y-2861.pdf">Manual V. 3.2</a></td>
-<td>No (bonos fiscales)</td>
-</tr>
-</tbody>
-</table>
-<hr />
-<h2>WSAA (autenticación)</h2>
-<p>Hub: https://www.arca.gob.ar/ws/documentacion/wsaa.asp</p>
-<table>
-<thead>
-<tr>
-<th>Recurso</th>
-<th>URL</th>
-<th>Cubre</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>Manual desarrollador WSAA</td>
-<td>https://www.arca.gob.ar/ws/WSAA/WSAAmanualDev.pdf</td>
-<td>Flujo TRA→CMS→LoginCms→TA, FAQ, ejemplos</td>
-</tr>
-<tr>
-<td>Especificación técnica WSAA 1.2.2</td>
-<td>https://www.arca.gob.ar/ws/WSAA/Especificacion_Tecnica_WSAA_1.2.2.pdf</td>
-<td>Schema TRA/TA, errores <code>cms.*</code> / <code>xml.*</code> / <code>coe.*</code>, HTTPS</td>
-</tr>
-<tr>
-<td>Obtener cert producción</td>
-<td>https://www.arca.gob.ar/ws/WSAA/wsaa_obtener_certificado_produccion.pdf</td>
-<td>Alta cert prod</td>
-</tr>
-<tr>
-<td>Asociar cert a WSN (prod)</td>
-<td>https://www.arca.gob.ar/ws/WSAA/wsaa_asociar_certificado_a_wsn_produccion.pdf</td>
-<td>Delegación WSFE</td>
-</tr>
-<tr>
-<td>Generación de certificados</td>
-<td>https://www.arca.gob.ar/ws/WSAA/WSAA.ObtenerCertificado.pdf</td>
-<td>CSR / OpenSSL</td>
-</tr>
-<tr>
-<td>Delegar WS (Admin Relaciones)</td>
-<td>https://www.arca.gob.ar/ws/WSAA/ADMINREL.DelegarWS.pdf</td>
-<td>Prod: asociar WSN</td>
-</tr>
-<tr>
-<td>Ejemplo Java</td>
-<td>https://www.arca.gob.ar/ws/WSAA/ejemplos/wsaa_client_java.tgz</td>
-<td>Cliente de referencia</td>
-</tr>
-<tr>
-<td>Ejemplo PHP / C# / VB / PowerShell</td>
-<td>bajo <code>…/ws/WSAA/ejemplos/</code></td>
-<td>Idem</td>
-</tr>
-</tbody>
-</table>
-<h3>URLs WSAA</h3>
-<table>
-<thead>
-<tr>
-<th>Ambiente</th>
-<th>LoginCms</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>Homologación</td>
-<td><code>https://wsaahomo.afip.gov.ar/ws/services/LoginCms</code> (+ <code>?WSDL</code>)</td>
-</tr>
-<tr>
-<td>Producción</td>
-<td><code>https://wsaa.afip.gov.ar/ws/services/LoginCms</code> (+ <code>?WSDL</code>)</td>
-</tr>
-</tbody>
-</table>
-<p>FAQ del manual también cita <code>wsaahomo.arca.gov.ar</code> / <code>wsaa.arca.gov.ar</code>. Preferir las URLs publicadas en la página WSAA vigente.</p>
-<p>Para factura electrónica el tag <code>&lt;service&gt;</code> del TRA es <strong><code>wsfe</code></strong>.</p>
-<hr />
-<h2>Certificados / WSASS (homologación)</h2>
-<p>Hub: https://www.arca.gob.ar/ws/documentacion/certificados.asp</p>
-<table>
-<thead>
-<tr>
-<th>Recurso</th>
-<th>URL</th>
-<th>Cubre</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>Cómo adherirse al WSASS</td>
-<td>https://www.arca.gob.ar/ws/WSASS/WSASS_como_adherirse.pdf</td>
-<td>Alta testing</td>
-</tr>
-<tr>
-<td>Manual usuario WSASS (PDF)</td>
-<td>https://www.arca.gob.ar/ws/WSASS/WSASS_manual.pdf</td>
-<td>Cert + asociar WSN en homo</td>
-</tr>
-<tr>
-<td>Manual usuario WSASS (HTML)</td>
-<td>https://www.arca.gob.ar/ws/WSASS/html/index.html</td>
-<td>Idem</td>
-</tr>
-<tr>
-<td>Cadena cert homo 2022–2034</td>
-<td>https://www.arca.gob.ar/ws/WSASS/Cadena_de_certificacion_homo_2022_2034.zip</td>
-<td>Trust store</td>
-</tr>
-</tbody>
-</table>
-<hr />
-<h2>WS factura electrónica (catálogo de servicios)</h2>
-<p>Hub: https://www.arca.gob.ar/ws/documentacion/ws-factura-electronica.asp<br />
-Desde ahí: “Ver manuales” → homologación externa.</p>
-<table>
-<thead>
-<tr>
-<th>Recurso</th>
-<th>URL</th>
-<th>Nota</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>COMPG (manual desarrollador, listado FE)</td>
-<td>https://www.arca.gob.ar/ws/documentacion/manuales/manual-desarrollador-ARCA-COMPG.pdf</td>
-<td>V. 4.7 en el listado del hub FE; contrastar siempre con <strong>V. 4.8</strong> de homologación externa</td>
-</tr>
-<tr>
-<td>WSFEX (exportación)</td>
-<td>…/manuales/WSFEX-Manualparaeldesarrollador_V3.1.1_ARCA.pdf</td>
-<td>Fuera de alcance piloto</td>
-</tr>
-<tr>
-<td>WSCT (comprobantes T)</td>
-<td>…/manuales/Manual_Desarrollador_WSCT_v1.6.4.pdf</td>
-<td>Fuera de alcance</td>
-</tr>
-</tbody>
-</table>
-<h3>URLs WSFEv1 (manual RG 4291 V.4.8)</h3>
-<table>
-<thead>
-<tr>
-<th>Ambiente</th>
-<th>Endpoint</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>Homologación</td>
-<td><code>https://wswhomo.afip.gov.ar/wsfev1/service.asmx</code></td>
-</tr>
-<tr>
-<td>Homologación WSDL</td>
-<td><code>https://wswhomo.afip.gov.ar/wsfev1/service.asmx?WSDL</code></td>
-</tr>
-<tr>
-<td>Producción</td>
-<td><code>https://servicios1.afip.gov.ar/wsfev1/service.asmx</code></td>
-</tr>
-<tr>
-<td>Producción WSDL</td>
-<td><code>https://servicios1.afip.gov.ar/wsfev1/service.asmx?WSDL</code></td>
-</tr>
-</tbody>
-</table>
-<p>Namespace SOAP habitual: <code>http://ar.gov.afip.dif.FEV1/</code>.</p>
-<hr />
-<h2>Otros hubs útiles</h2>
-<table>
-<thead>
-<tr>
-<th>Página</th>
-<th>URL</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>Arquitectura general WS</td>
-<td>https://www.arca.gob.ar/ws/documentacion/arquitectura-general.asp</td>
-</tr>
-<tr>
-<td>Catálogo WS (amplio)</td>
-<td>https://www.arca.gob.ar/ws/documentacion/catalogo.asp</td>
-</tr>
-<tr>
-<td>Ayuda FE</td>
-<td>https://www.afip.gob.ar/fe/ayuda.asp</td>
-</tr>
-<tr>
-<td>Soporte homo FE</td>
-<td><code>wsfev1@arca.gov.ar</code> (citado en manual)</td>
-</tr>
-<tr>
-<td>Soporte prod</td>
-<td><code>sri@arca.gov.ar</code></td>
-</tr>
-<tr>
-<td>Normativa FE</td>
-<td><code>facturaelectronica@arca.gov.ar</code></td>
-</tr>
-</tbody>
-</table>
-<hr />
-<h2>Qué NO bajamos al repo</h2>
-<p>Los PDF oficiales <strong>no</strong> se versionan en git (peso + vigencia). Se consultan por URL.<br />
-Guía operativa destilada: <a href="arca-implementacion.html">Guía de implementación</a>.</p>
-<hr />
-<h2>Verificación de descarga (sesión A1)</h2>
-<table>
-<thead>
-<tr>
-<th>Recurso</th>
-<th>Resultado</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>homologacion-externa.asp</td>
-<td>OK</td>
-</tr>
-<tr>
-<td>wsaa.asp, certificados.asp, ws-factura-electronica.asp</td>
-<td>OK</td>
-</tr>
-<tr>
-<td>wsfev1-RG-4291.pdf (V.4.8)</td>
-<td>OK (~4 MB)</td>
-</tr>
-<tr>
-<td>WSAAmanualDev.pdf + Especificacion_Tecnica_WSAA</td>
-<td>OK</td>
-</tr>
-<tr>
-<td>WSASS_manual + WSASS_como_adherirse</td>
-<td>OK</td>
-</tr>
-<tr>
-<td>wsaa_obtener / wsaa_asociar cert prod</td>
-<td>OK</td>
-</tr>
-<tr>
-<td>manual-desarrollador-ARCA-COMPG.pdf</td>
-<td>OK (descargado; alinear versión con V.4.8)</td>
-</tr>
-<tr>
-<td>LoginCms?WSDL (homo)</td>
-<td>HTTP 200 XML</td>
-</tr>
-<tr>
-<td>wsfev1?WSDL (homo)</td>
-<td>Respuesta corta HTML (81 B) — <strong>no usable en esta sesión</strong>; reintentar o usar SoapUI/manual</td>
-</tr>
-<tr>
-<td>afip.gob.ar/ws/documentacion/default.asp</td>
-<td>Redirect/vacío (~238 B) — usar arca.gob.ar</td>
-</tr>
-<tr>
-<td>afip.gob.ar/ws/programadores/</td>
-<td>Idem ~235 B</td>
-</tr>
-</tbody>
-</table>
-    </article>
+    <nav class="top" aria-label="Integraciones">
+      <a class="brand" href="index.html">Integraciones FE / pagos</a>
+      <a class="is-active" href="arca-fuentes.html" aria-current="page">ARCA · Fuentes</a>
+      <a href="arca-implementacion.html">API de ARCA para devs</a>
+      <a href="mercadopago.html">Mercado Pago</a>
+    </nav>
+
+    <div class="layout">
+      <aside class="toc" aria-label="Índice">
+        <h2>En esta página</h2>
+        <ol>
+          <li><a href="#piloto">Del piloto</a></li>
+          <li><a href="#wsaa">WSAA</a></li>
+          <li><a href="#wsass">WSASS / certs</a></li>
+          <li><a href="#wsfe">WSFE y otros</a></li>
+          <li><a href="#urls">URLs de servicio</a></li>
+          <li><a href="#hubs">Hubs oficiales</a></li>
+        </ol>
+      </aside>
+
+      <article id="contenido">
+        <header class="hero">
+          <p class="eyebrow">Documentación técnica · Extra cotizado</p>
+          <h1>ARCA / AFIP — fuentes y PDFs</h1>
+          <p class="lead">
+            Índice maestro + <strong>copias locales</strong> de los manuales PDF para que el kit se lea offline en esta web.
+            Ante duda de vigencia, prevalece el sitio oficial.
+          </p>
+          <div class="meta-row">
+            <span class="chip">15 PDF en /pdfs/</span>
+            <span class="chip">RG 4291 · V.4.8</span>
+            <span class="chip"><a href="arca-implementacion.html">Guía para devs</a></span>
+          </div>
+          <div class="hero-jumps">
+            <a class="jump" href="#piloto">PDFs del piloto</a>
+            <a class="jump ghost" href="pdfs/">Carpeta pdfs/</a>
+            <a class="jump ghost" href="arca-implementacion.html">Guía implementación</a>
+          </div>
+        </header>
+
+        <div class="callout tip">
+          <strong>Cómo leer esta página.</strong>
+          La columna <em>En esta web</em> abre el PDF hosteado en webconreeb.com.
+          <em>Oficial</em> apunta al sitio ARCA/AFIP (siempre la fuente de verdad).
+        </div>
+
+        <div class="callout info">
+          <strong>Índice maestro (homologación externa / RG 5616):</strong>
+          <a href="https://www.afip.gob.ar/ws/documentacion/homologacion-externa.asp">afip.gob.ar/…/homologacion-externa.asp</a>
+          · espejo
+          <a href="https://www.arca.gob.ar/ws/documentacion/homologacion-externa.asp">arca.gob.ar</a>
+        </div>
+
+        <h2 id="piloto">Manuales del piloto (los que usamos)</h2>
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>Documento</th>
+                <th>En esta web</th>
+                <th>Oficial</th>
+                <th>¿Lo usamos?</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><strong>WSFEv1</strong> — Manual desarrollador V. 4.8 (RG 4291)</td>
+                <td><a href="pdfs/wsfev1-RG-4291.pdf">Descargar PDF</a></td>
+                <td><a href="https://www.afip.gob.ar/fe/ayuda/documentos/wsfev1-RG-4291.pdf">AFIP</a></td>
+                <td><strong>Sí</strong> — CAE A/B/C</td>
+              </tr>
+              <tr>
+                <td><strong>WSAA</strong> — Manual desarrollador</td>
+                <td><a href="pdfs/WSAAmanualDev.pdf">Descargar PDF</a></td>
+                <td><a href="https://www.arca.gob.ar/ws/WSAA/WSAAmanualDev.pdf">ARCA</a></td>
+                <td><strong>Sí</strong> — login / TA</td>
+              </tr>
+              <tr>
+                <td><strong>WSAA</strong> — Especificación técnica 1.2.2</td>
+                <td><a href="pdfs/Especificacion_Tecnica_WSAA_1.2.2.pdf">Descargar PDF</a></td>
+                <td><a href="https://www.arca.gob.ar/ws/WSAA/Especificacion_Tecnica_WSAA_1.2.2.pdf">ARCA</a></td>
+                <td><strong>Sí</strong></td>
+              </tr>
+              <tr>
+                <td>WSASS — cómo adherirse (homo)</td>
+                <td><a href="pdfs/WSASS_como_adherirse.pdf">Descargar PDF</a></td>
+                <td><a href="https://www.arca.gob.ar/ws/WSASS/WSASS_como_adherirse.pdf">ARCA</a></td>
+                <td><strong>Sí</strong> — alta testing</td>
+              </tr>
+              <tr>
+                <td>WSASS — manual usuario</td>
+                <td><a href="pdfs/WSASS_manual.pdf">Descargar PDF</a></td>
+                <td><a href="https://www.arca.gob.ar/ws/WSASS/WSASS_manual.pdf">ARCA</a></td>
+                <td><strong>Sí</strong></td>
+              </tr>
+              <tr>
+                <td>Obtener certificado producción</td>
+                <td><a href="pdfs/wsaa_obtener_certificado_produccion.pdf">Descargar PDF</a></td>
+                <td><a href="https://www.arca.gob.ar/ws/WSAA/wsaa_obtener_certificado_produccion.pdf">ARCA</a></td>
+                <td><strong>Sí</strong> — prod</td>
+              </tr>
+              <tr>
+                <td>Asociar certificado a WSN (prod)</td>
+                <td><a href="pdfs/wsaa_asociar_certificado_a_wsn_produccion.pdf">Descargar PDF</a></td>
+                <td><a href="https://www.arca.gob.ar/ws/WSAA/wsaa_asociar_certificado_a_wsn_produccion.pdf">ARCA</a></td>
+                <td><strong>Sí</strong> — <code>wsfe</code></td>
+              </tr>
+              <tr>
+                <td>Generación de certificados (CSR / OpenSSL)</td>
+                <td><a href="pdfs/WSAA.ObtenerCertificado.pdf">Descargar PDF</a></td>
+                <td><a href="https://www.arca.gob.ar/ws/WSAA/WSAA.ObtenerCertificado.pdf">ARCA</a></td>
+                <td><strong>Sí</strong></td>
+              </tr>
+              <tr>
+                <td>Delegar WS (Admin Relaciones)</td>
+                <td><a href="pdfs/ADMINREL.DelegarWS.pdf">Descargar PDF</a></td>
+                <td><a href="https://www.arca.gob.ar/ws/WSAA/ADMINREL.DelegarWS.pdf">ARCA</a></td>
+                <td><strong>Sí</strong> — prod</td>
+              </tr>
+              <tr>
+                <td>COMPG — manual desarrollador (listado FE)</td>
+                <td><a href="pdfs/manual-desarrollador-ARCA-COMPG.pdf">Descargar PDF</a></td>
+                <td><a href="https://www.arca.gob.ar/ws/documentacion/manuales/manual-desarrollador-ARCA-COMPG.pdf">ARCA</a></td>
+                <td>Referencia · contrastar con V.4.8</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <h2 id="wsaa">WSAA (autenticación)</h2>
+        <p class="muted">Hub oficial: <a href="https://www.arca.gob.ar/ws/documentacion/wsaa.asp">arca.gob.ar/ws/documentacion/wsaa.asp</a></p>
+        <p>Para factura electrónica el tag <code>&lt;service&gt;</code> del TRA es <strong><code>wsfe</code></strong>.</p>
+
+        <h2 id="wsass">Certificados / WSASS (homologación)</h2>
+        <p class="muted">Hub oficial: <a href="https://www.arca.gob.ar/ws/documentacion/certificados.asp">certificados.asp</a>
+          · HTML WSASS: <a href="https://www.arca.gob.ar/ws/WSASS/html/index.html">manual HTML</a>
+          · Cadena cert homo: <a href="https://www.arca.gob.ar/ws/WSASS/Cadena_de_certificacion_homo_2022_2034.zip">ZIP 2022–2034</a></p>
+
+        <h2 id="wsfe">Otros manuales FE (fuera del piloto, hosteados igual)</h2>
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>Documento</th>
+                <th>En esta web</th>
+                <th>Oficial</th>
+                <th>Nota</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>wsseg (RG 2668)</td>
+                <td><a href="pdfs/wsseg-RG-2668.pdf">Descargar PDF</a></td>
+                <td><a href="https://www.afip.gob.ar/fe/ayuda/documentos/wsseg-RG-2668.pdf">AFIP</a></td>
+                <td>No — seguros de caución</td>
+              </tr>
+              <tr>
+                <td>wsmtxca (RG 2904)</td>
+                <td><a href="pdfs/Web-Service-MTXCA-Homo-Externa.pdf">Descargar PDF</a></td>
+                <td><a href="https://www.afip.gob.ar/fe/ayuda/documentos/Web-Service-MTXCA-Homo-Externa.pdf">AFIP</a></td>
+                <td>No — detalle de ítem / MTX</td>
+              </tr>
+              <tr>
+                <td>wsbfev1 (RG 5427 / 2861)</td>
+                <td><a href="pdfs/wsbfev1-RG-5427-y-2861.pdf">Descargar PDF</a></td>
+                <td><a href="https://www.afip.gob.ar/fe/ayuda/documentos/wsbfev1-RG-5427-y-2861.pdf">AFIP</a></td>
+                <td>No — bonos fiscales</td>
+              </tr>
+              <tr>
+                <td>WSFEX (exportación)</td>
+                <td><a href="pdfs/WSFEX-Manualparaeldesarrollador_V3.1.1_ARCA.pdf">Descargar PDF</a></td>
+                <td><a href="https://www.arca.gob.ar/ws/documentacion/manuales/WSFEX-Manualparaeldesarrollador_V3.1.1_ARCA.pdf">ARCA</a></td>
+                <td>Fuera de alcance piloto</td>
+              </tr>
+              <tr>
+                <td>WSCT (comprobantes T)</td>
+                <td><a href="pdfs/Manual_Desarrollador_WSCT_v1.6.4.pdf">Descargar PDF</a></td>
+                <td><a href="https://www.arca.gob.ar/ws/documentacion/manuales/Manual_Desarrollador_WSCT_v1.6.4.pdf">ARCA</a></td>
+                <td>Fuera de alcance</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <h2 id="urls">URLs de servicio</h2>
+        <h3>WSAA LoginCms</h3>
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr><th>Ambiente</th><th>Endpoint</th></tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>Homologación</td>
+                <td><code>https://wsaahomo.afip.gov.ar/ws/services/LoginCms</code> (+ <code>?WSDL</code>)</td>
+              </tr>
+              <tr>
+                <td>Producción</td>
+                <td><code>https://wsaa.afip.gov.ar/ws/services/LoginCms</code> (+ <code>?WSDL</code>)</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        <p class="muted">El FAQ también cita <code>wsaahomo.arca.gov.ar</code> / <code>wsaa.arca.gov.ar</code>. Preferí las URLs de la página WSAA vigente.</p>
+
+        <h3>WSFEv1 (manual RG 4291 V.4.8)</h3>
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr><th>Ambiente</th><th>Endpoint</th></tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>Homologación</td>
+                <td><code>https://wswhomo.afip.gov.ar/wsfev1/service.asmx</code></td>
+              </tr>
+              <tr>
+                <td>Homologación WSDL</td>
+                <td><code>https://wswhomo.afip.gov.ar/wsfev1/service.asmx?WSDL</code></td>
+              </tr>
+              <tr>
+                <td>Producción</td>
+                <td><code>https://servicios1.afip.gov.ar/wsfev1/service.asmx</code></td>
+              </tr>
+              <tr>
+                <td>Producción WSDL</td>
+                <td><code>https://servicios1.afip.gov.ar/wsfev1/service.asmx?WSDL</code></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        <p class="muted">Namespace SOAP habitual: <code>http://ar.gov.afip.dif.FEV1/</code>.</p>
+
+        <h2 id="hubs">Otros hubs útiles</h2>
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr><th>Página</th><th>URL</th></tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>Arquitectura general WS</td>
+                <td><a href="https://www.arca.gob.ar/ws/documentacion/arquitectura-general.asp">arca.gob.ar/…/arquitectura-general.asp</a></td>
+              </tr>
+              <tr>
+                <td>Catálogo WS</td>
+                <td><a href="https://www.arca.gob.ar/ws/documentacion/catalogo.asp">catalogo.asp</a></td>
+              </tr>
+              <tr>
+                <td>WS factura electrónica</td>
+                <td><a href="https://www.arca.gob.ar/ws/documentacion/ws-factura-electronica.asp">ws-factura-electronica.asp</a></td>
+              </tr>
+              <tr>
+                <td>Ayuda FE</td>
+                <td><a href="https://www.afip.gob.ar/fe/ayuda.asp">afip.gob.ar/fe/ayuda.asp</a></td>
+              </tr>
+              <tr>
+                <td>Soporte homo FE</td>
+                <td><code>wsfev1@arca.gov.ar</code></td>
+              </tr>
+              <tr>
+                <td>Soporte prod</td>
+                <td><code>sri@arca.gov.ar</code></td>
+              </tr>
+              <tr>
+                <td>Normativa FE</td>
+                <td><code>facturaelectronica@arca.gov.ar</code></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div class="callout warn">
+          <strong>Vigencia.</strong>
+          Estos PDF son una foto del material oficial al momento del kit.
+          Si ARCA publica una versión nueva, actualizá desde el hub de homologación externa.
+        </div>
+
+        <hr class="hr">
+        <p class="muted">Guía operativa: <a href="arca-implementacion.html">API de ARCA para developers</a> · carpeta: <a href="pdfs/">pdfs/</a></p>
+      </article>
+    </div>
+
     <footer>
-      Documentación técnica de integración (ARCA / AFIP y Mercado Pago). Extra cotizado; sin precios inventados.
-      Fuentes oficiales prevalecen ante este resumen. Abrí en el navegador (no como blob de GitHub).
+      Fuentes ARCA/AFIP con copias locales para el kit. Extra cotizado; sin precios inventados.
+      Ante duda, prevalece el PDF oficial en el sitio del organismo.
     </footer>
   </div>
 </body>
