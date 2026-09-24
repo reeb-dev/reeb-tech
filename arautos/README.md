@@ -104,10 +104,30 @@ Dos flujos distintos (no un token global para todos):
 
 | Flujo | Callback | Uso |
 | --- | --- | --- |
+| Ingresar con Google | `/api/auth/oauth/google/callback` | Cuenta AR Autos |
 | Ingresar con Facebook | `/api/auth/oauth/facebook/callback` | Cuenta AR Autos |
 | Conectar Meta | `/api/panel/social/meta/callback` | Página + Instagram de **esa** concesionaria |
 
-Env (ver `.env.example`): `ARAUTOS_OAUTH_FACEBOOK_ENABLED`, `CLIENT_ID`, `CLIENT_SECRET`, redirect URIs. Sin secret: botones apagados / `configured:false`.
+### Google — `redirect_uri_mismatch`
+
+En Google Cloud Console → Credenciales → cliente OAuth **Web** → **Authorized redirect URIs**, agregue **exactamente** (sin slash final, `http` no `https`, puerto `8080`):
+
+```text
+http://localhost:8080/api/auth/oauth/google/callback
+```
+
+En el `.env` local:
+
+```env
+ARAUTOS_OAUTH_GOOGLE_ENABLED=true
+ARAUTOS_OAUTH_GOOGLE_CLIENT_ID=...
+ARAUTOS_OAUTH_GOOGLE_CLIENT_SECRET=...
+ARAUTOS_OAUTH_GOOGLE_REDIRECT_URI=http://localhost:8080/api/auth/oauth/google/callback
+```
+
+Errores típicos: URI en `:4200`, `127.0.0.1` vs `localhost`, slash final, o falta `/api`.
+
+Env Facebook/Meta: `ARAUTOS_OAUTH_FACEBOOK_*`. Sin secret: botones apagados / `configured:false`.
 
 Panel: **Conectar Meta** → elegir Página → tokens cifrados por tenant → **Difusión** con vista previa y publicación FB/IG. Las fotos deben ser HTTPS públicas.
 

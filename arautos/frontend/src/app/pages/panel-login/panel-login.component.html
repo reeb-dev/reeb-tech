@@ -19,12 +19,22 @@
       <button
         type="button"
         class="btn secondary oauth-fb"
+        (click)="startGoogle()"
+        [disabled]="!google()?.configured">
+        Ingresar con Google
+      </button>
+      <button
+        type="button"
+        class="btn secondary oauth-fb"
         (click)="startFacebook()"
         [disabled]="!facebook()?.configured">
         Ingresar con Facebook
       </button>
+      @if (google(); as g) {
+        <p class="meta">{{ g.configured ? 'Google: crea o inicia su cuenta AR Autos.' : g.note }}</p>
+      }
       @if (facebook(); as fb) {
-        <p class="meta">{{ fb.configured ? 'Crea o inicia su cuenta AR Autos (no conecta las redes del local).' : fb.note }}</p>
+        <p class="meta">{{ fb.configured ? 'Facebook: crea o inicia su cuenta (no conecta las redes del local).' : fb.note }}</p>
       }
     </div>
     <p class="meta oauth-or">o con email y contraseña</p>

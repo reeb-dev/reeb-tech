@@ -27,6 +27,10 @@ public class UserAccount {
   @Column(length = 64, unique = true)
   private String facebookUserId;
 
+  /** ID de usuario Google (login OAuth). */
+  @Column(length = 64, unique = true)
+  private String googleUserId;
+
   @Enumerated(EnumType.STRING)
   @Column(nullable = false, length = 32)
   private UserRole role = UserRole.TENANT_ADMIN;
@@ -48,6 +52,8 @@ public class UserAccount {
   public void setPasswordHash(String passwordHash) { this.passwordHash = passwordHash; }
   public String getFacebookUserId() { return facebookUserId; }
   public void setFacebookUserId(String facebookUserId) { this.facebookUserId = facebookUserId; }
+  public String getGoogleUserId() { return googleUserId; }
+  public void setGoogleUserId(String googleUserId) { this.googleUserId = googleUserId; }
   public UserRole getRole() { return role; }
   public void setRole(UserRole role) { this.role = role; }
   public boolean isActive() { return active; }

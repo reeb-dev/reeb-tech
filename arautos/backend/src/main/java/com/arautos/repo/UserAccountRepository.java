@@ -9,6 +9,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 public interface UserAccountRepository extends JpaRepository<UserAccount, UUID> {
   Optional<UserAccount> findByEmailIgnoreCase(String email);
   Optional<UserAccount> findByFacebookUserId(String facebookUserId);
+  Optional<UserAccount> findByGoogleUserId(String googleUserId);
   boolean existsByEmailIgnoreCase(String email);
   List<UserAccount> findByTenant_IdOrderByCreatedAtAsc(UUID tenantId);
   Optional<UserAccount> findByIdAndTenant_Id(UUID id, UUID tenantId);

@@ -26,6 +26,7 @@ export class PanelLoginComponent implements OnInit {
   message = signal('');
   error = signal('');
   facebook = signal<OAuthProviderStatus | null>(null);
+  google = signal<OAuthProviderStatus | null>(null);
 
   constructor(private auth: AuthService, private api: ApiService, private router: Router) {
     if (auth.session()) {
@@ -36,11 +37,23 @@ export class PanelLoginComponent implements OnInit {
   ngOnInit() {
     this.api.oauthProviders().subscribe({
       next: (res) => {
-        const fb = res.providers.find((p) => p.id === 'facebook') || null;
-        this.facebook.set(fb);
+        this.facebook.set(res.providers.find((p) => p.id === 'facebook') || null);
+        this.google.set(res.providers.find((p) => p.id === 'google') || null);
       },
-      error: () => this.facebook.set(null)
+      error: () => {
+        this.facebook.set(null);
+        this.google.set(null);
+      }
     });
+  }
+
+  startGoogle() {
+    const g = this.google();
+    if (!g?.configured) {
+      this.error.set(g?.note || 'Google Login no configurado.');
+      return;
+    }
+    window.location.href = `${environment.apiUrl}/auth/oauth/google/start`;
   }
 
   startFacebook() {

@@ -9,6 +9,7 @@ public class ArautosProperties {
   private final Plan plan = new Plan();
   private final MercadoPago mercadoPago = new MercadoPago();
   private final FacebookOAuth facebookOAuth = new FacebookOAuth();
+  private final GoogleOAuth googleOAuth = new GoogleOAuth();
   private String corsOrigins = "http://localhost:4200";
   private boolean seed = true;
   private String publicBaseUrl = "http://localhost:4200";
@@ -19,6 +20,7 @@ public class ArautosProperties {
   public Plan getPlan() { return plan; }
   public MercadoPago getMercadoPago() { return mercadoPago; }
   public FacebookOAuth getFacebookOAuth() { return facebookOAuth; }
+  public GoogleOAuth getGoogleOAuth() { return googleOAuth; }
   public String getCorsOrigins() { return corsOrigins; }
   public void setCorsOrigins(String corsOrigins) { this.corsOrigins = corsOrigins; }
   public boolean isSeed() { return seed; }
@@ -121,6 +123,35 @@ public class ArautosProperties {
     public void setFrontendConnectSelectUrl(String frontendConnectSelectUrl) { this.frontendConnectSelectUrl = frontendConnectSelectUrl; }
     public String getGraphVersion() { return graphVersion; }
     public void setGraphVersion(String graphVersion) { this.graphVersion = graphVersion; }
+
+    public boolean isConfigured() {
+      return enabled
+          && clientId != null && !clientId.isBlank()
+          && clientSecret != null && !clientSecret.isBlank();
+    }
+  }
+
+  /**
+   * Google Login (cuenta AR Autos). Redirect debe coincidir byte a byte
+   * con «Authorized redirect URIs» en Google Cloud Console.
+   */
+  public static class GoogleOAuth {
+    private boolean enabled = false;
+    private String clientId = "";
+    private String clientSecret = "";
+    private String redirectUri = "http://localhost:8080/api/auth/oauth/google/callback";
+    private String frontendSuccessUrl = "http://localhost:4200/panel/oauth/callback";
+
+    public boolean isEnabled() { return enabled; }
+    public void setEnabled(boolean enabled) { this.enabled = enabled; }
+    public String getClientId() { return clientId; }
+    public void setClientId(String clientId) { this.clientId = clientId; }
+    public String getClientSecret() { return clientSecret; }
+    public void setClientSecret(String clientSecret) { this.clientSecret = clientSecret; }
+    public String getRedirectUri() { return redirectUri; }
+    public void setRedirectUri(String redirectUri) { this.redirectUri = redirectUri; }
+    public String getFrontendSuccessUrl() { return frontendSuccessUrl; }
+    public void setFrontendSuccessUrl(String frontendSuccessUrl) { this.frontendSuccessUrl = frontendSuccessUrl; }
 
     public boolean isConfigured() {
       return enabled

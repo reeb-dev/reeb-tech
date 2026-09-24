@@ -9,107 +9,108 @@ import com.arautos.domain.enums.UserRole;
 import com.arautos.repo.TenantRepository;
 import com.arautos.repo.UserAccountRepository;
 import com.arautos.security.JwtService;
-import com.arautos.service.meta.MetaGraphClient;
 import com.arautos.web.dto.AuthDtos;
 import com.arautos.web.dto.SocialDtos;
 import com.arautos.web.error.ApiException;
 import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.security.Keys;
+import java.net.URI;
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
 import java.util.Date;
-import java.util.List;
 import java.util.Locale;
 import java.util.Optional;
 import java.util.UUID;
 import javax.crypto.SecretKey;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.client.RestClient;
+import org.springframework.web.client.RestClientResponseException;
 import org.springframework.web.util.UriComponentsBuilder;
 
 @Service
-public class FacebookLoginService {
-  private static final String SCOPE_LOGIN = "email,public_profile";
+public class GoogleLoginService {
+  private static final String SCOPE = "openid email profile";
   private static final long STATE_TTL_MS = 10 * 60 * 1000L;
 
   private final ArautosProperties properties;
-  private final MetaGraphClient graph;
   private final UserAccountRepository users;
   private final TenantRepository tenants;
   private final PasswordEncoder passwordEncoder;
   private final JwtService jwtService;
+  private final ObjectMapper mapper;
+  private final RestClient rest = RestClient.create();
   private final SecretKey stateKey;
 
-  public FacebookLoginService(ArautosProperties properties, MetaGraphClient graph,
-                              UserAccountRepository users, TenantRepository tenants,
-                              PasswordEncoder passwordEncoder, JwtService jwtService) {
+  public GoogleLoginService(ArautosProperties properties, UserAccountRepository users,
+                            TenantRepository tenants, PasswordEncoder passwordEncoder,
+                            JwtService jwtService, ObjectMapper mapper) {
     this.properties = properties;
-    this.graph = graph;
     this.users = users;
     this.tenants = tenants;
     this.passwordEncoder = passwordEncoder;
     this.jwtService = jwtService;
+    this.mapper = mapper;
     byte[] bytes = properties.getJwt().getSecret().getBytes(StandardCharsets.UTF_8);
     this.stateKey = Keys.hmacShaKeyFor(bytes);
   }
 
   public SocialDtos.ProviderStatus providerStatus() {
-    ArautosProperties.FacebookOAuth fb = properties.getFacebookOAuth();
-    boolean configured = fb.isConfigured();
+    ArautosProperties.GoogleOAuth g = properties.getGoogleOAuth();
+    boolean configured = g.isConfigured();
     String note = configured
-        ? "Facebook Login listo (cuenta AR Autos). Conectar redes es otro flujo en el panel."
-        : "Configure ARAUTOS_OAUTH_FACEBOOK_* en el .env local. No pegue secrets en el chat.";
-    return new SocialDtos.ProviderStatus("facebook", fb.isEnabled(), configured, note);
-  }
-
-  /** @deprecated use {@link #providerStatus()} — kept for callers that still expect list. */
-  public SocialDtos.ProvidersResponse providers() {
-    return new SocialDtos.ProvidersResponse(List.of(providerStatus()));
+        ? "Google Login listo. Redirect URI: " + g.getRedirectUri()
+        : "Configure ARAUTOS_OAUTH_GOOGLE_* . En Google Cloud agregue exactamente: "
+            + g.getRedirectUri();
+    return new SocialDtos.ProviderStatus("google", g.isEnabled(), configured, note);
   }
 
   public String startUrl() {
     requireConfigured();
-    ArautosProperties.FacebookOAuth fb = properties.getFacebookOAuth();
-    String state = signState("login", null);
-    return "https://www.facebook.com/" + fb.getGraphVersion() + "/dialog/oauth"
-        + "?client_id=" + enc(fb.getClientId())
-        + "&redirect_uri=" + enc(fb.getLoginRedirectUri())
+    ArautosProperties.GoogleOAuth g = properties.getGoogleOAuth();
+    String state = signState();
+    return "https://accounts.google.com/o/oauth2/v2/auth"
+        + "?client_id=" + enc(g.getClientId())
+        + "&redirect_uri=" + enc(g.getRedirectUri())
+        + "&response_type=code"
+        + "&scope=" + enc(SCOPE)
         + "&state=" + enc(state)
-        + "&scope=" + enc(SCOPE_LOGIN)
-        + "&response_type=code";
+        + "&access_type=online"
+        + "&prompt=select_account";
   }
 
   @Transactional
   public String handleCallback(String code, String state, String error) {
-    ArautosProperties.FacebookOAuth fb = properties.getFacebookOAuth();
+    ArautosProperties.GoogleOAuth g = properties.getGoogleOAuth();
     if (error != null && !error.isBlank()) {
-      return failRedirect("meta_denied");
+      return failRedirect("google_denied");
     }
-    if (!fb.isConfigured()) {
+    if (!g.isConfigured()) {
       return failRedirect("not_configured");
     }
     try {
-      Claims claims = parseState(state);
-      if (!"login".equals(claims.get("purpose", String.class))) {
-        return failRedirect("invalid_state");
+      parseState(state);
+      if (code == null || code.isBlank()) {
+        return failRedirect("missing_code");
       }
-      String shortToken = graph.exchangeCode(code, fb.getLoginRedirectUri());
-      String userToken = graph.exchangeLongLivedUserToken(shortToken);
-      JsonNode me = graph.me(userToken);
-      String fbId = text(me, "id");
-      String email = text(me, "email");
-      String name = text(me, "name");
-      if (fbId == null) {
+      String accessToken = exchangeCode(code, g);
+      JsonNode profile = userInfo(accessToken);
+      String googleId = text(profile, "sub");
+      String email = text(profile, "email");
+      String name = text(profile, "name");
+      if (googleId == null) {
         return failRedirect("no_profile");
       }
-      AuthDtos.AuthResponse auth = loginOrCreate(fbId, email, name);
-      UriComponentsBuilder b = UriComponentsBuilder.fromUriString(fb.getFrontendLoginSuccessUrl())
+      AuthDtos.AuthResponse auth = loginOrCreate(googleId, email, name);
+      UriComponentsBuilder b = UriComponentsBuilder.fromUriString(g.getFrontendSuccessUrl())
           .queryParam("token", auth.token())
-          .queryParam("provider", "facebook")
+          .queryParam("provider", "google")
           .queryParam("email", auth.email())
           .queryParam("role", auth.role())
           .queryParam("userId", auth.userId().toString());
@@ -127,27 +128,68 @@ public class FacebookLoginService {
     }
   }
 
-  private AuthDtos.AuthResponse loginOrCreate(String fbId, String email, String name) {
-    Optional<UserAccount> byFb = users.findByFacebookUserId(fbId);
-    if (byFb.isPresent()) {
-      return toAuth(byFb.get());
+  private String exchangeCode(String code, ArautosProperties.GoogleOAuth g) {
+    try {
+      String body = "code=" + enc(code)
+          + "&client_id=" + enc(g.getClientId())
+          + "&client_secret=" + enc(g.getClientSecret())
+          + "&redirect_uri=" + enc(g.getRedirectUri())
+          + "&grant_type=authorization_code";
+      String raw = rest.post()
+          .uri(URI.create("https://oauth2.googleapis.com/token"))
+          .contentType(MediaType.APPLICATION_FORM_URLENCODED)
+          .body(body)
+          .retrieve()
+          .body(String.class);
+      JsonNode json = mapper.readTree(raw == null ? "{}" : raw);
+      String token = text(json, "access_token");
+      if (token == null) {
+        throw new ApiException(HttpStatus.BAD_GATEWAY, "Google no devolvió access_token");
+      }
+      return token;
+    } catch (RestClientResponseException e) {
+      throw new ApiException(HttpStatus.BAD_GATEWAY, "Google token: " + e.getStatusCode().value());
+    } catch (ApiException e) {
+      throw e;
+    } catch (Exception e) {
+      throw new ApiException(HttpStatus.BAD_GATEWAY, "Error al canjear código Google");
+    }
+  }
+
+  private JsonNode userInfo(String accessToken) {
+    try {
+      String raw = rest.get()
+          .uri(URI.create("https://www.googleapis.com/oauth2/v3/userinfo"))
+          .header("Authorization", "Bearer " + accessToken)
+          .retrieve()
+          .body(String.class);
+      return mapper.readTree(raw == null ? "{}" : raw);
+    } catch (Exception e) {
+      throw new ApiException(HttpStatus.BAD_GATEWAY, "No se pudo leer el perfil de Google");
+    }
+  }
+
+  private AuthDtos.AuthResponse loginOrCreate(String googleId, String email, String name) {
+    Optional<UserAccount> byGoogle = users.findByGoogleUserId(googleId);
+    if (byGoogle.isPresent()) {
+      return toAuth(byGoogle.get(), null);
     }
     if (email != null && !email.isBlank()) {
       Optional<UserAccount> byEmail = users.findByEmailIgnoreCase(email);
       if (byEmail.isPresent()) {
         UserAccount u = byEmail.get();
-        u.setFacebookUserId(fbId);
+        u.setGoogleUserId(googleId);
         users.save(u);
-        return toAuth(u);
+        return toAuth(u, null);
       }
     }
     String safeEmail = email != null && !email.isBlank()
         ? email.trim().toLowerCase(Locale.ROOT)
-        : ("fb-" + fbId + "@oauth.arautos.local");
+        : ("google-" + googleId + "@oauth.arautos.local");
     if (users.existsByEmailIgnoreCase(safeEmail)) {
       throw new ApiException(HttpStatus.CONFLICT, "Email ya registrado");
     }
-    String dealerName = (name != null && !name.isBlank()) ? name : "Concesionaria Facebook";
+    String dealerName = (name != null && !name.isBlank()) ? name : "Concesionaria Google";
     Tenant tenant = new Tenant();
     tenant.setName(dealerName);
     tenant.setSlug(uniqueSlug(dealerName));
@@ -155,7 +197,7 @@ public class FacebookLoginService {
     tenant.setCity("A completar");
     tenant.setWhatsapp("5490000000000");
     tenant.setEmail(safeEmail.contains("@oauth.arautos.local") ? null : safeEmail);
-    tenant.setDescription("Alta vía Facebook Login. Complete provincia, ciudad y WhatsApp.");
+    tenant.setDescription("Alta vía Google Login. Complete provincia, ciudad y WhatsApp.");
     tenant.setModerationStatus(ModerationStatus.PENDIENTE);
     tenant.setSubscriptionStatus(SubscriptionStatus.PENDIENTE_PAGO);
     tenant.setPlanId(properties.getPlan().getId());
@@ -165,14 +207,10 @@ public class FacebookLoginService {
     user.setTenant(tenant);
     user.setEmail(safeEmail);
     user.setPasswordHash(passwordEncoder.encode(UUID.randomUUID().toString()));
-    user.setFacebookUserId(fbId);
+    user.setGoogleUserId(googleId);
     user.setRole(UserRole.TENANT_ADMIN);
     users.save(user);
-    return toAuth(user, "Cuenta creada con Facebook. Complete el perfil; un administrador debe aprobar el alta.");
-  }
-
-  private AuthDtos.AuthResponse toAuth(UserAccount user) {
-    return toAuth(user, null);
+    return toAuth(user, "Cuenta creada con Google. Complete el perfil; un administrador debe aprobar el alta.");
   }
 
   private AuthDtos.AuthResponse toAuth(UserAccount user, String message) {
@@ -196,37 +234,37 @@ public class FacebookLoginService {
   }
 
   private String failRedirect(String code) {
-    return UriComponentsBuilder.fromUriString(properties.getFacebookOAuth().getFrontendLoginSuccessUrl())
+    return UriComponentsBuilder.fromUriString(properties.getGoogleOAuth().getFrontendSuccessUrl())
         .queryParam("oauth_error", code)
         .build(true)
         .toUriString();
   }
 
   private void requireConfigured() {
-    if (!properties.getFacebookOAuth().isConfigured()) {
+    if (!properties.getGoogleOAuth().isConfigured()) {
       throw new ApiException(HttpStatus.SERVICE_UNAVAILABLE,
-          "Facebook OAuth no configurado. Defina ARAUTOS_OAUTH_FACEBOOK_* en el .env.");
+          "Google OAuth no configurado. Defina ARAUTOS_OAUTH_GOOGLE_* en el .env.");
     }
   }
 
-  public String signState(String purpose, UUID userId) {
+  private String signState() {
     long now = System.currentTimeMillis();
-    var builder = Jwts.builder()
-        .claim("purpose", purpose)
+    return Jwts.builder()
+        .claim("purpose", "google_login")
         .issuedAt(new Date(now))
         .expiration(new Date(now + STATE_TTL_MS))
-        .signWith(stateKey);
-    if (userId != null) {
-      builder.subject(userId.toString());
-    }
-    return builder.compact();
+        .signWith(stateKey)
+        .compact();
   }
 
-  public Claims parseState(String state) {
+  private void parseState(String state) {
     if (state == null || state.isBlank()) {
       throw new ApiException(HttpStatus.BAD_REQUEST, "state inválido");
     }
-    return Jwts.parser().verifyWith(stateKey).build().parseSignedClaims(state).getPayload();
+    Claims claims = Jwts.parser().verifyWith(stateKey).build().parseSignedClaims(state).getPayload();
+    if (!"google_login".equals(claims.get("purpose", String.class))) {
+      throw new ApiException(HttpStatus.BAD_REQUEST, "state inválido");
+    }
   }
 
   private String uniqueSlug(String raw) {
