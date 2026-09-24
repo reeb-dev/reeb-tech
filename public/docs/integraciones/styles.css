@@ -1,31 +1,32 @@
 @import url("https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap");
 
 :root {
-  --bg: #f4efe6;
-  --bg-2: #ebe3d4;
-  --cream: #fff9e5;
-  --ink: #2d4f4b;
-  --muted: #5c6f6a;
-  --line: rgba(45, 79, 75, 0.14);
-  --accent: #2d4f4b;
-  --accent-soft: rgba(45, 79, 75, 0.08);
-  --ember: #c45c26;
-  --ember-soft: rgba(196, 92, 38, 0.12);
-  --sage: #4a6762;
-  --card: #fffcf6;
-  --code-bg: #1e3330;
-  --code: #e8efe9;
+  /* Paleta institucional ARCA (azul navy + celeste) */
+  --bg: #eef3f8;
+  --bg-2: #dde7f2;
+  --cream: #f5f9fc;
+  --ink: #0b1f3a;
+  --muted: #4a5d73;
+  --line: rgba(11, 31, 58, 0.14);
+  --accent: #0057a8;
+  --accent-soft: rgba(0, 87, 168, 0.09);
+  --ember: #0077cc;
+  --ember-soft: rgba(0, 119, 204, 0.14);
+  --sage: #3d5a80;
+  --card: #ffffff;
+  --code-bg: #0b1f3a;
+  --code: #e6eef8;
   --ok: #1f6b4a;
   --ok-soft: rgba(31, 107, 74, 0.1);
   --warn: #8a5a12;
   --warn-soft: rgba(196, 140, 38, 0.14);
   --gap: #9b2c2c;
   --gap-soft: rgba(155, 44, 44, 0.1);
-  --info: #2a5f8f;
-  --info-soft: rgba(42, 95, 143, 0.1);
+  --info: #0057a8;
+  --info-soft: rgba(0, 87, 168, 0.1);
   --radius: 14px;
-  --shadow: 0 10px 30px rgba(45, 79, 75, 0.06);
-  --shadow-lg: 0 18px 40px rgba(45, 79, 75, 0.08);
+  --shadow: 0 10px 30px rgba(11, 31, 58, 0.07);
+  --shadow-lg: 0 18px 40px rgba(11, 31, 58, 0.09);
 }
 
 * { box-sizing: border-box; }
@@ -37,8 +38,8 @@ body {
   font-family: Outfit, "Segoe UI", system-ui, sans-serif;
   color: var(--ink);
   background:
-    radial-gradient(900px 420px at 8% -10%, rgba(196, 92, 38, 0.08), transparent 55%),
-    radial-gradient(700px 380px at 100% 0%, rgba(45, 79, 75, 0.08), transparent 50%),
+    radial-gradient(900px 420px at 8% -10%, rgba(0, 119, 204, 0.12), transparent 55%),
+    radial-gradient(700px 380px at 100% 0%, rgba(0, 87, 168, 0.1), transparent 50%),
     var(--bg);
   line-height: 1.65;
   font-size: 17px;
@@ -176,7 +177,7 @@ article {
   border: 1px solid var(--line);
   border-radius: 16px;
   background:
-    linear-gradient(135deg, rgba(255, 249, 229, 0.9), rgba(255, 252, 246, 0.5)),
+    linear-gradient(135deg, rgba(0, 87, 168, 0.08), rgba(255, 255, 255, 0.9) 55%),
     var(--cream);
 }
 
@@ -268,8 +269,8 @@ p, li { color: var(--ink); }
   gap: 0.35rem;
   padding: 0.45rem 0.85rem;
   border-radius: 999px;
-  background: var(--ink);
-  color: #fff9e5 !important;
+  background: var(--accent);
+  color: #fff !important;
   text-decoration: none;
   font-size: 0.88rem;
   font-weight: 600;
@@ -531,8 +532,8 @@ code {
   justify-content: space-between;
   gap: 0.75rem;
   padding: 0.45rem 0.9rem;
-  background: #162825;
-  color: #9bb5ae;
+  background: #071528;
+  color: #8eb4d8;
   font-size: 0.75rem;
   font-weight: 600;
   letter-spacing: 0.04em;
@@ -800,8 +801,8 @@ footer {
 }
 
 .method.get { background: #1f6b4a; }
-.method.post { background: #c45c26; }
-.method.put { background: #2a5f8f; }
+.method.post { background: #0057a8; }
+.method.put { background: #0077cc; }
 .method.delete { background: #9b2c2c; }
 
 .endpoint-path {
@@ -858,9 +859,9 @@ footer {
 }
 
 .tab.is-on {
-  background: var(--ink);
-  color: var(--cream);
-  border-color: var(--ink);
+  background: var(--accent);
+  color: #fff;
+  border-color: var(--accent);
 }
 
 .panel[hidden] { display: none !important; }
