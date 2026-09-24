@@ -3,8 +3,8 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Documentación ARCA / AFIP y Mercado Pago</title>
-  <meta name="description" content="Índice de documentación oficial para facturación electrónica ARCA/AFIP (PDFs y webservices) y Mercado Pago.">
+  <title>ARCA {docs} — Facturación electrónica WSAA + WSFEv1</title>
+  <meta name="description" content="Documentación clara de webservices ARCA/AFIP: autenticación WSAA, CAE con WSFEv1 y PDFs oficiales.">
   <meta name="robots" content="index, follow">
   <link rel="canonical" href="https://webconreeb.com/docs/integraciones/">
   <link rel="stylesheet" href="styles.css">
@@ -13,64 +13,110 @@
   <a class="skip" href="#contenido">Saltar al contenido</a>
   <div class="wrap">
     <nav class="top" aria-label="Documentación">
-      <a class="brand is-active" href="index.html" aria-current="page">Docs ARCA · MP</a>
-      <a href="arca-fuentes.html">PDFs ARCA</a>
-      <a href="arca-implementacion.html">Webservices ARCA</a>
+      <a class="brand is-active" href="index.html" aria-current="page">ARCA {docs}</a>
+      <a href="arca-implementacion.html">Webservices</a>
+      <a href="arca-fuentes.html">PDFs</a>
       <a href="mercadopago.html">Mercado Pago</a>
     </nav>
 
     <article id="contenido">
       <header class="hero">
-        <p class="eyebrow">Fuentes oficiales</p>
-        <h1>ARCA / AFIP y Mercado Pago</h1>
+        <p class="eyebrow">Documentación oficial · ARCA / AFIP</p>
+        <h1>Autenticás, pedís el CAE y listo.</h1>
         <p class="lead">
-          Material para implementar facturación electrónica y cobros online
-          a partir de la documentación de ARCA (y sus PDF) y de Mercado Pago.
-          Ante duda, prevalece el PDF o la página oficial vigente.
+          Guía legible de los webservices de facturación electrónica:
+          primero WSAA, después WSFEv1. Sin rodeos — y con los PDF del organismo a un clic.
         </p>
         <div class="meta-row">
-          <span class="chip">WSAA · WSFEv1</span>
-          <span class="chip">PDFs locales</span>
-          <span class="chip">Checkout Pro</span>
+          <span class="chip">SOAP / HTTPS</span>
+          <span class="chip">RG 4291 · V.4.8</span>
+          <span class="chip">RG 5616</span>
         </div>
         <div class="hero-jumps">
-          <a class="jump" href="arca-fuentes.html">Ver PDFs ARCA</a>
-          <a class="jump ghost" href="arca-implementacion.html">Webservices</a>
-          <a class="jump ghost" href="mercadopago.html">Mercado Pago</a>
+          <a class="jump" href="arca-implementacion.html">Ver cómo implementar</a>
+          <a class="jump ghost" href="pdfs/wsfev1-RG-4291.pdf">Manual WSFEv1</a>
+          <a class="jump ghost" href="arca-fuentes.html">Todos los PDFs</a>
         </div>
       </header>
 
-      <div class="callout tip">
-        <strong>Alcance de este índice.</strong>
-        Resume y enlaza fuentes oficiales. No reemplaza los manuales de ARCA/AFIP ni la doc de Mercado Pago.
+      <div class="demo-grid">
+        <div class="demo-card">
+          <div class="bar"><span class="dot"></span> FECAESolicitar · WSFEv1</div>
+<pre><code>&lt;Auth&gt;
+  &lt;Token&gt;…&lt;/Token&gt;
+  &lt;Sign&gt;…&lt;/Sign&gt;
+  &lt;Cuit&gt;20123456789&lt;/Cuit&gt;
+&lt;/Auth&gt;
+&lt;FeCabReq&gt;
+  &lt;PtoVta&gt;1&lt;/PtoVta&gt;
+  &lt;CbteTipo&gt;6&lt;/CbteTipo&gt;  &lt;!-- Factura B --&gt;
+&lt;/FeCabReq&gt;
++ CondicionIVAReceptorId  &lt;!-- RG 5616 --&gt;</code></pre>
+        </div>
+        <div class="demo-result">
+          <div class="ok-line">✓ Resultado A</div>
+          <div class="cae">
+            CAE 75123456789012
+            <small>CAEFchVto · comprobante autorizado</small>
+          </div>
+          <p class="muted" style="margin:0">Eso es lo que buscás al cerrar el circuito WSAA → WSFE.</p>
+        </div>
       </div>
 
+      <h2>Todo lo que necesitás de ARCA acá</h2>
       <div class="cards">
-        <a class="card" href="arca-fuentes.html">
-          <h2>PDFs ARCA / AFIP</h2>
-          <p class="muted">Manuales WSAA, WSASS, WSFEv1 y otros, con copia local y link al original.</p>
-        </a>
         <a class="card" href="arca-implementacion.html">
-          <h2>Webservices ARCA</h2>
-          <p class="muted">Cómo implementar WSAA + WSFEv1 (loginCms, último autorizado, FECAESolicitar) según los PDF.</p>
+          <h2>Webservices</h2>
+          <p class="muted">loginCms → último autorizado → FECAESolicitar. Ejemplos XML y errores típicos.</p>
+        </a>
+        <a class="card" href="arca-fuentes.html">
+          <h2>PDFs oficiales</h2>
+          <p class="muted">WSAA, WSASS, WSFEv1 y más. Copia local + link al organismo.</p>
         </a>
         <a class="card" href="mercadopago.html">
           <h2>Mercado Pago</h2>
-          <p class="muted">Checkout Pro, preferencias, webhooks y links a la documentación oficial de MP.</p>
+          <p class="muted">Checkout Pro según la doc oficial de MP (preferencias y webhooks).</p>
         </a>
       </div>
 
-      <h2>Índice maestro ARCA</h2>
-      <p>
-        Homologación externa / RG 5616:<br>
-        <a href="https://www.afip.gob.ar/ws/documentacion/homologacion-externa.asp">afip.gob.ar/…/homologacion-externa.asp</a>
-        ·
-        <a href="https://www.arca.gob.ar/ws/documentacion/homologacion-externa.asp">espejo arca.gob.ar</a>
-      </p>
+      <h2>Cómo funciona</h2>
+      <ol class="steps">
+        <li>
+          <div>
+            <strong>Certificado del CUIT</strong>
+            Homologación o producción, asociado al WSN <code>wsfe</code>, con punto de venta electrónico.
+          </div>
+        </li>
+        <li>
+          <div>
+            <strong>WSAA te da el ticket</strong>
+            Firmás el TRA, llamás <code>loginCms</code>, cacheás <code>token</code> + <code>sign</code>.
+          </div>
+        </li>
+        <li>
+          <div>
+            <strong>WSFE autoriza el comprobante</strong>
+            Pedís el último número y después el CAE con <code>FECAESolicitar</code>.
+          </div>
+        </li>
+        <li>
+          <div>
+            <strong>Contrastás con el PDF</strong>
+            Ante duda, gana el manual vigente del organismo.
+          </div>
+        </li>
+      </ol>
+
+      <div class="callout tip">
+        <strong>Esto no es un facturador cloud.</strong>
+        Es documentación de los webservices ARCA/AFIP (y links a Mercado Pago).
+        El índice maestro oficial:
+        <a href="https://www.afip.gob.ar/ws/documentacion/homologacion-externa.asp">homologación externa</a>.
+      </div>
     </article>
 
     <footer>
-      Índice de documentación oficial ARCA/AFIP y Mercado Pago. Los PDF y sitios del organismo prevalecen.
+      ARCA {docs} — basado en manuales del organismo. Fuentes oficiales prevalecen.
     </footer>
   </div>
 </body>

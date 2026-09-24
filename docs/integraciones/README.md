@@ -1,10 +1,10 @@
-# Documentación ARCA / AFIP y Mercado Pago
+# ARCA {docs}
 
-Índice basado en **fuentes oficiales** (PDFs ARCA/AFIP y docs de Mercado Pago).
+Documentación de webservices ARCA/AFIP y links a Mercado Pago — estilo claro tipo producto, contenido oficial.
 
 - https://webconreeb.com/docs/integraciones/
-- PDFs: https://webconreeb.com/docs/integraciones/arca-fuentes.html
 - Webservices: https://webconreeb.com/docs/integraciones/arca-implementacion.html
-- Mercado Pago: https://webconreeb.com/docs/integraciones/mercadopago.html
+- PDFs: https://webconreeb.com/docs/integraciones/arca-fuentes.html
+- MP: https://webconreeb.com/docs/integraciones/mercadopago.html
 
-Ante duda, prevalece el PDF o la documentación del organismo / de MP.
+No reemplaza los PDF del organismo.
