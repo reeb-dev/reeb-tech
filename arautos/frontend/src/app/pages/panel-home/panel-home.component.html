@@ -23,6 +23,59 @@
     }
   }
 
+  @if (billing(); as bill) {
+    <section class="billing-block">
+      <h2>Suscripción</h2>
+      <p class="meta">
+        Plan {{ bill.planName }} · estado {{ bill.subscriptionStatus }}
+        @if (bill.trialEndsAt) {
+          · trial hasta {{ bill.trialEndsAt | date: 'dd/MM/yyyy' }}
+        }
+      </p>
+      @if (bill.planPriceArs || bill.planPriceUsd) {
+        <p class="meta">
+          @if (bill.planPriceArs) { Monto ARS (env): {{ bill.planPriceArs }} }
+          @if (bill.planPriceUsd) { · USD (env): {{ bill.planPriceUsd }} }
+        </p>
+      } @else {
+        <p class="meta">Montos del plan: a configurar (no se publican cifras inventadas).</p>
+      }
+      <p class="meta">{{ bill.message }}</p>
+      <button
+        class="btn"
+        type="button"
+        (click)="startCheckout()"
+        [disabled]="checkoutBusy">
+        {{ checkoutBusy ? 'Preparando…' : (bill.mpConfigured ? 'Pagar / renovar con Mercado Pago' : 'Probar checkout (scaffolding)') }}
+      </button>
+    </section>
+  }
+
+  @if (ranking(); as rk) {
+    <section class="ranking-block">
+      <h2>Ranking en {{ rk.province }}</h2>
+      <p class="meta">Criterio: clics de WhatsApp entre concesionarias de su provincia (solo panel).</p>
+      @if (rk.entries.length) {
+        <table class="table">
+          <thead>
+            <tr><th>#</th><th>Concesionaria</th><th>Clics WA</th></tr>
+          </thead>
+          <tbody>
+            @for (e of rk.entries; track e.tenantId) {
+              <tr [class.is-self]="e.self">
+                <td>{{ e.rank }}</td>
+                <td>{{ e.name }}@if (e.self) { <span class="you"> (usted)</span> }</td>
+                <td>{{ e.waClicks }}</td>
+              </tr>
+            }
+          </tbody>
+        </table>
+      } @else {
+        <p class="meta">Todavía no hay pares en esta provincia.</p>
+      }
+    </section>
+  }
+
   @if (error()) { <div class="alert">{{ error() }}</div> }
   @if (ok()) { <div class="alert ok">{{ ok() }}</div> }
 

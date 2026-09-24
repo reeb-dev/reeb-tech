@@ -13,3 +13,14 @@ h2 { margin-top: 1.75rem; font-size: 1.35rem; }
   display: contents;
 }
 code { font-size: .85em; background: #eef2f6; padding: .1rem .35rem; border-radius: 4px; }
+.billing-block, .ranking-block {
+  margin: 1.25rem 0;
+  padding: 1rem 1.1rem;
+  background: #fff;
+  border: 1px solid var(--line);
+  border-radius: 14px;
+  box-shadow: var(--shadow);
+}
+.billing-block h2, .ranking-block h2 { margin-top: 0; }
+.ranking-block .is-self { background: #eef5ff; }
+.ranking-block .you { color: var(--celeste); font-weight: 700; }

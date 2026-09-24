@@ -70,6 +70,43 @@ export interface Stats {
   readOnly: boolean;
 }
 
+export interface BillingStatus {
+  subscriptionStatus: string;
+  trialEndsAt?: string;
+  planId: string;
+  planName: string;
+  planPriceUsd?: string | null;
+  planPriceArs?: string | null;
+  mpConfigured: boolean;
+  mpPreferenceId?: string | null;
+  readOnly: boolean;
+  message?: string;
+}
+
+export interface CheckoutResponse {
+  configured: boolean;
+  preferenceId?: string | null;
+  initPoint?: string | null;
+  sandboxInitPoint?: string | null;
+  message?: string | null;
+}
+
+export interface RankingEntry {
+  rank: number;
+  tenantId: string;
+  name: string;
+  slug: string;
+  province: string;
+  waClicks: number;
+  self: boolean;
+}
+
+export interface RankingResponse {
+  province: string;
+  entries: RankingEntry[];
+  criterion: string;
+}
+
 export interface TenantProfile {
   id: string;
   name: string;

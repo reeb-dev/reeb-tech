@@ -4,7 +4,7 @@ import { FormsModule } from '@angular/forms';
 import { Router, RouterLink } from '@angular/router';
 import { ApiService } from '../../core/api.service';
 import { AuthService } from '../../core/auth.service';
-import { ProfileUpdateRequest, Stats, TenantProfile, VehiclePanel, VehicleRequest } from '../../core/models';
+import { ProfileUpdateRequest, Stats, TenantProfile, VehiclePanel, VehicleRequest, BillingStatus, RankingResponse } from '../../core/models';
 import { formatPrice, typeLabel } from '../../core/format';
 import { GeoSelectComponent } from '../../shared/geo-select.component';
 
@@ -19,11 +19,14 @@ export class PanelHomeComponent implements OnInit {
   vehicles = signal<VehiclePanel[]>([]);
   stats = signal<Stats | null>(null);
   profile = signal<TenantProfile | null>(null);
+  billing = signal<BillingStatus | null>(null);
+  ranking = signal<RankingResponse | null>(null);
   error = signal('');
   ok = signal('');
   formatPrice = formatPrice;
   typeLabel = typeLabel;
   photoUrl = '';
+  checkoutBusy = false;
 
   profileForm: ProfileUpdateRequest & { slug?: string } = {
     name: '', logoUrl: '', primaryColor: '#0f2744', accentColor: '#2563eb',
@@ -52,6 +55,8 @@ export class PanelHomeComponent implements OnInit {
   reload() {
     this.api.myVehicles().subscribe({ next: (v) => this.vehicles.set(v), error: (e) => this.error.set(e.error?.error || 'Error stock') });
     this.api.stats().subscribe({ next: (s) => this.stats.set(s) });
+    this.api.billingStatus().subscribe({ next: (b) => this.billing.set(b) });
+    this.api.ranking().subscribe({ next: (r) => this.ranking.set(r), error: () => this.ranking.set(null) });
     this.api.profile().subscribe({
       next: (p) => {
         this.profile.set(p);
@@ -70,6 +75,27 @@ export class PanelHomeComponent implements OnInit {
           description: p.description || '',
           slug: p.slug
         };
+      }
+    });
+  }
+
+  startCheckout() {
+    this.error.set('');
+    this.ok.set('');
+    this.checkoutBusy = true;
+    this.api.billingCheckout().subscribe({
+      next: (res) => {
+        this.checkoutBusy = false;
+        if (res.initPoint || res.sandboxInitPoint) {
+          window.location.href = (res.initPoint || res.sandboxInitPoint)!;
+          return;
+        }
+        this.ok.set(res.message || 'Checkout no disponible todavía.');
+        this.api.billingStatus().subscribe({ next: (b) => this.billing.set(b) });
+      },
+      error: (e) => {
+        this.checkoutBusy = false;
+        this.error.set(e.error?.error || 'No se pudo iniciar el checkout');
       }
     });
   }

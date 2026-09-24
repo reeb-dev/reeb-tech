@@ -1,9 +1,8 @@
-# ArAutos — Fase 1a (MVP multi-concesionario)
+# ArAutos — Marketplace multi-concesionario (AR)
 
-Marketplace multi-tenant para concesionarias en Argentina.  
 Producto aparte del hub `reeb-tech` (esta carpeta `arautos/`).
 
-Decisiones Fase 0: ver `/cursor/stores/self/docs/plan-arautos.md`.
+Decisiones Fase 0: ver plan en el Agent Store del proyecto (`docs/plan-arautos.md`).
 
 ## Stack
 
@@ -54,18 +53,45 @@ Abre `http://localhost:4200` (proxy `/api` → `:8080`).
 Rutas:
 
 - `/` catálogo público
-- `/aviso/:id` ficha
+- `/aviso/:id` ficha (galería + lightbox)
 - `/c/:slug` perfil concesionaria
 - `/panel/login` login / alta self-serve
-- `/panel` stock + stats
+- `/panel` stock + stats + suscripción + ranking provincia
 
-## Reglas 1a
+## Reglas de suscripción
 
 - Catálogo: solo avisos `PUBLICADO` de tenants con moderación `ACTIVA` y suscripción `TRIAL` vigente o `ACTIVA`.
 - `VENCIDA`: no lista en catálogo; panel solo lectura.
 - Trial: 14 días desde aprobación admin (`ARAUTOS_TRIAL_DAYS`).
 - Moneda avisos: USD y ARS.
-- Sin Mercado Pago (1b). Sin ranking (1c).
+
+## Fase 1b — Mercado Pago (scaffolding)
+
+Checkout y webhook están listos; **no hay secrets ni montos inventados en el repo**.
+
+Env (ver `.env.example`):
+
+| Variable | Uso |
+| --- | --- |
+| `ARAUTOS_MP_ENABLED` | `true` para habilitar |
+| `ARAUTOS_MP_ACCESS_TOKEN` | Access token (privado) |
+| `ARAUTOS_MP_PUBLIC_KEY` | Public key |
+| `ARAUTOS_MP_WEBHOOK_SECRET` | Opcional / futuro |
+| `ARAUTOS_PLAN_PRICE_ARS` | Monto del plan en ARS (requerido para crear preferencia) |
+| `ARAUTOS_PLAN_PRICE_USD` | Placeholder opcional (no se inventa en UI pública) |
+
+Endpoints:
+
+- `GET /api/panel/billing/status` — estado + si MP está configurado
+- `POST /api/panel/billing/checkout` — crea preferencia o responde mensaje de bloqueo
+- `POST /api/public/mp/webhook` — actualiza `ACTIVA` / `PENDIENTE_PAGO` según pago
+
+**Bloqueo actual:** sin `ARAUTOS_MP_*` + monto ARS, el checkout devuelve `configured:false` y un mensaje claro. No hardcodear tokens.
+
+## Fase 1c — Ranking panel
+
+- `GET /api/panel/ranking?province=` — ranking por provincia, criterio **clics WhatsApp**
+- Solo usuarios autenticados del panel (no público)
 
 ## API útil
 
@@ -77,8 +103,10 @@ Rutas:
 - `POST /api/auth/login` · `POST /api/auth/register`
 - `GET|POST|PUT|DELETE /api/panel/vehicles`
 - `GET|PUT /api/panel/profile` · `GET /api/panel/stats`
+- `GET /api/panel/billing/status` · `POST /api/panel/billing/checkout`
+- `GET /api/panel/ranking`
 - `GET /api/admin/tenants/pending` · `POST .../approve` · `POST .../suspend`
 
-## Fuera de alcance 1a
+## Fuera de alcance
 
-Mercado Pago, ranking, subdominio/custom domain, montos públicos inventados, editar demos del hub.
+ARCA, subdominio/custom domain, montos públicos inventados, editar demos del hub `public/demos`.
