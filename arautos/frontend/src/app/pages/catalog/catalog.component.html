@@ -1,18 +1,27 @@
-
 <section class="container">
   <div class="hero">
-    <h1>ArAutos</h1>
-    <p>Catálogo multi-concesionario. Filtrá y contactá por WhatsApp.</p>
+    <p class="eyebrow">Marketplace automotor · Argentina</p>
+    <h1>Encontrá tu próximo auto</h1>
+    <p>0 km y usados de concesionarias de todo el país. Filtrá por provincia, moneda y consultá por WhatsApp.</p>
   </div>
 
   <div class="filters">
     <div class="field">
       <label>Marca</label>
-      <input [(ngModel)]="brand" placeholder="Toyota, Ford…" (keyup.enter)="load()" />
+      <input [(ngModel)]="brand" placeholder="Toyota, Ford, Fiat…" (keyup.enter)="load()" />
     </div>
     <div class="field">
       <label>Provincia</label>
-      <input [(ngModel)]="province" placeholder="Buenos Aires…" (keyup.enter)="load()" />
+      <select [(ngModel)]="province">
+        <option value="">Todas</option>
+        <option value="Buenos Aires">Buenos Aires</option>
+        <option value="CABA">CABA</option>
+        <option value="Córdoba">Córdoba</option>
+        <option value="Santa Fe">Santa Fe</option>
+        <option value="Mendoza">Mendoza</option>
+        <option value="Río Negro">Río Negro</option>
+        <option value="Neuquén">Neuquén</option>
+      </select>
     </div>
     <div class="field">
       <label>Tipo</label>
@@ -27,7 +36,7 @@
       <select [(ngModel)]="currency">
         <option value="">USD y ARS</option>
         <option value="USD">USD</option>
-        <option value="ARS">ARS</option>
+        <option value="ARS">Pesos (ARS)</option>
       </select>
     </div>
     <div class="field" style="align-self:end">
@@ -41,7 +50,7 @@
     @for (v of vehicles(); track v.id) {
       <article class="card-vehicle">
         <a [routerLink]="['/aviso', v.id]" class="media">
-          <img [src]="v.photos[0] || 'https://placehold.co/800x500'" [alt]="v.brand + ' ' + v.model" />
+          <img [src]="v.photos[0] || '/assets/cars/toyota-corolla.jpg'" [alt]="v.brand + ' ' + v.model" />
         </a>
         <div class="body">
           <span class="badge">{{ typeLabel(v.type) }}</span>

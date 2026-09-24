@@ -1,31 +1,43 @@
-
-<section class="container" *ngIf="dealer() as d">
-  <div class="profile-head">
-    <div>
-      <h1>{{ d.name }}</h1>
-      <p class="meta">{{ d.address ? d.address + ' · ' : '' }}{{ d.city }}, {{ d.province }}</p>
-      <p>{{ d.description }}</p>
-    </div>
-    <button class="btn wa" type="button" (click)="wa(d)">WhatsApp</button>
-  </div>
-
-  <h2>Stock publicado</h2>
-  <div class="grid-cards">
-    @for (v of d.vehicles; track v.id) {
-      <article class="card-vehicle">
-        <a [routerLink]="['/aviso', v.id]" class="media">
-          <img [src]="v.photos[0] || 'https://placehold.co/800x500'" [alt]="v.brand + ' ' + v.model" />
-        </a>
-        <div class="body">
-          <span class="badge">{{ typeLabel(v.type) }}</span>
-          <h3><a [routerLink]="['/aviso', v.id]">{{ v.brand }} {{ v.model }}</a></h3>
-          <div class="meta">{{ v.year }} · {{ v.km | number }} km</div>
-          <div class="price">{{ formatPrice(v.price, v.currency) }}</div>
+<section class="dealer-shell" *ngIf="dealer() as d" [ngStyle]="themeVars(d)">
+  <div class="dealer-hero">
+    <div class="container dealer-hero-inner">
+      <div class="identity">
+        <img *ngIf="d.logoUrl" class="logo" [src]="d.logoUrl" [alt]="'Logo ' + d.name" />
+        <div>
+          <p class="eyebrow">Concesionaria</p>
+          <h1>{{ d.name }}</h1>
+          <p class="loc">
+            {{ d.address ? d.address + ' · ' : '' }}{{ d.city }}, {{ d.province }}
+          </p>
+          <p class="desc" *ngIf="d.description">{{ d.description }}</p>
         </div>
-      </article>
-    } @empty {
-      <p class="meta">Sin avisos publicados.</p>
-    }
+      </div>
+      <div class="actions">
+        <button class="btn wa" type="button" (click)="wa(d)">WhatsApp</button>
+        <a class="btn secondary ghost" routerLink="/">Volver al catálogo</a>
+      </div>
+    </div>
   </div>
+
+  <section class="container stock">
+    <h2>Stock publicado</h2>
+    <div class="grid-cards">
+      @for (v of d.vehicles; track v.id) {
+        <article class="card-vehicle branded">
+          <a [routerLink]="['/aviso', v.id]" class="media">
+            <img [src]="v.photos[0] || '/assets/cars/toyota-corolla.jpg'" [alt]="v.brand + ' ' + v.model" />
+          </a>
+          <div class="body">
+            <span class="badge">{{ typeLabel(v.type) }}</span>
+            <h3><a [routerLink]="['/aviso', v.id]">{{ v.brand }} {{ v.model }}</a></h3>
+            <div class="meta">{{ v.year }} · {{ v.km | number }} km</div>
+            <div class="price">{{ formatPrice(v.price, v.currency) }}</div>
+          </div>
+        </article>
+      } @empty {
+        <p class="meta">Sin avisos publicados.</p>
+      }
+    </div>
+  </section>
 </section>
 @if (error()) { <div class="container alert">{{ error() }}</div> }

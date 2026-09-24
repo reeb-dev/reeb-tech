@@ -1,0 +1,6 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 160 160" role="img" aria-label="Patagonia Motors">
+  <rect width="160" height="160" rx="28" fill="#0B3D4A"/>
+  <path d="M20 108 L48 52 L80 88 L112 40 L140 108 Z" fill="none" stroke="#E8F4F2" stroke-width="6" stroke-linejoin="round"/>
+  <circle cx="80" cy="118" r="8" fill="#F59E0B"/>
+  <text x="80" y="148" text-anchor="middle" fill="#E8F4F2" font-family="Arial,sans-serif" font-size="14" font-weight="700">PM</text>
+</svg>

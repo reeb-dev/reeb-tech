@@ -22,6 +22,14 @@ public class Tenant {
 
   private String logoUrl;
 
+  /** Color principal del micrositio /c/:slug (hex, ej. #0B3D4A). */
+  @Column(length = 16)
+  private String primaryColor;
+
+  /** Color de acento del micrositio (hex). */
+  @Column(length = 16)
+  private String accentColor;
+
   @Column(nullable = false, length = 80)
   private String province;
 
@@ -62,6 +70,10 @@ public class Tenant {
   public void setSlug(String slug) { this.slug = slug; }
   public String getLogoUrl() { return logoUrl; }
   public void setLogoUrl(String logoUrl) { this.logoUrl = logoUrl; }
+  public String getPrimaryColor() { return primaryColor; }
+  public void setPrimaryColor(String primaryColor) { this.primaryColor = primaryColor; }
+  public String getAccentColor() { return accentColor; }
+  public void setAccentColor(String accentColor) { this.accentColor = accentColor; }
   public String getProvince() { return province; }
   public void setProvince(String province) { this.province = province; }
   public String getCity() { return city; }

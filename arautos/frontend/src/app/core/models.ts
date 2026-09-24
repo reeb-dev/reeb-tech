@@ -37,6 +37,8 @@ export interface DealerPublic {
   name: string;
   slug: string;
   logoUrl?: string;
+  primaryColor?: string;
+  accentColor?: string;
   province: string;
   city: string;
   address?: string;
@@ -73,6 +75,8 @@ export interface TenantProfile {
   name: string;
   slug: string;
   logoUrl?: string;
+  primaryColor?: string;
+  accentColor?: string;
   province: string;
   city: string;
   address?: string;
@@ -106,4 +110,17 @@ export interface VehicleRequest {
   color?: string;
   description?: string;
   status: VehicleStatus;
+}
+
+export interface ProfileUpdateRequest {
+  name: string;
+  logoUrl?: string;
+  primaryColor?: string;
+  accentColor?: string;
+  province: string;
+  city: string;
+  address?: string;
+  whatsapp: string;
+  email?: string;
+  description?: string;
 }

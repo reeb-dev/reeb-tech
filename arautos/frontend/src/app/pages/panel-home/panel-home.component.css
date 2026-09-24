@@ -1,8 +1,12 @@
-
 .head { display: flex; justify-content: space-between; gap: 1rem; align-items: flex-start; margin-bottom: 1rem; }
-h1, h2 { font-family: var(--font-display); font-weight: 400; }
-h2 { margin-top: 1.75rem; font-size: 1.5rem; }
+h1, h2 { font-family: var(--font-display); font-weight: 700; color: var(--navy); }
+h2 { margin-top: 1.75rem; font-size: 1.35rem; }
 .form-grid {
   display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap: .75rem;
-  padding: 1rem; border: 1px solid var(--line); border-radius: 14px; background: rgba(21,32,28,.7);
+  padding: 1rem; border: 1px solid var(--line); border-radius: 14px; background: #fff;
+  box-shadow: var(--shadow);
 }
+.profile-form input[type="color"] {
+  height: 2.5rem; padding: .25rem; cursor: pointer;
+}
+code { font-size: .85em; background: #eef2f6; padding: .1rem .35rem; border-radius: 4px; }

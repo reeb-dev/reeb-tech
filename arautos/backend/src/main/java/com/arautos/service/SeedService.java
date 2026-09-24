@@ -69,7 +69,10 @@ public class SeedService implements ApplicationRunner {
         "Av. Bustillo 5100",
         "5492944123456",
         "contacto@patagoniamotors.example",
-        "Multimarca en Bariloche. 0km y usados seleccionados.");
+        "Multimarca en Bariloche. 0km y usados seleccionados. Permuta y financiación.",
+        "/assets/dealers/patagonia-motors.svg",
+        "#0B3D4A",
+        "#F59E0B");
     UserAccount u1 = createUser(t1, "demo1@patagonia-motors.example", "demo123");
 
     Tenant t2 = createTenant(
@@ -80,29 +83,39 @@ public class SeedService implements ApplicationRunner {
         "Calle 7 1234",
         "5492214567890",
         "ventas@centroautomotores.example",
-        "Concesionaria familiar en La Plata. Financiación y permuta.");
+        "Concesionaria familiar en La Plata. Financiación y permuta.",
+        "/assets/dealers/centro-automotores.svg",
+        "#1E3A5F",
+        "#2563EB");
     UserAccount u2 = createUser(t2, "demo2@centro-automotores.example", "demo123");
 
     vehicles.save(vehicle(t1, "Toyota", "Corolla", "XEi 2.0 CVT", 2024, 0, VehicleType.CERO_KM,
-        new BigDecimal("32000"), CurrencyCode.USD, "nafta", "cvt", "Blanco Perlado"));
-    vehicles.save(vehicle(t1, "Volkswagen", "Amarok", "V6 Extreme 3.0 TDI", 2022, 48000, VehicleType.USADO,
-        new BigDecimal("45000"), CurrencyCode.USD, "diesel", "automatica", "Gris"));
+        new BigDecimal("32000"), CurrencyCode.USD, "nafta", "cvt", "Blanco Perlado",
+        "/assets/cars/toyota-corolla.jpg"));
+    vehicles.save(vehicle(t1, "Jeep", "Compass", "Limited 1.3T", 2022, 42000, VehicleType.USADO,
+        new BigDecimal("41000"), CurrencyCode.USD, "nafta", "automatica", "Gris",
+        "/assets/cars/jeep-compass.jpg"));
     vehicles.save(vehicle(t1, "Ford", "Ranger", "XLT 3.2 4x4", 2021, 72000, VehicleType.USADO,
-        new BigDecimal("38500000"), CurrencyCode.ARS, "diesel", "manual", "Blanco"));
+        new BigDecimal("38500000"), CurrencyCode.ARS, "diesel", "manual", "Blanco",
+        "/assets/cars/ford-ranger.jpg"));
 
     vehicles.save(vehicle(t2, "Fiat", "Cronos", "Precision 1.3", 2023, 18000, VehicleType.USADO,
-        new BigDecimal("18500"), CurrencyCode.USD, "nafta", "cvt", "Rojo"));
+        new BigDecimal("18500"), CurrencyCode.USD, "nafta", "cvt", "Rojo",
+        "/assets/cars/fiat-cronos.jpg"));
     vehicles.save(vehicle(t2, "Chevrolet", "Tracker", "Premier 1.2T", 2024, 0, VehicleType.CERO_KM,
-        new BigDecimal("29500"), CurrencyCode.USD, "nafta", "automatica", "Negro"));
+        new BigDecimal("29500"), CurrencyCode.USD, "nafta", "automatica", "Negro",
+        "/assets/cars/chevrolet-tracker.jpg"));
     vehicles.save(vehicle(t2, "Peugeot", "208", "Active Pack 1.6", 2020, 55000, VehicleType.USADO,
-        new BigDecimal("16200000"), CurrencyCode.ARS, "nafta", "manual", "Gris Plata"));
+        new BigDecimal("16200000"), CurrencyCode.ARS, "nafta", "manual", "Gris Plata",
+        "/assets/cars/peugeot-208.jpg"));
 
     log.info("Seed OK: admin@arautos.local / admin123 | {} / demo123 | {} / demo123",
         u1.getEmail(), u2.getEmail());
   }
 
   private Tenant createTenant(String name, String slug, String province, String city, String address,
-                              String wa, String email, String desc) {
+                              String wa, String email, String desc, String logoUrl,
+                              String primaryColor, String accentColor) {
     Tenant t = new Tenant();
     t.setName(name);
     t.setSlug(slug);
@@ -112,6 +125,9 @@ public class SeedService implements ApplicationRunner {
     t.setWhatsapp(wa);
     t.setEmail(email);
     t.setDescription(desc);
+    t.setLogoUrl(logoUrl);
+    t.setPrimaryColor(primaryColor);
+    t.setAccentColor(accentColor);
     t.setModerationStatus(ModerationStatus.ACTIVA);
     t.setSubscriptionStatus(SubscriptionStatus.TRIAL);
     t.setTrialEndsAt(Instant.now().plus(properties.getTrialDays(), ChronoUnit.DAYS));
@@ -130,7 +146,7 @@ public class SeedService implements ApplicationRunner {
 
   private Vehicle vehicle(Tenant tenant, String brand, String model, String version, int year, int km,
                           VehicleType type, BigDecimal price, CurrencyCode currency,
-                          String fuel, String transmission, String color) {
+                          String fuel, String transmission, String color, String photo) {
     Vehicle v = new Vehicle();
     v.setTenant(tenant);
     v.setBrand(brand);
@@ -146,10 +162,9 @@ public class SeedService implements ApplicationRunner {
     v.setFuel(fuel);
     v.setTransmission(transmission);
     v.setColor(color);
-    v.setDescription(brand + " " + model + " " + version + ". Consultar por WhatsApp.");
+    v.setDescription(brand + " " + model + " " + version + ". Consultá por WhatsApp.");
     v.setStatus(VehicleStatus.PUBLICADO);
-    v.setPhotos(List.of(
-        "https://placehold.co/800x500/0f766e/f5f0e6?text=" + brand.replace(" ", "+") + "+" + model.replace(" ", "+")));
+    v.setPhotos(List.of(photo));
     return v;
   }
 }

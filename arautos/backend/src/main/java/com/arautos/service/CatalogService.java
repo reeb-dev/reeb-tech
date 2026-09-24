@@ -116,6 +116,8 @@ public class CatalogService {
         tenant.getName(),
         tenant.getSlug(),
         tenant.getLogoUrl(),
+        tenant.getPrimaryColor(),
+        tenant.getAccentColor(),
         tenant.getProvince(),
         tenant.getCity(),
         tenant.getAddress(),

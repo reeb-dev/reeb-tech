@@ -28,6 +28,13 @@ export class DealerProfileComponent implements OnInit {
     });
   }
 
+  themeVars(d: DealerPublic): Record<string, string> {
+    return {
+      '--dealer-primary': d.primaryColor || '#0f2744',
+      '--dealer-accent': d.accentColor || '#2563eb'
+    };
+  }
+
   wa(dealer: DealerPublic) {
     window.open(waLink(dealer.whatsapp, `Hola ${dealer.name}, vi su perfil en ArAutos.`), '_blank');
   }

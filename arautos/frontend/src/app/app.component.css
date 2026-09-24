@@ -1,28 +1,38 @@
-
 .top {
   position: sticky; top: 0; z-index: 20;
-  backdrop-filter: blur(10px);
-  background: rgba(12,18,16,.85);
-  border-bottom: 1px solid var(--line);
+  background: linear-gradient(135deg, var(--navy) 0%, var(--navy-soft) 100%);
+  border-bottom: 1px solid rgba(255,255,255,.08);
+  color: #fff;
 }
 .top-inner {
   display: flex; align-items: center; justify-content: space-between;
-  padding: .85rem 0;
+  padding: .9rem 0;
 }
 .brand {
   font-family: var(--font-display);
-  font-size: 1.65rem;
-  color: var(--ink);
+  font-size: 1.55rem;
+  color: #fff;
   text-decoration: none;
   letter-spacing: .01em;
+  font-weight: 700;
 }
-nav { display: flex; gap: 1rem; }
-nav a { color: var(--muted); font-weight: 600; }
-nav a:hover { color: var(--ink); }
+.brand small {
+  display: block;
+  font-family: var(--font-body);
+  font-size: .68rem;
+  font-weight: 600;
+  letter-spacing: .08em;
+  text-transform: uppercase;
+  opacity: .75;
+}
+nav { display: flex; gap: 1rem; align-items: center; }
+nav a { color: rgba(255,255,255,.85); font-weight: 600; text-decoration: none; }
+nav a:hover { color: #fff; text-decoration: none; }
 main { min-height: 70vh; padding: 1.5rem 0 3rem; }
 .foot {
   border-top: 1px solid var(--line);
   padding: 1.25rem 0 2rem;
   color: var(--muted);
   font-size: .9rem;
+  background: #fff;
 }

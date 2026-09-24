@@ -61,6 +61,8 @@ public class AdminService {
         t.getName(),
         t.getSlug(),
         t.getLogoUrl(),
+        t.getPrimaryColor(),
+        t.getAccentColor(),
         t.getProvince(),
         t.getCity(),
         t.getAddress(),
