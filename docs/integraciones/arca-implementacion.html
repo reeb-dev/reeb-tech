@@ -3,121 +3,80 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Implementar webservices ARCA (WSAA + WSFEv1) | webconreeb.com</title>
-  <meta name="description" content="Cómo hacer andar WSAA y WSFEv1 en tu propia API: URLs, SOAP, Auth, FECAESolicitar, ejemplos XML y checklist. Extra cotizado.">
+  <title>Webservices ARCA — WSAA + WSFEv1</title>
+  <meta name="description" content="Guía de implementación de webservices ARCA/AFIP según manuales oficiales: WSAA loginCms y WSFEv1 FECAESolicitar.">
   <meta name="robots" content="index, follow">
   <link rel="canonical" href="https://webconreeb.com/docs/integraciones/arca-implementacion.html">
   <link rel="stylesheet" href="styles.css">
 </head>
-<body class="theme-howto">
+<body>
   <a class="skip" href="#contenido">Saltar al contenido</a>
   <div class="wrap">
-    <nav class="top" aria-label="Integraciones">
-      <a class="brand" href="index.html">Integraciones</a>
-      <a href="arca-api.html">Docs API</a>
-      <a class="is-active" href="arca-implementacion.html" aria-current="page">SOAP avanzado</a>
+    <nav class="top" aria-label="Documentación">
+      <a class="brand" href="index.html">Docs ARCA · MP</a>
       <a href="arca-fuentes.html">PDFs ARCA</a>
+      <a class="is-active" href="arca-implementacion.html" aria-current="page">Webservices ARCA</a>
       <a href="mercadopago.html">Mercado Pago</a>
     </nav>
 
     <div class="layout">
       <aside class="toc" aria-label="Índice">
-        <h2>Implementación</h2>
+        <h2>Contenido</h2>
         <ol>
-          <li><a href="#receta">Receta (tu API)</a></li>
+          <li><a href="#resumen">Resumen</a></li>
           <li><a href="#prereq">Prerrequisitos</a></li>
-          <li><a href="#urls">URLs y WSDL</a></li>
-          <li><a href="#wsaa">1 · WSAA loginCms</a></li>
-          <li><a href="#ultimo">2 · Último autorizado</a></li>
-          <li><a href="#cae">3 · FECAESolicitar</a></li>
-          <li><a href="#campos">Campos clave</a></li>
+          <li><a href="#urls">URLs</a></li>
+          <li><a href="#wsaa">WSAA</a></li>
+          <li><a href="#ultimo">Último autorizado</a></li>
+          <li><a href="#cae">FECAESolicitar</a></li>
+          <li><a href="#campos">Campos</a></li>
           <li><a href="#errores">Errores</a></li>
-          <li><a href="#envolver">Envolver en REST</a></li>
           <li><a href="#pdfs">PDFs</a></li>
         </ol>
       </aside>
 
       <article id="contenido">
         <header class="hero">
-          <p class="eyebrow">Guía de implementación · Webservices ARCA</p>
-          <h1>Hacé andar ARCA en tu propia API</h1>
+          <p class="eyebrow">Basado en los manuales ARCA / AFIP</p>
+          <h1>Webservices: WSAA + WSFEv1</h1>
           <p class="lead">
-            Documentación tipo “cómo implementar el webservice”: qué llamar, en qué orden,
-            con qué XML, y qué guardar. ARCA no te da REST: vos hablás <strong>SOAP/XML</strong>
-            y, si querés, exponés un REST propio encima (como en stock-local).
+            Orden práctico para autenticarte y pedir un CAE.
+            El transporte es <strong>SOAP/XML sobre HTTPS</strong>.
+            Detalle normativo: PDFs oficiales (copia local en este índice).
           </p>
           <div class="meta-row">
-            <span class="chip">WSAA + WSFEv1</span>
-            <span class="chip">SOAP / HTTPS</span>
             <span class="chip">RG 4291 · V.4.8</span>
             <span class="chip">RG 5616</span>
+            <span class="chip"><a href="arca-fuentes.html">PDFs</a></span>
           </div>
           <div class="hero-jumps">
-            <a class="jump" href="#receta">Ver la receta</a>
-            <a class="jump ghost" href="#wsaa">Ir a WSAA</a>
-            <a class="jump ghost" href="arca-api.html">Probar REST del producto</a>
-            <a class="jump ghost" href="pdfs/wsfev1-RG-4291.pdf">Manual WSFEv1 PDF</a>
+            <a class="jump" href="pdfs/wsfev1-RG-4291.pdf">Manual WSFEv1</a>
+            <a class="jump ghost" href="pdfs/WSAAmanualDev.pdf">Manual WSAA</a>
+            <a class="jump ghost" href="#wsaa">Ir a loginCms</a>
           </div>
         </header>
 
-        <div class="callout tip">
-          <strong>Empezá por la Docs API (REST)</strong> si solo querés integrar el producto:
-          <a href="arca-api.html">arca-api.html</a>.
-          Esta página es para quien implementa WSAA/WSFE a mano en su backend.
-        </div>
+        <section class="tldr" id="resumen">
+          <h2>En corto</h2>
+          <ol>
+            <li>Certificado del CUIT + asociación al WSN <code>wsfe</code> + punto de venta electrónico.</li>
+            <li>WSAA <code>loginCms</code> → <code>token</code> + <code>sign</code> (cachear ~12 h).</li>
+            <li>WSFEv1 <code>FECompUltimoAutorizado</code> → número siguiente.</li>
+            <li>WSFEv1 <code>FECAESolicitar</code> → CAE / Resultado (incluir <code>CondicionIVAReceptorId</code>, RG 5616).</li>
+          </ol>
+        </section>
 
-        <h2 id="receta">Receta: hacerla andar en tu API</h2>
-        <p class="muted">Seguí este orden. Si saltás un paso, el siguiente falla.</p>
-        <div class="recipe">
-          <div class="recipe-step">
-            <span class="n">1</span>
-            <div>
-              <h3>Homologá el CUIT del comercio</h3>
-              <p>Certificado + asociación al WSN <code>wsfe</code> + punto de venta electrónico. Sin esto no hay login.</p>
-            </div>
-          </div>
-          <div class="recipe-step">
-            <span class="n">2</span>
-            <div>
-              <h3>Implementá WSAA <code>loginCms</code></h3>
-              <p>Armá el TRA → firmá CMS (SHA1+RSA) → Base64 → SOAP → cacheá <code>token</code> + <code>sign</code> (~12 h).</p>
-            </div>
-          </div>
-          <div class="recipe-step">
-            <span class="n">3</span>
-            <div>
-              <h3>Implementá WSFEv1</h3>
-              <p><code>FECompUltimoAutorizado</code> → calculá nro siguiente → <code>FECAESolicitar</code> → leé CAE / Resultado.</p>
-            </div>
-          </div>
-          <div class="recipe-step">
-            <span class="n">4</span>
-            <div>
-              <h3>(Opcional) Exponé tu REST</h3>
-              <p>Ej.: <code>POST /api/arca/invoices/{saleId}</code> que adentro hace los pasos 2–3. Ver <a href="arca-api.html">colección Postman</a>.</p>
-            </div>
-          </div>
-          <div class="recipe-step">
-            <span class="n">5</span>
-            <div>
-              <h3>Probá en HOMO hasta un CAE <code>A</code></h3>
-              <p>Incluí <code>CondicionIVAReceptorId</code> (RG 5616). Recién después pensá PROD.</p>
-            </div>
-          </div>
-        </div>
-
-        <h2 id="prereq">Prerrequisitos (bloqueantes)</h2>
+        <h2 id="prereq">Prerrequisitos</h2>
         <ul class="checklist">
-          <li><span class="box" aria-hidden="true"></span><div>CUIT + clave fiscal del comercio</div></li>
+          <li><span class="box" aria-hidden="true"></span><div>CUIT y clave fiscal</div></li>
           <li><span class="box" aria-hidden="true"></span><div>Certificado del ambiente (homo ≠ prod)</div></li>
-          <li><span class="box" aria-hidden="true"></span><div>Cert asociado a Facturación Electrónica (<code>wsfe</code>)</div></li>
-          <li><span class="box" aria-hidden="true"></span><div>Punto de venta electrónico habilitado</div></li>
-          <li><span class="box" aria-hidden="true"></span><div>Reloj del servidor sincronizado (NTP / GMT-3)</div></li>
-          <li><span class="box" aria-hidden="true"></span><div>Cert + clave privada solo en el servidor</div></li>
+          <li><span class="box" aria-hidden="true"></span><div>Asociación al WSN Facturación Electrónica (<code>wsfe</code>)</div></li>
+          <li><span class="box" aria-hidden="true"></span><div>Punto de venta electrónico</div></li>
+          <li><span class="box" aria-hidden="true"></span><div>Reloj sincronizado (NTP; zona GMT-3 en los manuales)</div></li>
         </ul>
-        <p class="muted">Detalle y PDFs de adhesión: <a href="arca-fuentes.html">Fuentes</a>.</p>
+        <p class="muted">Adhesión / certs: ver PDFs WSASS y WSAA en <a href="arca-fuentes.html">Fuentes</a>.</p>
 
-        <h2 id="urls">URLs de los webservices</h2>
+        <h2 id="urls">URLs de servicio</h2>
         <div class="table-wrap">
           <table>
             <thead>
@@ -125,23 +84,22 @@
             </thead>
             <tbody>
               <tr>
-                <td><strong>WSAA</strong> LoginCms</td>
+                <td>WSAA LoginCms</td>
                 <td><code>https://wsaahomo.afip.gov.ar/ws/services/LoginCms</code></td>
                 <td><code>https://wsaa.afip.gov.ar/ws/services/LoginCms</code></td>
               </tr>
               <tr>
-                <td><strong>WSFEv1</strong></td>
+                <td>WSFEv1</td>
                 <td><code>https://wswhomo.afip.gov.ar/wsfev1/service.asmx</code></td>
                 <td><code>https://servicios1.afip.gov.ar/wsfev1/service.asmx</code></td>
               </tr>
             </tbody>
           </table>
         </div>
-        <p class="muted">WSDL: agregá <code>?WSDL</code> a la URL. Namespace WSFE: <code>http://ar.gov.afip.dif.FEV1/</code>.</p>
+        <p class="muted">WSDL: <code>?WSDL</code>. Namespace WSFE: <code>http://ar.gov.afip.dif.FEV1/</code>. Preferí las URLs publicadas en la página vigente de ARCA.</p>
 
-        <!-- WSAA -->
-        <h2 id="wsaa">Webservice 1 — WSAA (autenticación)</h2>
-        <p>Objetivo: obtener el Ticket de Acceso (<code>token</code> + <code>sign</code>) para usar en cada llamada WSFE.</p>
+        <h2 id="wsaa">1. WSAA — <code>loginCms</code></h2>
+        <p>Fuentes: <a href="pdfs/WSAAmanualDev.pdf">Manual Dev</a> · <a href="pdfs/Especificacion_Tecnica_WSAA_1.2.2.pdf">Especificación 1.2.2</a>.</p>
 
         <div class="endpoint">
           <div class="endpoint-head">
@@ -150,14 +108,9 @@
             <span class="endpoint-meta">WSAA</span>
           </div>
           <div class="endpoint-body">
-            <div class="ws-meta">
-              <span>Content-Type: text/xml</span>
-              <span>service = wsfe</span>
-              <span>CMS SHA1withRSA</span>
-            </div>
-            <h3>Paso A — LoginTicketRequest (TRA)</h3>
+            <h3>TRA (XML a firmar)</h3>
             <div class="code-block">
-              <div class="label"><span>XML a firmar</span><span>TRA</span></div>
+              <div class="label"><span>LoginTicketRequest</span><span>service=wsfe</span></div>
 <pre><code>&lt;?xml version="1.0" encoding="UTF-8"?&gt;
 &lt;loginTicketRequest version="1.0"&gt;
   &lt;header&gt;
@@ -168,45 +121,25 @@
   &lt;service&gt;wsfe&lt;/service&gt;
 &lt;/loginTicketRequest&gt;</code></pre>
             </div>
-            <p class="muted"><code>source</code>/<code>destination</code> son opcionales (el FAQ recomienda omitirlos). Restá unos minutos a <code>generationTime</code> si el reloj falla.</p>
-
-            <h3>Paso B — Firmar y llamar</h3>
             <ol>
-              <li>Firmá el TRA como CMS <code>SignedData</code> (SHA1+RSA) con cert + clave del comercio.</li>
-              <li>Codificá el CMS en <strong>Base64</strong>.</li>
-              <li>Enviá SOAP <code>loginCms</code> con ese Base64.</li>
-              <li>Parseá <code>&lt;token&gt;</code> y <code>&lt;sign&gt;</code>. Cacheá ~11–12 h. <strong>No pidas TA en cada factura.</strong></li>
+              <li>Firmar CMS <code>SignedData</code> (SHA1+RSA) con cert + clave.</li>
+              <li>Codificar CMS en Base64.</li>
+              <li>Invocar <code>loginCms</code>.</li>
+              <li>Extraer <code>token</code> y <code>sign</code>; reutilizar mientras viva (~12 h).</li>
             </ol>
-            <div class="code-block">
-              <div class="label"><span>SOAP request (esqueleto)</span><span>WSAA</span></div>
-<pre><code>&lt;soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/"
-  xmlns:wsaa="http://wsaa.view.sua.dvadac.ubaar"&gt;
-  &lt;soapenv:Header/&gt;
-  &lt;soapenv:Body&gt;
-    &lt;wsaa:loginCms&gt;
-      &lt;wsaa:in0&gt;BASE64_DEL_CMS…&lt;/wsaa:in0&gt;
-    &lt;/wsaa:loginCms&gt;
-  &lt;/soapenv:Body&gt;
-&lt;/soapenv:Envelope&gt;</code></pre>
-            </div>
           </div>
         </div>
 
-        <!-- FECompUltimoAutorizado -->
-        <h2 id="ultimo">Webservice 2 — WSFEv1 · último número</h2>
+        <h2 id="ultimo">2. WSFEv1 — <code>FECompUltimoAutorizado</code></h2>
         <div class="endpoint">
           <div class="endpoint-head">
             <span class="method post">SOAP</span>
             <span class="endpoint-path">FECompUltimoAutorizado</span>
-            <span class="endpoint-meta">WSFEv1</span>
+            <span class="endpoint-meta">SOAPAction FEV1</span>
           </div>
           <div class="endpoint-body">
-            <div class="ws-meta">
-              <span>SOAPAction: http://ar.gov.afip.dif.FEV1/FECompUltimoAutorizado</span>
-            </div>
-            <p>Devuelve el último comprobante autorizado para ese PtoVta + CbteTipo. El siguiente es <code>último + 1</code>.</p>
             <div class="code-block">
-              <div class="label"><span>Body (dentro del Envelope)</span><span>ejemplo</span></div>
+              <div class="label"><span>Body</span><span>ejemplo</span></div>
 <pre><code>&lt;FECompUltimoAutorizado xmlns="http://ar.gov.afip.dif.FEV1/"&gt;
   &lt;Auth&gt;
     &lt;Token&gt;…&lt;/Token&gt;
@@ -214,33 +147,26 @@
     &lt;Cuit&gt;20123456789&lt;/Cuit&gt;
   &lt;/Auth&gt;
   &lt;PtoVta&gt;1&lt;/PtoVta&gt;
-  &lt;CbteTipo&gt;6&lt;/CbteTipo&gt;  &lt;!-- 1=A · 6=B · 11=C --&gt;
+  &lt;CbteTipo&gt;6&lt;/CbteTipo&gt;
 &lt;/FECompUltimoAutorizado&gt;</code></pre>
             </div>
+            <p class="muted">CbteTipo habitual: 1 Factura A · 6 B · 11 C (confirmar con <code>FEParamGetTiposCbte</code>).</p>
           </div>
         </div>
 
-        <!-- FECAESolicitar -->
-        <h2 id="cae">Webservice 3 — WSFEv1 · pedir CAE</h2>
+        <h2 id="cae">3. WSFEv1 — <code>FECAESolicitar</code></h2>
+        <p>Fuente: <a href="pdfs/wsfev1-RG-4291.pdf">Manual desarrollador V.4.8 (RG 4291)</a>.</p>
         <div class="endpoint">
           <div class="endpoint-head">
             <span class="method post">SOAP</span>
             <span class="endpoint-path">FECAESolicitar</span>
-            <span class="endpoint-meta">WSFEv1</span>
+            <span class="endpoint-meta">CAE</span>
           </div>
           <div class="endpoint-body">
-            <div class="ws-meta">
-              <span>SOAPAction: http://ar.gov.afip.dif.FEV1/FECAESolicitar</span>
-              <span>CondicionIVAReceptorId obligatorio (RG 5616)</span>
-            </div>
             <div class="code-block">
-              <div class="label"><span>Request (resumido)</span><span>Factura B ejemplo</span></div>
+              <div class="label"><span>Request resumido</span><span>Factura B</span></div>
 <pre><code>&lt;FECAESolicitar xmlns="http://ar.gov.afip.dif.FEV1/"&gt;
-  &lt;Auth&gt;
-    &lt;Token&gt;…&lt;/Token&gt;
-    &lt;Sign&gt;…&lt;/Sign&gt;
-    &lt;Cuit&gt;20123456789&lt;/Cuit&gt;
-  &lt;/Auth&gt;
+  &lt;Auth&gt;…&lt;/Auth&gt;
   &lt;FeCAEReq&gt;
     &lt;FeCabReq&gt;
       &lt;CantReg&gt;1&lt;/CantReg&gt;
@@ -264,109 +190,62 @@
         &lt;MonId&gt;PES&lt;/MonId&gt;
         &lt;MonCotiz&gt;1&lt;/MonCotiz&gt;
         &lt;CondicionIVAReceptorId&gt;5&lt;/CondicionIVAReceptorId&gt;
-        &lt;Iva&gt;
-          &lt;AlicIva&gt;
-            &lt;Id&gt;5&lt;/Id&gt;          &lt;!-- 21% --&gt;
-            &lt;BaseImp&gt;100.00&lt;/BaseImp&gt;
-            &lt;Importe&gt;21.00&lt;/Importe&gt;
-          &lt;/AlicIva&gt;
-        &lt;/Iva&gt;
+        &lt;Iva&gt;…&lt;/Iva&gt;
       &lt;/FECAEDetRequest&gt;
     &lt;/FeDetReq&gt;
   &lt;/FeCAEReq&gt;
 &lt;/FECAESolicitar&gt;</code></pre>
             </div>
-            <h3>Qué persistir de la respuesta</h3>
-            <ul>
-              <li><code>Resultado</code> — <code>A</code> aprobado / <code>R</code> rechazado / con observaciones</li>
-              <li><code>CAE</code> + <code>CAEFchVto</code> (<code>yyyyMMdd</code>)</li>
-              <li><code>CbteNro</code>, mensajes de error/obs</li>
-            </ul>
             <div class="callout gap">
-              <strong>Sin <code>CondicionIVAReceptorId</code> el CAE puede rechazarse</strong> (RG 5616).
-              Catálogo: método <code>FEParamGetCondicionIvaReceptor</code>.
+              <strong>RG 5616:</strong> sin <code>CondicionIVAReceptorId</code> el comprobante puede rechazarse.
+              Valores: <code>FEParamGetCondicionIvaReceptor</code>.
             </div>
+            <p>Persistir: <code>Resultado</code>, <code>CAE</code>, <code>CAEFchVto</code>, observaciones/errores.</p>
           </div>
         </div>
 
-        <h2 id="campos">Campos que más rompen si están mal</h2>
+        <h2 id="campos">Campos sensibles</h2>
         <div class="table-wrap">
           <table>
-            <thead>
-              <tr><th>Campo</th><th>Notas</th></tr>
-            </thead>
+            <thead><tr><th>Campo</th><th>Nota (según manual)</th></tr></thead>
             <tbody>
-              <tr><td><code>Auth.Token/Sign/Cuit</code></td><td>Del TA vigente; CUIT del cert</td></tr>
-              <tr><td><code>CbteTipo</code></td><td>1 Factura A · 6 B · 11 C (confirmá con FEParamGetTiposCbte)</td></tr>
-              <tr><td><code>CbteDesde/Hasta</code></td><td>Número siguiente al último autorizado</td></tr>
+              <tr><td><code>Auth</code></td><td>Token/Sign del TA + CUIT representado</td></tr>
               <tr><td><code>CbteFch</code></td><td><code>yyyyMMdd</code></td></tr>
-              <tr><td><code>DocTipo/DocNro</code></td><td>Receptor real (99/0 = CF típico)</td></tr>
-              <tr><td><code>CondicionIVAReceptorId</code></td><td>Obligatorio RG 5616</td></tr>
-              <tr><td><code>AlicIva</code></td><td>No informar en tipo C; Id vivos vía FEParamGetTiposIva</td></tr>
-              <tr><td>Importes</td><td>Deben cuadrar: neto + IVA ≈ total</td></tr>
+              <tr><td><code>AlicIva</code></td><td>No informar en tipo C; Ids vía <code>FEParamGetTiposIva</code></td></tr>
+              <tr><td>Importes</td><td>Deben ser coherentes entre sí</td></tr>
             </tbody>
           </table>
         </div>
 
-        <h2 id="errores">Errores frecuentes (WSAA / WSFE)</h2>
+        <h2 id="errores">Errores frecuentes (manuales / FAQ)</h2>
         <div class="table-wrap">
           <table>
-            <thead>
-              <tr><th>Síntoma</th><th>Qué revisar</th></tr>
-            </thead>
+            <thead><tr><th>Síntoma</th><th>Revisar</th></tr></thead>
             <tbody>
-              <tr><td>Cert no emitido por AC de confianza</td><td>Homo vs prod cruzados</td></tr>
-              <tr><td>Computador no autorizado al servicio</td><td>Cert sin asociar a <code>wsfe</code></td></tr>
-              <tr><td>CEE ya posee un TA válido</td><td>Cacheá el TA; no re-login</td></tr>
-              <tr><td>generationTime inválido</td><td>NTP / zona GMT-3</td></tr>
-              <tr><td>HTTP 600 / 601 (WSFE)</td><td>Token/firma o CUIT no en token</td></tr>
-              <tr><td>Resultado R</td><td>Leé <code>Errors</code>/<code>Obs</code>; CondicionIVA / DocTipo / importes</td></tr>
+              <tr><td>Cert no emitido por AC de confianza</td><td>Ambiente homo/prod cruzado</td></tr>
+              <tr><td>No autorizado al servicio</td><td>Cert sin asociar a <code>wsfe</code></td></tr>
+              <tr><td>CEE ya posee un TA válido</td><td>Reutilizar TA cacheado</td></tr>
+              <tr><td>generationTime inválido</td><td>NTP / zona</td></tr>
+              <tr><td>600 / 601 en WSFE</td><td>Token/firma o CUIT</td></tr>
             </tbody>
           </table>
         </div>
 
-        <h2 id="envolver">Envolver esto en tu propia API REST</h2>
-        <p>Patrón recomendado (el de stock-local):</p>
-        <ol class="order-list">
-          <li><code>GET /status</code> — ¿hay cert/key/env?</li>
-          <li><code>POST /invoices/{saleId}</code> — adentro: ticket WSAA → último → FECAESolicitar → guardar</li>
-          <li><code>GET /invoices/{saleId}</code> — leer CAE ya pedido</li>
-        </ol>
-        <p>
-          Contrato listo para Postman:
-          <a href="arca-api.html">arca-api.html</a>
-          ·
-          <a href="postman/arca-api.postman_collection.json">colección JSON</a>.
-        </p>
-        <div class="callout info">
-          <strong>Variables típicas en tu servidor:</strong>
-          <code>ARCA_ENABLED</code>, <code>ARCA_ENV</code> (HOMO/PROD), <code>ARCA_CUIT</code>,
-          <code>ARCA_CERT_PATH</code>, <code>ARCA_KEY_PATH</code>, <code>ARCA_PTO_VTA</code>.
-        </div>
-
-        <h2 id="pdfs">Manuales oficiales (copia local)</h2>
+        <h2 id="pdfs">PDFs de esta guía</h2>
         <ul>
-          <li><a href="pdfs/WSAAmanualDev.pdf">WSAA — Manual desarrollador</a></li>
-          <li><a href="pdfs/Especificacion_Tecnica_WSAA_1.2.2.pdf">WSAA — Especificación 1.2.2</a></li>
-          <li><a href="pdfs/wsfev1-RG-4291.pdf">WSFEv1 — Manual V.4.8 (RG 4291)</a></li>
-          <li><a href="arca-fuentes.html">Índice completo de PDFs</a></li>
+          <li><a href="pdfs/WSAAmanualDev.pdf">WSAAmanualDev.pdf</a></li>
+          <li><a href="pdfs/Especificacion_Tecnica_WSAA_1.2.2.pdf">Especificacion_Tecnica_WSAA_1.2.2.pdf</a></li>
+          <li><a href="pdfs/wsfev1-RG-4291.pdf">wsfev1-RG-4291.pdf</a></li>
+          <li><a href="arca-fuentes.html">Índice completo</a></li>
         </ul>
 
-        <div class="callout note">
-          <strong>DoD:</strong> un comprobante en homologación con <code>Resultado=A</code> y CAE válido.
-          Prod solo con OK del contador del comercio. Extra cotizado; no es asesoría fiscal.
-        </div>
-
         <hr class="hr">
-        <p class="muted">
-          Página verde = implementar webservices en tu API.
-          Página azul = <a href="arca-api.html">probar el REST del producto</a>.
-        </p>
+        <p class="muted">Este resumen no es asesoría fiscal. Prevalecen los PDF y el sitio ARCA/AFIP.</p>
       </article>
     </div>
 
     <footer>
-      Implementación WSAA + WSFEv1 para tu propia API. Extra cotizado. Fuentes oficiales prevalecen.
+      Webservices ARCA/AFIP según documentación oficial. Fuentes: PDFs del organismo.
     </footer>
   </div>
 </body>

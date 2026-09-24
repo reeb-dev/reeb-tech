@@ -1,12 +1,10 @@
-# Integraciones ARCA + Mercado Pago
+# Documentación ARCA / AFIP y Mercado Pago
 
-Docs al estilo producto REST (inspirado en docs modernas tipo arca.api.com.ar), con el contrato real de stock-local.
+Índice basado en **fuentes oficiales** (PDFs ARCA/AFIP y docs de Mercado Pago).
 
-- Landing: https://webconreeb.com/docs/integraciones/
-- **Docs API (REST):** https://webconreeb.com/docs/integraciones/arca-api.html
-- SOAP avanzado: https://webconreeb.com/docs/integraciones/arca-implementacion.html
-- PDFs: https://webconreeb.com/docs/integraciones/pdfs/
+- https://webconreeb.com/docs/integraciones/
+- PDFs: https://webconreeb.com/docs/integraciones/arca-fuentes.html
+- Webservices: https://webconreeb.com/docs/integraciones/arca-implementacion.html
+- Mercado Pago: https://webconreeb.com/docs/integraciones/mercadopago.html
 
-Fuente: `docs/integraciones/` · deploy: `public/docs/integraciones/`
-
-Sin secretos ni precios inventados. No es un SaaS multi-CUIT: es el extra de una instancia single-tenant.
+Ante duda, prevalece el PDF o la documentación del organismo / de MP.
